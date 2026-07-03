@@ -113,6 +113,17 @@ else
   ok_line
 fi
 
+# 12. DOCUMENTOS PROTEGIDOS NO DEBEN ESTAR EN EL REPO
+section "12. Documentos protegidos fuera del ignore:"
+PROTECTED_REGEX='(^|/)(.*-NUCLEO|.*_NUCLEO|metodo-nucleo|PRD[_-]?nucleo|SOURCE_OF_TRUTH|Estado[_-]?Nucleo|CLAUDE|MAIN-PROTECTOR|TEMA-.*|PROTOCOLO-.*|SEGURIDAD-.*|ESQUEMA-.*|AGENT-TEAMS-.*|DDD-.*)\.md$|(^|/)\.claude/|(^|/)\.gitconfig-|(^|/)docs-nucleo/'
+LEAKS="$(git ls-files 2>/dev/null | grep -iE "$PROTECTED_REGEX" || true)"
+if [ -n "$LEAKS" ]; then
+  fail_block "$LEAKS"
+  echo "   -> Estos archivos deben estar en .gitignore (ver MAIN-PROTECTOR.md)."
+else
+  ok_line
+fi
+
 # RESULTADO
 echo ""
 echo "======================================="
