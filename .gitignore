@@ -1,0 +1,69 @@
+# =============================================================================
+# NÚCLEO by raisen — .gitignore MAESTRO
+# Aplica la declaración de MAIN-PROTECTOR.md (v1.1)
+# =============================================================================
+
+# --- Regla catch-all para documentos fundamentales de NÚCLEO -----------------
+# Cualquier .md con sufijo -NUCLEO / _NUCLEO queda protegido automáticamente.
+# También cualquier archivo bajo docs-nucleo/ en cualquier profundidad.
+*-NUCLEO.md
+*_NUCLEO.md
+*.nucleo.md
+docs-nucleo/
+**/docs-nucleo/
+
+# --- Documentos fundamentales listados explícitamente ------------------------
+# (redundante con la catch-all, pero explícito por claridad y para docs con
+#  nombres que no siguen la convención de sufijo)
+metodo-nucleo.md
+PRD_nucleo.md
+PRD-nucleo.md
+SOURCE_OF_TRUTH.md
+Estado_Nucleo.md
+Estado-Nucleo.md
+CLAUDE.md
+MAIN-PROTECTOR.md
+TEMA-*.md
+PROTOCOLO-*.md
+SEGURIDAD-*.md
+ESQUEMA-*.md
+AGENT-TEAMS-*.md
+DDD-*.md
+
+# --- Ecosistema Claude Code (revela reglas y acciones) -----------------------
+.claude/
+CLAUDE.md
+
+# --- Overrides de identidad git (viven en $HOME, no en el repo) --------------
+.gitconfig-raisen
+.gitconfig-*
+
+# --- Secretos y variables de entorno -----------------------------------------
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# --- Directorios de trabajo / build ------------------------------------------
+node_modules/
+.next/
+.vite/
+.vercel/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+
+# --- Editor / SO -------------------------------------------------------------
+.DS_Store
+Thumbs.db
+.vscode/
+!.vscode/settings.example.json
+.idea/
+
+# --- Logs / cache ------------------------------------------------------------
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
