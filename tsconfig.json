@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "noUncheckedIndexedAccess": true,
+
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "noEmit": true,
+
+    "baseUrl": ".",
+    "paths": {
+      "@sales/*":     ["./apps/web/src/modules/sales/*"],
+      "@finance/*":   ["./apps/web/src/modules/finance/*"],
+      "@fieldops/*":  ["./apps/web/src/modules/fieldops/*"],
+      "@tenant/*":    ["./apps/web/src/modules/tenant/*"],
+      "@identity/*":  ["./apps/web/src/modules/identity/*"],
+      "@cognition/*": ["./apps/web/src/modules/cognition/*"],
+      "@shared/*":    ["./apps/web/src/shared/*"],
+      "@brand/*":     ["./brand/*"]
+    }
+  },
+  "include": ["apps/web/src/**/*", "brand/**/*"]
+}

@@ -1,0 +1,29 @@
+/* ============================================================================
+   PLANTILLA DE TEMA — cliente nuevo.
+   Cambia SOLO el bloque "EDITABLE POR CLIENTE". Formato HSL: "H S% L%".
+   Default = base OMEGA (dorado). Un cliente sobrescribe estos valores.
+   ============================================================================ */
+:root {
+  /* ---------- EDITABLE POR CLIENTE ---------- */
+  --brand-primary: 38 85% 55%;     /* ← dorado OMEGA (base del núcleo) */
+  --brand-secondary: 225 12% 14%;  /* ← superficie secundaria */
+  --brand-accent: 38 40% 20%;      /* ← acento dorado sutil */
+  --brand-radius: 0.5rem;
+  --brand-font-display: "Syne", ui-sans-serif, system-ui, sans-serif;
+  --brand-font-body: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  /* ------------------------------------------ */
+
+  /* ---------- DERIVADO DEL NÚCLEO (no tocar) ---------- */
+  --radius: var(--brand-radius);
+  --background: 0 0% 100%;   --foreground: 0 0% 8%;
+  --card: 0 0% 100%;         --card-foreground: 0 0% 8%;
+  --popover: 0 0% 100%;      --popover-foreground: 0 0% 8%;
+  --primary: var(--brand-primary);     --primary-foreground: 225 20% 5%;
+  --secondary: var(--brand-secondary); --secondary-foreground: 0 0% 100%;
+  --muted: 0 0% 96%;                   --muted-foreground: 0 0% 38%;
+  --accent: var(--brand-accent);       --accent-foreground: 0 0% 100%;
+  --destructive: 0 84% 55%;            --destructive-foreground: 0 0% 100%;
+  --success: 142 71% 40%;              --success-foreground: 0 0% 100%;
+  --warning: 45 100% 50%;              --warning-foreground: 0 0% 8%;
+  --border: 0 0% 90%;   --input: 0 0% 90%;   --ring: var(--brand-primary);
+}
