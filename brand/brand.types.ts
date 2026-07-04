@@ -1,5 +1,5 @@
 /**
- * RAISEN CORE™ — Contrato de la capa de marca (white label)
+ * NÚCLEO by raisen — Contrato de la capa de marca (white label)
  * Propiedad de raisen.agency.
  *
  * ⚠️ ESTE ARCHIVO ES NÚCLEO. No se edita por cliente.
@@ -14,7 +14,7 @@ export type Locale = "es" | "en";
 export interface BrandConfig {
   /** Identidad visible del negocio. */
   identity: {
-    productName: string;              // "Zafacones Ramos"
+    productName: string;              // "Nombre del negocio"
     legalName: string;                // Razón social
     tagline: Record<Locale, string>;
     foundedYear?: number;
@@ -56,7 +56,7 @@ export interface BrandConfig {
 
   /** Configuración del flujo de órdenes. */
   orders: {
-    numberPrefix: string;             // "ZR" -> #ZR2101 (secuencia real en Postgres)
+    numberPrefix: string;             // "XX" -> #XXNNNN (secuencia real en Postgres)
     channels: { web: boolean; whatsapp: boolean; stripeCheckout: boolean };
   };
 

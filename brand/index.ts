@@ -1,5 +1,5 @@
 /**
- * RAISEN CORE™ — Cargador de la marca activa.
+ * NÚCLEO by raisen — Cargador de la marca activa.
  * Propiedad de raisen.agency. NÚCLEO — no se edita por cliente.
  *
  * La marca activa se decide por variable de entorno VITE_BRAND en cada despliegue.
