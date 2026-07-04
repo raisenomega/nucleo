@@ -49,6 +49,7 @@ node_modules/
 .next/
 .vite/
 .vercel/
+.output/
 dist/
 build/
 coverage/
