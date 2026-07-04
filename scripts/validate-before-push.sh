@@ -22,6 +22,7 @@ ok_line() { echo "   OK"; }
 # 1. LONGITUD DE ARCHIVOS
 section "1. Archivos > $LIMIT lineas:"
 LONG=$(find "$SRC_DIR" "$SVC_DIR" -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.py" \) 2>/dev/null \
+  | grep -vE '(^|/)routeTree\.gen\.ts$' \
   | xargs wc -l 2>/dev/null \
   | awk -v lim="$LIMIT" '$1 > lim && $2 != "total" {print $2 " (" $1 " lineas)"}')
 if [ -n "$LONG" ]; then fail_block "$LONG"; else ok_line; fi
@@ -29,7 +30,8 @@ if [ -n "$LONG" ]; then fail_block "$LONG"; else ok_line; fi
 # 2. TYPESCRIPT PROHIBIDO
 section "2. any / ts-ignore:"
 ANY=$(grep -rn ": any\|as any\|@ts-ignore\|@ts-expect-error" \
-  "$SRC_DIR" --include="*.ts" --include="*.tsx" 2>/dev/null | grep -v "node_modules" | head -20)
+  "$SRC_DIR" --include="*.ts" --include="*.tsx" 2>/dev/null \
+  | grep -vE "node_modules|routeTree\.gen\.ts" | head -20)
 if [ -n "$ANY" ]; then fail_block "$ANY"; else ok_line; fi
 
 # 3. IMPORTS CRUZADOS DE CAPA

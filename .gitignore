@@ -54,6 +54,10 @@ build/
 coverage/
 *.tsbuildinfo
 
+# --- Autogenerado por TanStack Start (no se commitea; lo regenera el build) ---
+apps/web/src/routeTree.gen.ts
+**/routeTree.gen.ts
+
 # --- Editor / SO -------------------------------------------------------------
 .DS_Store
 Thumbs.db
