@@ -44,6 +44,11 @@ CLAUDE.md
 .env.*.local
 !.env.example
 
+# --- Supabase (config e info de proyecto — local por instancia) --------------
+supabase/config.toml
+supabase/.temp/
+supabase/.branches/
+
 # --- Directorios de trabajo / build ------------------------------------------
 node_modules/
 .next/
