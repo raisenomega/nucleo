@@ -1,41 +1,41 @@
-import { Link, useLocation } from "@tanstack/react-router";
-import { useI18n } from "@shared/i18n";
+import { useEffect, useState } from "react";
+import { useLocation } from "@tanstack/react-router";
 import { SECTIONS } from "@shared/components/sidebar.nav";
+import { SidebarSection } from "@shared/components/SidebarSection";
 import { SidebarUser } from "@shared/components/SidebarUser";
 import type { Session } from "@identity/domain/auth.types";
+
+function activeSection(pathname: string): string {
+  const s = SECTIONS.find((sec) => sec.items.some((i) => i.to && pathname.startsWith(i.to)));
+  return s ? s.title : "";
+}
 
 export function Sidebar({ session, onLogout, open, onClose }: {
   session: Session | null; onLogout: () => void; open: boolean; onClose: () => void;
 }) {
-  const { t } = useI18n();
   const { pathname } = useLocation();
-  const item = "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-body transition";
+  const [hovered, setHovered] = useState(false);
+  const [openSection, setOpenSection] = useState<string>(() => activeSection(pathname));
+  useEffect(() => { const s = activeSection(pathname); if (s) setOpenSection(s); }, [pathname]);
+  const expanded = hovered || open;
   return (
     <>
       {open && <div className="fixed inset-0 z-30 bg-black/50 md:hidden" onClick={onClose} />}
-      <aside className={`fixed z-40 flex h-full w-64 flex-col border-r border-border bg-card transition-transform md:static md:translate-x-0 ${open ? "translate-x-0" : "-translate-x-full"}`}>
-        <div className="flex items-center gap-2 border-b border-border px-6 py-5">
-          <span className="grid h-9 w-9 place-items-center rounded-full bg-primary font-display font-bold text-primary-foreground">N</span>
-          <span className="font-display text-lg font-bold text-primary">NÚCLEO</span>
+      <aside onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
+        className={`fixed z-40 flex h-full flex-col border-r border-border bg-card transition-all duration-300 md:translate-x-0 ${open ? "translate-x-0" : "-translate-x-full"} ${expanded ? "w-60" : "w-60 md:w-16"}`}>
+        <div className="flex items-center gap-2 border-b border-border px-4 py-5">
+          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-primary font-display font-bold text-primary-foreground">N</span>
+          {expanded && <span className="font-display text-lg font-bold text-primary">NÚCLEO</span>}
         </div>
-        <nav className="flex-1 space-y-4 overflow-y-auto p-3">
+        <nav className="flex-1 space-y-1 overflow-y-auto p-2">
           {SECTIONS.map((s) => (
-            <div key={s.title} className="space-y-1">
-              <p className="px-3 text-xs font-bold uppercase tracking-wide text-muted-foreground">{t(s.title)}</p>
-              {s.items.map((n) => n.to ? (
-                <Link key={n.key} to={n.to} onClick={onClose}
-                  className={`${item} ${pathname.startsWith(n.to) ? "bg-primary text-primary-foreground" : "hover:bg-secondary"}`}>
-                  <n.icon className="h-4 w-4" /> {t(n.key)}
-                </Link>
-              ) : (
-                <span key={n.key} title={t("comingSoon")} className={`${item} cursor-not-allowed text-muted-foreground opacity-50`}>
-                  <n.icon className="h-4 w-4" /> {t(n.key)}
-                </span>
-              ))}
-            </div>
+            <SidebarSection key={s.title} section={s} expanded={expanded}
+              isOpen={openSection === s.title} activePath={pathname}
+              onToggle={() => setOpenSection(openSection === s.title ? "" : s.title)}
+              onNavigate={onClose} />
           ))}
         </nav>
-        <SidebarUser session={session} onLogout={onLogout} />
+        {expanded && <SidebarUser session={session} onLogout={onLogout} />}
       </aside>
     </>
   );

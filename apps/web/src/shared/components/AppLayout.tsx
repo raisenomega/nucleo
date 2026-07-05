@@ -10,9 +10,9 @@ export function AppLayout({ session, onLogout }: { session: Session | null; onLo
   const { t, locale, setLocale } = useI18n();
   const [open, setOpen] = useState(false);
   return (
-    <div className="flex min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground">
       <Sidebar session={session} onLogout={onLogout} open={open} onClose={() => setOpen(false)} />
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex min-h-screen flex-col md:pl-16">
         <header className="flex items-center gap-2 border-b border-border p-4">
           <button type="button" onClick={() => setOpen(true)} aria-label={t("panel")}
             className="rounded-lg bg-secondary p-2 md:hidden"><Menu className="h-5 w-5" /></button>
