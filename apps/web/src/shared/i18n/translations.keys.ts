@@ -23,4 +23,6 @@ export type TranslationKey =
   | "leadList" | "newLead" | "leadSubtitle" | "contactName" | "phone" | "email"
   | "serviceRequested" | "leadSource" | "temperature" | "status" | "callDate" | "callNotes"
   | "hot" | "warm" | "cold"
-  | "statusNew" | "statusContacted" | "statusQuoted" | "statusConverted" | "statusLost";
+  | "statusNew" | "statusContacted" | "statusQuoted" | "statusConverted" | "statusLost"
+  | "address" | "city" | "zip" | "items" | "addItem" | "quantity" | "unitPrice"
+  | "taxPct" | "discountPct" | "grandTotal" | "whatsapp" | "quote" | "invoice";

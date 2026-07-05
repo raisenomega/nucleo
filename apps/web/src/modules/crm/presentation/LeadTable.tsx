@@ -1,5 +1,6 @@
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
+import { formatCurrency } from "@shared/lib/format";
 import { StatusBadge, TempBadge } from "@crm/presentation/LeadBadges";
 import type { Lead } from "@crm/domain/lead.types";
 
@@ -15,23 +16,25 @@ export function LeadTable({ rows, onView, onEdit, onDelete }: {
         <table className="w-full font-body text-sm">
           <thead className="bg-secondary text-xs uppercase text-muted-foreground"><tr>
             <th className={th}>{t("callDate")}</th><th className={th}>{t("contactName")}</th>
-            <th className={th}>{t("phone")}</th><th className={th}>{t("email")}</th>
+            <th className={th}>{t("phone")}</th><th className={th}>{t("leadSource")}</th>
             <th className={th}>{t("serviceRequested")}</th><th className={th}>{t("temperature")}</th>
-            <th className={th}>{t("status")}</th><th className={`${th} text-right`}>{t("actions")}</th>
+            <th className={th}>{t("status")}</th><th className={`${th} text-right`}>{t("total")}</th>
+            <th className={`${th} text-right`}>{t("actions")}</th>
           </tr></thead>
           <tbody>
             {rows.length === 0 && (
-              <tr><td colSpan={8} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>
+              <tr><td colSpan={9} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>
             )}
             {rows.map((l) => (
               <tr key={l.id} className="border-t border-border">
                 <td className="px-3 py-2">{l.callDate}</td>
                 <td className="px-3 py-2 font-medium">{l.contactName}</td>
                 <td className="px-3 py-2"><a href={`tel:${l.phone}`} className="text-primary hover:underline">{l.phone}</a></td>
-                <td className="px-3 py-2">{l.email ? <a href={`mailto:${l.email}`} className="text-primary hover:underline">{l.email}</a> : "—"}</td>
-                <td className="px-3 py-2">{l.serviceRequested}</td>
+                <td className="px-3 py-2">{l.leadSourceLabel || "—"}</td>
+                <td className="px-3 py-2">{l.serviceTypeLabel || "—"}</td>
                 <td className="px-3 py-2"><TempBadge value={l.temperature} /></td>
                 <td className="px-3 py-2"><StatusBadge value={l.status} /></td>
+                <td className="px-3 py-2 text-right font-semibold">{formatCurrency(l.quotedPrice)}</td>
                 <td className="px-3 py-2">
                   <div className="flex justify-end gap-2">
                     <button type="button" onClick={() => onView(l.id)} aria-label={t("viewDetail")} className="text-foreground"><Eye className="h-4 w-4" /></button>

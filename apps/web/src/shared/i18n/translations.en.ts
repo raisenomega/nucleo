@@ -42,4 +42,8 @@ export const en: Record<TranslationKey, string> = {
   hot: "Hot", warm: "Warm", cold: "Cold",
   statusNew: "New", statusContacted: "Contacted", statusQuoted: "Quoted",
   statusConverted: "Converted", statusLost: "Lost",
+  address: "Address", city: "City", zip: "Zip code", items: "Items",
+  addItem: "Add line", quantity: "Quantity", unitPrice: "Unit price",
+  taxPct: "% Tax", discountPct: "% Disc.", grandTotal: "Grand total",
+  whatsapp: "WhatsApp", quote: "Quote", invoice: "Invoice",
 };
