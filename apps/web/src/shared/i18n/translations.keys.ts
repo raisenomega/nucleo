@@ -28,4 +28,5 @@ export type TranslationKey =
   | "taxPct" | "discountPct" | "grandTotal" | "whatsapp" | "quote" | "invoice"
   | "duplicate" | "archive" | "convertToInvoice" | "send"
   | "quotePlaceholder" | "invoicePlaceholder" | "whatsappMessage"
-  | "quoteSaved" | "invoiceSaved" | "requiredFields";
+  | "quoteSaved" | "invoiceSaved" | "requiredFields"
+  | "crmSection" | "totalLeads" | "totalQuoted" | "conversionRate" | "recentLeads";

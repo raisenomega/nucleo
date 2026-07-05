@@ -20,12 +20,13 @@ function RecentList({ title, items, empty }: { title: string; items: readonly Re
   );
 }
 
+// Devuelve las 2 columnas (ingresos/gastos) sin wrapper → la página las mete en la fila de 3.
 export function DashboardRecent({ s }: { s: Snapshot }) {
   const { t } = useI18n();
   return (
-    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+    <>
       <RecentList title={t("recentIncome")} items={s.recentIncome} empty={t("noData")} />
       <RecentList title={t("recentExpenses")} items={s.recentExpenses} empty={t("noData")} />
-    </div>
+    </>
   );
 }

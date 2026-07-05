@@ -52,4 +52,6 @@ export const es: Record<TranslationKey, string> = {
   quoteSaved: "Cotización guardada — PDF próximamente con Gotenberg",
   invoiceSaved: "Factura guardada — PDF próximamente con Gotenberg",
   requiredFields: "Completa nombre y teléfono",
+  crmSection: "CRM", totalLeads: "Leads del mes", totalQuoted: "Total cotizado",
+  conversionRate: "Conversión", recentLeads: "Leads recientes",
 };

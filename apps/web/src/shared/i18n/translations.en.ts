@@ -52,4 +52,6 @@ export const en: Record<TranslationKey, string> = {
   quoteSaved: "Quote saved — PDF coming soon with Gotenberg",
   invoiceSaved: "Invoice saved — PDF coming soon with Gotenberg",
   requiredFields: "Fill in name and phone",
+  crmSection: "CRM", totalLeads: "Leads this month", totalQuoted: "Total quoted",
+  conversionRate: "Conversion", recentLeads: "Recent leads",
 };
