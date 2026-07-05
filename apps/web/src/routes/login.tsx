@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useAuth } from "@identity/application/useAuth.hook";
 import { supabaseAuthAdapter } from "@identity/infrastructure/supabase-auth.adapter";
 
@@ -54,6 +54,10 @@ function Login() {
         >
           {busy ? "Entrando…" : "Entrar"}
         </button>
+        <p className="text-sm text-muted-foreground text-center">
+          ¿No tienes cuenta?{" "}
+          <Link to="/registro" className="text-primary">Prueba gratis por 3 días</Link>
+        </p>
       </form>
     </main>
   );
