@@ -14,7 +14,8 @@ export function MarketingExpenseForm({ channels, initial, onSubmit, onCancel }: 
   const field = "w-full rounded-lg border border-border bg-background p-2 font-body";
   const lbl = "text-xs font-bold text-muted-foreground";
   return (
-    <form onSubmit={(e) => { e.preventDefault(); onSubmit(f); }} className="space-y-4 rounded-lg border border-border bg-card p-5">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onCancel}>
+    <form onSubmit={(e) => { e.preventDefault(); onSubmit(f); }} onClick={(e) => e.stopPropagation()} className="max-h-[90vh] w-full max-w-2xl space-y-4 overflow-y-auto rounded-lg border border-border bg-card p-6">
       <h2 className="font-body font-bold">{t("registerExpense")}</h2>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <label className="space-y-1"><span className={lbl}>{t("channel")}</span>
@@ -37,5 +38,6 @@ export function MarketingExpenseForm({ channels, initial, onSubmit, onCancel }: 
         <button type="button" onClick={onCancel} className="rounded-lg bg-secondary text-foreground px-4 py-2 font-body">{t("cancel")}</button>
       </div>
     </form>
+    </div>
   );
 }

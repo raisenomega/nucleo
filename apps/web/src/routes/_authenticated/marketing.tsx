@@ -52,16 +52,16 @@ function MarketingPage() {
           <h1 className="font-display text-3xl font-bold text-primary">{t("marketing")}</h1>
           <p className="text-xs text-muted-foreground">{t("marketingSubtitle")}</p>
         </div>
-        <input type="month" value={month} onChange={(e) => setMonth(e.target.value)} className="rounded-lg border border-border bg-background p-2 text-sm" />
+        <div className="flex items-center gap-2">
+          <input type="month" value={month} onChange={(e) => setMonth(e.target.value)} className="rounded-lg border border-border bg-background p-2 text-sm" />
+          <button type="button" onClick={() => setEditE("new")} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-4 py-2 font-body font-bold"><Plus className="h-4 w-4" /> {t("registerExpense")}</button>
+        </div>
       </div>
       {m.snapshot && <MarketingKpis s={m.snapshot} />}
       <MarketingChart budgets={budgets} expenses={expenses} channels={channels} />
       <MarketingBudgetTable channels={channels} budgets={budgets} month={month} canEdit={canEdit("coo")}
         onSave={(channel, amount) => { void m.upsertBudget({ month: `${month}-01`, channel, budgetedAmount: amount, notes: "" }); }} />
-      <div className="flex items-center justify-between">
-        <h2 className="font-body font-bold text-primary">{t("mExpenseList")}</h2>
-        <button type="button" onClick={() => setEditE("new")} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-4 py-2 font-body font-bold"><Plus className="h-4 w-4" /> {t("registerExpense")}</button>
-      </div>
+      <h2 className="font-body font-bold text-primary">{t("mExpenseList")}</h2>
       {editE !== null && editExpense && <MarketingExpenseForm channels={channels} initial={editExpense} onSubmit={submitE} onCancel={() => setEditE(null)} />}
       <MarketingExpenseTable rows={expenses} onView={setViewE} onEdit={setEditE}
         onDelete={(id) => { if (window.confirm(`${t("delete")}?`)) void m.removeExpense(id); }} />
