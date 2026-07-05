@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useAuth } from "@identity/application/useAuth.hook";
 import { supabaseAuthAdapter } from "@identity/infrastructure/supabase-auth.adapter";
+import { TrialBanner } from "@shared/components/TrialBanner";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
@@ -18,6 +19,7 @@ function Dashboard() {
   return (
     <main className="min-h-screen bg-background text-foreground p-8">
       <div className="mx-auto max-w-2xl space-y-4">
+        <TrialBanner />
         <h1 className="font-display text-4xl font-bold text-primary">Bienvenido a NÚCLEO</h1>
         <p className="font-body text-lg">{session?.email ?? "—"}</p>
         <p className="font-body text-muted-foreground">Rol: {session?.role ?? "—"}</p>
