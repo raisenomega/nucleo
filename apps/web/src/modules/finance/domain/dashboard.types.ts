@@ -35,8 +35,15 @@ export interface CrmSnapshot {
   readonly recentLeads: readonly RecentLead[];
 }
 
+export interface MktSnapshot {
+  readonly executedPct: number;
+  readonly totalBudget: number;
+  readonly totalSpent: number;
+}
+
 // Puerto del repositorio — lo implementa infrastructure; lo consume application (DI).
 export interface IDashboardRepository {
   getSnapshot(month?: Date): Promise<Snapshot | null>;
   getCrmSnapshot(month?: Date): Promise<CrmSnapshot | null>;
+  getMarketingSnapshot(month?: Date): Promise<MktSnapshot | null>;
 }

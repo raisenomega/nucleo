@@ -31,4 +31,5 @@ export type TranslationKey =
   | "quoteSaved" | "invoiceSaved" | "requiredFields"
   | "crmSection" | "totalLeads" | "totalQuoted" | "conversionRate" | "recentLeads"
   | "marketingSubtitle" | "channel" | "budgetedAmount" | "budgetList" | "newBudget"
-  | "campaignName" | "month" | "mExpenseList" | "newMExpense";
+  | "campaignName" | "month" | "mExpenseList" | "newMExpense"
+  | "spent" | "executed" | "cac" | "roi" | "leadsGenerated" | "registerExpense" | "marketingExecuted";

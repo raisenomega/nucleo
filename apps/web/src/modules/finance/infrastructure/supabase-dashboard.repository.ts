@@ -1,6 +1,6 @@
 import { supabase } from "@shared/lib/supabase";
 import type {
-  IDashboardRepository, RecentItem, Snapshot, CrmSnapshot, RecentLead,
+  IDashboardRepository, RecentItem, Snapshot, CrmSnapshot, RecentLead, MktSnapshot,
 } from "@finance/domain/dashboard.types";
 
 interface Raw {
@@ -39,5 +39,12 @@ export const supabaseDashboardRepository: IDashboardRepository = {
       conversionRate: Number(r.conversion_rate), byTemperature: r.by_temperature,
       byStatus: r.by_status, recentLeads: r.recent_leads ?? [],
     };
+  },
+  async getMarketingSnapshot(month?: Date): Promise<MktSnapshot | null> {
+    const args = month ? { p_month: month.toISOString().slice(0, 10) } : {};
+    const { data, error } = await supabase.rpc("get_marketing_snapshot", args);
+    if (error || !data) return null;
+    const r = data as unknown as { executed_pct: number; total_budget: number; total_spent: number };
+    return { executedPct: Number(r.executed_pct), totalBudget: Number(r.total_budget), totalSpent: Number(r.total_spent) };
   },
 };

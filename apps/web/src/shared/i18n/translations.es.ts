@@ -57,4 +57,6 @@ export const es: Record<TranslationKey, string> = {
   marketingSubtitle: "Presupuestos y gastos por canal.", channel: "Canal",
   budgetedAmount: "Presupuesto", budgetList: "Presupuestos", newBudget: "Nuevo presupuesto",
   campaignName: "Campaña", month: "Mes", mExpenseList: "Gastos de marketing", newMExpense: "Nuevo gasto",
+  spent: "Gasto real", executed: "% Ejecutado", cac: "CAC", roi: "ROI",
+  leadsGenerated: "Leads generados", registerExpense: "Registrar gasto", marketingExecuted: "Marketing ejecutado",
 };
