@@ -1,19 +1,21 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { supabase } from "@shared/lib/supabase";
+import type { Session } from "@identity/domain/auth.types";
 
 type TrialInfo = { status: string; expires_at: string | null };
 
-export function TrialBanner() {
+export function TrialBanner({ session }: { session: Session | null }) {
   const navigate = useNavigate();
   const [info, setInfo] = useState<TrialInfo | null>(null);
 
   useEffect(() => {
-    void supabase.from("tenants").select("status, expires_at").single()
+    if (!session) return; // sin sesión → sin query (evita el 401)
+    void supabase.from("tenants").select("status, expires_at").maybeSingle()
       .then(({ data }) => setInfo(data as TrialInfo | null));
-  }, []);
+  }, [session]);
 
-  if (!info || info.status !== "trial" || !info.expires_at) return null;
+  if (!session || !info || info.status !== "trial" || !info.expires_at) return null;
 
   const msLeft = new Date(info.expires_at).getTime() - Date.now();
   const daysLeft = Math.ceil(msLeft / 86_400_000);
