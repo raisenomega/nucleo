@@ -25,6 +25,7 @@ export function LeadItemsEditor({ items, onChange }: {
       </div>
       {items.map((it, idx) => (
         <div key={idx} className="grid grid-cols-12 items-center gap-1">
+          {/* TODO: reemplazar input texto por dropdown de categories kind='service_type' con precio preset (admin/config) */}
           <input value={it.description} onChange={(e) => set(idx, "description", e.target.value)} placeholder={t("description")} className={`${inp} col-span-4`} />
           <input type="number" value={it.quantity || ""} onChange={(e) => set(idx, "quantity", e.target.value)} placeholder={t("quantity")} className={`${inp} col-span-2`} />
           <input type="number" value={it.unitPrice || ""} onChange={(e) => set(idx, "unitPrice", e.target.value)} placeholder={t("unitPrice")} className={`${inp} col-span-2`} />

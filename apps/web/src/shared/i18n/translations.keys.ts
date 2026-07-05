@@ -25,4 +25,6 @@ export type TranslationKey =
   | "hot" | "warm" | "cold"
   | "statusNew" | "statusContacted" | "statusQuoted" | "statusConverted" | "statusLost"
   | "address" | "city" | "zip" | "items" | "addItem" | "quantity" | "unitPrice"
-  | "taxPct" | "discountPct" | "grandTotal" | "whatsapp" | "quote" | "invoice";
+  | "taxPct" | "discountPct" | "grandTotal" | "whatsapp" | "quote" | "invoice"
+  | "duplicate" | "archive" | "convertToInvoice" | "send"
+  | "quotePlaceholder" | "invoicePlaceholder" | "whatsappMessage";

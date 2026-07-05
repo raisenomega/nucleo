@@ -1,4 +1,4 @@
-import { Eye, Pencil, Trash2 } from "lucide-react";
+import { Eye, FileText, MessageCircle, Pencil, Receipt, Trash2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { formatCurrency } from "@shared/lib/format";
 import { StatusBadge, TempBadge } from "@crm/presentation/LeadBadges";
@@ -28,7 +28,9 @@ export function LeadTable({ rows, onView, onEdit, onDelete }: {
             {rows.map((l) => (
               <tr key={l.id} className="border-t border-border">
                 <td className="px-3 py-2">{l.callDate}</td>
-                <td className="px-3 py-2 font-medium">{l.contactName}</td>
+                <td className="px-3 py-2">
+                  <button type="button" onClick={() => onView(l.id)} className="font-medium text-primary hover:underline">{l.contactName}</button>
+                </td>
                 <td className="px-3 py-2"><a href={`tel:${l.phone}`} className="text-primary hover:underline">{l.phone}</a></td>
                 <td className="px-3 py-2">{l.leadSourceLabel || "—"}</td>
                 <td className="px-3 py-2">{l.serviceTypeLabel || "—"}</td>
@@ -37,6 +39,10 @@ export function LeadTable({ rows, onView, onEdit, onDelete }: {
                 <td className="px-3 py-2 text-right font-semibold">{formatCurrency(l.quotedPrice)}</td>
                 <td className="px-3 py-2">
                   <div className="flex justify-end gap-2">
+                    <button type="button" aria-label={t("whatsapp")} className="text-green-600"
+                      onClick={() => window.open(`https://wa.me/${l.phone.replace(/\D/g, "")}?text=${encodeURIComponent(t("whatsappMessage", { name: l.contactName, total: formatCurrency(l.quotedPrice) }))}`, "_blank")}><MessageCircle className="h-4 w-4" /></button>
+                    <button type="button" onClick={() => window.alert(t("quotePlaceholder"))} aria-label={t("quote")} className="text-primary"><FileText className="h-4 w-4" /></button>
+                    <button type="button" onClick={() => window.alert(t("invoicePlaceholder"))} aria-label={t("invoice")} className="text-primary"><Receipt className="h-4 w-4" /></button>
                     <button type="button" onClick={() => onView(l.id)} aria-label={t("viewDetail")} className="text-foreground"><Eye className="h-4 w-4" /></button>
                     <button type="button" onClick={() => onEdit(l.id)} aria-label={t("edit")} className="text-primary"><Pencil className="h-4 w-4" /></button>
                     <button type="button" onClick={() => onDelete(l.id)} aria-label={t("delete")} className="text-destructive"><Trash2 className="h-4 w-4" /></button>

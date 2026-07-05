@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
-import { FileText, MessageCircle, Receipt, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { formatCurrency } from "@shared/lib/format";
 import { signEvidence } from "@finance/infrastructure/supabase-evidence.storage";
 import { StatusBadge, TempBadge } from "@crm/presentation/LeadBadges";
+import { LeadDetailActions } from "@crm/presentation/LeadDetailActions";
 import type { Lead } from "@crm/domain/lead.types";
 
-export function LeadDetail({ lead, onClose }: { lead: Lead; onClose: () => void }) {
+export function LeadDetail({ lead, onClose, onEdit, onDuplicate, onArchive }: {
+  lead: Lead; onClose: () => void; onEdit: () => void; onDuplicate: () => void; onArchive: () => void;
+}) {
   const { t } = useI18n();
   const [urls, setUrls] = useState<string[]>([]);
   const [photo, setPhoto] = useState<string | null>(null);
   useEffect(() => { void signEvidence(lead.evidenceUrls).then(setUrls); }, [lead]);
-  const soon = () => window.alert(t("comingSoon"));
-  const wa = () => window.open(`https://wa.me/${lead.phone.replace(/\D/g, "")}`, "_blank");
-  const btn = "flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-body font-bold";
   const row = (k: "phone" | "email" | "leadSource" | "serviceRequested", v: string) => (
     <div><dt className="inline text-muted-foreground">{t(k)}: </dt><dd className="inline">{v || "—"}</dd></div>
   );
@@ -28,6 +28,7 @@ export function LeadDetail({ lead, onClose }: { lead: Lead; onClose: () => void 
             </div>
             <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-5 w-5" /></button>
           </div>
+          <LeadDetailActions onEdit={onEdit} onDuplicate={onDuplicate} onArchive={onArchive} />
           <dl className="space-y-1 font-body text-sm">
             {row("phone", lead.phone)}{row("email", lead.email)}
             {row("leadSource", lead.leadSourceLabel)}{row("serviceRequested", lead.serviceTypeLabel)}
@@ -44,11 +45,6 @@ export function LeadDetail({ lead, onClose }: { lead: Lead; onClose: () => void 
               </div>
             </div>
           )}
-          <div className="flex flex-wrap gap-2">
-            <button type="button" onClick={wa} className={`${btn} bg-green-600 text-white`}><MessageCircle className="h-4 w-4" /> {t("whatsapp")}</button>
-            <button type="button" onClick={soon} className={`${btn} bg-secondary text-foreground`}><FileText className="h-4 w-4" /> {t("quote")}</button>
-            <button type="button" onClick={soon} className={`${btn} bg-secondary text-foreground`}><Receipt className="h-4 w-4" /> {t("invoice")}</button>
-          </div>
           {urls.length > 0 && (
             <div className="flex flex-wrap gap-2">
               {urls.map((src, i) => <img key={i} src={src} alt="" onClick={() => setPhoto(src)} className="h-20 w-20 cursor-pointer rounded object-cover" />)}

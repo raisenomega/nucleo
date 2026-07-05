@@ -5,22 +5,26 @@ import { supabase } from "@shared/lib/supabase";
 import { useI18n } from "@shared/i18n";
 import { useLead } from "@crm/application/useLead.hook";
 import { supabaseLeadRepository } from "@crm/infrastructure/supabase-lead.repository";
-import { LeadFilters } from "@crm/presentation/LeadFilters";
 import { LeadForm } from "@crm/presentation/LeadForm";
 import { LeadTable } from "@crm/presentation/LeadTable";
 import { LeadDetail } from "@crm/presentation/LeadDetail";
-import type { LeadFormData } from "@crm/domain/lead.types";
+import type { Lead, LeadFormData } from "@crm/domain/lead.types";
 
 export const Route = createFileRoute("/_authenticated/leads")({ component: LeadsPage });
 
 type Cat = { id: string; label: string; kind: string };
 
+function toForm(l: Lead): LeadFormData {
+  return { contactName: l.contactName, phone: l.phone, email: l.email, address: l.address, city: l.city,
+    zipCode: l.zipCode, leadSourceId: l.leadSourceId, serviceTypeId: l.serviceTypeId, temperature: l.temperature,
+    status: l.status, callDate: l.callDate, notes: l.notes, quotedPrice: l.quotedPrice, items: l.items,
+    evidenceUrls: l.evidenceUrls };
+}
+
 function LeadsPage() {
   const { t } = useI18n();
   const { leads, create, update, remove } = useLead(supabaseLeadRepository);
   const [cats, setCats] = useState<Cat[]>([]);
-  const [temp, setTemp] = useState("");
-  const [status, setStatus] = useState("");
   const [editing, setEditing] = useState<string | null>(null);
   const [viewing, setViewing] = useState<string | null>(null);
 
@@ -29,16 +33,9 @@ function LeadsPage() {
       .then(({ data }) => setCats((data as Cat[] | null) ?? []));
   }, []);
 
-  const filtered = leads.filter((l) => (!temp || l.temperature === temp) && (!status || l.status === status));
-  const counts = { total: leads.length, hot: leads.filter((l) => l.temperature === "hot").length,
-    warm: leads.filter((l) => l.temperature === "warm").length, cold: leads.filter((l) => l.temperature === "cold").length };
-
-  const editRow = useMemo<LeadFormData | undefined>(() => {
+  const editRow = useMemo(() => {
     const l = leads.find((x) => x.id === editing);
-    return l ? { contactName: l.contactName, phone: l.phone, email: l.email, address: l.address,
-      city: l.city, zipCode: l.zipCode, leadSourceId: l.leadSourceId, serviceTypeId: l.serviceTypeId,
-      temperature: l.temperature, status: l.status, callDate: l.callDate, notes: l.notes,
-      quotedPrice: l.quotedPrice, items: l.items, evidenceUrls: l.evidenceUrls } : undefined;
+    return l ? toForm(l) : undefined;
   }, [editing, leads]);
 
   async function submit(d: LeadFormData) {
@@ -59,14 +56,18 @@ function LeadsPage() {
           <Plus className="h-4 w-4" /> {t("newLead")}
         </button>
       </div>
-      <LeadFilters temp={temp} status={status} onTemp={setTemp} onStatus={setStatus} counts={counts} />
       {editing !== null && (
         <LeadForm sources={cats.filter((c) => c.kind === "lead_source")} services={cats.filter((c) => c.kind === "service_type")}
           initial={editRow} onSubmit={submit} onCancel={() => setEditing(null)} />
       )}
-      <LeadTable rows={filtered} onView={setViewing} onEdit={setEditing}
+      <LeadTable rows={leads} onView={setViewing} onEdit={setEditing}
         onDelete={(id) => { if (window.confirm(`${t("delete")}?`)) void remove(id); }} />
-      {viewLead && <LeadDetail lead={viewLead} onClose={() => setViewing(null)} />}
+      {viewLead && (
+        <LeadDetail lead={viewLead} onClose={() => setViewing(null)}
+          onEdit={() => { setEditing(viewLead.id); setViewing(null); }}
+          onDuplicate={() => { void create(toForm(viewLead)); setViewing(null); }}
+          onArchive={() => { void update(viewLead.id, { ...toForm(viewLead), status: "lost" }); setViewing(null); }} />
+      )}
     </div>
   );
 }

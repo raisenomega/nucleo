@@ -46,4 +46,7 @@ export const es: Record<TranslationKey, string> = {
   addItem: "Añadir línea", quantity: "Cantidad", unitPrice: "Precio unit.",
   taxPct: "% Imp.", discountPct: "% Desc.", grandTotal: "Total general",
   whatsapp: "WhatsApp", quote: "Cotización", invoice: "Factura",
+  duplicate: "Duplicar", archive: "Archivar", convertToInvoice: "Convertir a factura", send: "Enviar",
+  quotePlaceholder: "Próximamente — Gotenberg", invoicePlaceholder: "Próximamente — Gotenberg",
+  whatsappMessage: "Hola {name}, aquí está tu cotización por {total}.",
 };
