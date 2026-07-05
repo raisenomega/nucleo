@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useAuth } from "@identity/application/useAuth.hook";
 import { supabaseAuthAdapter } from "@identity/infrastructure/supabase-auth.adapter";
 import { TrialBanner } from "@shared/components/TrialBanner";
@@ -25,13 +25,21 @@ function Dashboard() {
         <h1 className="font-display text-4xl font-bold text-primary">{t("welcome")}</h1>
         <p className="font-body text-lg">{session?.email ?? "—"}</p>
         <p className="font-body text-muted-foreground">{t("role")}: {session?.role ?? "—"}</p>
-        <button
-          type="button"
-          onClick={onLogout}
-          className="rounded-lg bg-secondary text-foreground px-4 py-2 font-body font-bold"
-        >
-          {t("logout")}
-        </button>
+        <div className="flex gap-3">
+          <Link
+            to="/income"
+            className="rounded-lg bg-primary text-primary-foreground px-4 py-2 font-body font-bold"
+          >
+            {t("income")}
+          </Link>
+          <button
+            type="button"
+            onClick={onLogout}
+            className="rounded-lg bg-secondary text-foreground px-4 py-2 font-body font-bold"
+          >
+            {t("logout")}
+          </button>
+        </div>
       </div>
     </main>
   );
