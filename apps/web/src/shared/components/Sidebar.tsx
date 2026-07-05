@@ -10,19 +10,16 @@ function activeSection(pathname: string): string {
   return s ? s.title : "";
 }
 
-export function Sidebar({ session, onLogout, open, onClose }: {
-  session: Session | null; onLogout: () => void; open: boolean; onClose: () => void;
+export function Sidebar({ session, onLogout, expanded, onClose }: {
+  session: Session | null; onLogout: () => void; expanded: boolean; onClose: () => void;
 }) {
   const { pathname } = useLocation();
-  const [hovered, setHovered] = useState(false);
   const [openSection, setOpenSection] = useState<string>(() => activeSection(pathname));
   useEffect(() => { const s = activeSection(pathname); if (s) setOpenSection(s); }, [pathname]);
-  const expanded = hovered || open;
   return (
     <>
-      {open && <div className="fixed inset-0 z-30 bg-black/50 md:hidden" onClick={onClose} />}
-      <aside onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-        className={`fixed z-40 flex h-full flex-col border-r border-border bg-card transition-all duration-300 md:translate-x-0 ${open ? "translate-x-0" : "-translate-x-full"} ${expanded ? "w-60" : "w-60 md:w-16"}`}>
+      {expanded && <div className="fixed inset-0 z-30 bg-black/50 md:hidden" onClick={onClose} />}
+      <aside className={`fixed z-40 flex h-full flex-col border-r border-border bg-card transition-all duration-300 md:translate-x-0 ${expanded ? "w-60 translate-x-0" : "w-60 -translate-x-full md:w-16"}`}>
         <div className="flex items-center gap-2 border-b border-border px-4 py-5">
           <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-primary font-display font-bold text-primary-foreground">N</span>
           {expanded && <span className="font-display text-lg font-bold text-primary">NÚCLEO</span>}
