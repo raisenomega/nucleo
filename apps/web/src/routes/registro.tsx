@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { supabase } from "@shared/lib/supabase";
 
 export const Route = createFileRoute("/registro")({
@@ -7,10 +7,10 @@ export const Route = createFileRoute("/registro")({
 });
 
 function Registro() {
-  const navigate = useNavigate();
   const [form, setForm] = useState({ name: "", email: "", password: "", business_name: "", phone: "" });
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [done, setDone] = useState(false);
 
   function set(k: keyof typeof form) {
     return (e: React.ChangeEvent<HTMLInputElement>) => setForm((f) => ({ ...f, [k]: e.target.value }));
@@ -25,15 +25,27 @@ function Registro() {
     const { data, error: rpcError } = await supabase.rpc("create_trial_tenant", {
       name: form.name, email: form.email, business_name: form.business_name, phone: form.phone,
     });
-    if (rpcError || (data && typeof data === "object" && "error" in data)) {
-      return void (setBusy(false), setError(rpcError?.message ?? "No se pudo crear la prueba"));
-    }
-    await supabase.auth.refreshSession(); // reemite el JWT ya con tenant_id + role
     setBusy(false);
-    void navigate({ to: "/dashboard" });
+    if (rpcError || (data && typeof data === "object" && "error" in data)) {
+      return void setError(rpcError?.message ?? "No se pudo crear la prueba");
+    }
+    setDone(true);
   }
 
   const field = "w-full rounded-lg bg-secondary text-foreground p-3 font-body";
+  if (done) {
+    return (
+      <main className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
+        <div className="max-w-sm text-center space-y-4">
+          <h1 className="font-display text-2xl font-bold text-primary">¡Cuenta creada!</h1>
+          <p className="font-body text-muted-foreground">
+            Revisa tu correo para confirmar tu email. Después podrás iniciar sesión.
+          </p>
+          <Link to="/login" className="inline-block text-primary font-body font-bold">Ir a iniciar sesión</Link>
+        </div>
+      </main>
+    );
+  }
   return (
     <main className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
       <form onSubmit={onSubmit} className="w-full max-w-sm space-y-3">
