@@ -3,12 +3,15 @@ import { useI18n } from "@shared/i18n";
 import { formatCurrency } from "@shared/lib/format";
 import type { Expense } from "@finance/domain/expense.types";
 
-export function ExpenseTable({ rows, onView, onEdit, onDelete }: {
-  rows: readonly Expense[];
+type Emp = { id: string; full_name: string };
+
+export function ExpenseTable({ rows, employees, onView, onEdit, onDelete }: {
+  rows: readonly Expense[]; employees: Emp[];
   onView: (id: string) => void; onEdit: (id: string) => void; onDelete: (id: string) => void;
 }) {
   const { t } = useI18n();
   const total = rows.reduce((s, i) => s + i.amount, 0);
+  const nameOf = (id: string) => employees.find((e) => e.id === id)?.full_name ?? "—";
   const th = "px-3 py-2 text-left font-bold";
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card">
@@ -21,11 +24,12 @@ export function ExpenseTable({ rows, onView, onEdit, onDelete }: {
           <thead className="bg-secondary text-xs uppercase text-muted-foreground"><tr>
             <th className={th}>{t("date")}</th><th className={th}>{t("category")}</th>
             <th className={th}>{t("description")}</th><th className={`${th} text-right`}>{t("amount")}</th>
-            <th className={th}>{t("paymentMethod")}</th><th className={`${th} text-right`}>{t("actions")}</th>
+            <th className={th}>{t("paymentMethod")}</th><th className={th}>{t("paidBy")}</th>
+            <th className={`${th} text-right`}>{t("actions")}</th>
           </tr></thead>
           <tbody>
             {rows.length === 0 && (
-              <tr><td colSpan={6} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>
+              <tr><td colSpan={7} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>
             )}
             {rows.map((i) => (
               <tr key={i.id} className="border-t border-border">
@@ -34,6 +38,7 @@ export function ExpenseTable({ rows, onView, onEdit, onDelete }: {
                 <td className="px-3 py-2">{i.description}</td>
                 <td className="px-3 py-2 text-right font-semibold">{formatCurrency(i.amount)}</td>
                 <td className="px-3 py-2">{i.paymentMethodLabel}</td>
+                <td className="px-3 py-2">{nameOf(i.paidBy)}</td>
                 <td className="px-3 py-2">
                   <div className="flex justify-end gap-2">
                     <button type="button" onClick={() => onView(i.id)} aria-label={t("viewDetail")} className="text-foreground"><Eye className="h-4 w-4" /></button>

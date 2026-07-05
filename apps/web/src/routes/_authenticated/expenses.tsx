@@ -13,23 +13,27 @@ import type { ExpenseFormData } from "@finance/domain/expense.types";
 export const Route = createFileRoute("/_authenticated/expenses")({ component: ExpensePage });
 
 type Cat = { id: string; label: string; kind: string };
+type Emp = { id: string; full_name: string };
 
 function ExpensePage() {
   const { t } = useI18n();
   const { expenses, create, update, remove } = useExpense(supabaseExpenseRepository);
   const [cats, setCats] = useState<Cat[]>([]);
+  const [emps, setEmps] = useState<Emp[]>([]);
   const [editing, setEditing] = useState<string | null>(null);
   const [viewing, setViewing] = useState<string | null>(null);
 
   useEffect(() => {
     void supabase.from("categories").select("id,label,kind").in("kind", ["expense", "payment_method"])
       .then(({ data }) => setCats((data as Cat[] | null) ?? []));
+    void supabase.from("profiles").select("id, full_name")
+      .then(({ data }) => setEmps((data as Emp[] | null) ?? []));
   }, []);
 
   const editRow = useMemo<ExpenseFormData | undefined>(() => {
     const i = expenses.find((x) => x.id === editing);
     return i ? { categoryId: i.categoryId, amount: i.amount, description: i.description,
-      date: i.date, paymentMethodId: i.paymentMethodId, evidenceUrls: i.evidenceUrls } : undefined;
+      date: i.date, paymentMethodId: i.paymentMethodId, paidBy: i.paidBy, evidenceUrls: i.evidenceUrls } : undefined;
   }, [editing, expenses]);
 
   async function submit(d: ExpenseFormData) {
@@ -52,12 +56,12 @@ function ExpensePage() {
       </div>
       {editing !== null && (
         <ExpenseForm expenseCats={cats.filter((c) => c.kind === "expense")}
-          payCats={cats.filter((c) => c.kind === "payment_method")}
+          payCats={cats.filter((c) => c.kind === "payment_method")} employees={emps}
           initial={editRow} onSubmit={submit} onCancel={() => setEditing(null)} />
       )}
-      <ExpenseTable rows={expenses} onView={setViewing} onEdit={setEditing}
+      <ExpenseTable rows={expenses} employees={emps} onView={setViewing} onEdit={setEditing}
         onDelete={(id) => { if (window.confirm(`${t("delete")}?`)) void remove(id); }} />
-      {viewExpense && <ExpenseDetail expense={viewExpense} onClose={() => setViewing(null)} />}
+      {viewExpense && <ExpenseDetail expense={viewExpense} employees={emps} onClose={() => setViewing(null)} />}
     </div>
   );
 }

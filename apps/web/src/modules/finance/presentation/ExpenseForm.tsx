@@ -5,9 +5,10 @@ import { EvidenceUpload } from "@finance/presentation/EvidenceUpload";
 import type { ExpenseFormData } from "@finance/domain/expense.types";
 
 type Cat = { id: string; label: string };
+type Emp = { id: string; full_name: string };
 
-export function ExpenseForm({ expenseCats, payCats, initial, onSubmit, onCancel }: {
-  expenseCats: Cat[]; payCats: Cat[];
+export function ExpenseForm({ expenseCats, payCats, employees, initial, onSubmit, onCancel }: {
+  expenseCats: Cat[]; payCats: Cat[]; employees: Emp[];
   initial?: ExpenseFormData;
   onSubmit: (d: ExpenseFormData) => void;
   onCancel: () => void;
@@ -15,7 +16,7 @@ export function ExpenseForm({ expenseCats, payCats, initial, onSubmit, onCancel 
   const { t } = useI18n();
   const { session } = useSession();
   const [f, setF] = useState<ExpenseFormData>(
-    initial ?? { categoryId: "", amount: 0, description: "", date: "", paymentMethodId: "", evidenceUrls: [] },
+    initial ?? { categoryId: "", amount: 0, description: "", date: "", paymentMethodId: "", paidBy: "", evidenceUrls: [] },
   );
   const field = "w-full rounded-lg border border-border bg-background p-2 font-body";
   const lbl = "text-xs font-bold text-muted-foreground";
@@ -37,6 +38,11 @@ export function ExpenseForm({ expenseCats, payCats, initial, onSubmit, onCancel 
           <select value={f.paymentMethodId} onChange={(e) => setF({ ...f, paymentMethodId: e.target.value })} className={field}>
             <option value="">—</option>
             {payCats.map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}
+          </select></label>
+        <label className="space-y-1"><span className={lbl}>{t("paidBy")}</span>
+          <select value={f.paidBy} onChange={(e) => setF({ ...f, paidBy: e.target.value })} className={field}>
+            <option value="">—</option>
+            {employees.map((emp) => <option key={emp.id} value={emp.id}>{emp.full_name}</option>)}
           </select></label>
         <label className="space-y-1 md:col-span-2"><span className={lbl}>{t("description")}</span>
           <input value={f.description} onChange={(e) => setF({ ...f, description: e.target.value })} className={field} /></label>

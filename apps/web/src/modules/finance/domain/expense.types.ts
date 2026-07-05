@@ -13,6 +13,7 @@ export interface Expense {
   readonly date: string;               // ← expense_date (yyyy-mm-dd)
   readonly paymentMethodId: string;
   readonly paymentMethodLabel: string; // del join a categories
+  readonly paidBy: string;             // id de auth.users (quién pagó); "" si no aplica
   readonly createdBy: string;
   readonly createdAt: string;
   readonly evidenceUrls: readonly string[]; // rutas de storage (bucket evidence)
@@ -24,6 +25,7 @@ export interface ExpenseFormData {
   readonly description: string;
   readonly date: string;
   readonly paymentMethodId: string;
+  readonly paidBy: string;
   readonly evidenceUrls?: readonly string[];
 }
 

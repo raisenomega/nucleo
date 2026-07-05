@@ -18,4 +18,5 @@ export type TranslationKey =
   | "payrollList" | "newPayroll" | "payrollSubtitle" | "payrollDetail"
   | "employee" | "period" | "notes"
   | "inventoryList" | "newItem" | "itemName" | "stock" | "unitCost" | "minStock"
-  | "lowStock" | "inventorySubtitle";
+  | "lowStock" | "inventorySubtitle"
+  | "clientReference" | "orderNumber" | "paidBy";

@@ -27,7 +27,7 @@ export function InventoryTable({ rows, onEdit, onDelete }: {
                 <td className="px-3 py-2">{i.name}</td>
                 <td className="px-3 py-2 text-right">
                   <span className="font-semibold">{i.stock}</span>
-                  {i.stock < i.minStock && (
+                  {i.minStock > 0 && i.stock < i.minStock && (
                     <span className="ml-2 inline-flex items-center gap-1 rounded bg-destructive/10 px-1.5 text-xs text-destructive">
                       <AlertTriangle className="h-3 w-3" /> {t("lowStock")}
                     </span>

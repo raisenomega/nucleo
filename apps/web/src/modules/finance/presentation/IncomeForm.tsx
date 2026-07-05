@@ -15,7 +15,8 @@ export function IncomeForm({ incomeCats, payCats, initial, onSubmit, onCancel }:
   const { t } = useI18n();
   const { session } = useSession();
   const [f, setF] = useState<IncomeFormData>(
-    initial ?? { categoryId: "", amount: 0, description: "", date: "", paymentMethodId: "", evidenceUrls: [] },
+    initial ?? { categoryId: "", amount: 0, description: "", date: "", paymentMethodId: "",
+      clientReference: "", orderNumber: "", evidenceUrls: [] },
   );
   const field = "w-full rounded-lg border border-border bg-background p-2 font-body";
   const lbl = "text-xs font-bold text-muted-foreground";
@@ -40,6 +41,10 @@ export function IncomeForm({ incomeCats, payCats, initial, onSubmit, onCancel }:
           </select></label>
         <label className="space-y-1 md:col-span-2"><span className={lbl}>{t("description")}</span>
           <input value={f.description} onChange={(e) => setF({ ...f, description: e.target.value })} className={field} /></label>
+        <label className="space-y-1"><span className={lbl}>{t("clientReference")}</span>
+          <input value={f.clientReference} onChange={(e) => setF({ ...f, clientReference: e.target.value })} className={field} /></label>
+        <label className="space-y-1"><span className={lbl}>{t("orderNumber")}</span>
+          <input value={f.orderNumber} onChange={(e) => setF({ ...f, orderNumber: e.target.value })} className={field} /></label>
       </div>
       <EvidenceUpload tenantId={session?.tenantId ?? ""} value={f.evidenceUrls ?? []}
         onChange={(paths) => setF({ ...f, evidenceUrls: paths })} />

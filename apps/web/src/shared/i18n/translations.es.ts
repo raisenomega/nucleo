@@ -34,4 +34,5 @@ export const es: Record<TranslationKey, string> = {
   inventoryList: "Inventario", newItem: "Nuevo artículo", itemName: "Artículo",
   stock: "Stock", unitCost: "Costo unitario", minStock: "Stock mínimo",
   lowStock: "Stock bajo", inventorySubtitle: "Catálogo de artículos y existencias.",
+  clientReference: "Referencia cliente", orderNumber: "Nro. orden", paidBy: "Pagado por",
 };

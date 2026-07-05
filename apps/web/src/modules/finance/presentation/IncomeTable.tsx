@@ -19,19 +19,22 @@ export function IncomeTable({ rows, onView, onEdit, onDelete }: {
       <div className="overflow-x-auto">
         <table className="w-full font-body text-sm">
           <thead className="bg-secondary text-xs uppercase text-muted-foreground"><tr>
-            <th className={th}>{t("date")}</th><th className={th}>{t("category")}</th>
-            <th className={th}>{t("description")}</th><th className={`${th} text-right`}>{t("amount")}</th>
+            <th className={th}>{t("date")}</th><th className={th}>{t("category")}</th><th className={th}>{t("description")}</th>
+            <th className={th}>{t("clientReference")}</th><th className={th}>{t("orderNumber")}</th>
+            <th className={`${th} text-right`}>{t("amount")}</th>
             <th className={th}>{t("paymentMethod")}</th><th className={`${th} text-right`}>{t("actions")}</th>
           </tr></thead>
           <tbody>
             {rows.length === 0 && (
-              <tr><td colSpan={6} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>
+              <tr><td colSpan={8} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>
             )}
             {rows.map((i) => (
               <tr key={i.id} className="border-t border-border">
                 <td className="px-3 py-2">{i.date}</td>
                 <td className="px-3 py-2">{i.categoryLabel}</td>
                 <td className="px-3 py-2">{i.description}</td>
+                <td className="px-3 py-2">{i.clientReference}</td>
+                <td className="px-3 py-2">{i.orderNumber}</td>
                 <td className="px-3 py-2 text-right font-semibold">{formatCurrency(i.amount)}</td>
                 <td className="px-3 py-2">{i.paymentMethodLabel}</td>
                 <td className="px-3 py-2">

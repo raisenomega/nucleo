@@ -10,7 +10,7 @@ export function IncomeDetail({ income, onClose }: { income: Income; onClose: () 
   const [urls, setUrls] = useState<string[]>([]);
   const [photo, setPhoto] = useState<string | null>(null);
   useEffect(() => { void signEvidence(income.evidenceUrls).then(setUrls); }, [income]);
-  const row = (k: "date" | "category" | "amount" | "paymentMethod" | "description", v: string) => (
+  const row = (k: "date" | "category" | "amount" | "paymentMethod" | "description" | "clientReference" | "orderNumber", v: string) => (
     <div><dt className="inline text-muted-foreground">{t(k)}: </dt><dd className="inline">{v}</dd></div>
   );
   return (
@@ -25,6 +25,7 @@ export function IncomeDetail({ income, onClose }: { income: Income; onClose: () 
             {row("date", income.date)}{row("category", income.categoryLabel)}
             {row("amount", formatCurrency(income.amount))}
             {row("paymentMethod", income.paymentMethodLabel)}{row("description", income.description)}
+            {row("clientReference", income.clientReference)}{row("orderNumber", income.orderNumber)}
           </dl>
           {urls.length > 0 && (
             <div className="flex flex-wrap gap-2">

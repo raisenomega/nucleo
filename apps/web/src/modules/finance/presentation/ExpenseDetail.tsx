@@ -5,12 +5,17 @@ import { formatCurrency } from "@shared/lib/format";
 import { signEvidence } from "@finance/infrastructure/supabase-evidence.storage";
 import type { Expense } from "@finance/domain/expense.types";
 
-export function ExpenseDetail({ expense, onClose }: { expense: Expense; onClose: () => void }) {
+type Emp = { id: string; full_name: string };
+
+export function ExpenseDetail({ expense, employees, onClose }: {
+  expense: Expense; employees: Emp[]; onClose: () => void;
+}) {
   const { t } = useI18n();
   const [urls, setUrls] = useState<string[]>([]);
   const [photo, setPhoto] = useState<string | null>(null);
   useEffect(() => { void signEvidence(expense.evidenceUrls).then(setUrls); }, [expense]);
-  const row = (k: "date" | "category" | "amount" | "paymentMethod" | "description", v: string) => (
+  const paidByName = employees.find((e) => e.id === expense.paidBy)?.full_name ?? "—";
+  const row = (k: "date" | "category" | "amount" | "paymentMethod" | "description" | "paidBy", v: string) => (
     <div><dt className="inline text-muted-foreground">{t(k)}: </dt><dd className="inline">{v}</dd></div>
   );
   return (
@@ -25,6 +30,7 @@ export function ExpenseDetail({ expense, onClose }: { expense: Expense; onClose:
             {row("date", expense.date)}{row("category", expense.categoryLabel)}
             {row("amount", formatCurrency(expense.amount))}
             {row("paymentMethod", expense.paymentMethodLabel)}{row("description", expense.description)}
+            {row("paidBy", paidByName)}
           </dl>
           {urls.length > 0 && (
             <div className="flex flex-wrap gap-2">

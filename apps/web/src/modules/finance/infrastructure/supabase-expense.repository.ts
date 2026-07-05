@@ -6,13 +6,13 @@ import type {
 type Cat = { label: string } | null;
 interface Row {
   id: string; tenant_id: string; category_id: string; payment_method_id: string;
-  amount: number | string; expense_date: string; notes: string | null;
+  amount: number | string; expense_date: string; notes: string | null; paid_by: string | null;
   created_by: string; created_at: string; category: Cat; paymentMethod: Cat;
   evidence_urls: unknown;
 }
 
 const SELECT =
-  "id, tenant_id, category_id, payment_method_id, amount, expense_date, notes, created_by, created_at, evidence_urls," +
+  "id, tenant_id, category_id, payment_method_id, amount, expense_date, notes, paid_by, created_by, created_at, evidence_urls," +
   " category:categories!expenses_category_id_fkey(label)," +
   " paymentMethod:categories!expenses_payment_method_id_fkey(label)";
 
@@ -22,7 +22,7 @@ function toExpense(r: Row): Expense {
     categoryLabel: r.category?.label ?? "", amount: Number(r.amount),
     description: r.notes ?? "", date: r.expense_date,
     paymentMethodId: r.payment_method_id, paymentMethodLabel: r.paymentMethod?.label ?? "",
-    createdBy: r.created_by, createdAt: r.created_at,
+    paidBy: r.paid_by ?? "", createdBy: r.created_by, createdAt: r.created_at,
     evidenceUrls: Array.isArray(r.evidence_urls) ? (r.evidence_urls as string[]) : [],
   };
 }
@@ -31,6 +31,7 @@ function toRow(d: ExpenseFormData) {
   return {
     category_id: d.categoryId, payment_method_id: d.paymentMethodId,
     amount: d.amount, expense_date: d.date, notes: d.description,
+    paid_by: d.paidBy || null,
     evidence_urls: d.evidenceUrls ?? [],
   };
 }

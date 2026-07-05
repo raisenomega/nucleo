@@ -7,12 +7,13 @@ type Cat = { label: string } | null;
 interface Row {
   id: string; tenant_id: string; category_id: string; payment_method_id: string;
   amount: number | string; income_date: string; notes: string | null;
+  client_reference: string | null; order_number: string | null;
   created_by: string; created_at: string; category: Cat; paymentMethod: Cat;
   evidence_urls: unknown;
 }
 
 const SELECT =
-  "id, tenant_id, category_id, payment_method_id, amount, income_date, notes, created_by, created_at, evidence_urls," +
+  "id, tenant_id, category_id, payment_method_id, amount, income_date, notes, client_reference, order_number, created_by, created_at, evidence_urls," +
   " category:categories!income_category_id_fkey(label)," +
   " paymentMethod:categories!income_payment_method_id_fkey(label)";
 
@@ -22,6 +23,7 @@ function toIncome(r: Row): Income {
     categoryLabel: r.category?.label ?? "", amount: Number(r.amount),
     description: r.notes ?? "", date: r.income_date,
     paymentMethodId: r.payment_method_id, paymentMethodLabel: r.paymentMethod?.label ?? "",
+    clientReference: r.client_reference ?? "", orderNumber: r.order_number ?? "",
     createdBy: r.created_by, createdAt: r.created_at,
     evidenceUrls: Array.isArray(r.evidence_urls) ? (r.evidence_urls as string[]) : [],
   };
@@ -31,6 +33,7 @@ function toRow(d: IncomeFormData) {
   return {
     category_id: d.categoryId, payment_method_id: d.paymentMethodId,
     amount: d.amount, income_date: d.date, notes: d.description,
+    client_reference: d.clientReference, order_number: d.orderNumber,
     evidence_urls: d.evidenceUrls ?? [],
   };
 }

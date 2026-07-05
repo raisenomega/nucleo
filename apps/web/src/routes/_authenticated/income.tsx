@@ -29,7 +29,8 @@ function IncomePage() {
   const editRow = useMemo<IncomeFormData | undefined>(() => {
     const i = incomes.find((x) => x.id === editing);
     return i ? { categoryId: i.categoryId, amount: i.amount, description: i.description,
-      date: i.date, paymentMethodId: i.paymentMethodId, evidenceUrls: i.evidenceUrls } : undefined;
+      date: i.date, paymentMethodId: i.paymentMethodId, clientReference: i.clientReference,
+      orderNumber: i.orderNumber, evidenceUrls: i.evidenceUrls } : undefined;
   }, [editing, incomes]);
 
   async function submit(d: IncomeFormData) {
