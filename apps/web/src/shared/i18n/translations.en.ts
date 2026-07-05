@@ -54,4 +54,7 @@ export const en: Record<TranslationKey, string> = {
   requiredFields: "Fill in name and phone",
   crmSection: "CRM", totalLeads: "Leads this month", totalQuoted: "Total quoted",
   conversionRate: "Conversion", recentLeads: "Recent leads",
+  marketingSubtitle: "Budgets and spend by channel.", channel: "Channel",
+  budgetedAmount: "Budget", budgetList: "Budgets", newBudget: "New budget",
+  campaignName: "Campaign", month: "Month", mExpenseList: "Marketing expenses", newMExpense: "New expense",
 };

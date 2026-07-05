@@ -29,4 +29,6 @@ export type TranslationKey =
   | "duplicate" | "archive" | "convertToInvoice" | "send"
   | "quotePlaceholder" | "invoicePlaceholder" | "whatsappMessage"
   | "quoteSaved" | "invoiceSaved" | "requiredFields"
-  | "crmSection" | "totalLeads" | "totalQuoted" | "conversionRate" | "recentLeads";
+  | "crmSection" | "totalLeads" | "totalQuoted" | "conversionRate" | "recentLeads"
+  | "marketingSubtitle" | "channel" | "budgetedAmount" | "budgetList" | "newBudget"
+  | "campaignName" | "month" | "mExpenseList" | "newMExpense";
