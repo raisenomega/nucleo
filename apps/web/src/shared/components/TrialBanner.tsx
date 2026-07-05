@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { supabase } from "@shared/lib/supabase";
+import { useI18n } from "@shared/i18n";
 import type { Session } from "@identity/domain/auth.types";
 
 type TrialInfo = { status: string; expires_at: string | null };
 
 export function TrialBanner({ session }: { session: Session | null }) {
   const navigate = useNavigate();
+  const { t } = useI18n();
   const [info, setInfo] = useState<TrialInfo | null>(null);
 
   useEffect(() => {
@@ -27,14 +29,14 @@ export function TrialBanner({ session }: { session: Session | null }) {
     return (
       <div className="fixed inset-0 z-50 bg-background/95 flex items-center justify-center p-4">
         <div className="max-w-md text-center space-y-4">
-          <h2 className="font-display text-2xl font-bold text-primary">Tu prueba terminó</h2>
-          <p className="font-body text-muted-foreground">Agenda una consulta para seguir con NÚCLEO.</p>
+          <h2 className="font-display text-2xl font-bold text-primary">{t("trialEnded")}</h2>
+          <p className="font-body text-muted-foreground">{t("trialEndedDesc")}</p>
           <button
             type="button"
             onClick={() => void navigate({ to: "/agendar-consulta" })}
             className="rounded-lg bg-primary text-primary-foreground px-6 py-3 font-body font-bold"
           >
-            Agendar consulta
+            {t("scheduleConsultation")}
           </button>
         </div>
       </div>
@@ -43,8 +45,7 @@ export function TrialBanner({ session }: { session: Session | null }) {
 
   return (
     <div className="rounded-lg bg-secondary text-foreground px-4 py-2 font-body text-sm text-center">
-      Te quedan <span className="font-bold text-primary">{daysLeft}</span>{" "}
-      {daysLeft === 1 ? "día" : "días"} de prueba
+      {t("trialBanner", { days: daysLeft })}
     </div>
   );
 }

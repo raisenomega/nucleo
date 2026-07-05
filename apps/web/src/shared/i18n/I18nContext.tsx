@@ -6,7 +6,7 @@ import type { Locale, TranslationKey } from "./translations";
 interface I18nValue {
   locale: Locale;
   setLocale: (l: Locale) => void;
-  t: (key: TranslationKey) => string;
+  t: (key: TranslationKey, params?: Record<string, string | number>) => string;
 }
 
 const I18nContext = createContext<I18nValue | null>(null);
@@ -25,7 +25,11 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const t = useCallback(
-    (key: TranslationKey) => translations[locale][key],
+    (key: TranslationKey, params?: Record<string, string | number>) => {
+      let s = translations[locale][key];
+      if (params) for (const [k, v] of Object.entries(params)) s = s.replace(`{${k}}`, String(v));
+      return s;
+    },
     [locale],
   );
 

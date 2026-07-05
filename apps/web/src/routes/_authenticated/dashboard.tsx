@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useAuth } from "@identity/application/useAuth.hook";
 import { supabaseAuthAdapter } from "@identity/infrastructure/supabase-auth.adapter";
 import { TrialBanner } from "@shared/components/TrialBanner";
+import { useI18n } from "@shared/i18n";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
@@ -9,6 +10,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 
 function Dashboard() {
   const { session, signOut } = useAuth(supabaseAuthAdapter);
+  const { t } = useI18n();
   const navigate = useNavigate();
 
   async function onLogout() {
@@ -20,15 +22,15 @@ function Dashboard() {
     <main className="min-h-screen bg-background text-foreground p-8">
       <div className="mx-auto max-w-2xl space-y-4">
         <TrialBanner session={session} />
-        <h1 className="font-display text-4xl font-bold text-primary">Bienvenido a NÚCLEO</h1>
+        <h1 className="font-display text-4xl font-bold text-primary">{t("welcome")}</h1>
         <p className="font-body text-lg">{session?.email ?? "—"}</p>
-        <p className="font-body text-muted-foreground">Rol: {session?.role ?? "—"}</p>
+        <p className="font-body text-muted-foreground">{t("role")}: {session?.role ?? "—"}</p>
         <button
           type="button"
           onClick={onLogout}
           className="rounded-lg bg-secondary text-foreground px-4 py-2 font-body font-bold"
         >
-          Cerrar sesión
+          {t("logout")}
         </button>
       </div>
     </main>
