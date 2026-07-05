@@ -16,6 +16,8 @@ export function Sidebar({ session, onLogout, expanded, onClose }: {
   const { pathname } = useLocation();
   const [openSection, setOpenSection] = useState<string>(() => activeSection(pathname));
   useEffect(() => { const s = activeSection(pathname); if (s) setOpenSection(s); }, [pathname]);
+  // Al navegar: cierra el sidebar solo en mobile; en desktop persiste hasta el toggle manual.
+  const onNavigate = () => { if (window.innerWidth < 768) onClose(); };
   return (
     <>
       {expanded && <div className="fixed inset-0 z-30 bg-black/50 md:hidden" onClick={onClose} />}
@@ -29,7 +31,7 @@ export function Sidebar({ session, onLogout, expanded, onClose }: {
             <SidebarSection key={s.title} section={s} expanded={expanded}
               isOpen={openSection === s.title} activePath={pathname}
               onToggle={() => setOpenSection(openSection === s.title ? "" : s.title)}
-              onNavigate={onClose} />
+              onNavigate={onNavigate} />
           ))}
         </nav>
         {expanded && <SidebarUser session={session} onLogout={onLogout} />}
