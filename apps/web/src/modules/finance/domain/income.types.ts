@@ -15,6 +15,7 @@ export interface Income {
   readonly paymentMethodLabel: string; // del join a categories
   readonly createdBy: string;
   readonly createdAt: string;
+  readonly evidenceUrls: readonly string[]; // rutas de storage (bucket evidence)
 }
 
 export interface IncomeFormData {
@@ -23,6 +24,7 @@ export interface IncomeFormData {
   readonly description: string;
   readonly date: string;
   readonly paymentMethodId: string;
+  readonly evidenceUrls?: readonly string[]; // opcional: el form lo aporta (Commit 2 UI)
 }
 
 export type IncomeListResult = Result<Income[], string>;
