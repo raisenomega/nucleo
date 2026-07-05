@@ -1,0 +1,17 @@
+export type Locale = "es" | "en";
+export type TranslationKey =
+  | "title" | "tagline" | "toggleTheme" | "switchLang" | "welcome" | "role" | "logout"
+  | "trialBanner" | "trialEnded" | "trialEndedDesc" | "scheduleConsultation"
+  | "income" | "incomeList" | "newIncome" | "amount" | "category" | "description" | "date"
+  | "paymentMethod" | "save" | "cancel" | "edit" | "delete" | "noRecords" | "createdBy"
+  | "actions" | "total" | "dashboard" | "balance" | "expenses" | "monthSummary"
+  | "panel" | "payroll" | "routes" | "inventory" | "leads" | "marketing" | "reports"
+  | "settings" | "comingSoon" | "operations" | "finance" | "salesCrm" | "management"
+  | "agenda" | "extraordinary" | "reconciliation" | "orders" | "quotes" | "evaluations"
+  | "training" | "support" | "incomeSubtitle"
+  | "assets" | "billing" | "portal" | "documents" | "notifications" | "menu" | "aiChat"
+  | "addEvidence" | "viewDetail"
+  | "expenseList" | "newExpense" | "expenseSubtitle" | "expenseDetail"
+  | "recentIncome" | "recentExpenses" | "noData"
+  | "extraordinaryList" | "newExtraordinary" | "extraordinarySubtitle" | "extraordinaryDetail"
+  | "justification";
