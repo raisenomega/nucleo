@@ -29,6 +29,7 @@
       "@tenant/*":    ["./apps/web/src/modules/tenant/*"],
       "@identity/*":  ["./apps/web/src/modules/identity/*"],
       "@cognition/*": ["./apps/web/src/modules/cognition/*"],
+      "@crm/*":       ["./apps/web/src/modules/crm/*"],
       "@shared/*":    ["./apps/web/src/shared/*"],
       "@brand/*":     ["./brand/*"]
     }

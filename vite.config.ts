@@ -22,6 +22,7 @@ export default defineConfig({
       "@tenant": r("apps/web/src/modules/tenant"),
       "@identity": r("apps/web/src/modules/identity"),
       "@cognition": r("apps/web/src/modules/cognition"),
+      "@crm": r("apps/web/src/modules/crm"),
       "@shared": r("apps/web/src/shared"),
       "@brand": r("brand"),
     },

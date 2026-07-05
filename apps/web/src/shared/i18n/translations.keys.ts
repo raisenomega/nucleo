@@ -19,4 +19,8 @@ export type TranslationKey =
   | "employee" | "period" | "notes"
   | "inventoryList" | "newItem" | "itemName" | "stock" | "unitCost" | "minStock"
   | "lowStock" | "inventorySubtitle"
-  | "clientReference" | "orderNumber" | "paidBy";
+  | "clientReference" | "orderNumber" | "paidBy"
+  | "leadList" | "newLead" | "leadSubtitle" | "contactName" | "phone" | "email"
+  | "serviceRequested" | "leadSource" | "temperature" | "status" | "callDate" | "callNotes"
+  | "hot" | "warm" | "cold"
+  | "statusNew" | "statusContacted" | "statusQuoted" | "statusConverted" | "statusLost";

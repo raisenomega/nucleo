@@ -35,4 +35,11 @@ export const en: Record<TranslationKey, string> = {
   stock: "Stock", unitCost: "Unit cost", minStock: "Min stock",
   lowStock: "Low stock", inventorySubtitle: "Item catalog and stock levels.",
   clientReference: "Client Reference", orderNumber: "Order Number", paidBy: "Paid by",
+  leadList: "Lead list", newLead: "New lead", leadSubtitle: "Prospects and follow-up.",
+  contactName: "Contact", phone: "Phone", email: "Email",
+  serviceRequested: "Service requested", leadSource: "Source", temperature: "Temperature",
+  status: "Status", callDate: "Date", callNotes: "Call notes",
+  hot: "Hot", warm: "Warm", cold: "Cold",
+  statusNew: "New", statusContacted: "Contacted", statusQuoted: "Quoted",
+  statusConverted: "Converted", statusLost: "Lost",
 };
