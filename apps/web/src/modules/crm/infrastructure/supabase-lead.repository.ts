@@ -1,50 +1,70 @@
 import { supabase } from "@shared/lib/supabase";
-import type { Lead, LeadFormData, LeadListResult, ILeadRepository, Result } from "@crm/domain/lead.types";
+import type { Lead, LeadFormData, LeadItem, LeadListResult, ILeadRepository, Result } from "@crm/domain/lead.types";
 
+type Ref = { label: string } | null;
+type ItemRow = { description: string; quantity: number | string; unit_price: number | string;
+  tax_pct: number | string; discount_pct: number | string; line_total: number | string };
 interface Row {
   id: string; tenant_id: string; contact_name: string; phone: string; email: string | null;
-  service_requested: string; lead_source: string; temperature: string; status: string;
-  call_date: string; notes: string | null; created_at: string; evidence_urls: unknown;
+  address: string | null; city: string | null; zip_code: string | null;
+  lead_source: string | null; service_requested: string | null;
+  lead_source_id: string | null; service_type_id: string | null;
+  temperature: string; status: string; call_date: string; notes: string | null;
+  quoted_price: number | string | null; created_at: string; evidence_urls: unknown;
+  source: Ref; service: Ref; items: ItemRow[] | null;
 }
 
 const SELECT =
-  "id, tenant_id, contact_name, phone, email, service_requested, lead_source, temperature, status," +
-  " call_date, notes, created_at, evidence_urls";
+  "id, tenant_id, contact_name, phone, email, address, city, zip_code, lead_source, service_requested," +
+  " lead_source_id, service_type_id, temperature, status, call_date, notes, quoted_price, created_at, evidence_urls," +
+  " source:categories!leads_lead_source_id_fkey(label), service:categories!leads_service_type_id_fkey(label)," +
+  " items:lead_items(description, quantity, unit_price, tax_pct, discount_pct, line_total)";
+
+function toItem(i: ItemRow): LeadItem {
+  return { description: i.description, quantity: Number(i.quantity), unitPrice: Number(i.unit_price),
+    taxPct: Number(i.tax_pct), discountPct: Number(i.discount_pct), lineTotal: Number(i.line_total) };
+}
 
 function toLead(r: Row): Lead {
   return {
     id: r.id, tenantId: r.tenant_id, contactName: r.contact_name, phone: r.phone, email: r.email ?? "",
-    serviceRequested: r.service_requested, leadSource: r.lead_source, temperature: r.temperature,
-    status: r.status, callDate: r.call_date, notes: r.notes ?? "", createdAt: r.created_at,
+    address: r.address ?? "", city: r.city ?? "", zipCode: r.zip_code ?? "",
+    leadSource: r.lead_source ?? "", serviceRequested: r.service_requested ?? "",
+    leadSourceId: r.lead_source_id ?? "", leadSourceLabel: r.source?.label ?? "",
+    serviceTypeId: r.service_type_id ?? "", serviceTypeLabel: r.service?.label ?? "",
+    temperature: r.temperature, status: r.status, callDate: r.call_date, notes: r.notes ?? "",
+    quotedPrice: Number(r.quoted_price ?? 0), createdAt: r.created_at,
     evidenceUrls: Array.isArray(r.evidence_urls) ? (r.evidence_urls as string[]) : [],
+    items: Array.isArray(r.items) ? r.items.map(toItem) : [],
   };
 }
 
-function toRow(d: LeadFormData) {
-  return {
-    contact_name: d.contactName, phone: d.phone, email: d.email || null,
-    service_requested: d.serviceRequested, lead_source: d.leadSource, temperature: d.temperature,
-    status: d.status, call_date: d.callDate, notes: d.notes, evidence_urls: d.evidenceUrls ?? [],
-  };
+function leadJson(id: string | null, d: LeadFormData) {
+  return { id, contact_name: d.contactName, phone: d.phone, email: d.email,
+    address: d.address ?? "", city: d.city ?? "", zip_code: d.zipCode ?? "",
+    lead_source_id: d.leadSourceId ?? "", service_type_id: d.serviceTypeId ?? "",
+    temperature: d.temperature, status: d.status, call_date: d.callDate, notes: d.notes,
+    quoted_price: d.quotedPrice ?? "", evidence_urls: d.evidenceUrls ?? [] };
+}
+
+function itemsJson(d: LeadFormData) {
+  return (d.items ?? []).map((i) => ({ description: i.description, quantity: i.quantity,
+    unit_price: i.unitPrice, tax_pct: i.taxPct, discount_pct: i.discountPct }));
+}
+
+async function save(id: string | null, d: LeadFormData): Promise<Result<null, string>> {
+  const { error } = await supabase.rpc("save_lead_with_items", { lead: leadJson(id, d), items: itemsJson(d) });
+  return error ? { ok: false, error: error.message } : { ok: true, value: null };
 }
 
 export const supabaseLeadRepository: ILeadRepository = {
   async list(): Promise<LeadListResult> {
-    const { data, error } = await supabase.from("leads").select(SELECT)
-      .order("call_date", { ascending: false });
+    const { data, error } = await supabase.from("leads").select(SELECT).order("call_date", { ascending: false });
     if (error) return { ok: false, error: error.message };
     return { ok: true, value: (data as unknown as Row[]).map(toLead) };
   },
-  async create(d): Promise<Result<Lead, string>> {
-    const { data, error } = await supabase.from("leads").insert(toRow(d)).select(SELECT).single();
-    if (error || !data) return { ok: false, error: error?.message ?? "error" };
-    return { ok: true, value: toLead(data as unknown as Row) };
-  },
-  async update(id, d): Promise<Result<Lead, string>> {
-    const { data, error } = await supabase.from("leads").update(toRow(d)).eq("id", id).select(SELECT).single();
-    if (error || !data) return { ok: false, error: error?.message ?? "error" };
-    return { ok: true, value: toLead(data as unknown as Row) };
-  },
+  create: (d) => save(null, d),
+  update: (id, d) => save(id, d),
   async remove(id): Promise<Result<null, string>> {
     const { error } = await supabase.from("leads").delete().eq("id", id);
     if (error) return { ok: false, error: error.message };

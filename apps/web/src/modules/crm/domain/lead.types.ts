@@ -1,7 +1,16 @@
-// BC crm — tipos de dominio de leads. Puro: sin imports externos.
+// BC crm — tipos de dominio de leads v2 (contacto + origen/servicio config + items). Puro.
 export type Result<T, E> =
   | { readonly ok: true; readonly value: T }
   | { readonly ok: false; readonly error: E };
+
+export interface LeadItem {
+  readonly description: string;
+  readonly quantity: number;
+  readonly unitPrice: number;
+  readonly taxPct: number;
+  readonly discountPct: number;
+  readonly lineTotal: number; // calculado por la DB (read) o client-side (form)
+}
 
 export interface Lead {
   readonly id: string;
@@ -9,35 +18,50 @@ export interface Lead {
   readonly contactName: string;
   readonly phone: string;
   readonly email: string;
-  readonly serviceRequested: string;
-  readonly leadSource: string;
-  readonly temperature: string;        // hot | warm | cold
-  readonly status: string;             // new | contacted | quoted | converted | lost
-  readonly callDate: string;           // ← call_date (yyyy-mm-dd)
-  readonly notes: string;              // ← notes (notas de llamada)
+  readonly address: string;
+  readonly city: string;
+  readonly zipCode: string;
+  readonly leadSource: string;        // legacy text
+  readonly serviceRequested: string;  // legacy text
+  readonly leadSourceId: string;
+  readonly leadSourceLabel: string;   // join a categories
+  readonly serviceTypeId: string;
+  readonly serviceTypeLabel: string;  // join a categories
+  readonly temperature: string;
+  readonly status: string;
+  readonly callDate: string;
+  readonly notes: string;
+  readonly quotedPrice: number;
   readonly createdAt: string;
   readonly evidenceUrls: readonly string[];
+  readonly items: readonly LeadItem[];
 }
 
 export interface LeadFormData {
   readonly contactName: string;
   readonly phone: string;
   readonly email: string;
-  readonly serviceRequested: string;
-  readonly leadSource: string;
   readonly temperature: string;
   readonly status: string;
   readonly callDate: string;
   readonly notes: string;
+  readonly leadSource?: string;
+  readonly serviceRequested?: string;
+  readonly address?: string;
+  readonly city?: string;
+  readonly zipCode?: string;
+  readonly leadSourceId?: string;
+  readonly serviceTypeId?: string;
+  readonly quotedPrice?: number;
+  readonly items?: readonly LeadItem[];
   readonly evidenceUrls?: readonly string[];
 }
 
 export type LeadListResult = Result<Lead[], string>;
 
-// Puerto del repositorio — lo implementa infrastructure; lo consume application (DI).
 export interface ILeadRepository {
   list(): Promise<LeadListResult>;
-  create(data: LeadFormData): Promise<Result<Lead, string>>;
-  update(id: string, data: LeadFormData): Promise<Result<Lead, string>>;
+  create(data: LeadFormData): Promise<Result<null, string>>;
+  update(id: string, data: LeadFormData): Promise<Result<null, string>>;
   remove(id: string): Promise<Result<null, string>>;
 }
