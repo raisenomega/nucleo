@@ -12,7 +12,7 @@ export function TrialBanner({ session }: { session: Session | null }) {
   useEffect(() => {
     if (!session) return; // sin sesión → sin query (evita el 401)
     void supabase.from("tenants").select("status, expires_at").maybeSingle()
-      .then(({ data }) => setInfo(data as TrialInfo | null));
+      .then(({ data, error }) => setInfo(error ? null : (data as TrialInfo | null)));
   }, [session]);
 
   if (!session || !info || info.status !== "trial" || !info.expires_at) return null;
