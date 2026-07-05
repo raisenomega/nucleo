@@ -5,19 +5,25 @@ import { ThemeToggle } from "@shared/components/ThemeToggle";
 
 const THEME_SCRIPT = `(function(){try{var s=localStorage.getItem("theme"),m=window.matchMedia,d;if(s==="dark"||s==="light"){d=s==="dark";}else if(m&&m("(prefers-color-scheme: dark)").matches){d=true;}else if(m&&m("(prefers-color-scheme: light)").matches){d=false;}else{d=true;}document.documentElement.classList.toggle("dark",d);}catch(e){}})();`;
 
+// Registra el service worker solo en producción (no en localhost).
+const SW_SCRIPT = `if("serviceWorker" in navigator&&location.hostname!=="localhost"){window.addEventListener("load",function(){navigator.serviceWorker.register("/service-worker.js").catch(function(){});});}`;
+
 export const Route = createRootRoute({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "NÚCLEO by raisen" },
+      { name: "theme-color", content: "hsl(38 85% 55%)" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
       { rel: "icon", href: "/favicon.ico", sizes: "any" },
+      { rel: "manifest", href: "/manifest.json" },
     ],
-    scripts: [{ children: THEME_SCRIPT }],
+    scripts: [{ children: THEME_SCRIPT }, { children: SW_SCRIPT }],
   }),
   component: RootComponent,
 });

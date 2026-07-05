@@ -13,7 +13,7 @@ export function AppLayout({ session, onLogout }: { session: Session | null; onLo
     <div className="min-h-screen bg-background text-foreground">
       <Sidebar session={session} onLogout={onLogout} open={open} onClose={() => setOpen(false)} />
       <div className="flex min-h-screen flex-col md:pl-16">
-        <header className="flex items-center gap-2 border-b border-border p-4">
+        <header className="sticky top-0 z-40 flex items-center gap-2 border-b border-border bg-background p-4">
           <button type="button" onClick={() => setOpen(true)} aria-label={t("panel")}
             className="rounded-lg bg-secondary p-2 md:hidden"><Menu className="h-5 w-5" /></button>
           <div className="flex-1" />
