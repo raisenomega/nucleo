@@ -7,6 +7,7 @@ import { useIncome } from "@finance/application/useIncome.hook";
 import { supabaseIncomeRepository } from "@finance/infrastructure/supabase-income.repository";
 import { IncomeForm } from "@finance/presentation/IncomeForm";
 import { IncomeTable } from "@finance/presentation/IncomeTable";
+import { IncomeDetail } from "@finance/presentation/IncomeDetail";
 import type { IncomeFormData } from "@finance/domain/income.types";
 
 export const Route = createFileRoute("/_authenticated/income")({ component: IncomePage });
@@ -17,30 +18,26 @@ function IncomePage() {
   const { t } = useI18n();
   const { incomes, create, update, remove } = useIncome(supabaseIncomeRepository);
   const [cats, setCats] = useState<Cat[]>([]);
-  const [editing, setEditing] = useState<string | null>(null); // id | "new" | null
+  const [editing, setEditing] = useState<string | null>(null);
+  const [viewing, setViewing] = useState<string | null>(null);
 
   useEffect(() => {
-    void supabase.from("categories").select("id,label,kind")
-      .in("kind", ["income", "payment_method"])
+    void supabase.from("categories").select("id,label,kind").in("kind", ["income", "payment_method"])
       .then(({ data }) => setCats((data as Cat[] | null) ?? []));
   }, []);
 
   const editRow = useMemo<IncomeFormData | undefined>(() => {
     const i = incomes.find((x) => x.id === editing);
     return i ? { categoryId: i.categoryId, amount: i.amount, description: i.description,
-      date: i.date, paymentMethodId: i.paymentMethodId } : undefined;
+      date: i.date, paymentMethodId: i.paymentMethodId, evidenceUrls: i.evidenceUrls } : undefined;
   }, [editing, incomes]);
 
   async function submit(d: IncomeFormData) {
-    if (editing && editing !== "new") await update(editing, d);
-    else await create(d);
+    if (editing && editing !== "new") await update(editing, d); else await create(d);
     setEditing(null);
   }
 
-  function del(id: string) {
-    if (window.confirm(`${t("delete")}?`)) void remove(id);
-  }
-
+  const viewIncome = incomes.find((i) => i.id === viewing);
   return (
     <div className="space-y-6 p-8">
       <div className="flex items-start justify-between gap-4">
@@ -58,7 +55,9 @@ function IncomePage() {
           payCats={cats.filter((c) => c.kind === "payment_method")}
           initial={editRow} onSubmit={submit} onCancel={() => setEditing(null)} />
       )}
-      <IncomeTable rows={incomes} onEdit={setEditing} onDelete={del} />
+      <IncomeTable rows={incomes} onView={setViewing} onEdit={setEditing}
+        onDelete={(id) => { if (window.confirm(`${t("delete")}?`)) void remove(id); }} />
+      {viewIncome && <IncomeDetail income={viewIncome} onClose={() => setViewing(null)} />}
     </div>
   );
 }
