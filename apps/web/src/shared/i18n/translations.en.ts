@@ -49,4 +49,7 @@ export const en: Record<TranslationKey, string> = {
   duplicate: "Duplicate", archive: "Archive", convertToInvoice: "Convert to invoice", send: "Send",
   quotePlaceholder: "Coming soon — Gotenberg", invoicePlaceholder: "Coming soon — Gotenberg",
   whatsappMessage: "Hi {name}, here is your quote for {total}.",
+  quoteSaved: "Quote saved — PDF coming soon with Gotenberg",
+  invoiceSaved: "Invoice saved — PDF coming soon with Gotenberg",
+  requiredFields: "Fill in name and phone",
 };

@@ -27,4 +27,5 @@ export type TranslationKey =
   | "address" | "city" | "zip" | "items" | "addItem" | "quantity" | "unitPrice"
   | "taxPct" | "discountPct" | "grandTotal" | "whatsapp" | "quote" | "invoice"
   | "duplicate" | "archive" | "convertToInvoice" | "send"
-  | "quotePlaceholder" | "invoicePlaceholder" | "whatsappMessage";
+  | "quotePlaceholder" | "invoicePlaceholder" | "whatsappMessage"
+  | "quoteSaved" | "invoiceSaved" | "requiredFields";
