@@ -9,7 +9,7 @@ function toSession(userId: string, email: string, accessToken: string): Session 
     userId,
     email,
     tenantId: typeof claims.tenant_id === "string" ? claims.tenant_id : null,
-    role: typeof claims.role === "string" ? claims.role : null,
+    role: typeof claims.user_role === "string" ? claims.user_role : null,
   };
 }
 
