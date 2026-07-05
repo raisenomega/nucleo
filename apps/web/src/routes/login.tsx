@@ -22,7 +22,7 @@ function Login() {
     setError(null);
     const result = await signIn(email, password);
     setBusy(false);
-    if (result.ok) void navigate({ to: "/pin" });
+    if (result.ok) void navigate({ to: "/dashboard" });
     else setError(result.error.message);
   }
 
