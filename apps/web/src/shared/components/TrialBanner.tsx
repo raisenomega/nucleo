@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { supabase } from "@shared/lib/supabase";
 import { useI18n } from "@shared/i18n";
-import type { Session } from "@identity/domain/auth.types";
+import { useSession } from "@shared/providers/SessionProvider";
 
 type TrialInfo = { status: string; expires_at: string | null };
 
-export function TrialBanner({ session }: { session: Session | null }) {
+export function TrialBanner() {
+  const { session } = useSession();
   const navigate = useNavigate();
   const { t } = useI18n();
   const [info, setInfo] = useState<TrialInfo | null>(null);

@@ -3,16 +3,13 @@ import { useLocation } from "@tanstack/react-router";
 import { SECTIONS } from "@shared/components/sidebar.nav";
 import { SidebarSection } from "@shared/components/SidebarSection";
 import { SidebarUser } from "@shared/components/SidebarUser";
-import type { Session } from "@identity/domain/auth.types";
 
 function activeSection(pathname: string): string {
   const s = SECTIONS.find((sec) => sec.items.some((i) => i.to && pathname.startsWith(i.to)));
   return s ? s.title : "";
 }
 
-export function Sidebar({ session, onLogout, expanded, onClose }: {
-  session: Session | null; onLogout: () => void; expanded: boolean; onClose: () => void;
-}) {
+export function Sidebar({ expanded, onClose }: { expanded: boolean; onClose: () => void }) {
   const { pathname } = useLocation();
   const [openSection, setOpenSection] = useState<string>(() => activeSection(pathname));
   useEffect(() => { const s = activeSection(pathname); if (s) setOpenSection(s); }, [pathname]);
@@ -34,7 +31,7 @@ export function Sidebar({ session, onLogout, expanded, onClose }: {
               onNavigate={onNavigate} />
           ))}
         </nav>
-        {expanded && <SidebarUser session={session} onLogout={onLogout} />}
+        {expanded && <SidebarUser />}
       </aside>
     </>
   );

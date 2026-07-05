@@ -1,16 +1,22 @@
-import { createFileRoute, Navigate, useNavigate } from "@tanstack/react-router";
-import { useAuth } from "@identity/application/useAuth.hook";
-import { supabaseAuthAdapter } from "@identity/infrastructure/supabase-auth.adapter";
+import { createFileRoute, Navigate } from "@tanstack/react-router";
+import { SessionProvider, useSession } from "@shared/providers/SessionProvider";
 import { AppLayout } from "@shared/components/AppLayout";
 
 export const Route = createFileRoute("/_authenticated")({
-  component: AuthenticatedLayout,
+  component: AuthenticatedRoute,
 });
 
-// Guard de layout: verifica sesión (DI del adapter) y monta el AppLayout profesional.
-function AuthenticatedLayout() {
-  const { session, isLoading, signOut } = useAuth(supabaseAuthAdapter);
-  const navigate = useNavigate();
+// SessionProvider envuelve toda la app autenticada; el Guard lee la sesión de useSession().
+function AuthenticatedRoute() {
+  return (
+    <SessionProvider>
+      <Guard />
+    </SessionProvider>
+  );
+}
+
+function Guard() {
+  const { session, isLoading } = useSession();
   if (isLoading) {
     return (
       <main className="min-h-screen bg-background text-foreground flex items-center justify-center">
@@ -19,9 +25,5 @@ function AuthenticatedLayout() {
     );
   }
   if (!session) return <Navigate to="/login" />;
-  const onLogout = async () => {
-    await signOut();
-    void navigate({ to: "/login" });
-  };
-  return <AppLayout session={session} onLogout={onLogout} />;
+  return <AppLayout />;
 }
