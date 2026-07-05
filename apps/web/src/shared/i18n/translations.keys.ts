@@ -14,4 +14,6 @@ export type TranslationKey =
   | "expenseList" | "newExpense" | "expenseSubtitle" | "expenseDetail"
   | "recentIncome" | "recentExpenses" | "noData"
   | "extraordinaryList" | "newExtraordinary" | "extraordinarySubtitle" | "extraordinaryDetail"
-  | "justification";
+  | "justification"
+  | "payrollList" | "newPayroll" | "payrollSubtitle" | "payrollDetail"
+  | "employee" | "period" | "notes";

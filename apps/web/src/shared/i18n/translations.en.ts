@@ -28,4 +28,7 @@ export const en: Record<TranslationKey, string> = {
   extraordinaryList: "Extraordinary list", newExtraordinary: "New extraordinary",
   extraordinarySubtitle: "Out-of-the-ordinary payments, with justification.", extraordinaryDetail: "Extraordinary detail",
   justification: "Justification",
+  payrollList: "Payroll list", newPayroll: "New payroll",
+  payrollSubtitle: "Record payroll payments.", payrollDetail: "Payroll detail",
+  employee: "Employee", period: "Period", notes: "Notes",
 };
