@@ -10,7 +10,8 @@ export type TranslationKey =
   | "agenda" | "extraordinary" | "reconciliation" | "orders" | "quotes" | "evaluations"
   | "training" | "support" | "incomeSubtitle"
   | "assets" | "billing" | "portal" | "documents" | "notifications" | "menu" | "aiChat"
-  | "addEvidence" | "viewDetail";
+  | "addEvidence" | "viewDetail"
+  | "expenseList" | "newExpense" | "expenseSubtitle" | "expenseDetail";
 
 export const translations: Record<Locale, Record<TranslationKey, string>> = {
   es: {
@@ -35,6 +36,8 @@ export const translations: Record<Locale, Record<TranslationKey, string>> = {
     assets: "Activos", billing: "Facturación", portal: "Portal cliente",
     documents: "Documentos", notifications: "Notificaciones", menu: "Menú", aiChat: "Chat IA",
     addEvidence: "Añadir evidencia", viewDetail: "Ver detalle",
+    expenseList: "Lista de gastos", newExpense: "Nuevo gasto",
+    expenseSubtitle: "Registra y consulta los gastos del negocio.", expenseDetail: "Detalle del gasto",
   },
   en: {
     title: "NÚCLEO by raisen", tagline: "The operating core for your business",
@@ -58,5 +61,7 @@ export const translations: Record<Locale, Record<TranslationKey, string>> = {
     assets: "Assets", billing: "Billing", portal: "Client Portal",
     documents: "Documents", notifications: "Notifications", menu: "Menu", aiChat: "AI Chat",
     addEvidence: "Add evidence", viewDetail: "View detail",
+    expenseList: "Expense list", newExpense: "New expense",
+    expenseSubtitle: "Record and review your business expenses.", expenseDetail: "Expense detail",
   },
 };
