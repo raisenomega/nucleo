@@ -16,4 +16,6 @@ export type TranslationKey =
   | "extraordinaryList" | "newExtraordinary" | "extraordinarySubtitle" | "extraordinaryDetail"
   | "justification"
   | "payrollList" | "newPayroll" | "payrollSubtitle" | "payrollDetail"
-  | "employee" | "period" | "notes";
+  | "employee" | "period" | "notes"
+  | "inventoryList" | "newItem" | "itemName" | "stock" | "unitCost" | "minStock"
+  | "lowStock" | "inventorySubtitle";

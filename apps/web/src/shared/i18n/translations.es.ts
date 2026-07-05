@@ -31,4 +31,7 @@ export const es: Record<TranslationKey, string> = {
   payrollList: "Lista de nómina", newPayroll: "Nueva nómina",
   payrollSubtitle: "Registra los pagos de nómina.", payrollDetail: "Detalle de nómina",
   employee: "Empleado", period: "Periodo", notes: "Notas",
+  inventoryList: "Inventario", newItem: "Nuevo artículo", itemName: "Artículo",
+  stock: "Stock", unitCost: "Costo unitario", minStock: "Stock mínimo",
+  lowStock: "Stock bajo", inventorySubtitle: "Catálogo de artículos y existencias.",
 };
