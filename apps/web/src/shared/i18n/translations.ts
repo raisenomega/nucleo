@@ -6,7 +6,9 @@ export type TranslationKey =
   | "paymentMethod" | "save" | "cancel" | "edit" | "delete" | "noRecords" | "createdBy"
   | "actions" | "total" | "dashboard" | "balance" | "expenses" | "monthSummary"
   | "panel" | "payroll" | "routes" | "inventory" | "leads" | "marketing" | "reports"
-  | "settings" | "comingSoon";
+  | "settings" | "comingSoon" | "operations" | "finance" | "salesCrm" | "management"
+  | "agenda" | "extraordinary" | "reconciliation" | "orders" | "quotes" | "evaluations"
+  | "training" | "support" | "incomeSubtitle";
 
 export const translations: Record<Locale, Record<TranslationKey, string>> = {
   es: {
@@ -22,7 +24,12 @@ export const translations: Record<Locale, Record<TranslationKey, string>> = {
     actions: "Acciones", total: "Total", dashboard: "Panel", balance: "Balance",
     expenses: "Gastos", monthSummary: "Resumen del mes", panel: "Panel", payroll: "Nómina",
     routes: "Rutas", inventory: "Inventario", leads: "Leads", marketing: "Marketing",
-    reports: "Reportes", settings: "Ajustes", comingSoon: "Próximamente",
+    reports: "Reportes", settings: "Configuración", comingSoon: "Próximamente",
+    operations: "Operaciones", finance: "Finanzas", salesCrm: "Ventas y CRM", management: "Gestión",
+    agenda: "Agenda", extraordinary: "Extraordinarios", reconciliation: "Conciliación",
+    orders: "Órdenes", quotes: "Cotizaciones", evaluations: "Evaluaciones",
+    training: "Capacitación", support: "Soporte",
+    incomeSubtitle: "Registra y consulta los ingresos del negocio.",
   },
   en: {
     title: "NÚCLEO by raisen", tagline: "The operating core for your business",
@@ -38,5 +45,10 @@ export const translations: Record<Locale, Record<TranslationKey, string>> = {
     expenses: "Expenses", monthSummary: "Month summary", panel: "Dashboard", payroll: "Payroll",
     routes: "Routes", inventory: "Inventory", leads: "Leads", marketing: "Marketing",
     reports: "Reports", settings: "Settings", comingSoon: "Coming soon",
+    operations: "Operations", finance: "Finance", salesCrm: "Sales & CRM", management: "Management",
+    agenda: "Schedule", extraordinary: "Extraordinary", reconciliation: "Reconciliation",
+    orders: "Orders", quotes: "Quotes", evaluations: "Evaluations",
+    training: "Training", support: "Support",
+    incomeSubtitle: "Record and review your business income.",
   },
 };

@@ -1,17 +1,8 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { useI18n } from "@shared/i18n";
-import type { TranslationKey } from "@shared/i18n";
+import { SECTIONS } from "@shared/components/sidebar.nav";
+import { SidebarUser } from "@shared/components/SidebarUser";
 import type { Session } from "@identity/domain/auth.types";
-
-const ENABLED = [
-  { to: "/dashboard", key: "panel", icon: "📊" },
-  { to: "/income", key: "income", icon: "💰" },
-] as const;
-const SOON: { key: TranslationKey; icon: string }[] = [
-  { key: "expenses", icon: "💸" }, { key: "payroll", icon: "📋" }, { key: "routes", icon: "🚛" },
-  { key: "inventory", icon: "📦" }, { key: "leads", icon: "👥" }, { key: "marketing", icon: "📈" },
-  { key: "reports", icon: "📊" },
-];
 
 export function Sidebar({ session, onLogout, open, onClose }: {
   session: Session | null; onLogout: () => void; open: boolean; onClose: () => void;
@@ -27,29 +18,24 @@ export function Sidebar({ session, onLogout, open, onClose }: {
           <span className="grid h-9 w-9 place-items-center rounded-full bg-primary font-display font-bold text-primary-foreground">N</span>
           <span className="font-display text-lg font-bold text-primary">NÚCLEO</span>
         </div>
-        <nav className="flex-1 space-y-1 overflow-y-auto p-3">
-          {ENABLED.map((n) => (
-            <Link key={n.to} to={n.to} onClick={onClose}
-              className={`${item} ${pathname.startsWith(n.to) ? "bg-primary text-primary-foreground" : "hover:bg-secondary"}`}>
-              <span>{n.icon}</span> {t(n.key)}
-            </Link>
-          ))}
-          {SOON.map((n) => (
-            <span key={n.key} title={t("comingSoon")} className={`${item} cursor-not-allowed text-muted-foreground opacity-50`}>
-              <span>{n.icon}</span> {t(n.key)}
-            </span>
+        <nav className="flex-1 space-y-4 overflow-y-auto p-3">
+          {SECTIONS.map((s) => (
+            <div key={s.title} className="space-y-1">
+              <p className="px-3 text-xs font-bold uppercase tracking-wide text-muted-foreground">{t(s.title)}</p>
+              {s.items.map((n) => n.to ? (
+                <Link key={n.key} to={n.to} onClick={onClose}
+                  className={`${item} ${pathname.startsWith(n.to) ? "bg-primary text-primary-foreground" : "hover:bg-secondary"}`}>
+                  <n.icon className="h-4 w-4" /> {t(n.key)}
+                </Link>
+              ) : (
+                <span key={n.key} title={t("comingSoon")} className={`${item} cursor-not-allowed text-muted-foreground opacity-50`}>
+                  <n.icon className="h-4 w-4" /> {t(n.key)}
+                </span>
+              ))}
+            </div>
           ))}
         </nav>
-        <div className="space-y-2 border-t border-border p-4">
-          <div className="font-body text-sm">
-            <p className="truncate">{session?.email ?? "—"}</p>
-            <p className="text-xs text-muted-foreground">{t("role")}: {session?.role ?? "—"}</p>
-          </div>
-          <button type="button" onClick={onLogout}
-            className="w-full rounded-lg bg-secondary text-foreground px-3 py-2 text-sm font-body font-bold hover:bg-primary hover:text-primary-foreground">
-            {t("logout")}
-          </button>
-        </div>
+        <SidebarUser session={session} onLogout={onLogout} />
       </aside>
     </>
   );

@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { Plus } from "lucide-react";
 import { supabase } from "@shared/lib/supabase";
 import { useI18n } from "@shared/i18n";
 import { useIncome } from "@finance/application/useIncome.hook";
 import { supabaseIncomeRepository } from "@finance/infrastructure/supabase-income.repository";
 import { IncomeForm } from "@finance/presentation/IncomeForm";
+import { IncomeTable } from "@finance/presentation/IncomeTable";
 import type { IncomeFormData } from "@finance/domain/income.types";
 
 export const Route = createFileRoute("/_authenticated/income")({ component: IncomePage });
@@ -35,41 +37,28 @@ function IncomePage() {
     setEditing(null);
   }
 
+  function del(id: string) {
+    if (window.confirm(`${t("delete")}?`)) void remove(id);
+  }
+
   return (
-    <main className="min-h-screen bg-background text-foreground p-8">
-      <div className="mx-auto max-w-4xl space-y-4">
-        <div className="flex items-center justify-between">
-          <h1 className="font-display text-3xl font-bold text-primary">{t("incomeList")}</h1>
-          <button type="button" onClick={() => setEditing("new")}
-            className="rounded-lg bg-primary text-primary-foreground px-4 py-2 font-body font-bold">{t("newIncome")}</button>
+    <div className="space-y-6 p-8">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="font-display text-3xl font-bold text-primary">{t("income")}</h1>
+          <p className="text-xs text-muted-foreground">{t("incomeSubtitle")}</p>
         </div>
-        {editing !== null && (
-          <IncomeForm incomeCats={cats.filter((c) => c.kind === "income")}
-            payCats={cats.filter((c) => c.kind === "payment_method")}
-            initial={editRow} onSubmit={submit} onCancel={() => setEditing(null)} />
-        )}
-        {incomes.length === 0 ? (
-          <p className="font-body text-muted-foreground">{t("noRecords")}</p>
-        ) : (
-          <table className="w-full font-body text-sm">
-            <thead><tr className="text-left text-muted-foreground">
-              <th className="py-2">{t("date")}</th><th>{t("category")}</th><th>{t("amount")}</th><th>{t("paymentMethod")}</th><th>{t("actions")}</th>
-            </tr></thead>
-            <tbody>
-              {incomes.map((i) => (
-                <tr key={i.id} className="border-t border-secondary">
-                  <td className="py-2">{i.date}</td><td>{i.categoryLabel}</td><td>{i.amount}</td><td>{i.paymentMethodLabel}</td>
-                  <td className="flex gap-3 py-2">
-                    <button type="button" onClick={() => setEditing(i.id)} className="text-primary">{t("edit")}</button>
-                    <button type="button" onClick={() => { if (window.confirm(`${t("delete")}?`)) void remove(i.id); }}
-                      className="text-destructive">{t("delete")}</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+        <button type="button" onClick={() => setEditing("new")}
+          className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-4 py-2 font-body font-bold">
+          <Plus className="h-4 w-4" /> {t("newIncome")}
+        </button>
       </div>
-    </main>
+      {editing !== null && (
+        <IncomeForm incomeCats={cats.filter((c) => c.kind === "income")}
+          payCats={cats.filter((c) => c.kind === "payment_method")}
+          initial={editRow} onSubmit={submit} onCancel={() => setEditing(null)} />
+      )}
+      <IncomeTable rows={incomes} onEdit={setEditing} onDelete={del} />
+    </div>
   );
 }

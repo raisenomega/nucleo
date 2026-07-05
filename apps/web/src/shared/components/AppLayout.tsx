@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Menu } from "lucide-react";
 import { Outlet } from "@tanstack/react-router";
 import { ThemeToggle } from "@shared/components/ThemeToggle";
 import { Sidebar } from "@shared/components/Sidebar";
@@ -14,7 +15,7 @@ export function AppLayout({ session, onLogout }: { session: Session | null; onLo
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex items-center gap-2 border-b border-border p-4">
           <button type="button" onClick={() => setOpen(true)} aria-label={t("panel")}
-            className="rounded-lg bg-secondary p-2 md:hidden">☰</button>
+            className="rounded-lg bg-secondary p-2 md:hidden"><Menu className="h-5 w-5" /></button>
           <div className="flex-1" />
           <ThemeToggle />
           <button type="button" onClick={() => setLocale(locale === "es" ? "en" : "es")}
