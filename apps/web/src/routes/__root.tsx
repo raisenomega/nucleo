@@ -1,4 +1,4 @@
-import { HeadContent, Outlet, Scripts, createRootRoute } from "@tanstack/react-router";
+import { HeadContent, Outlet, Scripts, createRootRoute, useLocation } from "@tanstack/react-router";
 import appCss from "../styles/index.css?url";
 import { I18nProvider, useI18n } from "@shared/i18n";
 import { ThemeToggle } from "@shared/components/ThemeToggle";
@@ -30,9 +30,13 @@ function RootComponent() {
   );
 }
 
-// Controles globales — flotan en la esquina superior derecha en TODAS las rutas.
+const PUBLIC = new Set(["/", "/login", "/registro", "/pin", "/agendar-consulta"]);
+
+// Controles globales — solo en rutas públicas; en autenticadas viven en AppLayout.
 function GlobalControls() {
   const { t, locale, setLocale } = useI18n();
+  const { pathname } = useLocation();
+  if (!PUBLIC.has(pathname)) return null;
   return (
     <div className="fixed top-4 right-4 z-50 flex gap-2">
       <ThemeToggle />
