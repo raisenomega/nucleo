@@ -10,9 +10,12 @@ export function TrialBanner({ session }: { session: Session | null }) {
   const [info, setInfo] = useState<TrialInfo | null>(null);
 
   useEffect(() => {
-    if (!session) return; // sin sesión → sin query (evita el 401)
-    void supabase.from("tenants").select("status, expires_at").maybeSingle()
-      .then(({ data, error }) => setInfo(error ? null : (data as TrialInfo | null)));
+    // Confirma que el client tiene sesión válida (refresca si expiró) ANTES de consultar.
+    void supabase.auth.getSession().then(({ data: { session: s } }) => {
+      if (!s) return; // sin sesión en el client → sin query (evita el 401)
+      void supabase.from("tenants").select("status, expires_at").maybeSingle()
+        .then(({ data, error }) => setInfo(error ? null : (data as TrialInfo | null)));
+    });
   }, [session]);
 
   if (!session || !info || info.status !== "trial" || !info.expires_at) return null;
