@@ -29,6 +29,11 @@ export const supabaseBudgetRepository: IBudgetRepository = {
       : await supabase.from("marketing_budgets").insert(toRow(d));
     return error ? { ok: false, error: error.message } : { ok: true, value: null };
   },
+  async upsert(d): Promise<Result<null, string>> {
+    const { error } = await supabase.from("marketing_budgets")
+      .upsert(toRow(d), { onConflict: "tenant_id,month,channel" });
+    return error ? { ok: false, error: error.message } : { ok: true, value: null };
+  },
   async remove(id): Promise<Result<null, string>> {
     const { error } = await supabase.from("marketing_budgets").delete().eq("id", id);
     return error ? { ok: false, error: error.message } : { ok: true, value: null };

@@ -43,13 +43,28 @@ export interface MExpenseFormData {
   readonly evidenceUrls?: readonly string[];
 }
 
+export interface MarketingSnapshot {
+  readonly totalBudget: number;
+  readonly totalSpent: number;
+  readonly executedPct: number;
+  readonly leadsGenerated: number;
+  readonly converted: number;
+  readonly cac: number;
+  readonly roi: number;
+}
+
 export type BudgetListResult = Result<Budget[], string>;
 export type MExpenseListResult = Result<MarketingExpense[], string>;
 
 export interface IBudgetRepository {
   list(): Promise<BudgetListResult>;
   save(id: string | null, data: BudgetFormData): Promise<Result<null, string>>;
+  upsert(data: BudgetFormData): Promise<Result<null, string>>;
   remove(id: string): Promise<Result<null, string>>;
+}
+
+export interface IMarketingSnapshotRepository {
+  getSnapshot(month: string): Promise<MarketingSnapshot | null>;
 }
 
 export interface IMExpenseRepository {
