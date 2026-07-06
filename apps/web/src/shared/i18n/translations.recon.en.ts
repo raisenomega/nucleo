@@ -21,4 +21,5 @@ export const enRecon = {
   registerPayment: "Register payment", manageRecurring: "Manage recurring", frequencyLabel: "Frequency",
   coveredPercent: "You've covered {done} of {total} fixed expenses ({pct}%)", newCategory: "New category",
   createCategory: "Create", categoryName: "Category name", selectExpenseClass: "Expense type",
+  movementsSoon: "Movement history coming soon",
 } satisfies Partial<Record<TranslationKey, string>>;

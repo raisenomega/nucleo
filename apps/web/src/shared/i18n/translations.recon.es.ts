@@ -21,4 +21,5 @@ export const esRecon = {
   registerPayment: "Registrar pago", manageRecurring: "Gestionar recurrentes", frequencyLabel: "Frecuencia",
   coveredPercent: "Has cubierto {done} de {total} gastos fijos ({pct}%)", newCategory: "Nueva categoría",
   createCategory: "Crear", categoryName: "Nombre de la categoría", selectExpenseClass: "Tipo de gasto",
+  movementsSoon: "Historial de movimientos próximamente",
 } satisfies Partial<Record<TranslationKey, string>>;

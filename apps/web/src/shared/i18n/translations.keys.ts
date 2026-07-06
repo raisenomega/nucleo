@@ -53,4 +53,4 @@ export type TranslationKey =
   | "classifyCategories" | "breakEvenComposition" | "payrollCost" | "fixedCosts"
   | "recurringExpenses" | "recurringSubtitle" | "budgeted" | "paid" | "addRecurring"
   | "registerPayment" | "coveredPercent" | "manageRecurring" | "frequencyLabel" | "newCategory"
-  | "createCategory" | "categoryName" | "selectExpenseClass";
+  | "createCategory" | "categoryName" | "selectExpenseClass" | "movementsSoon";

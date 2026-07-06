@@ -1,12 +1,15 @@
-import { AlertTriangle, Pencil, Trash2 } from "lucide-react";
+import { AlertTriangle, Eye, Pencil, Trash2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
+import { useRoleGate } from "@shared/hooks/useRoleGate";
 import { formatCurrency } from "@shared/lib/format";
 import type { InventoryItem } from "@fieldops/domain/inventory.types";
 
-export function InventoryTable({ rows, onEdit, onDelete }: {
-  rows: readonly InventoryItem[]; onEdit: (id: string) => void; onDelete: (id: string) => void;
+export function InventoryTable({ rows, onView, onEdit, onDelete }: {
+  rows: readonly InventoryItem[]; onView: (id: string) => void; onEdit: (id: string) => void; onDelete: (id: string) => void;
 }) {
   const { t } = useI18n();
+  const { canEdit } = useRoleGate();
+  const showCost = canEdit("coo");
   const th = "px-3 py-2 text-left font-bold";
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card">
@@ -15,12 +18,12 @@ export function InventoryTable({ rows, onEdit, onDelete }: {
         <table className="w-full font-body text-sm">
           <thead className="bg-secondary text-xs uppercase text-muted-foreground"><tr>
             <th className={th}>{t("itemName")}</th><th className={`${th} text-right`}>{t("stock")}</th>
-            <th className={`${th} text-right`}>{t("unitCost")}</th><th className={`${th} text-right`}>{t("minStock")}</th>
-            <th className={`${th} text-right`}>{t("actions")}</th>
+            {showCost && <th className={`${th} text-right`}>{t("unitCost")}</th>}
+            <th className={`${th} text-right`}>{t("minStock")}</th><th className={`${th} text-right`}>{t("actions")}</th>
           </tr></thead>
           <tbody>
             {rows.length === 0 && (
-              <tr><td colSpan={5} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>
+              <tr><td colSpan={showCost ? 5 : 4} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>
             )}
             {rows.map((i) => (
               <tr key={i.id} className="border-t border-border">
@@ -33,12 +36,13 @@ export function InventoryTable({ rows, onEdit, onDelete }: {
                     </span>
                   )}
                 </td>
-                <td className="px-3 py-2 text-right">{formatCurrency(i.unitCost)}</td>
+                {showCost && <td className="px-3 py-2 text-right">{formatCurrency(i.unitCost)}</td>}
                 <td className="px-3 py-2 text-right">{i.minStock}</td>
                 <td className="px-3 py-2">
                   <div className="flex justify-end gap-2">
-                    <button type="button" onClick={() => onEdit(i.id)} aria-label={t("edit")} className="text-primary"><Pencil className="h-4 w-4" /></button>
-                    <button type="button" onClick={() => onDelete(i.id)} aria-label={t("delete")} className="text-destructive"><Trash2 className="h-4 w-4" /></button>
+                    <button type="button" onClick={() => onView(i.id)} aria-label={t("viewDetail")} className="text-foreground"><Eye className="h-4 w-4" /></button>
+                    {canEdit("operaciones") && <button type="button" onClick={() => onEdit(i.id)} aria-label={t("edit")} className="text-primary"><Pencil className="h-4 w-4" /></button>}
+                    {canEdit("coo") && <button type="button" onClick={() => onDelete(i.id)} aria-label={t("delete")} className="text-destructive"><Trash2 className="h-4 w-4" /></button>}
                   </div>
                 </td>
               </tr>
