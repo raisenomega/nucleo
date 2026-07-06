@@ -1,5 +1,6 @@
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { SessionProvider, useSession } from "@shared/providers/SessionProvider";
+import { ModuleAccessProvider } from "@shared/providers/ModuleAccessProvider";
 import { AppLayout } from "@shared/components/AppLayout";
 
 export const Route = createFileRoute("/_authenticated")({
@@ -25,5 +26,9 @@ function Guard() {
     );
   }
   if (!session) return <Navigate to="/login" />;
-  return <AppLayout />;
+  return (
+    <ModuleAccessProvider>
+      <AppLayout />
+    </ModuleAccessProvider>
+  );
 }
