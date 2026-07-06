@@ -1,5 +1,6 @@
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
+import { useRoleGate } from "@shared/hooks/useRoleGate";
 import { formatCurrency } from "@shared/lib/format";
 import type { Payroll } from "@finance/domain/payroll.types";
 
@@ -12,34 +13,36 @@ export function PayrollTable({ rows, onView, onEdit, onDelete }: {
   onView: (id: string) => void; onEdit?: (id: string) => void; onDelete?: (id: string) => void;
 }) {
   const { t } = useI18n();
+  const { canEdit } = useRoleGate();
+  const money = canEdit("coo"); // salario/deducciones/patronal = dato financiero → por ROL
   const total = rows.reduce((s, i) => s + costOf(i), 0);
   const th = "px-3 py-2 text-left font-bold";
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card">
       <div className="flex items-center justify-between border-b border-border p-4">
         <h2 className="font-body font-bold">{t("payrollList")} ({rows.length})</h2>
-        <span className="font-body font-bold text-primary">{t("totalEmployerCost")}: {formatCurrency(total)}</span>
+        {money && <span className="font-body font-bold text-primary">{t("totalEmployerCost")}: {formatCurrency(total)}</span>}
       </div>
       <div className="overflow-x-auto">
         <table className="w-full font-body text-sm">
           <thead className="bg-secondary text-xs uppercase text-muted-foreground"><tr>
             <th className={th}>{t("date")}</th><th className={th}>{t("employee")}</th>
-            <th className={`${th} text-right`}>{t("grossSalary")}</th><th className={`${th} text-right`}>{t("withheld")}</th>
-            <th className={`${th} text-right`}>{t("netSalary")}</th><th className={`${th} text-right`}>{t("employerCost")}</th>
+            {money && <><th className={`${th} text-right`}>{t("grossSalary")}</th><th className={`${th} text-right`}>{t("withheld")}</th>
+            <th className={`${th} text-right`}>{t("netSalary")}</th><th className={`${th} text-right`}>{t("employerCost")}</th></>}
             <th className={`${th} text-right`}>{t("actions")}</th>
           </tr></thead>
           <tbody>
             {rows.length === 0 && (
-              <tr><td colSpan={7} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>
+              <tr><td colSpan={money ? 7 : 3} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>
             )}
             {rows.map((i) => (
               <tr key={i.id} className="border-t border-border">
                 <td className="px-3 py-2">{i.date}</td>
                 <td className="px-3 py-2">{i.employeeName}</td>
-                <td className="px-3 py-2 text-right font-semibold">{formatCurrency(grossOf(i))}</td>
+                {money && <><td className="px-3 py-2 text-right font-semibold">{formatCurrency(grossOf(i))}</td>
                 <td className="px-3 py-2 text-right text-destructive">{formatCurrency(grossOf(i) - netOf(i))}</td>
                 <td className="px-3 py-2 text-right">{formatCurrency(netOf(i))}</td>
-                <td className="px-3 py-2 text-right font-semibold text-primary">{formatCurrency(costOf(i))}</td>
+                <td className="px-3 py-2 text-right font-semibold text-primary">{formatCurrency(costOf(i))}</td></>}
                 <td className="px-3 py-2">
                   <div className="flex justify-end gap-2">
                     <button type="button" onClick={() => onView(i.id)} aria-label={t("viewDetail")} className="text-foreground"><Eye className="h-4 w-4" /></button>
