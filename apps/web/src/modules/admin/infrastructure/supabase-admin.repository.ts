@@ -34,8 +34,7 @@ export const supabaseAdminRepository: IAdminRepository = {
     return ok((await supabase.from("profiles").update({ status }).eq("id", id)).error);
   },
   async changeRole(userId, role): Promise<RepoResult> {
-    await supabase.from("user_roles").delete().eq("user_id", userId);
-    return ok((await supabase.from("user_roles").insert({ user_id: userId, role })).error);
+    return ok((await supabase.rpc("change_user_role", { p_user_id: userId, p_role: role })).error);
   },
   async invite(d): Promise<RepoResult> {
     return ok((await supabase.from("allowed_emails").insert({ email: d.email.toLowerCase(), full_name: d.fullName, role: d.role })).error);
