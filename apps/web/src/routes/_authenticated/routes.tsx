@@ -54,8 +54,7 @@ function RoutesPage() {
         onEdit={can("routes", "edit") ? (id) => { setEditing(id); m.setActive(id); } : undefined}
         onDelete={can("routes", "delete") ? (id) => { if (window.confirm(`${t("delete")}?`)) void m.remove(id); } : undefined} />
       {viewRoute && <RouteDetail route={viewRoute} stops={m.stops} employees={emps} tenantId={session?.tenantId ?? ""} onClose={() => setViewing(null)}
-        onComplete={doComplete} onNotAttended={doNotAttended} onEvidence={doEvidence}
-        onEdit={can("routes", "edit") ? () => { setEditing(viewRoute.id); m.setActive(viewRoute.id); setViewing(null); } : undefined} />}
+        onComplete={doComplete} onNotAttended={doNotAttended} onEvidence={doEvidence} />}
     </div>
   );
 }
