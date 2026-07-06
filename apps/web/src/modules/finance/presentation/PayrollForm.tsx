@@ -44,7 +44,7 @@ export function PayrollForm({ employees, payCats, initial, preview, onSubmit, on
           <select value={f.period} onChange={(e) => setF({ ...f, period: e.target.value })} className={field}>
             <option value="">—</option>{PERIODS.map((p) => <option key={p} value={p}>{p}</option>)}
           </select></label>
-        <CategoryPicker kind="payment_method" gateModule="payroll" value={f.paymentMethodId} onChange={(id) => setF({ ...f, paymentMethodId: id })} label="paymentMethod" />
+        <CategoryPicker kind="payment_method" value={f.paymentMethodId} onChange={(id) => setF({ ...f, paymentMethodId: id })} label="paymentMethod" />
         <label className="space-y-1"><span className={lbl}>{t("date")}</span>
           <input type="date" value={f.date} onChange={(e) => setF({ ...f, date: e.target.value })} className={field} /></label>
         <label className="space-y-1 md:col-span-3"><span className={lbl}>{t("notes")}</span>

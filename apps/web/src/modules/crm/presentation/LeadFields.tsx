@@ -28,8 +28,8 @@ export function LeadFields({ f, set, sources, services }: {
     <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
       {txt("contactName", "contactName")}{txt("phone", "phone", "tel")}{txt("email", "email", "email")}
       {txt("address", "address")}{txt("city", "city")}{txt("zipCode", "zip")}
-      <CategoryPicker kind="lead_source" gateModule="leads" value={f.leadSourceId ?? ""} onChange={(id) => set("leadSourceId", id)} label="leadSource" />
-      <CategoryPicker kind="service_type" gateModule="leads" value={f.serviceTypeId ?? ""} onChange={(id) => set("serviceTypeId", id)} label="serviceRequested" />
+      <CategoryPicker kind="lead_source" value={f.leadSourceId ?? ""} onChange={(id) => set("leadSourceId", id)} label="leadSource" />
+      <CategoryPicker kind="service_type" value={f.serviceTypeId ?? ""} onChange={(id) => set("serviceTypeId", id)} label="serviceRequested" />
       <label className="space-y-1"><span className={lbl}>{t("temperature")}</span>
         <select value={f.temperature} onChange={(e) => set("temperature", e.target.value)} className={field}>
           {TEMPS.map((x) => <option key={x.value} value={x.value}>{t(x.key)}</option>)}
