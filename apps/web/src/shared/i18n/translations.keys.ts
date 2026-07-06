@@ -50,4 +50,4 @@ export type TranslationKey =
   | "totalEmployerCost" | "employeeDeductions" | "employerContributions" | "remitToTreasury"
   | "contractorReceives" | "payrollDisclaimer"
   | "fixedExpense" | "variableExpense" | "debtExpense" | "oneTimeExpense" | "unclassified"
-  | "classifyCategories" | "breakEvenComposition";
+  | "classifyCategories" | "breakEvenComposition" | "payrollCost" | "fixedCosts";

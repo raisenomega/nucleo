@@ -14,4 +14,5 @@ export const enRecon = {
   fixedExpense: "Fixed", variableExpense: "Variable", debtExpense: "Debt", oneTimeExpense: "One-time",
   unclassified: "Unclassified", classifyCategories: "classify your categories",
   breakEvenComposition: "fixed expenses + payroll",
+  payrollCost: "Total payroll cost", fixedCosts: "Fixed costs",
 } satisfies Partial<Record<TranslationKey, string>>;

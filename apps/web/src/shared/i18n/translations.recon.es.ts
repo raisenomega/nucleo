@@ -14,4 +14,5 @@ export const esRecon = {
   fixedExpense: "Fijo", variableExpense: "Variable", debtExpense: "Deuda", oneTimeExpense: "Único",
   unclassified: "Sin clasificar", classifyCategories: "clasifique sus categorías",
   breakEvenComposition: "gastos fijos + nómina",
+  payrollCost: "Costo total nómina", fixedCosts: "Gastos fijos",
 } satisfies Partial<Record<TranslationKey, string>>;
