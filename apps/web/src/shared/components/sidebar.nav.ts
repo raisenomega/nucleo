@@ -1,5 +1,5 @@
 import {
-  LayoutDashboard, Route as RouteIcon, Package, Calendar, Truck, DollarSign, CreditCard, Users,
+  Route as RouteIcon, Package, Calendar, Truck, DollarSign, CreditCard, Users,
   AlertCircle, Scale, RefreshCw, BarChart3, UserPlus, Megaphone, ShoppingCart, FileText,
   Home, FileCheck, ClipboardCheck, GraduationCap, LifeBuoy, Bell, Settings,
   Cog, Wallet, Store, Briefcase,
@@ -14,7 +14,6 @@ export type NavSection = { title: TranslationKey; icon: LucideIcon; items: NavIt
 
 export const SECTIONS: NavSection[] = [
   { title: "operations", icon: Cog, items: [
-    { key: "panel", icon: LayoutDashboard, to: "/dashboard" },
     { key: "routes", icon: RouteIcon }, { key: "inventory", icon: Package, to: "/inventory" },
     { key: "agenda", icon: Calendar }, { key: "assets", icon: Truck },
   ] },

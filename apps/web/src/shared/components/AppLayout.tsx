@@ -9,7 +9,7 @@ export function AppLayout() {
   const [expanded, setExpanded] = useState(false);
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <Sidebar expanded={expanded} onClose={() => setExpanded(false)} />
+      <Sidebar expanded={expanded} onClose={() => setExpanded(false)} onToggle={() => setExpanded((v) => !v)} />
       <div className={`flex min-h-screen flex-col transition-all duration-300 ${expanded ? "md:pl-60" : "md:pl-16"}`}>
         <header className="sticky top-0 z-30 flex items-center gap-2 border-b border-border bg-background p-4">
           <button type="button" onClick={() => setExpanded((v) => !v)} aria-label={t("menu")}
