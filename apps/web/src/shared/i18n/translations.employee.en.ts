@@ -11,6 +11,7 @@ export const enEmployee = {
   riskClass: "Risk class", payFrequency: "Pay frequency", professionalNotes: "Professional notes",
   country: "Country", personalTab: "Personal", professionalTab: "Professional", accessTab: "Access",
   benefitsTab: "Benefits", healthTab: "Health", documentsTab: "Documents",
+  module: "Module", resetDefaults: "Reset defaults", customAccess: "Custom access", roleDefaults: "Role defaults",
   vacationRate: "Vacation (days/mo)", accrued: "Accrued", used: "Used", available: "Available",
   maxAccrual: "Max accrual", sickRate: "Sick (days/mo)", bonus: "Bonus applies", bonusPct: "Bonus %",
   medicalPlan: "Medical plan", provider: "Provider", policyNumber: "Policy no.", employeeContribution: "Employee contrib.",

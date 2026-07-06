@@ -55,7 +55,7 @@ function MemberPage() {
       </div>
       {tab === "personal" && <ProfilePersonalTab form={form} set={set} />}
       {tab === "professional" && <ProfileProfessionalTab form={form} set={set} />}
-      {tab === "access" && <ProfileAccessTab role={m.role} onRole={(r) => void tm.changeRole(r)} onPin={(p) => void tm.setPin(p)} />}
+      {tab === "access" && <ProfileAccessTab role={m.role} onRole={(r) => void tm.changeRole(r)} onPin={(p) => void tm.setPin(p)} form={form} set={set} />}
       {tab === "benefits" && <ProfileBenefitsTab form={form} set={set} />}
       {tab === "health" && <div className="space-y-4"><ProfileHealthTab form={form} set={set} />
         <ProfileCertifications certs={ed.certs} onAdd={(c) => void ed.addCert(c)} onUpdate={(id, c) => void ed.updateCert(id, c)} onRemove={(id) => void ed.removeCert(id)} /></div>}

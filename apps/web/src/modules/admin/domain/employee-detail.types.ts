@@ -1,6 +1,7 @@
 // BC admin — expediente del empleado (employee_details, ~80 columnas). Puro.
 // NOTA: campos snake_case a propósito (espejan la tabla) → repo sin mapeo de 80 campos.
 import type { RepoResult } from "@admin/domain/admin.types";
+import type { ModuleAccess } from "@admin/domain/module-access";
 
 export interface EmployeeDetail {
   readonly id: string; readonly profile_id: string; readonly tenant_id: string;
@@ -24,6 +25,7 @@ export interface EmployeeDetail {
   readonly medical_conditions: string | null; readonly allergies: string | null; readonly blood_type: string | null; readonly current_medications: string | null; readonly physical_limitations: string | null;
   readonly uses_uniform: boolean | null; readonly shirt_size: string | null; readonly pants_size: string | null; readonly shoe_size: string | null;
   readonly protective_equipment: string[] | null; readonly assigned_equipment: string | null;
+  readonly module_access: ModuleAccess | null;
 }
 
 export type EmployeeDetailUpdate = Partial<Omit<EmployeeDetail, "id" | "tenant_id" | "profile_id">>;

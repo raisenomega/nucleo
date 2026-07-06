@@ -59,7 +59,7 @@ export type TranslationKey =
   | "joinTeam" | "invitedSubtitle" | "createPassword" | "confirmPassword" | "passwordMismatch"
   | "minPassword" | "alreadyRegistered" | "invitedLink" | "accountCreated" | "goToLogin"
   | "businessOwner" | "trialFree"
-  | "personalTab" | "professionalTab" | "accessTab" | "benefitsTab" | "healthTab" | "documentsTab"
+  | "personalTab" | "professionalTab" | "accessTab" | "benefitsTab" | "healthTab" | "documentsTab" | "module" | "resetDefaults" | "customAccess" | "roleDefaults"
   | "employeeProfile" | "personalInfo" | "roleAccess" | "assignPin" | "reactivate" | "lastAccess"
   | "modulesVisible" | "backToTeam" | "phone" | "position" | "approvedDate" | "registeredDate"
   | "middleName" | "lastName" | "ssn" | "dateOfBirth" | "gender" | "maritalStatus" | "dependents"

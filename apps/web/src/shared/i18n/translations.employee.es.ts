@@ -11,6 +11,7 @@ export const esEmployee = {
   riskClass: "Clasificación de riesgo", payFrequency: "Frecuencia de pago", professionalNotes: "Notas profesionales",
   country: "País", personalTab: "Personal", professionalTab: "Profesional", accessTab: "Accesos",
   benefitsTab: "Beneficios", healthTab: "Salud", documentsTab: "Documentos",
+  module: "Módulo", resetDefaults: "Restaurar defaults", customAccess: "Accesos personalizados", roleDefaults: "Defaults del rol",
   vacationRate: "Vacaciones (días/mes)", accrued: "Acumuladas", used: "Usadas", available: "Disponibles",
   maxAccrual: "Máx acumulable", sickRate: "Enfermedad (días/mes)", bonus: "Aguinaldo aplica", bonusPct: "Aguinaldo %",
   medicalPlan: "Plan médico", provider: "Proveedor", policyNumber: "Nº póliza", employeeContribution: "Aporte empleado",
