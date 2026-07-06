@@ -10,4 +10,5 @@ export const enRecon = {
   retentionAutoNote: "Computed from the month's income. Informational — no action needed.",
   accumulated: "Accumulated", operatingMargin: "Operating margin",
   breakEven: "Break-even", surplus: "Surplus", shortfall: "Shortfall", trend: "Trend",
+  dashboardFiscal: "Fiscal", breakEvenProgress: "of break-even",
 } satisfies Partial<Record<TranslationKey, string>>;

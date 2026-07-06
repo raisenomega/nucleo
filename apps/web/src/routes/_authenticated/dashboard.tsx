@@ -29,12 +29,17 @@ function Dashboard() {
           <div className="space-y-2">
             <h2 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("crmSection")}</h2>
             <DashboardCrm c={crm} />
-            {mkt && <div className="grid grid-cols-1 sm:grid-cols-3"><DashboardMarketing m={mkt} /></div>}
           </div>
           {fiscal && (
             <div className="space-y-2">
               <h2 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("fiscalSection")}</h2>
               <DashboardFiscal f={fiscal} />
+            </div>
+          )}
+          {mkt && (
+            <div className="space-y-2">
+              <h2 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("marketing")}</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-3"><DashboardMarketing m={mkt} /></div>
             </div>
           )}
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">

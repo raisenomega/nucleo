@@ -43,9 +43,10 @@ export interface MktSnapshot {
 
 export interface FiscalSnapshot {
   readonly availableBalance: number;
-  readonly status: "healthy" | "tight" | "at_risk";
-  readonly taxEstimated: number;
-  readonly totalIncome: number;
+  readonly operatingStatus: "surplus" | "tight" | "deficit";
+  readonly breakEvenPct: number;
+  readonly shortfall: number;
+  readonly surplus: number;
 }
 
 // Puerto del repositorio — lo implementa infrastructure; lo consume application (DI).

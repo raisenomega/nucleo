@@ -44,4 +44,5 @@ export type TranslationKey =
   | "deposit" | "deposits" | "egresos" | "registerBalance" | "openingBalance" | "realBalance" | "calculatedBalance"
   | "depositType" | "cash" | "check" | "transfer" | "other" | "referenceNumber"
   | "retentionAuto" | "retentionAutoNote" | "accumulated" | "operatingMargin"
-  | "breakEven" | "surplus" | "shortfall" | "trend";
+  | "breakEven" | "surplus" | "shortfall" | "trend"
+  | "dashboardFiscal" | "breakEvenProgress";
