@@ -26,5 +26,5 @@ export function useRecurringExpenses(repo: IRecurringRepository, month: string) 
     const r = await repo.remove(id); if (r.ok) await refresh(); return r;
   }, [repo, refresh]);
 
-  return { items, paid, loading, save, remove };
+  return { items, paid, loading, save, remove, refresh };
 }

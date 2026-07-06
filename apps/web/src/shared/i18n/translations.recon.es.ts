@@ -19,5 +19,5 @@ export const esRecon = {
   recurringSubtitle: "Configura los gastos que se repiten cada mes. El sistema te indica cuáles ya pagaste.",
   budgeted: "Presupuestado", paid: "Pagado", addRecurring: "Añadir gasto fijo",
   registerPayment: "Registrar pago", manageRecurring: "Gestionar recurrentes", frequencyLabel: "Frecuencia",
-  coveredPercent: "Has cubierto {done} de {total} gastos fijos ({pct}%)",
+  coveredPercent: "Has cubierto {done} de {total} gastos fijos ({pct}%)", newCategory: "Nueva categoría",
 } satisfies Partial<Record<TranslationKey, string>>;
