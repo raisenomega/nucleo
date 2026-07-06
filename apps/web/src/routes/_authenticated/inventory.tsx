@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 import { useI18n } from "@shared/i18n";
-import { useRoleGate } from "@shared/hooks/useRoleGate";
+import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { useInventory } from "@fieldops/application/useInventory.hook";
 import { supabaseInventoryRepository } from "@fieldops/infrastructure/supabase-inventory.repository";
 import { InventoryForm } from "@fieldops/presentation/InventoryForm";
@@ -14,7 +14,7 @@ export const Route = createFileRoute("/_authenticated/inventory")({ component: I
 
 function InventoryPage() {
   const { t } = useI18n();
-  const { canEdit } = useRoleGate();
+  const { can } = useModuleAccess();
   const { items, create, update, remove } = useInventory(supabaseInventoryRepository);
   const [editing, setEditing] = useState<string | null>(null);
   const [viewing, setViewing] = useState<string | null>(null);
@@ -29,6 +29,7 @@ function InventoryPage() {
     setEditing(null);
   }
 
+  if (!can("inventory", "view")) return <Navigate to="/dashboard" />;
   return (
     <div className="space-y-6 p-8">
       <div className="flex items-start justify-between gap-4">
@@ -36,7 +37,7 @@ function InventoryPage() {
           <h1 className="font-display text-3xl font-bold text-primary">{t("inventory")}</h1>
           <p className="text-xs text-muted-foreground">{t("inventorySubtitle")}</p>
         </div>
-        {canEdit("coo") && (
+        {can("inventory", "create") && (
           <button type="button" onClick={() => setEditing("new")}
             className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-4 py-2 font-body font-bold">
             <Plus className="h-4 w-4" /> {t("newItem")}

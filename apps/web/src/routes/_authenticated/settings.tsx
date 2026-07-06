@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { useI18n } from "@shared/i18n";
-import { useRoleGate } from "@shared/hooks/useRoleGate";
+import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { useAdmin } from "@admin/application/useAdmin.hook";
 import { supabaseAdminRepository } from "@admin/infrastructure/supabase-admin.repository";
 import { AdminTeamTab } from "@admin/presentation/AdminTeamTab";
@@ -14,12 +14,12 @@ type Tab = "team" | "categories" | "general";
 
 function SettingsPage() {
   const { t } = useI18n();
-  const { canEdit } = useRoleGate();
+  const { can } = useModuleAccess();
   const m = useAdmin(supabaseAdminRepository);
-  const isCeo = canEdit("ceo");
+  const isCeo = can("settings", "edit");
   const [tab, setTab] = useState<Tab>(isCeo ? "team" : "categories");
 
-  if (!canEdit("coo")) return <div className="p-8 text-sm text-muted-foreground">{t("notAuthorized")}</div>;
+  if (!can("settings", "view")) return <Navigate to="/dashboard" />;
 
   const tabs: { id: Tab; label: string; show: boolean }[] = [
     { id: "team", label: t("team"), show: isCeo },

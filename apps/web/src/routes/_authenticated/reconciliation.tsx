@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { useI18n } from "@shared/i18n";
-import { useRoleGate } from "@shared/hooks/useRoleGate";
+import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { useReconciliation } from "@finance/application/useReconciliation.hook";
 import { supabaseReconciliationRepository } from "@finance/infrastructure/supabase-reconciliation.repository";
 import { supabaseBankAccountRepository } from "@finance/infrastructure/supabase-bank-account.repository";
@@ -21,7 +21,7 @@ type Modal = "account" | "deposit" | "balance" | null;
 
 function ReconciliationPage() {
   const { t } = useI18n();
-  const { canEdit } = useRoleGate();
+  const { can } = useModuleAccess();
   const [month, setMonth] = useState(() => new Date().toISOString().slice(0, 7));
   const [modal, setModal] = useState<Modal>(null);
   const m = useReconciliation(supabaseReconciliationRepository, supabaseBankAccountRepository, month);
@@ -31,7 +31,7 @@ function ReconciliationPage() {
     catch (e) { window.alert(e instanceof Error ? e.message : String(e)); }
   };
 
-  if (!canEdit("coo")) return <div className="p-8 text-sm text-muted-foreground">{t("notAuthorized")}</div>;
+  if (!can("reconciliation", "view")) return <Navigate to="/dashboard" />;
 
   return (
     <div className="space-y-6 p-8">

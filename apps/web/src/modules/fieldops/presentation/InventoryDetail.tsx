@@ -1,12 +1,12 @@
 import { X } from "lucide-react";
 import { useI18n } from "@shared/i18n";
-import { useRoleGate } from "@shared/hooks/useRoleGate";
+import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { formatCurrency } from "@shared/lib/format";
 import type { InventoryItem } from "@fieldops/domain/inventory.types";
 
 export function InventoryDetail({ item, onClose }: { item: InventoryItem; onClose: () => void }) {
   const { t } = useI18n();
-  const { canEdit } = useRoleGate();
+  const { can } = useModuleAccess();
   const row = (label: string, v: string) => (
     <div><dt className="inline text-muted-foreground">{label}: </dt><dd className="inline">{v}</dd></div>
   );
@@ -19,7 +19,7 @@ export function InventoryDetail({ item, onClose }: { item: InventoryItem; onClos
         </div>
         <dl className="space-y-1 font-body text-sm">
           {row(t("stock"), String(item.stock))}
-          {canEdit("coo") && row(t("unitCost"), formatCurrency(item.unitCost))}
+          {can("inventory", "edit") && row(t("unitCost"), formatCurrency(item.unitCost))}
           {row(t("minStock"), String(item.minStock))}
         </dl>
         <p className="text-xs text-muted-foreground">{t("movementsSoon")}</p>
