@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
-import { Plus, Repeat } from "lucide-react";
+import { createFileRoute, Navigate } from "@tanstack/react-router";
+import { Plus } from "lucide-react";
 import { supabase } from "@shared/lib/supabase";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
@@ -56,10 +56,7 @@ function ExpensePage() {
       <div className="flex items-start justify-between gap-4">
         <div><h1 className="font-display text-3xl font-bold text-primary">{t("expenses")}</h1>
           <p className="text-xs text-muted-foreground">{t("expenseSubtitle")}</p></div>
-        <div className="flex flex-wrap items-center gap-2">
-          {can("recurring", "view") && <Link to="/expenses-recurring" className="flex items-center gap-2 rounded-lg border border-border px-4 py-2 font-body font-bold text-primary"><Repeat className="h-4 w-4" /> {t("recurringExpenses")} →</Link>}
-          {can("expenses", "create") && <button type="button" onClick={() => setEditing("new")} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-4 py-2 font-body font-bold"><Plus className="h-4 w-4" /> {t("newExpense")}</button>}
-        </div>
+        {can("expenses", "create") && <button type="button" onClick={() => setEditing("new")} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-4 py-2 font-body font-bold"><Plus className="h-4 w-4" /> {t("newExpense")}</button>}
       </div>
       {editing !== null && (
         <ExpenseForm expenseCats={cats.filter((c) => c.kind === "expense").map((c) => ({ id: c.id, label: c.label, expenseClass: c.expense_class }))}

@@ -10,7 +10,7 @@ import { RecurringExpenseForm } from "@finance/presentation/RecurringExpenseForm
 import { RecurringPayModal } from "@finance/presentation/RecurringPayModal";
 import type { RecurringExpenseFormData } from "@finance/domain/recurring-expense.types";
 
-export const Route = createFileRoute("/_authenticated/expenses-recurring")({ component: RecurringPage });
+export const Route = createFileRoute("/_authenticated/recurring")({ component: RecurringPage });
 
 function RecurringPage() {
   const { t } = useI18n();

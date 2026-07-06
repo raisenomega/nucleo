@@ -7,7 +7,7 @@ import type { ExpenseFormData } from "@finance/domain/expense.types";
 type Cat = { id: string; label: string; kind: string; expense_class?: string | null };
 type Emp = { id: string; full_name: string };
 
-// Registra el pago de un gasto fijo sin salir de /expenses-recurring: reutiliza ExpenseForm en modal.
+// Registra el pago de un gasto fijo sin salir de /recurring: reutiliza ExpenseForm en modal.
 export function RecurringPayModal({ categoryId, onClose, onDone }: {
   categoryId: string; onClose: () => void; onDone: () => void;
 }) {
