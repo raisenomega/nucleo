@@ -32,4 +32,11 @@ export type TranslationKey =
   | "crmSection" | "totalLeads" | "totalQuoted" | "conversionRate" | "recentLeads"
   | "marketingSubtitle" | "channel" | "budgetedAmount" | "budgetList" | "newBudget"
   | "campaignName" | "month" | "mExpenseList" | "newMExpense"
-  | "spent" | "executed" | "cac" | "roi" | "leadsGenerated" | "registerExpense" | "marketingExecuted";
+  | "spent" | "executed" | "cac" | "roi" | "leadsGenerated" | "registerExpense" | "marketingExecuted"
+  | "reconciliationSubtitle" | "bankAccounts" | "addAccount" | "notRegistered" | "cutoff"
+  | "totalBank" | "totalSystem" | "difference" | "checking" | "savings"
+  | "taxObligations" | "obligation" | "base" | "estimated" | "consultCpa"
+  | "monthly" | "quarterly" | "annual"
+  | "retentionFund" | "registerDeposit" | "required" | "deposited" | "pending" | "history"
+  | "executiveSummary" | "operatingProfit" | "availableBalance" | "healthy" | "tight" | "atRisk"
+  | "fiscalDisclaimer" | "bankName" | "accountLast4" | "accountType" | "isPrimary" | "notAuthorized";

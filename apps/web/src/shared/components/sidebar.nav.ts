@@ -8,7 +8,7 @@ import type { LucideIcon } from "lucide-react";
 import type { TranslationKey } from "@shared/i18n";
 
 // Solo las rutas ya construidas llevan `to`; el resto se renderiza deshabilitado.
-type EnabledPath = "/dashboard" | "/income" | "/expenses" | "/extraordinary" | "/payroll" | "/inventory" | "/leads" | "/marketing";
+type EnabledPath = "/dashboard" | "/income" | "/expenses" | "/extraordinary" | "/payroll" | "/inventory" | "/leads" | "/marketing" | "/reconciliation";
 export type NavItem = { key: TranslationKey; icon: LucideIcon; to?: EnabledPath };
 export type NavSection = { title: TranslationKey; icon: LucideIcon; items: NavItem[] };
 
@@ -21,7 +21,7 @@ export const SECTIONS: NavSection[] = [
   { title: "finance", icon: Wallet, items: [
     { key: "income", icon: DollarSign, to: "/income" },
     { key: "expenses", icon: CreditCard, to: "/expenses" }, { key: "payroll", icon: Users, to: "/payroll" },
-    { key: "extraordinary", icon: AlertCircle, to: "/extraordinary" }, { key: "reconciliation", icon: Scale },
+    { key: "extraordinary", icon: AlertCircle, to: "/extraordinary" }, { key: "reconciliation", icon: Scale, to: "/reconciliation" },
     { key: "billing", icon: RefreshCw }, { key: "reports", icon: BarChart3 },
   ] },
   { title: "salesCrm", icon: Store, items: [
