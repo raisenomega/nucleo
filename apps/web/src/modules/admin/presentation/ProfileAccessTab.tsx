@@ -6,8 +6,11 @@ import { ACCESS_MODULES, defaultsFor, type ModuleAccess, type Perm } from "@admi
 const ROLES: { v: AppRole; l: string }[] = [
   { v: "ceo", l: "CEO" }, { v: "coo", l: "COO" }, { v: "operaciones", l: "Operaciones" }, { v: "servicio", l: "Servicio" },
 ];
-const PERMS: Perm[] = ["view", "create", "edit", "delete"];
-const PERM_L: Record<Perm, string> = { view: "Ver", create: "Crear", edit: "Editar", delete: "Eliminar" };
+const PERMS: Perm[] = ["view", "create", "edit", "delete", "cost", "salary", "documents", "categories", "bank", "fiscal"];
+const PERM_L: Record<Perm, string> = {
+  view: "Ver", create: "Crear", edit: "Editar", delete: "Eliminar",
+  cost: "Precios", salary: "Salarios", documents: "Docs", categories: "Categorías", bank: "Banco", fiscal: "Fiscal",
+};
 
 export function ProfileAccessTab({ role, onRole, onPin, form, set }: {
   role: AppRole | null; onRole: (r: AppRole) => void; onPin: (pin: string) => void;

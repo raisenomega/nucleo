@@ -1,7 +1,9 @@
-// BC admin — matriz de accesos por modulo. Puro. Fuente de verdad de checkmarks + enforcement futuro.
+// BC admin — matriz de accesos por modulo. Puro. Fuente de verdad de checkmarks + enforcement.
 import type { AppRole } from "@admin/domain/admin.types";
 
-export type Perm = "view" | "create" | "edit" | "delete";
+// CRUD operativo + permisos granulares: cost (precios), salary (nomina), documents (leads),
+// categories (crear categorias), bank/fiscal (datos de conciliacion).
+export type Perm = "view" | "create" | "edit" | "delete" | "cost" | "salary" | "documents" | "categories" | "bank" | "fiscal";
 export type ModuleAccess = Record<string, Partial<Record<Perm, boolean>>>;
 
 const ALL: Perm[] = ["view", "create", "edit", "delete"];
@@ -10,25 +12,25 @@ export const ACCESS_MODULES: { key: string; label: string; crud: Perm[]; note: s
   { key: "dashboard", label: "Dashboard", crud: ["view"], note: "" },
   { key: "income", label: "Ingresos", crud: ALL, note: "" },
   { key: "expenses", label: "Gastos", crud: ALL, note: "" },
-  { key: "payroll", label: "Nómina", crud: ALL, note: "Solo CEO/COO" },
+  { key: "payroll", label: "Nómina", crud: [...ALL, "salary"], note: "salary = salario/deducciones" },
   { key: "extraordinary", label: "Extraordinarios", crud: ALL, note: "" },
-  { key: "inventory", label: "Inventario", crud: ALL, note: "Sin precios (oper.)" },
-  { key: "leads", label: "Leads", crud: ALL, note: "" },
-  { key: "marketing", label: "Marketing", crud: ALL, note: "Solo KPIs" },
-  { key: "reconciliation", label: "Conciliación", crud: ALL, note: "Solo CEO/COO" },
+  { key: "inventory", label: "Inventario", crud: [...ALL, "cost"], note: "cost = precios/costo" },
+  { key: "leads", label: "Leads", crud: [...ALL, "documents"], note: "documents = WhatsApp/cotizar/factura" },
+  { key: "marketing", label: "Marketing", crud: ALL, note: "" },
+  { key: "reconciliation", label: "Conciliación", crud: [...ALL, "bank", "fiscal"], note: "bank/fiscal = datos sensibles" },
   { key: "recurring", label: "Gastos recurrentes", crud: ALL, note: "" },
-  { key: "settings", label: "Configuración", crud: ALL, note: "Solo CEO" },
+  { key: "settings", label: "Configuración", crud: ["view", "edit", "categories"], note: "categories = crear categorías" },
 ];
 
 const V = { view: true };
-const FULL = { view: true, create: true, edit: true, delete: true };
-const everything = () => Object.fromEntries(ACCESS_MODULES.map((m) => [m.key, FULL])) as ModuleAccess;
+const perms = (crud: Perm[]) => Object.fromEntries(crud.map((p) => [p, true]));
+const everything = () => Object.fromEntries(ACCESS_MODULES.map((m) => [m.key, perms(m.crud)])) as ModuleAccess;
 
-// Defaults por rol (§3 del doc). Solo se listan modulos con algun permiso.
+// Defaults por rol (§3 del doc). ceo/superadmin todo; coo todo salvo settings.edit; oper/servicio minimo.
 export const ROLE_DEFAULTS: Record<AppRole, ModuleAccess> = {
   superadmin: everything(),
   ceo: everything(),
-  coo: { ...everything(), settings: V },
+  coo: { ...everything(), settings: { view: true, categories: true } },
   operaciones: { dashboard: V, expenses: { view: true, create: true }, inventory: { view: true, edit: true } },
   servicio: { dashboard: V, inventory: V },
 };
