@@ -57,7 +57,7 @@ function ExpensePage() {
         <div><h1 className="font-display text-3xl font-bold text-primary">{t("expenses")}</h1>
           <p className="text-xs text-muted-foreground">{t("expenseSubtitle")}</p></div>
         <div className="flex flex-wrap items-center gap-2">
-          <Link to="/expenses-recurring" className="flex items-center gap-2 rounded-lg border border-border px-4 py-2 font-body font-bold text-primary"><Repeat className="h-4 w-4" /> {t("recurringExpenses")} →</Link>
+          {can("recurring", "view") && <Link to="/expenses-recurring" className="flex items-center gap-2 rounded-lg border border-border px-4 py-2 font-body font-bold text-primary"><Repeat className="h-4 w-4" /> {t("recurringExpenses")} →</Link>}
           {can("expenses", "create") && <button type="button" onClick={() => setEditing("new")} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-4 py-2 font-body font-bold"><Plus className="h-4 w-4" /> {t("newExpense")}</button>}
         </div>
       </div>

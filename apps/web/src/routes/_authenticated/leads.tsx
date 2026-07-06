@@ -57,7 +57,8 @@ function LeadsPage() {
       </div>
       {editing !== null && (
         <LeadForm sources={cats.filter((c) => c.kind === "lead_source")} services={cats.filter((c) => c.kind === "service_type")}
-          initial={editRow} onSubmit={submit} onCancel={() => setEditing(null)} />
+          initial={editRow} onSubmit={submit} onCancel={() => setEditing(null)}
+          canSubmit={editing === "new" ? can("leads", "create") : can("leads", "edit")} />
       )}
       <LeadTable rows={leads} onView={setViewing} onEdit={can("leads", "edit") ? setEditing : undefined}
         onDelete={can("leads", "delete") ? (id) => { if (window.confirm(`${t("delete")}?`)) void remove(id); } : undefined} />

@@ -13,9 +13,9 @@ const EMPTY: LeadFormData = {
   callDate: "", notes: "", quotedPrice: 0, items: [],
 };
 
-export function LeadForm({ sources, services, initial, onSubmit, onCancel }: {
+export function LeadForm({ sources, services, initial, onSubmit, onCancel, canSubmit }: {
   sources: Cat[]; services: Cat[]; initial?: LeadFormData;
-  onSubmit: (d: LeadFormData) => void; onCancel: () => void;
+  onSubmit: (d: LeadFormData) => void; onCancel: () => void; canSubmit: boolean;
 }) {
   const { t } = useI18n();
   const [f, setF] = useState<LeadFormData>(initial ?? EMPTY);
@@ -39,9 +39,9 @@ export function LeadForm({ sources, services, initial, onSubmit, onCancel }: {
       {error && <p className="text-sm text-destructive">{error}</p>}
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap gap-2">
-          <button type="button" onClick={() => act(wa)} className={`${b} bg-green-600 text-white`}><MessageCircle className="h-4 w-4" /> {t("whatsapp")}</button>
-          <button type="button" onClick={() => act(() => window.alert(t("quoteSaved")))} className={`${b} bg-primary text-primary-foreground`}><FileText className="h-4 w-4" /> {t("quote")}</button>
-          <button type="button" onClick={() => act(() => window.alert(t("invoiceSaved")))} className={`${b} bg-primary text-primary-foreground`}><Receipt className="h-4 w-4" /> {t("invoice")}</button>
+          {canSubmit && <button type="button" onClick={() => act(wa)} className={`${b} bg-green-600 text-white`}><MessageCircle className="h-4 w-4" /> {t("whatsapp")}</button>}
+          {canSubmit && <button type="button" onClick={() => act(() => window.alert(t("quoteSaved")))} className={`${b} bg-primary text-primary-foreground`}><FileText className="h-4 w-4" /> {t("quote")}</button>}
+          {canSubmit && <button type="button" onClick={() => act(() => window.alert(t("invoiceSaved")))} className={`${b} bg-primary text-primary-foreground`}><Receipt className="h-4 w-4" /> {t("invoice")}</button>}
         </div>
         <button type="button" onClick={onCancel} className="px-3 py-2 text-sm font-body text-muted-foreground hover:underline">{t("cancel")}</button>
       </div>

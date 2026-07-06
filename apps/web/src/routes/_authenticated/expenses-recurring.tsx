@@ -42,7 +42,8 @@ function RecurringPage() {
           <Plus className="h-4 w-4" /> {t("addRecurring")}
         </button>}
       </div>
-      <RecurringExpenseTable items={m.items} paid={m.paid} onEdit={can("recurring", "edit") ? setEditing : undefined} onPay={setPaying}
+      <RecurringExpenseTable items={m.items} paid={m.paid} onEdit={can("recurring", "edit") ? setEditing : undefined}
+        onPay={can("recurring", "create") ? setPaying : undefined}
         onDelete={can("recurring", "delete") ? (id) => { if (window.confirm(`${t("delete")}?`)) void m.remove(id); } : undefined} />
       {editing !== null && <RecurringExpenseForm initial={editRow} onSubmit={submit} onCancel={() => setEditing(null)} />}
       {paying && <RecurringPayModal categoryId={paying} onClose={() => setPaying(null)} onDone={() => { setPaying(null); void m.refresh(); }} />}

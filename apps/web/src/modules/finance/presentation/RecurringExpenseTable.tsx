@@ -5,7 +5,7 @@ import type { RecurringExpense } from "@finance/domain/recurring-expense.types";
 
 export function RecurringExpenseTable({ items, paid, onPay, onEdit, onDelete }: {
   items: readonly RecurringExpense[]; paid: Record<string, number>;
-  onPay: (categoryId: string) => void; onEdit?: (id: string) => void; onDelete?: (id: string) => void;
+  onPay?: (categoryId: string) => void; onEdit?: (id: string) => void; onDelete?: (id: string) => void;
 }) {
   const { t } = useI18n();
   const paidOf = (i: RecurringExpense) => paid[i.categoryId] ?? 0;
@@ -42,7 +42,7 @@ export function RecurringExpenseTable({ items, paid, onPay, onEdit, onDelete }: 
                   <td className="px-3 py-2 text-right">{p > 0 ? <span className="text-green-600">{formatCurrency(p)} ✅</span> : <span className="text-muted-foreground">⏳</span>}</td>
                   <td className="px-3 py-2">
                     <div className="flex justify-end gap-2">
-                      {p === 0 && <button type="button" onClick={() => onPay(i.categoryId)} className="rounded bg-primary text-primary-foreground px-2 py-1 text-xs font-bold">{t("registerPayment")}</button>}
+                      {p === 0 && onPay && <button type="button" onClick={() => onPay(i.categoryId)} className="rounded bg-primary text-primary-foreground px-2 py-1 text-xs font-bold">{t("registerPayment")}</button>}
                       {onEdit && <button type="button" onClick={() => onEdit(i.id)} aria-label={t("edit")} className="text-primary"><Pencil className="h-4 w-4" /></button>}
                       {onDelete && <button type="button" onClick={() => onDelete(i.id)} aria-label={t("delete")} className="text-destructive"><Trash2 className="h-4 w-4" /></button>}
                     </div>
