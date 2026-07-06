@@ -66,7 +66,9 @@ export type TranslationKey =
   | "emergencyContact" | "relationship" | "professionalInfo" | "department" | "employeeNumber"
   | "hireDate" | "terminationDate" | "probationEnd" | "contractType" | "flsaClass" | "riskClass"
   | "payFrequency" | "professionalNotes" | "country"
-  | "vacationRate" | "accrued" | "used" | "available" | "maxAccrual" | "sickRate" | "bonus" | "bonusPct"
-  | "medicalPlan" | "provider" | "policyNumber" | "employeeContribution" | "employerContribution"
-  | "retirementPlan" | "planType" | "employerMatchPct" | "lifeInsurance" | "parking"
-  | "companyVehicle" | "companyPhone" | "otherBenefits";
+  | "vacationRate" | "accrued" | "used" | "available" | "maxAccrual" | "sickRate" | "bonus" | "bonusPct" | "medicalPlan"
+  | "provider" | "policyNumber" | "employeeContribution" | "employerContribution" | "retirementPlan" | "planType"
+  | "employerMatchPct" | "lifeInsurance" | "parking" | "companyVehicle" | "companyPhone" | "otherBenefits"
+  | "medicalExam" | "examDate" | "nextExam" | "drugTest" | "testDate" | "medicalConditions" | "confidential" | "allergies"
+  | "bloodType" | "medications" | "limitations" | "uniform" | "shirtSize" | "pantsSize" | "shoeSize" | "protectiveEquipment"
+  | "assignedEquipment" | "certifications" | "certName" | "certNumber" | "expirationDate" | "addCert" | "requiredDocs" | "missing" | "uploadDoc";

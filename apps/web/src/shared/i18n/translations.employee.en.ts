@@ -16,4 +16,10 @@ export const enEmployee = {
   employerContribution: "Employer contrib.", retirementPlan: "Retirement plan", planType: "Type", employerMatchPct: "Employer match %",
   lifeInsurance: "Life insurance", parking: "Parking", companyVehicle: "Company vehicle",
   companyPhone: "Company phone", otherBenefits: "Other benefits",
+  medicalExam: "Medical exam", examDate: "Exam date", nextExam: "Next exam", drugTest: "Drug test",
+  testDate: "Test date", medicalConditions: "Medical conditions", confidential: "confidential", allergies: "Allergies",
+  bloodType: "Blood type", medications: "Medications", limitations: "Physical limitations", uniform: "Uses uniform",
+  shirtSize: "Shirt size", pantsSize: "Pants size", shoeSize: "Shoe size", protectiveEquipment: "Protective equipment",
+  assignedEquipment: "Assigned equipment", certifications: "Certifications", certName: "Certification", certNumber: "Number",
+  expirationDate: "Expiration", addCert: "Add", requiredDocs: "Required documents", missing: "Missing", uploadDoc: "Upload document",
 } satisfies Partial<Record<TranslationKey, string>>;
