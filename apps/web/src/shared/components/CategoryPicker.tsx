@@ -4,8 +4,9 @@ import { supabase } from "@shared/lib/supabase";
 import { useI18n } from "@shared/i18n";
 import type { TranslationKey } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
+import { useRoleGate } from "@shared/hooks/useRoleGate";
 
-type Cat = { id: string; label: string };
+type Cat = { id: string; label: string; expense_class?: string | null };
 const CLASSES: { v: string; k: TranslationKey }[] = [
   { v: "fixed", k: "fixedExpense" }, { v: "variable", k: "variableExpense" },
   { v: "debt", k: "debtExpense" }, { v: "one_time", k: "oneTimeExpense" },
@@ -17,13 +18,19 @@ export function CategoryPicker({ kind, value, onChange, label, byLabel }: {
 }) {
   const { t } = useI18n();
   const { can } = useModuleAccess();
+  const { canEdit } = useRoleGate();
   const [cats, setCats] = useState<Cat[]>([]);
   const [creating, setCreating] = useState(false);
   const [name, setName] = useState("");
   const [cls, setCls] = useState("fixed");
   const field = "w-full rounded-lg border border-border bg-background p-2 font-body";
-  const load = () => void supabase.from("categories").select("id,label").eq("kind", kind).eq("active", true).order("sort")
-    .then(({ data }) => setCats((data as Cat[] | null) ?? []));
+  const load = () => void supabase.from("categories").select("id,label,expense_class").eq("kind", kind).eq("active", true).order("sort")
+    .then(({ data }) => {
+      let list = (data as Cat[] | null) ?? [];
+      // Gastos fijos (renta, luz, lease...) solo los ve el CEO; el empleado no los ve en el selector.
+      if (kind === "expense" && !canEdit("ceo")) list = list.filter((c) => c.expense_class !== "fixed");
+      setCats(list);
+    });
   useEffect(() => { load(); }, [kind]);
   async function create() {
     if (!name.trim()) return;
