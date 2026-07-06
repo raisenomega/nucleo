@@ -1,0 +1,34 @@
+// BC operations — dominio de rutas de servicio (service_routes + route_stops). Puro.
+export type RepoResult = { ok: true } | { ok: false; error: string };
+
+export interface ServiceRoute {
+  readonly id: string; readonly routeDate: string; readonly assignedTo: string;
+  readonly status: string; readonly notes: string | null;
+  readonly createdBy: string; readonly stopCount: number;
+}
+export interface RouteStop {
+  readonly id: string; readonly routeId: string; readonly stopOrder: number;
+  readonly clientName: string; readonly address: string; readonly city: string | null;
+  readonly serviceType: string; readonly scheduledTime: string;
+  readonly estimatedAmount: number; readonly actualAmount: number | null;
+  readonly paymentMethodId: string | null; readonly status: string;
+  readonly notes: string | null; readonly completedAt: string | null;
+}
+export interface RouteFormData { routeDate: string; assignedTo: string; status: string; notes: string; }
+export interface StopFormData {
+  clientName: string; address: string; city: string; serviceType: string;
+  scheduledTime: string; estimatedAmount: number; notes: string;
+}
+export type StopPatch = Partial<StopFormData> & { status?: string; completedAt?: string | null };
+
+export interface IRouteRepository {
+  listRoutes(date: string): Promise<readonly ServiceRoute[]>;
+  listStops(routeId: string): Promise<readonly RouteStop[]>;
+  create(d: RouteFormData, stops: readonly StopFormData[]): Promise<RepoResult>;
+  update(id: string, d: RouteFormData): Promise<RepoResult>;
+  remove(id: string): Promise<RepoResult>;
+  addStop(routeId: string, order: number, s: StopFormData): Promise<RepoResult>;
+  updateStop(id: string, patch: StopPatch): Promise<RepoResult>;
+  removeStop(id: string): Promise<RepoResult>;
+  reorderStops(orderedIds: readonly string[]): Promise<RepoResult>;
+}

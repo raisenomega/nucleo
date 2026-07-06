@@ -8,14 +8,14 @@ import type { LucideIcon } from "lucide-react";
 import type { TranslationKey } from "@shared/i18n";
 
 // Solo las rutas ya construidas llevan `to`; el resto se renderiza deshabilitado.
-type EnabledPath = "/dashboard" | "/income" | "/expenses" | "/extraordinary" | "/payroll" | "/inventory" | "/leads" | "/marketing" | "/reconciliation" | "/recurring" | "/settings";
+type EnabledPath = "/dashboard" | "/routes" | "/income" | "/expenses" | "/extraordinary" | "/payroll" | "/inventory" | "/leads" | "/marketing" | "/reconciliation" | "/recurring" | "/settings";
 // mod = clave de módulo para el gate (can(mod,"view")). Items sin mod = "próximamente" (solo roadmap coo/ceo).
 export type NavItem = { key: TranslationKey; icon: LucideIcon; to?: EnabledPath; mod?: string };
 export type NavSection = { title: TranslationKey; icon: LucideIcon; items: NavItem[] };
 
 export const SECTIONS: NavSection[] = [
   { title: "operations", icon: Cog, items: [
-    { key: "routes", icon: RouteIcon }, { key: "inventory", icon: Package, to: "/inventory", mod: "inventory" },
+    { key: "routes", icon: RouteIcon, to: "/routes", mod: "routes" }, { key: "inventory", icon: Package, to: "/inventory", mod: "inventory" },
     { key: "agenda", icon: Calendar }, { key: "assets", icon: Truck },
   ] },
   { title: "finance", icon: Wallet, items: [

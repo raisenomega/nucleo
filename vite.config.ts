@@ -23,6 +23,7 @@ export default defineConfig({
       "@identity": r("apps/web/src/modules/identity"),
       "@cognition": r("apps/web/src/modules/cognition"),
       "@crm": r("apps/web/src/modules/crm"),
+      "@operations": r("apps/web/src/modules/operations"),
       "@admin": r("apps/web/src/modules/admin"),
       "@shared": r("apps/web/src/shared"),
       "@brand": r("brand"),
