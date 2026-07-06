@@ -41,9 +41,17 @@ export interface MktSnapshot {
   readonly totalSpent: number;
 }
 
+export interface FiscalSnapshot {
+  readonly availableBalance: number;
+  readonly status: "healthy" | "tight" | "at_risk";
+  readonly taxEstimated: number;
+  readonly totalIncome: number;
+}
+
 // Puerto del repositorio — lo implementa infrastructure; lo consume application (DI).
 export interface IDashboardRepository {
   getSnapshot(month?: Date): Promise<Snapshot | null>;
   getCrmSnapshot(month?: Date): Promise<CrmSnapshot | null>;
   getMarketingSnapshot(month?: Date): Promise<MktSnapshot | null>;
+  getReconciliationSnapshot(month?: Date): Promise<FiscalSnapshot | null>;
 }

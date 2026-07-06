@@ -6,6 +6,7 @@ import { supabaseDashboardRepository } from "@finance/infrastructure/supabase-da
 import { DashboardKpis } from "@finance/presentation/DashboardKpis";
 import { DashboardCrm } from "@finance/presentation/DashboardCrm";
 import { DashboardMarketing } from "@finance/presentation/DashboardMarketing";
+import { DashboardFiscal } from "@finance/presentation/DashboardFiscal";
 import { DashboardRecent } from "@finance/presentation/DashboardRecent";
 import { DashboardRecentLeads } from "@finance/presentation/DashboardRecentLeads";
 
@@ -15,7 +16,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 
 function Dashboard() {
   const { t } = useI18n();
-  const { snapshot, crm, mkt, isLoading } = useDashboard(supabaseDashboardRepository);
+  const { snapshot, crm, mkt, fiscal, isLoading } = useDashboard(supabaseDashboardRepository);
   return (
     <div className="space-y-6 p-8">
       <TrialBanner />
@@ -30,6 +31,12 @@ function Dashboard() {
             <DashboardCrm c={crm} />
             {mkt && <div className="grid grid-cols-1 sm:grid-cols-3"><DashboardMarketing m={mkt} /></div>}
           </div>
+          {fiscal && (
+            <div className="space-y-2">
+              <h2 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("fiscalSection")}</h2>
+              <DashboardFiscal f={fiscal} />
+            </div>
+          )}
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
             <DashboardRecent s={snapshot} />
             <DashboardRecentLeads leads={crm.recentLeads} />

@@ -39,4 +39,5 @@ export type TranslationKey =
   | "monthly" | "quarterly" | "annual"
   | "retentionFund" | "registerDeposit" | "required" | "deposited" | "pending" | "history"
   | "executiveSummary" | "operatingProfit" | "availableBalance" | "healthy" | "tight" | "atRisk"
-  | "fiscalDisclaimer" | "bankName" | "accountLast4" | "accountType" | "isPrimary" | "notAuthorized";
+  | "fiscalDisclaimer" | "bankName" | "accountLast4" | "accountType" | "isPrimary" | "notAuthorized"
+  | "fiscalSection";

@@ -1,6 +1,6 @@
 import { supabase } from "@shared/lib/supabase";
 import type {
-  IDashboardRepository, RecentItem, Snapshot, CrmSnapshot, RecentLead, MktSnapshot,
+  IDashboardRepository, RecentItem, Snapshot, CrmSnapshot, RecentLead, MktSnapshot, FiscalSnapshot,
 } from "@finance/domain/dashboard.types";
 
 interface Raw {
@@ -46,5 +46,15 @@ export const supabaseDashboardRepository: IDashboardRepository = {
     if (error || !data) return null;
     const r = data as unknown as { executed_pct: number; total_budget: number; total_spent: number };
     return { executedPct: Number(r.executed_pct), totalBudget: Number(r.total_budget), totalSpent: Number(r.total_spent) };
+  },
+  async getReconciliationSnapshot(month?: Date): Promise<FiscalSnapshot | null> {
+    const args = month ? { p_month: month.toISOString().slice(0, 10) } : {};
+    const { data, error } = await supabase.rpc("get_reconciliation_snapshot", args);
+    if (error || !data) return null;
+    const s = (data as unknown as { summary_panel: {
+      available_balance: number; status: "healthy" | "tight" | "at_risk"; tax_estimated: number; total_income: number;
+    } }).summary_panel;
+    return { availableBalance: Number(s.available_balance), status: s.status,
+      taxEstimated: Number(s.tax_estimated), totalIncome: Number(s.total_income) };
   },
 };

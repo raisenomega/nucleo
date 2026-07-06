@@ -71,5 +71,5 @@ export const es: Record<TranslationKey, string> = {
   healthy: "🟢 Saludable", tight: "🟡 Ajustado", atRisk: "🔴 En riesgo",
   fiscalDisclaimer: "Cifras estimadas automáticamente. NO son asesoría fiscal ni sustituyen a un Contador Público Autorizado (CPA). Consulte a su profesional contable para declaraciones oficiales.",
   bankName: "Banco", accountLast4: "Últimos 4", accountType: "Tipo", isPrimary: "Cuenta principal",
-  notAuthorized: "No tienes permiso para ver esta página.",
+  notAuthorized: "No tienes permiso para ver esta página.", fiscalSection: "Fiscal",
 };
