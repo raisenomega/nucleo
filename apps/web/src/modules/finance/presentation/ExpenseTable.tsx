@@ -1,12 +1,13 @@
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { formatCurrency } from "@shared/lib/format";
+import { ExpenseClassBadge } from "@finance/presentation/ExpenseClassBadge";
 import type { Expense } from "@finance/domain/expense.types";
 
 type Emp = { id: string; full_name: string };
 
-export function ExpenseTable({ rows, employees, onView, onEdit, onDelete }: {
-  rows: readonly Expense[]; employees: Emp[];
+export function ExpenseTable({ rows, employees, classOf, onView, onEdit, onDelete }: {
+  rows: readonly Expense[]; employees: Emp[]; classOf: (categoryId: string) => string | null;
   onView: (id: string) => void; onEdit: (id: string) => void; onDelete: (id: string) => void;
 }) {
   const { t } = useI18n();
@@ -34,7 +35,7 @@ export function ExpenseTable({ rows, employees, onView, onEdit, onDelete }: {
             {rows.map((i) => (
               <tr key={i.id} className="border-t border-border">
                 <td className="px-3 py-2">{i.date}</td>
-                <td className="px-3 py-2">{i.categoryLabel}</td>
+                <td className="px-3 py-2"><span className="flex items-center gap-2">{i.categoryLabel} <ExpenseClassBadge value={classOf(i.categoryId)} /></span></td>
                 <td className="px-3 py-2">{i.description}</td>
                 <td className="px-3 py-2 text-right font-semibold">{formatCurrency(i.amount)}</td>
                 <td className="px-3 py-2">{i.paymentMethodLabel}</td>

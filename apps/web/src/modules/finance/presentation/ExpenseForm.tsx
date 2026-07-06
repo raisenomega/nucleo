@@ -2,9 +2,10 @@ import { useState } from "react";
 import { useI18n } from "@shared/i18n";
 import { useSession } from "@shared/providers/SessionProvider";
 import { EvidenceUpload } from "@finance/presentation/EvidenceUpload";
+import { ExpenseClassBadge } from "@finance/presentation/ExpenseClassBadge";
 import type { ExpenseFormData } from "@finance/domain/expense.types";
 
-type Cat = { id: string; label: string };
+type Cat = { id: string; label: string; expenseClass?: string | null };
 type Emp = { id: string; full_name: string };
 
 export function ExpenseForm({ expenseCats, payCats, employees, initial, onSubmit, onCancel }: {
@@ -24,7 +25,8 @@ export function ExpenseForm({ expenseCats, payCats, employees, initial, onSubmit
     <form onSubmit={(e) => { e.preventDefault(); onSubmit(f); }} className="space-y-4 rounded-lg border border-border bg-card p-5">
       <h2 className="font-body font-bold">{t("newExpense")}</h2>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <label className="space-y-1"><span className={lbl}>{t("category")}</span>
+        <label className="space-y-1"><span className="flex items-center gap-2"><span className={lbl}>{t("category")}</span>
+          <ExpenseClassBadge value={expenseCats.find((c) => c.id === f.categoryId)?.expenseClass ?? null} /></span>
           <select value={f.categoryId} onChange={(e) => setF({ ...f, categoryId: e.target.value })} className={field}>
             <option value="">—</option>
             {expenseCats.map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}

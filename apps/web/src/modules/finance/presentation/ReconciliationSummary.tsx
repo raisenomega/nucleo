@@ -29,7 +29,15 @@ export function ReconciliationSummary({ summary }: { summary: SummaryPanel }) {
         <>
           <div className="text-sm">
             {row(t("income"), summary.totalIncome)}
-            {summary.expenseBreakdown.map((e) => row(e.category, e.amount, true))}
+            {row(t("fixedExpense"), summary.expenseClasses.fixed, true)}
+            {row(t("variableExpense"), summary.expenseClasses.variable, true)}
+            {summary.expenseClasses.debt > 0 && row(t("debtExpense"), summary.expenseClasses.debt, true)}
+            {summary.expenseClasses.oneTime > 0 && row(t("oneTimeExpense"), summary.expenseClasses.oneTime, true)}
+            {summary.expenseClasses.unclassified > 0 && (
+              <div className="flex justify-between py-0.5 text-muted-foreground">
+                <span>{t("unclassified")} · <span className="text-xs">{t("classifyCategories")}</span></span>
+                <span>−{formatCurrency(summary.expenseClasses.unclassified)}</span></div>
+            )}
             {row(t("payroll"), summary.totalPayroll, true)}
             {row(t("extraordinary"), summary.totalExtraordinary, true)}
             {row(t("marketing"), summary.totalMarketing, true)}

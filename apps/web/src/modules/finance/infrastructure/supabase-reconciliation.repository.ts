@@ -8,9 +8,11 @@ import type {
 import type { RepoResult } from "@finance/domain/bank-account.types";
 
 interface RawObl { label: string; calcType: string; rate: number; base: number; estimated: number; frequency: string; notes: string; }
+interface RawClasses { fixed: number; variable: number; debt: number; one_time: number; unclassified: number; }
 interface RawHealth {
   total_out: number; break_even: number; break_even_pct: number; shortfall: number; surplus: number;
   operating_margin: number; operating_status: OperatingStatus; trend: MonthlySeriesRow[];
+  fixed_expenses: number; variable_expenses: number; debt_expenses: number; one_time_expenses: number;
 }
 interface Raw {
   bank_panel: { accounts: { bankName: string; openingBalance: number; deposits: number; calculatedBalance: number; realBalance: number; difference: number; cutoffDate: string }[];
@@ -20,7 +22,7 @@ interface Raw {
   summary_panel: {
     total_income: number; total_expenses: number; total_payroll: number; total_extraordinary: number; total_marketing: number;
     operating_profit: number; tax_estimated: number; retention_required: number; available_balance: number;
-    status: "healthy" | "tight" | "at_risk"; expense_breakdown: ExpenseBreakdownRow[]; health: RawHealth;
+    status: "healthy" | "tight" | "at_risk"; expense_breakdown: ExpenseBreakdownRow[]; expense_classes: RawClasses; health: RawHealth;
   };
 }
 
@@ -38,9 +40,13 @@ function map(r: Raw): ReconciliationSnapshot {
       totalExtraordinary: N(s.total_extraordinary), totalMarketing: N(s.total_marketing), operatingProfit: N(s.operating_profit),
       taxEstimated: N(s.tax_estimated), retentionRequired: N(s.retention_required), availableBalance: N(s.available_balance), status: s.status,
       expenseBreakdown: s.expense_breakdown ?? [],
+      expenseClasses: { fixed: N(s.expense_classes?.fixed), variable: N(s.expense_classes?.variable),
+        debt: N(s.expense_classes?.debt), oneTime: N(s.expense_classes?.one_time), unclassified: N(s.expense_classes?.unclassified) },
       health: { totalOut: N(h.total_out), breakEven: N(h.break_even), breakEvenPct: N(h.break_even_pct),
         shortfall: N(h.shortfall), surplus: N(h.surplus), operatingMargin: N(h.operating_margin),
-        operatingStatus: h.operating_status, trend: h.trend ?? [] } },
+        operatingStatus: h.operating_status, trend: h.trend ?? [],
+        fixedExpenses: N(h.fixed_expenses), variableExpenses: N(h.variable_expenses),
+        debtExpenses: N(h.debt_expenses), oneTimeExpenses: N(h.one_time_expenses) } },
   };
 }
 

@@ -24,8 +24,15 @@ export interface MonthlySeriesRow {
 
 export interface ExpenseBreakdownRow { readonly category: string; readonly amount: number; }
 
+export interface ExpenseClasses {
+  readonly fixed: number; readonly variable: number; readonly debt: number;
+  readonly oneTime: number; readonly unclassified: number;
+}
+
 export interface HealthPanel {
   readonly totalOut: number; readonly breakEven: number; readonly breakEvenPct: number;
   readonly shortfall: number; readonly surplus: number; readonly operatingMargin: number;
   readonly operatingStatus: OperatingStatus; readonly trend: readonly MonthlySeriesRow[];
+  readonly fixedExpenses: number; readonly variableExpenses: number;
+  readonly debtExpenses: number; readonly oneTimeExpenses: number;
 }

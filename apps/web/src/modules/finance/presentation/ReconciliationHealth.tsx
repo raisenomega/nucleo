@@ -17,8 +17,12 @@ export function ReconciliationHealth({ health }: { health: HealthPanel }) {
         <h2 className="font-body font-bold text-primary">{t("breakEven")}</h2>
         <span className={`text-xl ${COLOR[health.operatingStatus]}`}>{EMOJI[health.operatingStatus]}</span>
       </div>
+      <div className="flex items-center justify-between text-xs text-muted-foreground">
+        <span>{formatCurrency(health.breakEven)} · {t("breakEvenComposition")}</span>
+        <span className="font-bold">{health.breakEvenPct}%</span>
+      </div>
       <div className="h-3 w-full overflow-hidden rounded-full bg-secondary">
-        <div className="h-full bg-primary" style={{ width: `${health.breakEvenPct}%` }} />
+        <div className="h-full bg-primary" style={{ width: `${Math.min(100, health.breakEvenPct)}%` }} />
       </div>
       <div className="text-sm font-bold">
         {health.surplus > 0

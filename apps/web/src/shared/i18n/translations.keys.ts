@@ -48,4 +48,6 @@ export type TranslationKey =
   | "dashboardFiscal" | "breakEvenProgress" | "bankBalance"
   | "contractor" | "grossSalary" | "netSalary" | "withheld" | "employerCost" | "totalWithheld"
   | "totalEmployerCost" | "employeeDeductions" | "employerContributions" | "remitToTreasury"
-  | "contractorReceives" | "payrollDisclaimer";
+  | "contractorReceives" | "payrollDisclaimer"
+  | "fixedExpense" | "variableExpense" | "debtExpense" | "oneTimeExpense" | "unclassified"
+  | "classifyCategories" | "breakEvenComposition";

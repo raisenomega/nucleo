@@ -12,7 +12,7 @@ import type { ExpenseFormData } from "@finance/domain/expense.types";
 
 export const Route = createFileRoute("/_authenticated/expenses")({ component: ExpensePage });
 
-type Cat = { id: string; label: string; kind: string };
+type Cat = { id: string; label: string; kind: string; expense_class?: string | null };
 type Emp = { id: string; full_name: string };
 
 function ExpensePage() {
@@ -24,7 +24,7 @@ function ExpensePage() {
   const [viewing, setViewing] = useState<string | null>(null);
 
   useEffect(() => {
-    void supabase.from("categories").select("id,label,kind").in("kind", ["expense", "payment_method"])
+    void supabase.from("categories").select("id,label,kind,expense_class").in("kind", ["expense", "payment_method"])
       .then(({ data }) => setCats((data as Cat[] | null) ?? []));
     void supabase.from("profiles").select("id, full_name")
       .then(({ data }) => setEmps((data as Emp[] | null) ?? []));
@@ -55,11 +55,11 @@ function ExpensePage() {
         </button>
       </div>
       {editing !== null && (
-        <ExpenseForm expenseCats={cats.filter((c) => c.kind === "expense")}
+        <ExpenseForm expenseCats={cats.filter((c) => c.kind === "expense").map((c) => ({ id: c.id, label: c.label, expenseClass: c.expense_class }))}
           payCats={cats.filter((c) => c.kind === "payment_method")} employees={emps}
           initial={editRow} onSubmit={submit} onCancel={() => setEditing(null)} />
       )}
-      <ExpenseTable rows={expenses} employees={emps} onView={setViewing} onEdit={setEditing}
+      <ExpenseTable rows={expenses} employees={emps} classOf={(id) => cats.find((c) => c.id === id)?.expense_class ?? null} onView={setViewing} onEdit={setEditing}
         onDelete={(id) => { if (window.confirm(`${t("delete")}?`)) void remove(id); }} />
       {viewExpense && <ExpenseDetail expense={viewExpense} employees={emps} onClose={() => setViewing(null)} />}
     </div>

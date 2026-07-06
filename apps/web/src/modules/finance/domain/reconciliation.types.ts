@@ -1,9 +1,9 @@
 // BC finance — snapshot de conciliación v2. Espeja get_reconciliation_snapshot. Puro.
 import type { RepoResult } from "@finance/domain/bank-account.types";
 import type {
-  FiscalStatus, BankPanelAccount, TaxObligation, MonthlySeriesRow, ExpenseBreakdownRow, HealthPanel,
+  FiscalStatus, BankPanelAccount, TaxObligation, MonthlySeriesRow, ExpenseBreakdownRow, HealthPanel, ExpenseClasses,
 } from "@finance/domain/reconciliation-health.types";
-export type { FiscalStatus, BankPanelAccount, TaxObligation, MonthlySeriesRow, ExpenseBreakdownRow, HealthPanel };
+export type { FiscalStatus, BankPanelAccount, TaxObligation, MonthlySeriesRow, ExpenseBreakdownRow, HealthPanel, ExpenseClasses };
 
 export interface BankPanel {
   readonly accounts: readonly BankPanelAccount[];
@@ -27,6 +27,7 @@ export interface SummaryPanel {
   readonly taxEstimated: number; readonly retentionRequired: number; readonly availableBalance: number;
   readonly status: FiscalStatus;
   readonly expenseBreakdown: readonly ExpenseBreakdownRow[];
+  readonly expenseClasses: ExpenseClasses;
   readonly health: HealthPanel;
 }
 

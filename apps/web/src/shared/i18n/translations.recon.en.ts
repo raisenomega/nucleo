@@ -11,4 +11,7 @@ export const enRecon = {
   accumulated: "Accumulated", operatingMargin: "Operating margin",
   breakEven: "Break-even", surplus: "Surplus", shortfall: "Shortfall", trend: "Trend",
   dashboardFiscal: "Fiscal", breakEvenProgress: "of break-even", bankBalance: "Bank balance",
+  fixedExpense: "Fixed", variableExpense: "Variable", debtExpense: "Debt", oneTimeExpense: "One-time",
+  unclassified: "Unclassified", classifyCategories: "classify your categories",
+  breakEvenComposition: "fixed expenses + payroll",
 } satisfies Partial<Record<TranslationKey, string>>;

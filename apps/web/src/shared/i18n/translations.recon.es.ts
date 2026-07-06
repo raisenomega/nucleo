@@ -11,4 +11,7 @@ export const esRecon = {
   accumulated: "Acumulado", operatingMargin: "Margen operativo",
   breakEven: "Punto de equilibrio", surplus: "Superávit", shortfall: "Faltante", trend: "Tendencia",
   dashboardFiscal: "Fiscal", breakEvenProgress: "del punto de equilibrio", bankBalance: "Balance en banco",
+  fixedExpense: "Fijo", variableExpense: "Variable", debtExpense: "Deuda", oneTimeExpense: "Único",
+  unclassified: "Sin clasificar", classifyCategories: "clasifique sus categorías",
+  breakEvenComposition: "gastos fijos + nómina",
 } satisfies Partial<Record<TranslationKey, string>>;
