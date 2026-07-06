@@ -28,7 +28,7 @@ function ExpensePage() {
   const [editing, setEditing] = useState<string | null>(null);
   const [viewing, setViewing] = useState<string | null>(null);
 
-  useEffect(() => { if (category) setEditing("new"); }, [category]);
+  useEffect(() => { if (category && can("expenses", "create")) setEditing("new"); }, [category, can]);
 
   useEffect(() => {
     void supabase.from("categories").select("id,label,kind,expense_class").in("kind", ["expense", "payment_method"])

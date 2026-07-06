@@ -45,8 +45,10 @@ function ReconciliationPage() {
       {m.loading || !m.snapshot ? <p className="text-sm text-muted-foreground">{t("noData")}</p> : (
         <div className="space-y-6">
           <ReconciliationBankPanel bank={m.snapshot.bank} accounts={m.bankAccounts}
-            onAddAccount={() => setModal("account")} onDeposit={() => setModal("deposit")} onRegisterBalance={() => setModal("balance")}
-            onRemoveAccount={(id) => { if (window.confirm(`${t("delete")}?`)) void m.removeAccount(id); }} />
+            onAddAccount={can("reconciliation", "create") ? () => setModal("account") : undefined}
+            onDeposit={can("reconciliation", "create") ? () => setModal("deposit") : undefined}
+            onRegisterBalance={can("reconciliation", "edit") ? () => setModal("balance") : undefined}
+            onRemoveAccount={can("reconciliation", "delete") ? (id) => { if (window.confirm(`${t("delete")}?`)) void m.removeAccount(id); } : undefined} />
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             <ReconciliationTaxPanel tax={m.snapshot.tax} />
             <ReconciliationSummary summary={m.snapshot.summary} />

@@ -6,7 +6,7 @@ import type { BankAccount } from "@finance/domain/bank-account.types";
 
 export function ReconciliationBankPanel({ bank, accounts, onAddAccount, onDeposit, onRegisterBalance, onRemoveAccount }: {
   bank: BankPanel; accounts: readonly BankAccount[];
-  onAddAccount: () => void; onDeposit: () => void; onRegisterBalance: () => void; onRemoveAccount: (id: string) => void;
+  onAddAccount?: () => void; onDeposit?: () => void; onRegisterBalance?: () => void; onRemoveAccount?: (id: string) => void;
 }) {
   const { t } = useI18n();
   const dataOf = (name: string) => bank.accounts.find((a) => a.bankName === name);
@@ -19,9 +19,9 @@ export function ReconciliationBankPanel({ bank, accounts, onAddAccount, onDeposi
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-body font-bold text-primary">{t("bankAccounts")}</h2>
         <div className="flex gap-2 text-sm">
-          <button type="button" onClick={onAddAccount} className="rounded-lg bg-secondary text-foreground px-3 py-1.5 font-bold">+ {t("addAccount")}</button>
-          <button type="button" onClick={onRegisterBalance} className="rounded-lg bg-secondary text-foreground px-3 py-1.5 font-bold">{t("registerBalance")}</button>
-          <button type="button" onClick={onDeposit} className="flex items-center gap-1 rounded-lg bg-primary text-primary-foreground px-3 py-1.5 font-bold"><Plus className="h-4 w-4" /> {t("deposit")}</button>
+          {onAddAccount && <button type="button" onClick={onAddAccount} className="rounded-lg bg-secondary text-foreground px-3 py-1.5 font-bold">+ {t("addAccount")}</button>}
+          {onRegisterBalance && <button type="button" onClick={onRegisterBalance} className="rounded-lg bg-secondary text-foreground px-3 py-1.5 font-bold">{t("registerBalance")}</button>}
+          {onDeposit && <button type="button" onClick={onDeposit} className="flex items-center gap-1 rounded-lg bg-primary text-primary-foreground px-3 py-1.5 font-bold"><Plus className="h-4 w-4" /> {t("deposit")}</button>}
         </div>
       </div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -31,7 +31,7 @@ export function ReconciliationBankPanel({ bank, accounts, onAddAccount, onDeposi
             <div key={a.id} className="rounded-lg border border-border p-3">
               <div className="flex items-center justify-between">
                 <span className="flex items-center gap-1 font-semibold"><Landmark className="h-4 w-4 text-primary" />{a.bankName}{a.isPrimary ? " ★" : ""}</span>
-                <button type="button" onClick={() => onRemoveAccount(a.id)} className="text-muted-foreground hover:text-red-600"><Trash2 className="h-4 w-4" /></button>
+                {onRemoveAccount && <button type="button" onClick={() => onRemoveAccount(a.id)} className="text-muted-foreground hover:text-red-600"><Trash2 className="h-4 w-4" /></button>}
               </div>
               {d ? (
                 <div className="mt-2 space-y-0.5 text-xs">
