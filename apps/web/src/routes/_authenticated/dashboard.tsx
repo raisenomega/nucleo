@@ -25,7 +25,7 @@ function Dashboard() {
         <p className="font-body text-muted-foreground">{t("noData")}</p>
       ) : (
         <div className="space-y-6">
-          <DashboardKpis s={snapshot} />
+          <DashboardKpis s={snapshot} bankBalance={fiscal?.realBalance} />
           <div className="space-y-2">
             <h2 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("crmSection")}</h2>
             <DashboardCrm c={crm} />

@@ -51,10 +51,12 @@ export const supabaseDashboardRepository: IDashboardRepository = {
     const args = month ? { p_month: month.toISOString().slice(0, 10) } : {};
     const { data, error } = await supabase.rpc("get_reconciliation_snapshot", args);
     if (error || !data) return null;
-    const s = (data as unknown as { summary_panel: { available_balance: number; health: {
+    const d = data as unknown as { bank_panel: { real_balance: number }; summary_panel: { available_balance: number; health: {
       operating_status: "surplus" | "tight" | "deficit"; break_even_pct: number; shortfall: number; surplus: number;
-    } } }).summary_panel;
+    } } };
+    const s = d.summary_panel;
     return { availableBalance: Number(s.available_balance), operatingStatus: s.health.operating_status,
-      breakEvenPct: Number(s.health.break_even_pct), shortfall: Number(s.health.shortfall), surplus: Number(s.health.surplus) };
+      breakEvenPct: Number(s.health.break_even_pct), shortfall: Number(s.health.shortfall), surplus: Number(s.health.surplus),
+      realBalance: Number(d.bank_panel.real_balance) };
   },
 };
