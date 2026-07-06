@@ -3,7 +3,7 @@ import { useI18n } from "@shared/i18n";
 import { CategoryPicker } from "@shared/components/CategoryPicker";
 import type { EditableStop } from "@operations/domain/route.types";
 
-export const emptyStop = (): EditableStop => ({ clientName: "", address: "", city: "", serviceType: "", scheduledTime: "09:00", estimatedAmount: 0, notes: "" });
+export const emptyStop = (): EditableStop => ({ clientName: "", address: "", city: "", serviceType: "", scheduledTime: "09:00", estimatedAmount: 0, notes: "", phone: "" });
 
 // Editor en memoria de paradas (crear o editar). Conserva el id de las existentes. service_type = categorías.
 export function RouteStopsEditor({ stops, onChange }: { stops: EditableStop[]; onChange: (s: EditableStop[]) => void }) {
@@ -18,7 +18,8 @@ export function RouteStopsEditor({ stops, onChange }: { stops: EditableStop[]; o
             <button type="button" onClick={() => onChange(stops.filter((_, x) => x !== i))} className="text-destructive"><Trash2 className="h-4 w-4" /></button></div>
           <div className="grid grid-cols-2 gap-2">
             <input value={s.clientName} onChange={(e) => set(i, "clientName", e.target.value)} placeholder={t("contactName")} className={fld} />
-            <input value={s.city} onChange={(e) => set(i, "city", e.target.value)} placeholder={t("city")} className={fld} />
+            <input value={s.phone} onChange={(e) => set(i, "phone", e.target.value)} placeholder={t("phone")} className={fld} />
+            <input value={s.city} onChange={(e) => set(i, "city", e.target.value)} placeholder={t("city")} className={`${fld} col-span-2`} />
             <input value={s.address} onChange={(e) => set(i, "address", e.target.value)} placeholder={t("address")} className={`${fld} col-span-2`} />
             <CategoryPicker kind="service_type" byLabel value={s.serviceType} onChange={(v) => set(i, "serviceType", v)} label="serviceRequested" />
             <input type="time" value={s.scheduledTime} onChange={(e) => set(i, "scheduledTime", e.target.value)} className={fld} />

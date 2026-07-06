@@ -1,6 +1,6 @@
 import {
   Route as RouteIcon, Package, Calendar, Truck, DollarSign, CreditCard, Users,
-  AlertCircle, Scale, Repeat, RefreshCw, BarChart3, UserPlus, Megaphone, ShoppingCart, FileText,
+  AlertCircle, Scale, Repeat, HandCoins, RefreshCw, BarChart3, UserPlus, Megaphone, ShoppingCart, FileText,
   Home, FileCheck, ClipboardCheck, GraduationCap, LifeBuoy, Bell, Settings,
   Cog, Wallet, Store, Briefcase,
 } from "lucide-react";
@@ -23,7 +23,7 @@ export const SECTIONS: NavSection[] = [
     { key: "expenses", icon: CreditCard, to: "/expenses", mod: "expenses" }, { key: "payroll", icon: Users, to: "/payroll", mod: "payroll" },
     { key: "extraordinary", icon: AlertCircle, to: "/extraordinary", mod: "extraordinary" }, { key: "reconciliation", icon: Scale, to: "/reconciliation", mod: "reconciliation" },
     { key: "recurringExpenses", icon: Repeat, to: "/recurring", mod: "recurring" },
-    { key: "billing", icon: RefreshCw }, { key: "reports", icon: BarChart3 },
+    { key: "accountsReceivable", icon: HandCoins }, { key: "billing", icon: RefreshCw }, { key: "reports", icon: BarChart3 },
   ] },
   { title: "salesCrm", icon: Store, items: [
     { key: "leads", icon: UserPlus, to: "/leads", mod: "leads" }, { key: "marketing", icon: Megaphone, to: "/marketing", mod: "marketing" },

@@ -5,7 +5,7 @@ import type { RouteFormData, EditableStop, RouteStop } from "@operations/domain/
 
 type Emp = { id: string; full_name: string };
 const STATUS = ["Planificada", "En progreso", "Completada", "Cancelada"];
-const toEditable = (s: RouteStop): EditableStop => ({ id: s.id, clientName: s.clientName, address: s.address, city: s.city ?? "", serviceType: s.serviceType, scheduledTime: s.scheduledTime, estimatedAmount: s.estimatedAmount, notes: s.notes ?? "" });
+const toEditable = (s: RouteStop): EditableStop => ({ id: s.id, clientName: s.clientName, address: s.address, city: s.city ?? "", serviceType: s.serviceType, scheduledTime: s.scheduledTime, estimatedAmount: s.estimatedAmount, notes: s.notes ?? "", phone: s.phone ?? "" });
 
 export function RouteForm({ employees, initial, initialStops, onSubmit, onCancel }: {
   employees: Emp[]; initial?: RouteFormData; initialStops?: readonly RouteStop[];

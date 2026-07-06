@@ -4,12 +4,13 @@ import { Plus } from "lucide-react";
 import { supabase } from "@shared/lib/supabase";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
+import { useSession } from "@shared/providers/SessionProvider";
 import { useRoutes } from "@operations/application/useRoutes.hook";
 import { supabaseRouteRepository } from "@operations/infrastructure/supabase-route.repository";
 import { RouteForm } from "@operations/presentation/RouteForm";
 import { RouteTable } from "@operations/presentation/RouteTable";
 import { RouteDetail } from "@operations/presentation/RouteDetail";
-import type { RouteFormData, EditableStop } from "@operations/domain/route.types";
+import type { RouteFormData, EditableStop, CompletePayload } from "@operations/domain/route.types";
 
 export const Route = createFileRoute("/_authenticated/routes")({ component: RoutesPage });
 type Emp = { id: string; full_name: string };
@@ -17,6 +18,7 @@ type Emp = { id: string; full_name: string };
 function RoutesPage() {
   const { t } = useI18n();
   const { can } = useModuleAccess();
+  const { session } = useSession();
   const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
   const m = useRoutes(supabaseRouteRepository, date);
   const [emps, setEmps] = useState<Emp[]>([]);
@@ -30,7 +32,9 @@ function RoutesPage() {
     if (r.ok && editId) await m.syncStops(editId, stops, m.stops);
     window.alert(r.ok ? "Guardado exitoso" : r.error); if (r.ok) setEditing(null);
   }
-  const complete = (id: string) => void m.completeStop(id).then((r) => { if (!r.ok) window.alert(r.error); });
+  const doComplete = (id: string, p: CompletePayload) => void m.completeStop(id, p).then((r) => { if (!r.ok) window.alert(r.error); });
+  const doNotAttended = (id: string, reason: string) => void m.setNotAttended(id, reason).then((r) => { if (!r.ok) window.alert(r.error); });
+  const doEvidence = (id: string, paths: string[]) => void m.updateStop(id, { evidenceUrls: paths });
   if (!can("routes", "view")) return <Navigate to="/dashboard" />;
   const cur = m.routes.find((r) => r.id === editing);
   const initial = cur ? { routeDate: cur.routeDate, assignedTo: cur.assignedTo, status: cur.status, notes: cur.notes ?? "" } : undefined;
@@ -49,8 +53,8 @@ function RoutesPage() {
       <RouteTable rows={m.routes} employees={emps} onView={(id) => { setViewing(id); m.setActive(id); }}
         onEdit={can("routes", "edit") ? (id) => { setEditing(id); m.setActive(id); } : undefined}
         onDelete={can("routes", "delete") ? (id) => { if (window.confirm(`${t("delete")}?`)) void m.remove(id); } : undefined} />
-      {viewRoute && <RouteDetail route={viewRoute} stops={m.stops} employees={emps} onClose={() => setViewing(null)}
-        onComplete={can("routes", "edit") ? complete : undefined}
+      {viewRoute && <RouteDetail route={viewRoute} stops={m.stops} employees={emps} tenantId={session?.tenantId ?? ""} onClose={() => setViewing(null)}
+        onComplete={doComplete} onNotAttended={doNotAttended} onEvidence={doEvidence}
         onEdit={can("routes", "edit") ? () => { setEditing(viewRoute.id); m.setActive(viewRoute.id); setViewing(null); } : undefined} />}
     </div>
   );
