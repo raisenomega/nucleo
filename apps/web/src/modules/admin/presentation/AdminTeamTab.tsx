@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { useI18n } from "@shared/i18n";
 import type { TeamMember, AppRole, UserStatus, InviteData, RepoResult } from "@admin/domain/admin.types";
 
@@ -13,6 +14,7 @@ export function AdminTeamTab({ team, onInvite, onStatus, onRole }: {
   onRole: (uid: string, role: AppRole) => Promise<RepoResult>;
 }) {
   const { t } = useI18n();
+  const navigate = useNavigate();
   const [inv, setInv] = useState<InviteData>({ email: "", fullName: "", role: "servicio" });
   const field = "rounded-lg border border-border bg-background p-2 text-sm";
   async function invite() {
@@ -39,7 +41,8 @@ export function AdminTeamTab({ team, onInvite, onStatus, onRole }: {
           <tbody>
             {team.map((m) => (
               <tr key={m.id} className="border-t border-border">
-                <td className="px-3 py-2">{m.fullName}</td><td className="px-3 py-2">{m.email}</td>
+                <td className="px-3 py-2"><button type="button" onClick={() => void navigate({ to: "/settings-team/$userId", params: { userId: m.id } })} className="cursor-pointer font-semibold text-primary hover:underline">{m.fullName}</button></td>
+                <td className="px-3 py-2">{m.email}</td>
                 <td className="px-3 py-2">
                   <select value={m.role ?? ""} onChange={(e) => void onRole(m.id, e.target.value as AppRole)} className={field}>
                     {ROLES.map((r) => <option key={r.v} value={r.v}>{r.l}</option>)}

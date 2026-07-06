@@ -58,4 +58,6 @@ export type TranslationKey =
   | "categories" | "generalSettings" | "retentionPct" | "orderPrefix" | "fiscalCountry"
   | "joinTeam" | "invitedSubtitle" | "createPassword" | "confirmPassword" | "passwordMismatch"
   | "minPassword" | "alreadyRegistered" | "invitedLink" | "accountCreated" | "goToLogin"
-  | "businessOwner" | "trialFree";
+  | "businessOwner" | "trialFree"
+  | "employeeProfile" | "personalInfo" | "roleAccess" | "assignPin" | "reactivate" | "lastAccess"
+  | "modulesVisible" | "backToTeam" | "phone" | "position" | "approvedDate" | "registeredDate";

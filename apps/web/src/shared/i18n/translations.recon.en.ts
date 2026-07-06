@@ -32,4 +32,8 @@ export const enRecon = {
   alreadyRegistered: "This email already has an account. Sign in.", invitedLink: "Invited? Create your account",
   accountCreated: "Account created! Check your email to confirm. Then you can sign in.",
   goToLogin: "Go to sign in", businessOwner: "Business owner?", trialFree: "Try free for 3 days",
+  employeeProfile: "Employee profile", personalInfo: "Personal info", roleAccess: "Role & access",
+  assignPin: "Assign PIN", reactivate: "Reactivate", lastAccess: "Last access", modulesVisible: "Visible modules",
+  backToTeam: "Back to team", phone: "Phone", position: "Position",
+  approvedDate: "Approval date", registeredDate: "Registration date",
 } satisfies Partial<Record<TranslationKey, string>>;

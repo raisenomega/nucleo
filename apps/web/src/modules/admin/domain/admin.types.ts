@@ -14,6 +14,17 @@ export interface InviteData {
   readonly email: string; readonly fullName: string; readonly role: AppRole;
 }
 
+export interface TeamMemberDetail extends TeamMember {
+  readonly phone: string;
+  readonly position: string;
+  readonly approvedAt: string | null;
+  readonly createdAt: string;
+}
+
+export interface TeamMemberUpdate {
+  readonly fullName: string; readonly phone: string; readonly position: string;
+}
+
 export interface CategoryConfig {
   readonly id: string; readonly kind: string; readonly label: string;
   readonly expenseClass: string | null; readonly active: boolean;
@@ -26,6 +37,9 @@ export type RepoResult = { readonly ok: true } | { readonly ok: false; readonly 
 // Puerto — lo implementa infrastructure; lo consume application (DI).
 export interface IAdminRepository {
   listTeam(): Promise<readonly TeamMember[]>;
+  getTeamMember(userId: string): Promise<TeamMemberDetail | null>;
+  updateTeamMember(userId: string, d: TeamMemberUpdate): Promise<RepoResult>;
+  setPin(userId: string, pin: string): Promise<RepoResult>;
   setStatus(id: string, status: UserStatus): Promise<RepoResult>;
   changeRole(userId: string, role: AppRole): Promise<RepoResult>;
   invite(d: InviteData): Promise<RepoResult>;

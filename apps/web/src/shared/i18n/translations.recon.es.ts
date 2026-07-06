@@ -32,4 +32,8 @@ export const esRecon = {
   alreadyRegistered: "Este email ya tiene cuenta. Inicia sesión.", invitedLink: "¿Te invitaron? Crea tu cuenta",
   accountCreated: "¡Cuenta creada! Revisa tu correo para confirmar. Después podrás iniciar sesión.",
   goToLogin: "Ir a iniciar sesión", businessOwner: "¿Eres dueño de negocio?", trialFree: "Prueba gratis por 3 días",
+  employeeProfile: "Perfil del empleado", personalInfo: "Información personal", roleAccess: "Rol y accesos",
+  assignPin: "Asignar PIN", reactivate: "Reactivar", lastAccess: "Último acceso", modulesVisible: "Módulos visibles",
+  backToTeam: "Volver al equipo", phone: "Teléfono", position: "Posición",
+  approvedDate: "Fecha de aprobación", registeredDate: "Fecha de registro",
 } satisfies Partial<Record<TranslationKey, string>>;

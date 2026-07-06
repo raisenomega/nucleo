@@ -1,6 +1,6 @@
 import { supabase } from "@shared/lib/supabase";
 import type {
-  IAdminRepository, TeamMember, CategoryConfig, SettingEntry, RepoResult, AppRole, UserStatus,
+  IAdminRepository, TeamMember, TeamMemberDetail, TeamMemberUpdate, CategoryConfig, SettingEntry, RepoResult, AppRole, UserStatus,
 } from "@admin/domain/admin.types";
 
 const ok = (error: { message: string } | null): RepoResult => (error ? { ok: false, error: error.message } : { ok: true });
@@ -14,6 +14,21 @@ export const supabaseAdminRepository: IAdminRepository = {
     const roleOf = new Map(((r.data as { user_id: string; role: AppRole }[] | null) ?? []).map((x) => [x.user_id, x.role]));
     return ((p.data as { id: string; email: string; full_name: string; status: UserStatus }[] | null) ?? [])
       .map((x) => ({ id: x.id, email: x.email, fullName: x.full_name, role: roleOf.get(x.id) ?? null, status: x.status }));
+  },
+  async getTeamMember(userId): Promise<TeamMemberDetail | null> {
+    const { data } = await supabase.from("profiles")
+      .select("id,email,full_name,status,phone,position,approved_at,created_at").eq("id", userId).maybeSingle();
+    if (!data) return null;
+    const p = data as { id: string; email: string; full_name: string; status: UserStatus; phone: string | null; position: string | null; approved_at: string | null; created_at: string };
+    const { data: r } = await supabase.from("user_roles").select("role").eq("user_id", userId).maybeSingle();
+    return { id: p.id, email: p.email, fullName: p.full_name, status: p.status, role: (r as { role: AppRole } | null)?.role ?? null,
+      phone: p.phone ?? "", position: p.position ?? "", approvedAt: p.approved_at, createdAt: p.created_at };
+  },
+  async updateTeamMember(userId, d: TeamMemberUpdate): Promise<RepoResult> {
+    return ok((await supabase.from("profiles").update({ full_name: d.fullName, phone: d.phone, position: d.position }).eq("id", userId)).error);
+  },
+  async setPin(userId, pin): Promise<RepoResult> {
+    return ok((await supabase.rpc("admin_set_pin", { p_user_id: userId, p_pin: pin })).error);
   },
   async setStatus(id, status): Promise<RepoResult> {
     return ok((await supabase.from("profiles").update({ status }).eq("id", id)).error);
