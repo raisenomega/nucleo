@@ -53,4 +53,6 @@ export type TranslationKey =
   | "classifyCategories" | "breakEvenComposition" | "payrollCost" | "fixedCosts"
   | "recurringExpenses" | "recurringSubtitle" | "budgeted" | "paid" | "addRecurring"
   | "registerPayment" | "coveredPercent" | "manageRecurring" | "frequencyLabel" | "newCategory"
-  | "createCategory" | "categoryName" | "selectExpenseClass" | "movementsSoon";
+  | "createCategory" | "categoryName" | "selectExpenseClass" | "movementsSoon"
+  | "team" | "inviteEmployee" | "approve" | "reject" | "changeRole" | "deactivate"
+  | "categories" | "generalSettings" | "retentionPct" | "orderPrefix" | "fiscalCountry";

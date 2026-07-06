@@ -22,4 +22,8 @@ export const enRecon = {
   coveredPercent: "You've covered {done} of {total} fixed expenses ({pct}%)", newCategory: "New category",
   createCategory: "Create", categoryName: "Category name", selectExpenseClass: "Expense type",
   movementsSoon: "Movement history coming soon",
+  team: "Team", inviteEmployee: "Invite employee", approve: "Approve", reject: "Reject",
+  changeRole: "Change role", deactivate: "Deactivate", categories: "Categories",
+  generalSettings: "General settings", retentionPct: "Retention %", orderPrefix: "Order prefix",
+  fiscalCountry: "Fiscal country",
 } satisfies Partial<Record<TranslationKey, string>>;
