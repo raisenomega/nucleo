@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 import { supabase } from "@shared/lib/supabase";
 import { useI18n } from "@shared/i18n";
+import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { useIncome } from "@finance/application/useIncome.hook";
 import { supabaseIncomeRepository } from "@finance/infrastructure/supabase-income.repository";
 import { IncomeForm } from "@finance/presentation/IncomeForm";
@@ -16,6 +17,7 @@ type Cat = { id: string; label: string; kind: string };
 
 function IncomePage() {
   const { t } = useI18n();
+  const { can } = useModuleAccess();
   const { incomes, create, update, remove } = useIncome(supabaseIncomeRepository);
   const [cats, setCats] = useState<Cat[]>([]);
   const [editing, setEditing] = useState<string | null>(null);
@@ -38,6 +40,7 @@ function IncomePage() {
     setEditing(null);
   }
 
+  if (!can("income", "view")) return <Navigate to="/dashboard" />;
   const viewIncome = incomes.find((i) => i.id === viewing);
   return (
     <div className="space-y-6 p-8">
@@ -46,18 +49,20 @@ function IncomePage() {
           <h1 className="font-display text-3xl font-bold text-primary">{t("income")}</h1>
           <p className="text-xs text-muted-foreground">{t("incomeSubtitle")}</p>
         </div>
-        <button type="button" onClick={() => setEditing("new")}
-          className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-4 py-2 font-body font-bold">
-          <Plus className="h-4 w-4" /> {t("newIncome")}
-        </button>
+        {can("income", "create") && (
+          <button type="button" onClick={() => setEditing("new")}
+            className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-4 py-2 font-body font-bold">
+            <Plus className="h-4 w-4" /> {t("newIncome")}
+          </button>
+        )}
       </div>
       {editing !== null && (
         <IncomeForm incomeCats={cats.filter((c) => c.kind === "income")}
           payCats={cats.filter((c) => c.kind === "payment_method")}
           initial={editRow} onSubmit={submit} onCancel={() => setEditing(null)} />
       )}
-      <IncomeTable rows={incomes} onView={setViewing} onEdit={setEditing}
-        onDelete={(id) => { if (window.confirm(`${t("delete")}?`)) void remove(id); }} />
+      <IncomeTable rows={incomes} onView={setViewing} onEdit={can("income", "edit") ? setEditing : undefined}
+        onDelete={can("income", "delete") ? (id) => { if (window.confirm(`${t("delete")}?`)) void remove(id); } : undefined} />
       {viewIncome && <IncomeDetail income={viewIncome} onClose={() => setViewing(null)} />}
     </div>
   );

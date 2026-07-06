@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 import { supabase } from "@shared/lib/supabase";
 import { useI18n } from "@shared/i18n";
+import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { usePayroll } from "@finance/application/usePayroll.hook";
 import { supabasePayrollRepository } from "@finance/infrastructure/supabase-payroll.repository";
 import { PayrollForm } from "@finance/presentation/PayrollForm";
@@ -17,6 +18,7 @@ type Cat = { id: string; label: string; kind: string };
 
 function PayrollPage() {
   const { t } = useI18n();
+  const { can } = useModuleAccess();
   const { items, create, update, remove, preview } = usePayroll(supabasePayrollRepository);
   const [emps, setEmps] = useState<Emp[]>([]);
   const [cats, setCats] = useState<Cat[]>([]);
@@ -42,6 +44,7 @@ function PayrollPage() {
     setEditing(null);
   }
 
+  if (!can("payroll", "view")) return <Navigate to="/dashboard" />;
   const viewItem = items.find((i) => i.id === viewing);
   return (
     <div className="space-y-6 p-8">
@@ -50,17 +53,19 @@ function PayrollPage() {
           <h1 className="font-display text-3xl font-bold text-primary">{t("payroll")}</h1>
           <p className="text-xs text-muted-foreground">{t("payrollSubtitle")}</p>
         </div>
-        <button type="button" onClick={() => setEditing("new")}
-          className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-4 py-2 font-body font-bold">
-          <Plus className="h-4 w-4" /> {t("newPayroll")}
-        </button>
+        {can("payroll", "create") && (
+          <button type="button" onClick={() => setEditing("new")}
+            className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-4 py-2 font-body font-bold">
+            <Plus className="h-4 w-4" /> {t("newPayroll")}
+          </button>
+        )}
       </div>
       {editing !== null && (
         <PayrollForm employees={emps} payCats={cats} preview={preview}
           initial={editRow} onSubmit={submit} onCancel={() => setEditing(null)} />
       )}
-      <PayrollTable rows={items} onView={setViewing} onEdit={setEditing}
-        onDelete={(id) => { if (window.confirm(`${t("delete")}?`)) void remove(id); }} />
+      <PayrollTable rows={items} onView={setViewing} onEdit={can("payroll", "edit") ? setEditing : undefined}
+        onDelete={can("payroll", "delete") ? (id) => { if (window.confirm(`${t("delete")}?`)) void remove(id); } : undefined} />
       {viewItem && <PayrollDetail item={viewItem} onClose={() => setViewing(null)} />}
     </div>
   );

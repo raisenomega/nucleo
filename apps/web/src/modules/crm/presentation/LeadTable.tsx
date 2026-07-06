@@ -5,7 +5,7 @@ import { StatusBadge, TempBadge } from "@crm/presentation/LeadBadges";
 import type { Lead } from "@crm/domain/lead.types";
 
 export function LeadTable({ rows, onView, onEdit, onDelete }: {
-  rows: readonly Lead[]; onView: (id: string) => void; onEdit: (id: string) => void; onDelete: (id: string) => void;
+  rows: readonly Lead[]; onView: (id: string) => void; onEdit?: (id: string) => void; onDelete?: (id: string) => void;
 }) {
   const { t } = useI18n();
   const th = "px-3 py-2 text-left font-bold";
@@ -44,8 +44,8 @@ export function LeadTable({ rows, onView, onEdit, onDelete }: {
                     <button type="button" onClick={() => window.alert(t("quotePlaceholder"))} aria-label={t("quote")} className="text-primary"><FileText className="h-4 w-4" /></button>
                     <button type="button" onClick={() => window.alert(t("invoicePlaceholder"))} aria-label={t("invoice")} className="text-primary"><Receipt className="h-4 w-4" /></button>
                     <button type="button" onClick={() => onView(l.id)} aria-label={t("viewDetail")} className="text-foreground"><Eye className="h-4 w-4" /></button>
-                    <button type="button" onClick={() => onEdit(l.id)} aria-label={t("edit")} className="text-primary"><Pencil className="h-4 w-4" /></button>
-                    <button type="button" onClick={() => onDelete(l.id)} aria-label={t("delete")} className="text-destructive"><Trash2 className="h-4 w-4" /></button>
+                    {onEdit && <button type="button" onClick={() => onEdit(l.id)} aria-label={t("edit")} className="text-primary"><Pencil className="h-4 w-4" /></button>}
+                    {onDelete && <button type="button" onClick={() => onDelete(l.id)} aria-label={t("delete")} className="text-destructive"><Trash2 className="h-4 w-4" /></button>}
                   </div>
                 </td>
               </tr>

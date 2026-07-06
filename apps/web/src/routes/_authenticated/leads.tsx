@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 import { supabase } from "@shared/lib/supabase";
 import { useI18n } from "@shared/i18n";
+import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { useLead } from "@crm/application/useLead.hook";
 import { supabaseLeadRepository } from "@crm/infrastructure/supabase-lead.repository";
 import { LeadForm } from "@crm/presentation/LeadForm";
@@ -22,7 +23,7 @@ function toForm(l: Lead): LeadFormData {
 }
 
 function LeadsPage() {
-  const { t } = useI18n();
+  const { t } = useI18n(); const { can } = useModuleAccess();
   const { leads, create, update, remove } = useLead(supabaseLeadRepository);
   const [cats, setCats] = useState<Cat[]>([]);
   const [editing, setEditing] = useState<string | null>(null);
@@ -43,6 +44,7 @@ function LeadsPage() {
     setEditing(null);
   }
 
+  if (!can("leads", "view")) return <Navigate to="/dashboard" />;
   const viewLead = leads.find((l) => l.id === viewing);
   return (
     <div className="space-y-6 p-8">
@@ -51,17 +53,14 @@ function LeadsPage() {
           <h1 className="font-display text-3xl font-bold text-primary">{t("leads")}</h1>
           <p className="text-xs text-muted-foreground">{t("leadSubtitle")}</p>
         </div>
-        <button type="button" onClick={() => setEditing("new")}
-          className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-4 py-2 font-body font-bold">
-          <Plus className="h-4 w-4" /> {t("newLead")}
-        </button>
+        {can("leads", "create") && <button type="button" onClick={() => setEditing("new")} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-4 py-2 font-body font-bold"><Plus className="h-4 w-4" /> {t("newLead")}</button>}
       </div>
       {editing !== null && (
         <LeadForm sources={cats.filter((c) => c.kind === "lead_source")} services={cats.filter((c) => c.kind === "service_type")}
           initial={editRow} onSubmit={submit} onCancel={() => setEditing(null)} />
       )}
-      <LeadTable rows={leads} onView={setViewing} onEdit={setEditing}
-        onDelete={(id) => { if (window.confirm(`${t("delete")}?`)) void remove(id); }} />
+      <LeadTable rows={leads} onView={setViewing} onEdit={can("leads", "edit") ? setEditing : undefined}
+        onDelete={can("leads", "delete") ? (id) => { if (window.confirm(`${t("delete")}?`)) void remove(id); } : undefined} />
       {viewLead && (
         <LeadDetail lead={viewLead} onClose={() => setViewing(null)}
           onEdit={() => { setEditing(viewLead.id); setViewing(null); }}

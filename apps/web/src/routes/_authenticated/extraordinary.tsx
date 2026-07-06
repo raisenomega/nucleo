@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 import { supabase } from "@shared/lib/supabase";
 import { useI18n } from "@shared/i18n";
+import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { useExtraordinary } from "@finance/application/useExtraordinary.hook";
 import { supabaseExtraordinaryRepository } from "@finance/infrastructure/supabase-extraordinary.repository";
 import { ExtraordinaryForm } from "@finance/presentation/ExtraordinaryForm";
@@ -16,6 +17,7 @@ type Cat = { id: string; label: string; kind: string };
 
 function ExtraordinaryPage() {
   const { t } = useI18n();
+  const { can } = useModuleAccess();
   const { items, create, update, remove } = useExtraordinary(supabaseExtraordinaryRepository);
   const [cats, setCats] = useState<Cat[]>([]);
   const [editing, setEditing] = useState<string | null>(null);
@@ -37,6 +39,7 @@ function ExtraordinaryPage() {
     setEditing(null);
   }
 
+  if (!can("extraordinary", "view")) return <Navigate to="/dashboard" />;
   const viewItem = items.find((i) => i.id === viewing);
   return (
     <div className="space-y-6 p-8">
@@ -45,18 +48,20 @@ function ExtraordinaryPage() {
           <h1 className="font-display text-3xl font-bold text-primary">{t("extraordinary")}</h1>
           <p className="text-xs text-muted-foreground">{t("extraordinarySubtitle")}</p>
         </div>
-        <button type="button" onClick={() => setEditing("new")}
-          className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-4 py-2 font-body font-bold">
-          <Plus className="h-4 w-4" /> {t("newExtraordinary")}
-        </button>
+        {can("extraordinary", "create") && (
+          <button type="button" onClick={() => setEditing("new")}
+            className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-4 py-2 font-body font-bold">
+            <Plus className="h-4 w-4" /> {t("newExtraordinary")}
+          </button>
+        )}
       </div>
       {editing !== null && (
         <ExtraordinaryForm extraCats={cats.filter((c) => c.kind === "extraordinary")}
           payCats={cats.filter((c) => c.kind === "payment_method")}
           initial={editRow} onSubmit={submit} onCancel={() => setEditing(null)} />
       )}
-      <ExtraordinaryTable rows={items} onView={setViewing} onEdit={setEditing}
-        onDelete={(id) => { if (window.confirm(`${t("delete")}?`)) void remove(id); }} />
+      <ExtraordinaryTable rows={items} onView={setViewing} onEdit={can("extraordinary", "edit") ? setEditing : undefined}
+        onDelete={can("extraordinary", "delete") ? (id) => { if (window.confirm(`${t("delete")}?`)) void remove(id); } : undefined} />
       {viewItem && <ExtraordinaryDetail item={viewItem} onClose={() => setViewing(null)} />}
     </div>
   );
