@@ -19,7 +19,8 @@ export function ModuleAccessProvider({ children }: { children: ReactNode }) {
     });
   }, []);
   const value = useMemo<ModuleAccessValue>(() => {
-    const access = override ?? defaultsFor((session?.role as AppRole | null) ?? null);
+    // Merge per-modulo (espejo de can_access_module en RLS): base = defaults del rol; override reemplaza por modulo.
+    const access = { ...defaultsFor((session?.role as AppRole | null) ?? null), ...(override ?? {}) };
     return { access, can: (mod, perm = "view") => access[mod]?.[perm] === true };
   }, [override, session?.role]);
   if (!ready) return <div className="grid min-h-screen place-items-center bg-background font-body text-sm text-muted-foreground">…</div>;
