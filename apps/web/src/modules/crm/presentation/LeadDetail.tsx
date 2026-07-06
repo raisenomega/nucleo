@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { formatCurrency } from "@shared/lib/format";
+import { ScreenModal } from "@shared/components/ScreenModal";
 import { signEvidence } from "@finance/infrastructure/supabase-evidence.storage";
 import { StatusBadge, TempBadge } from "@crm/presentation/LeadBadges";
 import { LeadDetailActions } from "@crm/presentation/LeadDetailActions";
@@ -19,15 +20,15 @@ export function LeadDetail({ lead, onClose, onEdit, onDuplicate, onArchive }: {
   );
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
-        <div className="max-h-[90vh] w-full max-w-lg space-y-3 overflow-y-auto rounded-lg border border-border bg-card p-6" onClick={(e) => e.stopPropagation()}>
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex flex-wrap items-center gap-2">
-              <h2 className="font-display text-xl font-bold text-primary">{lead.contactName}</h2>
-              <TempBadge value={lead.temperature} /><StatusBadge value={lead.status} />
-            </div>
-            <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-5 w-5" /></button>
+      <ScreenModal onClose={onClose}>
+        <div className="flex items-center justify-between gap-2 border-b border-border p-4 md:p-6">
+          <div className="flex flex-wrap items-center gap-2">
+            <h2 className="font-display text-xl font-bold text-primary">{lead.contactName}</h2>
+            <TempBadge value={lead.temperature} /><StatusBadge value={lead.status} />
           </div>
+          <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button>
+        </div>
+        <div className="space-y-3 p-4 md:p-6">
           <LeadDetailActions onEdit={onEdit} onDuplicate={onDuplicate} onArchive={onArchive} />
           <dl className="space-y-1 font-body text-sm">
             {row("phone", lead.phone)}{row("email", lead.email)}
@@ -51,7 +52,7 @@ export function LeadDetail({ lead, onClose, onEdit, onDuplicate, onArchive }: {
             </div>
           )}
         </div>
-      </div>
+      </ScreenModal>
       {photo && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4" onClick={() => setPhoto(null)}>
           <button type="button" onClick={() => setPhoto(null)} aria-label={t("cancel")} className="absolute right-4 top-4 text-white"><X className="h-6 w-6" /></button>

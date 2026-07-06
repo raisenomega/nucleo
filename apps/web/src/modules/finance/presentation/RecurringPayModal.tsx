@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@shared/lib/supabase";
+import { ScreenModal } from "@shared/components/ScreenModal";
 import { supabaseExpenseRepository } from "@finance/infrastructure/supabase-expense.repository";
 import { ExpenseForm } from "@finance/presentation/ExpenseForm";
 import type { ExpenseFormData } from "@finance/domain/expense.types";
@@ -21,12 +22,10 @@ export function RecurringPayModal({ categoryId, onClose, onDone }: {
   const initial: ExpenseFormData = { categoryId, amount: 0, description: "", date: new Date().toISOString().slice(0, 10), paymentMethodId: "", paidBy: "", evidenceUrls: [] };
   async function submit(d: ExpenseFormData) { await supabaseExpenseRepository.create(d); onDone(); }
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 p-4" onClick={onClose}>
-      <div className="w-full max-w-2xl" onClick={(e) => e.stopPropagation()}>
-        <ExpenseForm expenseCats={cats.filter((c) => c.kind === "expense").map((c) => ({ id: c.id, label: c.label, expenseClass: c.expense_class }))}
-          payCats={cats.filter((c) => c.kind === "payment_method")} employees={emps}
-          initial={initial} onSubmit={submit} onCancel={onClose} />
-      </div>
-    </div>
+    <ScreenModal onClose={onClose}>
+      <ExpenseForm expenseCats={cats.filter((c) => c.kind === "expense").map((c) => ({ id: c.id, label: c.label, expenseClass: c.expense_class }))}
+        payCats={cats.filter((c) => c.kind === "payment_method")} employees={emps}
+        initial={initial} onSubmit={submit} onCancel={onClose} />
+    </ScreenModal>
   );
 }

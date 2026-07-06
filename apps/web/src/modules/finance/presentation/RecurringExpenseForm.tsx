@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { X } from "lucide-react";
 import { useI18n } from "@shared/i18n";
+import { ScreenModal } from "@shared/components/ScreenModal";
 import { CategoryPicker } from "@shared/components/CategoryPicker";
 import type { RecurringExpenseFormData, RecurringFrequency } from "@finance/domain/recurring-expense.types";
 
@@ -12,12 +14,15 @@ export function RecurringExpenseForm({ initial, onSubmit, onCancel }: {
 }) {
   const { t } = useI18n();
   const [f, setF] = useState<RecurringExpenseFormData>(initial ?? EMPTY);
-  const field = "w-full rounded-lg border border-border bg-background p-2 font-body";
+  const field = "h-12 w-full rounded-lg border border-border bg-background px-3 font-body";
   const lbl = "text-xs font-bold text-muted-foreground";
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onCancel}>
-      <form onSubmit={(e) => { e.preventDefault(); onSubmit(f); }} onClick={(e) => e.stopPropagation()} className="w-full max-w-md space-y-4 rounded-lg border border-border bg-card p-6">
-        <h2 className="font-body font-bold">{t("addRecurring")}</h2>
+    <ScreenModal onClose={onCancel}>
+      <div className="flex items-center justify-between border-b border-border p-4 md:p-6">
+        <h2 className="font-display text-xl font-bold text-primary">{t("addRecurring")}</h2>
+        <button type="button" onClick={onCancel} aria-label={t("cancel")}><X className="h-6 w-6" /></button>
+      </div>
+      <form onSubmit={(e) => { e.preventDefault(); onSubmit(f); }} className="flex flex-1 flex-col gap-4 p-4 md:p-6">
         <CategoryPicker kind="expense" value={f.categoryId} onChange={(id) => setF({ ...f, categoryId: id })} label="category" />
         <label className="block space-y-1"><span className={lbl}>{t("description")}</span>
           <input value={f.label} onChange={(e) => setF({ ...f, label: e.target.value })} className={field} required /></label>
@@ -29,11 +34,11 @@ export function RecurringExpenseForm({ initial, onSubmit, onCancel }: {
               {FREQ.map((fr) => <option key={fr} value={fr}>{t(fr)}</option>)}
             </select></label>
         </div>
-        <div className="flex gap-2">
-          <button type="submit" className="rounded-lg bg-primary text-primary-foreground px-4 py-2 font-body font-bold">{t("save")}</button>
-          <button type="button" onClick={onCancel} className="rounded-lg bg-secondary text-foreground px-4 py-2 font-body">{t("cancel")}</button>
+        <div className="mt-auto flex gap-2">
+          <button type="submit" className="min-h-[48px] flex-1 rounded-lg bg-primary text-primary-foreground px-4 font-body font-bold">{t("save")}</button>
+          <button type="button" onClick={onCancel} className="min-h-[48px] rounded-lg bg-secondary text-foreground px-4 font-body">{t("cancel")}</button>
         </div>
       </form>
-    </div>
+    </ScreenModal>
   );
 }

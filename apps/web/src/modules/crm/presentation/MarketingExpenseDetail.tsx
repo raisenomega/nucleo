@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { formatCurrency } from "@shared/lib/format";
+import { ScreenModal } from "@shared/components/ScreenModal";
 import { signEvidence } from "@finance/infrastructure/supabase-evidence.storage";
 import type { MarketingExpense } from "@crm/domain/marketing.types";
 
@@ -15,12 +16,12 @@ export function MarketingExpenseDetail({ item, onClose }: { item: MarketingExpen
   );
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
-        <div className="w-full max-w-lg space-y-3 rounded-lg border border-border bg-card p-6" onClick={(e) => e.stopPropagation()}>
-          <div className="flex items-center justify-between">
-            <h2 className="font-display text-xl font-bold text-primary">{item.channel}</h2>
-            <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-5 w-5" /></button>
-          </div>
+      <ScreenModal onClose={onClose}>
+        <div className="flex items-center justify-between border-b border-border p-4 md:p-6">
+          <h2 className="font-display text-xl font-bold text-primary">{item.channel}</h2>
+          <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button>
+        </div>
+        <div className="space-y-3 p-4 md:p-6">
           <dl className="space-y-1 font-body text-sm">
             {row("date", item.date)}{row("amount", formatCurrency(item.amount))}
             {row("campaignName", item.campaignName)}{row("description", item.description)}
@@ -31,7 +32,7 @@ export function MarketingExpenseDetail({ item, onClose }: { item: MarketingExpen
             </div>
           )}
         </div>
-      </div>
+      </ScreenModal>
       {photo && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4" onClick={() => setPhoto(null)}>
           <button type="button" onClick={() => setPhoto(null)} aria-label={t("cancel")} className="absolute right-4 top-4 text-white"><X className="h-6 w-6" /></button>

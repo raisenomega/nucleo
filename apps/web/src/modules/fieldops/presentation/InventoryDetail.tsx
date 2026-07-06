@@ -2,6 +2,7 @@ import { X } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { formatCurrency } from "@shared/lib/format";
+import { ScreenModal } from "@shared/components/ScreenModal";
 import type { InventoryItem } from "@fieldops/domain/inventory.types";
 
 export function InventoryDetail({ item, onClose }: { item: InventoryItem; onClose: () => void }) {
@@ -11,12 +12,12 @@ export function InventoryDetail({ item, onClose }: { item: InventoryItem; onClos
     <div><dt className="inline text-muted-foreground">{label}: </dt><dd className="inline">{v}</dd></div>
   );
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
-      <div className="w-full max-w-md space-y-3 rounded-lg border border-border bg-card p-6" onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-center justify-between">
-          <h2 className="font-display text-xl font-bold text-primary">{item.name}</h2>
-          <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-5 w-5" /></button>
-        </div>
+    <ScreenModal onClose={onClose}>
+      <div className="flex items-center justify-between border-b border-border p-4 md:p-6">
+        <h2 className="font-display text-xl font-bold text-primary">{item.name}</h2>
+        <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button>
+      </div>
+      <div className="space-y-3 p-4 md:p-6">
         <dl className="space-y-1 font-body text-sm">
           {row(t("stock"), String(item.stock))}
           {can("inventory", "cost") && row(t("unitCost"), formatCurrency(item.unitCost))}
@@ -24,6 +25,6 @@ export function InventoryDetail({ item, onClose }: { item: InventoryItem; onClos
         </dl>
         <p className="text-xs text-muted-foreground">{t("movementsSoon")}</p>
       </div>
-    </div>
+    </ScreenModal>
   );
 }
