@@ -55,4 +55,7 @@ export type TranslationKey =
   | "registerPayment" | "coveredPercent" | "manageRecurring" | "frequencyLabel" | "newCategory"
   | "createCategory" | "categoryName" | "selectExpenseClass" | "movementsSoon"
   | "team" | "inviteEmployee" | "approve" | "reject" | "changeRole" | "deactivate"
-  | "categories" | "generalSettings" | "retentionPct" | "orderPrefix" | "fiscalCountry";
+  | "categories" | "generalSettings" | "retentionPct" | "orderPrefix" | "fiscalCountry"
+  | "joinTeam" | "invitedSubtitle" | "createPassword" | "confirmPassword" | "passwordMismatch"
+  | "minPassword" | "alreadyRegistered" | "invitedLink" | "accountCreated" | "goToLogin"
+  | "businessOwner" | "trialFree";

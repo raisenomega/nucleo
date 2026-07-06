@@ -26,4 +26,10 @@ export const enRecon = {
   changeRole: "Change role", deactivate: "Deactivate", categories: "Categories",
   generalSettings: "General settings", retentionPct: "Retention %", orderPrefix: "Order prefix",
   fiscalCountry: "Fiscal country",
+  joinTeam: "Join your team", invitedSubtitle: "Your admin invited you to NÚCLEO. Create your password to sign in.",
+  createPassword: "Create your password", confirmPassword: "Confirm your password",
+  passwordMismatch: "Passwords don't match", minPassword: "Minimum 8 characters",
+  alreadyRegistered: "This email already has an account. Sign in.", invitedLink: "Invited? Create your account",
+  accountCreated: "Account created! Check your email to confirm. Then you can sign in.",
+  goToLogin: "Go to sign in", businessOwner: "Business owner?", trialFree: "Try free for 3 days",
 } satisfies Partial<Record<TranslationKey, string>>;

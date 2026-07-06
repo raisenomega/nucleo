@@ -58,6 +58,9 @@ function Login() {
           ¿No tienes cuenta?{" "}
           <Link to="/registro" className="text-primary">Prueba gratis por 3 días</Link>
         </p>
+        <p className="text-sm text-muted-foreground text-center">
+          ¿Te invitaron? <Link to="/invite" className="text-primary">Crea tu cuenta</Link>
+        </p>
       </form>
     </main>
   );
