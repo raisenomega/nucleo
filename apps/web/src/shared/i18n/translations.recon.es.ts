@@ -15,4 +15,9 @@ export const esRecon = {
   unclassified: "Sin clasificar", classifyCategories: "clasifique sus categorías",
   breakEvenComposition: "gastos fijos + nómina",
   payrollCost: "Costo total nómina", fixedCosts: "Gastos fijos",
+  recurringExpenses: "Gastos fijos recurrentes",
+  recurringSubtitle: "Configura los gastos que se repiten cada mes. El sistema te indica cuáles ya pagaste.",
+  budgeted: "Presupuestado", paid: "Pagado", addRecurring: "Añadir gasto fijo",
+  registerPayment: "Registrar pago", manageRecurring: "Gestionar recurrentes", frequencyLabel: "Frecuencia",
+  coveredPercent: "Has cubierto {done} de {total} gastos fijos ({pct}%)",
 } satisfies Partial<Record<TranslationKey, string>>;

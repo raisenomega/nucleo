@@ -9,6 +9,8 @@ const EMOJI = { surplus: "🟢", tight: "🟡", deficit: "🔴" } as const;
 export function DashboardFiscal({ f }: { f: FiscalSnapshot }) {
   const { t } = useI18n();
   const color = COLOR[f.operatingStatus];
+  const paidPct = f.recurringBudgeted > 0 ? Math.round((f.recurringPaid / f.recurringBudgeted) * 100) : (f.recurringPaid > 0 ? 100 : 0);
+  const fixColor = f.recurringBudgeted === 0 ? "" : f.recurringPaid >= f.recurringBudgeted ? "text-green-600" : f.recurringPaid > 0 ? "text-yellow-600" : "text-red-600";
   const card = "space-y-2 rounded-lg border border-border bg-card p-5";
   const lbl = "flex items-center gap-2 text-xs text-muted-foreground";
   return (
@@ -35,8 +37,8 @@ export function DashboardFiscal({ f }: { f: FiscalSnapshot }) {
       </div>
       <div className={card}>
         <div className={lbl}><Home className="h-4 w-4 text-primary" /> {t("fixedCosts")}</div>
-        <div className="text-2xl font-black md:text-3xl">{formatCurrency(f.breakEven)}</div>
-        <div className="text-xs text-muted-foreground">{t("breakEvenComposition")}</div>
+        <div className={`text-2xl font-black md:text-3xl ${fixColor}`}>{formatCurrency(f.recurringBudgeted)}</div>
+        <div className="text-xs text-muted-foreground">{t("paid")}: {formatCurrency(f.recurringPaid)} ({paidPct}%)</div>
       </div>
     </div>
   );

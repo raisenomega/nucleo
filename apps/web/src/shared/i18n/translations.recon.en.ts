@@ -15,4 +15,9 @@ export const enRecon = {
   unclassified: "Unclassified", classifyCategories: "classify your categories",
   breakEvenComposition: "fixed expenses + payroll",
   payrollCost: "Total payroll cost", fixedCosts: "Fixed costs",
+  recurringExpenses: "Recurring fixed expenses",
+  recurringSubtitle: "Set up the expenses that repeat every month. The system shows which ones you've paid.",
+  budgeted: "Budgeted", paid: "Paid", addRecurring: "Add fixed expense",
+  registerPayment: "Register payment", manageRecurring: "Manage recurring", frequencyLabel: "Frequency",
+  coveredPercent: "You've covered {done} of {total} fixed expenses ({pct}%)",
 } satisfies Partial<Record<TranslationKey, string>>;

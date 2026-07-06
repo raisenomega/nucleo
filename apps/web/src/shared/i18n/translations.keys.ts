@@ -50,4 +50,6 @@ export type TranslationKey =
   | "totalEmployerCost" | "employeeDeductions" | "employerContributions" | "remitToTreasury"
   | "contractorReceives" | "payrollDisclaimer"
   | "fixedExpense" | "variableExpense" | "debtExpense" | "oneTimeExpense" | "unclassified"
-  | "classifyCategories" | "breakEvenComposition" | "payrollCost" | "fixedCosts";
+  | "classifyCategories" | "breakEvenComposition" | "payrollCost" | "fixedCosts"
+  | "recurringExpenses" | "recurringSubtitle" | "budgeted" | "paid" | "addRecurring"
+  | "registerPayment" | "coveredPercent" | "manageRecurring" | "frequencyLabel";
