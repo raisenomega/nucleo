@@ -30,6 +30,7 @@
       "@identity/*":  ["./apps/web/src/modules/identity/*"],
       "@cognition/*": ["./apps/web/src/modules/cognition/*"],
       "@crm/*":       ["./apps/web/src/modules/crm/*"],
+      "@admin/*":     ["./apps/web/src/modules/admin/*"],
       "@shared/*":    ["./apps/web/src/shared/*"],
       "@brand/*":     ["./brand/*"]
     }
