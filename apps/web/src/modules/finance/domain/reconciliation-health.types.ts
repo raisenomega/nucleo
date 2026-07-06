@@ -5,7 +5,10 @@ export type OperatingStatus = "surplus" | "tight" | "deficit";
 export interface BankPanelAccount {
   readonly bankName: string;
   readonly openingBalance: number;
+  readonly deposits: number;
+  readonly calculatedBalance: number;
   readonly realBalance: number;
+  readonly difference: number;
   readonly cutoffDate: string;
 }
 

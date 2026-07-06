@@ -12,9 +12,9 @@ export function DashboardKpis({ s, bankBalance }: { s: Snapshot; bankBalance?: n
     <div className={`grid grid-cols-1 gap-4 ${bankBalance === undefined ? "sm:grid-cols-3" : "sm:grid-cols-2 lg:grid-cols-4"}`}>
       {bankBalance !== undefined && (
         <div className={card}>
-          <div className={lbl}><Landmark className="h-4 w-4 text-primary" /> {t("realBalance")}</div>
+          <div className={lbl}><Landmark className="h-4 w-4 text-primary" /> {t("bankBalance")}</div>
           <div className={`${amount} text-primary`}>{formatCurrency(bankBalance)}</div>
-          <div className="text-xs text-muted-foreground">{t("bankAccounts")}</div>
+          <div className="text-xs text-muted-foreground">{t("calculatedBalance")}</div>
         </div>
       )}
       <div className={card}>

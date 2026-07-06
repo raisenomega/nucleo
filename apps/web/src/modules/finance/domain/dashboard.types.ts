@@ -47,7 +47,7 @@ export interface FiscalSnapshot {
   readonly breakEvenPct: number;
   readonly shortfall: number;
   readonly surplus: number;
-  readonly realBalance: number;
+  readonly bankCalculated: number;
 }
 
 // Puerto del repositorio — lo implementa infrastructure; lo consume application (DI).

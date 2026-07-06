@@ -45,4 +45,4 @@ export type TranslationKey =
   | "depositType" | "cash" | "check" | "transfer" | "other" | "referenceNumber"
   | "retentionAuto" | "retentionAutoNote" | "accumulated" | "operatingMargin"
   | "breakEven" | "surplus" | "shortfall" | "trend"
-  | "dashboardFiscal" | "breakEvenProgress";
+  | "dashboardFiscal" | "breakEvenProgress" | "bankBalance";

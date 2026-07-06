@@ -10,5 +10,5 @@ export const esRecon = {
   retentionAutoNote: "Calculada sobre los ingresos del mes. Informativo — no requiere acción.",
   accumulated: "Acumulado", operatingMargin: "Margen operativo",
   breakEven: "Punto de equilibrio", surplus: "Superávit", shortfall: "Faltante", trend: "Tendencia",
-  dashboardFiscal: "Fiscal", breakEvenProgress: "del punto de equilibrio",
+  dashboardFiscal: "Fiscal", breakEvenProgress: "del punto de equilibrio", bankBalance: "Balance en banco",
 } satisfies Partial<Record<TranslationKey, string>>;

@@ -13,7 +13,7 @@ interface RawHealth {
   operating_margin: number; operating_status: OperatingStatus; trend: MonthlySeriesRow[];
 }
 interface Raw {
-  bank_panel: { accounts: { bankName: string; openingBalance: number; realBalance: number; cutoffDate: string }[];
+  bank_panel: { accounts: { bankName: string; openingBalance: number; deposits: number; calculatedBalance: number; realBalance: number; difference: number; cutoffDate: string }[];
     opening_balance: number; deposits: number; egresos: number; calculated_balance: number; real_balance: number; difference: number };
   tax_panel: { obligations: RawObl[]; total_estimated: number };
   retention_panel: { retention_pct: number; required: number; monthly: MonthlySeriesRow[] };
