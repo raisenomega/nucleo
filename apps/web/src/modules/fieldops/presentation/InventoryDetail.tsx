@@ -19,7 +19,7 @@ export function InventoryDetail({ item, onClose }: { item: InventoryItem; onClos
         </div>
         <dl className="space-y-1 font-body text-sm">
           {row(t("stock"), String(item.stock))}
-          {can("inventory", "edit") && row(t("unitCost"), formatCurrency(item.unitCost))}
+          {can("inventory", "cost") && row(t("unitCost"), formatCurrency(item.unitCost))}
           {row(t("minStock"), String(item.minStock))}
         </dl>
         <p className="text-xs text-muted-foreground">{t("movementsSoon")}</p>

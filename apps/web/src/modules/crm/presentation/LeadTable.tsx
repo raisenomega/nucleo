@@ -1,5 +1,6 @@
 import { Eye, FileText, MessageCircle, Pencil, Receipt, Trash2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
+import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { formatCurrency } from "@shared/lib/format";
 import { StatusBadge, TempBadge } from "@crm/presentation/LeadBadges";
 import type { Lead } from "@crm/domain/lead.types";
@@ -8,6 +9,8 @@ export function LeadTable({ rows, onView, onEdit, onDelete }: {
   rows: readonly Lead[]; onView: (id: string) => void; onEdit?: (id: string) => void; onDelete?: (id: string) => void;
 }) {
   const { t } = useI18n();
+  const { can } = useModuleAccess();
+  const docs = can("leads", "documents");
   const th = "px-3 py-2 text-left font-bold";
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card">
@@ -39,10 +42,10 @@ export function LeadTable({ rows, onView, onEdit, onDelete }: {
                 <td className="px-3 py-2 text-right font-semibold">{formatCurrency(l.quotedPrice)}</td>
                 <td className="px-3 py-2">
                   <div className="flex justify-end gap-2">
-                    <button type="button" aria-label={t("whatsapp")} className="text-green-600"
-                      onClick={() => window.open(`https://wa.me/${l.phone.replace(/\D/g, "")}?text=${encodeURIComponent(t("whatsappMessage", { name: l.contactName, total: formatCurrency(l.quotedPrice) }))}`, "_blank")}><MessageCircle className="h-4 w-4" /></button>
-                    <button type="button" onClick={() => window.alert(t("quotePlaceholder"))} aria-label={t("quote")} className="text-primary"><FileText className="h-4 w-4" /></button>
-                    <button type="button" onClick={() => window.alert(t("invoicePlaceholder"))} aria-label={t("invoice")} className="text-primary"><Receipt className="h-4 w-4" /></button>
+                    {docs && <button type="button" aria-label={t("whatsapp")} className="text-green-600"
+                      onClick={() => window.open(`https://wa.me/${l.phone.replace(/\D/g, "")}?text=${encodeURIComponent(t("whatsappMessage", { name: l.contactName, total: formatCurrency(l.quotedPrice) }))}`, "_blank")}><MessageCircle className="h-4 w-4" /></button>}
+                    {docs && <button type="button" onClick={() => window.alert(t("quotePlaceholder"))} aria-label={t("quote")} className="text-primary"><FileText className="h-4 w-4" /></button>}
+                    {docs && <button type="button" onClick={() => window.alert(t("invoicePlaceholder"))} aria-label={t("invoice")} className="text-primary"><Receipt className="h-4 w-4" /></button>}
                     <button type="button" onClick={() => onView(l.id)} aria-label={t("viewDetail")} className="text-foreground"><Eye className="h-4 w-4" /></button>
                     {onEdit && <button type="button" onClick={() => onEdit(l.id)} aria-label={t("edit")} className="text-primary"><Pencil className="h-4 w-4" /></button>}
                     {onDelete && <button type="button" onClick={() => onDelete(l.id)} aria-label={t("delete")} className="text-destructive"><Trash2 className="h-4 w-4" /></button>}

@@ -1,6 +1,6 @@
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
-import { useRoleGate } from "@shared/hooks/useRoleGate";
+import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { formatCurrency } from "@shared/lib/format";
 import type { Payroll } from "@finance/domain/payroll.types";
 
@@ -13,8 +13,8 @@ export function PayrollTable({ rows, onView, onEdit, onDelete }: {
   onView: (id: string) => void; onEdit?: (id: string) => void; onDelete?: (id: string) => void;
 }) {
   const { t } = useI18n();
-  const { canEdit } = useRoleGate();
-  const money = canEdit("coo"); // salario/deducciones/patronal = dato financiero → por ROL
+  const { can } = useModuleAccess();
+  const money = can("payroll", "salary"); // salario/deducciones/patronal gateado por payroll.salary
   const total = rows.reduce((s, i) => s + costOf(i), 0);
   const th = "px-3 py-2 text-left font-bold";
   return (

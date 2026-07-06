@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useI18n } from "@shared/i18n";
-import { useRoleGate } from "@shared/hooks/useRoleGate";
+import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import type { InventoryFormData } from "@fieldops/domain/inventory.types";
 
 export function InventoryForm({ initial, onSubmit, onCancel }: {
@@ -9,7 +9,7 @@ export function InventoryForm({ initial, onSubmit, onCancel }: {
   onCancel: () => void;
 }) {
   const { t } = useI18n();
-  const { canEdit } = useRoleGate();
+  const { can } = useModuleAccess();
   const [f, setF] = useState<InventoryFormData>(initial ?? { name: "", stock: 0, unitCost: 0, minStock: 0 });
   const field = "w-full rounded-lg border border-border bg-background p-2 font-body";
   const lbl = "text-xs font-bold text-muted-foreground";
@@ -25,7 +25,7 @@ export function InventoryForm({ initial, onSubmit, onCancel }: {
         <label className="space-y-1"><span className={lbl}>{t("itemName")}</span>
           <input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} className={field} /></label>
         {num("stock", t("stock"))}
-        {canEdit("coo") && num("unitCost", t("unitCost"))}
+        {can("inventory", "cost") && num("unitCost", t("unitCost"))}
         {num("minStock", t("minStock"))}
       </div>
       <div className="flex gap-2">

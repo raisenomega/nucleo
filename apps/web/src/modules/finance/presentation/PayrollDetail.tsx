@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { useI18n } from "@shared/i18n";
+import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { formatCurrency } from "@shared/lib/format";
 import { signEvidence } from "@finance/infrastructure/supabase-evidence.storage";
 import type { Payroll } from "@finance/domain/payroll.types";
 
 export function PayrollDetail({ item, onClose }: { item: Payroll; onClose: () => void }) {
   const { t } = useI18n();
+  const { can } = useModuleAccess();
   const [urls, setUrls] = useState<string[]>([]);
   const [photo, setPhoto] = useState<string | null>(null);
   useEffect(() => { void signEvidence(item.evidenceUrls).then(setUrls); }, [item]);
@@ -26,7 +28,7 @@ export function PayrollDetail({ item, onClose }: { item: Payroll; onClose: () =>
             {row("amount", formatCurrency(item.amount))}{row("paymentMethod", item.paymentMethodLabel)}
             {row("notes", item.notes)}
           </dl>
-          {item.deductionsEmployee.length > 0 && (
+          {can("payroll", "salary") && item.deductionsEmployee.length > 0 && (
             <div className="space-y-1 border-t border-border pt-2 text-sm">
               <div className="text-xs font-bold text-muted-foreground">{t("employeeDeductions")}</div>
               {item.deductionsEmployee.map((d) => (

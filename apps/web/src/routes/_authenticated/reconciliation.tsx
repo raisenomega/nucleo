@@ -49,12 +49,14 @@ function ReconciliationPage() {
             onDeposit={can("reconciliation", "create") ? () => setModal("deposit") : undefined}
             onRegisterBalance={can("reconciliation", "edit") ? () => setModal("balance") : undefined}
             onRemoveAccount={can("reconciliation", "delete") ? (id) => { if (window.confirm(`${t("delete")}?`)) void m.removeAccount(id); } : undefined} />
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <ReconciliationTaxPanel tax={m.snapshot.tax} />
-            <ReconciliationSummary summary={m.snapshot.summary} />
-          </div>
-          <ReconciliationHealth health={m.snapshot.summary.health} />
-          <ReconciliationRetentionPanel retention={m.snapshot.retention} />
+          {can("reconciliation", "fiscal") && (
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+              <ReconciliationTaxPanel tax={m.snapshot.tax} />
+              <ReconciliationSummary summary={m.snapshot.summary} />
+            </div>
+          )}
+          {can("reconciliation", "fiscal") && <ReconciliationHealth health={m.snapshot.summary.health} />}
+          {can("reconciliation", "fiscal") && <ReconciliationRetentionPanel retention={m.snapshot.retention} />}
         </div>
       )}
       {modal === "account" && <BankAccountForm onCancel={close} onSubmit={(d) => void submit(m.addAccount(d))} />}

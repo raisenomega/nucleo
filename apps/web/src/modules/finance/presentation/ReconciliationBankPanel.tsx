@@ -1,5 +1,6 @@
 import { Plus, Trash2, Landmark } from "lucide-react";
 import { useI18n } from "@shared/i18n";
+import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { formatCurrency } from "@shared/lib/format";
 import type { BankPanel } from "@finance/domain/reconciliation.types";
 import type { BankAccount } from "@finance/domain/bank-account.types";
@@ -9,6 +10,8 @@ export function ReconciliationBankPanel({ bank, accounts, onAddAccount, onDeposi
   onAddAccount?: () => void; onDeposit?: () => void; onRegisterBalance?: () => void; onRemoveAccount?: (id: string) => void;
 }) {
   const { t } = useI18n();
+  const { can } = useModuleAccess();
+  const canBank = can("reconciliation", "bank"); // saldos/depósitos gateados por reconciliation.bank
   const dataOf = (name: string) => bank.accounts.find((a) => a.bankName === name);
   const line = (label: string, v: number, sign?: string, bold?: boolean) => (
     <div className={`flex justify-between ${bold ? "border-t border-border pt-1 font-bold" : ""}`}>
@@ -33,7 +36,7 @@ export function ReconciliationBankPanel({ bank, accounts, onAddAccount, onDeposi
                 <span className="flex items-center gap-1 font-semibold"><Landmark className="h-4 w-4 text-primary" />{a.bankName}{a.isPrimary ? " ★" : ""}</span>
                 {onRemoveAccount && <button type="button" onClick={() => onRemoveAccount(a.id)} className="text-muted-foreground hover:text-red-600"><Trash2 className="h-4 w-4" /></button>}
               </div>
-              {d ? (
+              {canBank && d ? (
                 <div className="mt-2 space-y-0.5 text-xs">
                   <div className="flex justify-between text-muted-foreground"><span>{t("openingBalance")}</span><span>{formatCurrency(d.openingBalance)}</span></div>
                   <div className="flex justify-between text-muted-foreground"><span>+ {t("deposits")}</span><span>{formatCurrency(d.deposits)}</span></div>
@@ -47,15 +50,17 @@ export function ReconciliationBankPanel({ bank, accounts, onAddAccount, onDeposi
         })}
         {accounts.length === 0 && <div className="text-xs text-muted-foreground">{t("noRecords")}</div>}
       </div>
-      <div className="space-y-1 border-t border-border pt-3 text-sm">
-        {line(t("openingBalance"), bank.openingBalance)}
-        {line(t("deposits"), bank.deposits, "+")}
-        {line(t("egresos"), bank.egresos, "−")}
-        {line(t("calculatedBalance"), bank.calculatedBalance, "=", true)}
-        {line(t("realBalance"), bank.realBalance)}
-        <div className="flex justify-between font-bold"><span>{t("difference")}</span>
-          <span className={bank.difference === 0 ? "" : "text-yellow-700"}>{formatCurrency(bank.difference)}</span></div>
-      </div>
+      {canBank && (
+        <div className="space-y-1 border-t border-border pt-3 text-sm">
+          {line(t("openingBalance"), bank.openingBalance)}
+          {line(t("deposits"), bank.deposits, "+")}
+          {line(t("egresos"), bank.egresos, "−")}
+          {line(t("calculatedBalance"), bank.calculatedBalance, "=", true)}
+          {line(t("realBalance"), bank.realBalance)}
+          <div className="flex justify-between font-bold"><span>{t("difference")}</span>
+            <span className={bank.difference === 0 ? "" : "text-yellow-700"}>{formatCurrency(bank.difference)}</span></div>
+        </div>
+      )}
     </div>
   );
 }

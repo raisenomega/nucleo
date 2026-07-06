@@ -1,7 +1,6 @@
 import { AlertTriangle, Eye, Pencil, Trash2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
-import { useRoleGate } from "@shared/hooks/useRoleGate";
 import { formatCurrency } from "@shared/lib/format";
 import type { InventoryItem } from "@fieldops/domain/inventory.types";
 
@@ -10,8 +9,7 @@ export function InventoryTable({ rows, onView, onEdit, onDelete }: {
 }) {
   const { t } = useI18n();
   const { can } = useModuleAccess();
-  const { canEdit } = useRoleGate();
-  const showCost = canEdit("coo"); // costo = dato financiero → por ROL, no por module_access
+  const showCost = can("inventory", "cost"); // costo gateado por checkbox inventory.cost
   const th = "px-3 py-2 text-left font-bold";
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card">
