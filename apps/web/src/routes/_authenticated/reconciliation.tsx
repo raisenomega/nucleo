@@ -13,6 +13,7 @@ import { ReconciliationHealth } from "@finance/presentation/ReconciliationHealth
 import { BankAccountForm } from "@finance/presentation/BankAccountForm";
 import { BankDepositForm } from "@finance/presentation/BankDepositForm";
 import { BankBalanceForm } from "@finance/presentation/BankBalanceForm";
+import type { RepoResult } from "@finance/domain/bank-account.types";
 
 export const Route = createFileRoute("/_authenticated/reconciliation")({ component: ReconciliationPage });
 
@@ -25,6 +26,10 @@ function ReconciliationPage() {
   const [modal, setModal] = useState<Modal>(null);
   const m = useReconciliation(supabaseReconciliationRepository, supabaseBankAccountRepository, month);
   const close = () => setModal(null);
+  const submit = async (op: Promise<RepoResult>) => {
+    try { const r = await op; if (!r.ok) { window.alert(r.error); return; } close(); }
+    catch (e) { window.alert(e instanceof Error ? e.message : String(e)); }
+  };
 
   if (!canEdit("coo")) return <div className="p-8 text-sm text-muted-foreground">{t("notAuthorized")}</div>;
 
@@ -50,9 +55,9 @@ function ReconciliationPage() {
           <ReconciliationRetentionPanel retention={m.snapshot.retention} />
         </div>
       )}
-      {modal === "account" && <BankAccountForm onCancel={close} onSubmit={(d) => { void m.addAccount(d); close(); }} />}
-      {modal === "deposit" && <BankDepositForm accounts={m.bankAccounts} onCancel={close} onSubmit={(d) => { void m.addBankDeposit(d); close(); }} />}
-      {modal === "balance" && <BankBalanceForm accounts={m.bankAccounts} onCancel={close} onSubmit={(d) => { void m.upsertBankBalance(d); close(); }} />}
+      {modal === "account" && <BankAccountForm onCancel={close} onSubmit={(d) => void submit(m.addAccount(d))} />}
+      {modal === "deposit" && <BankDepositForm accounts={m.bankAccounts} onCancel={close} onSubmit={(d) => void submit(m.addBankDeposit(d))} />}
+      {modal === "balance" && <BankBalanceForm accounts={m.bankAccounts} onCancel={close} onSubmit={(d) => void submit(m.upsertBankBalance(d))} />}
     </div>
   );
 }
