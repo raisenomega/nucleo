@@ -65,4 +65,8 @@ export type TranslationKey =
   | "alternatePhone" | "personalEmail" | "addressLine1" | "addressLine2" | "stateProvince"
   | "emergencyContact" | "relationship" | "professionalInfo" | "department" | "employeeNumber"
   | "hireDate" | "terminationDate" | "probationEnd" | "contractType" | "flsaClass" | "riskClass"
-  | "payFrequency" | "professionalNotes" | "country";
+  | "payFrequency" | "professionalNotes" | "country"
+  | "vacationRate" | "accrued" | "used" | "available" | "maxAccrual" | "sickRate" | "bonus" | "bonusPct"
+  | "medicalPlan" | "provider" | "policyNumber" | "employeeContribution" | "employerContribution"
+  | "retirementPlan" | "planType" | "employerMatchPct" | "lifeInsurance" | "parking"
+  | "companyVehicle" | "companyPhone" | "otherBenefits";

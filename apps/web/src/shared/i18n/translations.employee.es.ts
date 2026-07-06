@@ -10,4 +10,10 @@ export const esEmployee = {
   probationEnd: "Fin de probatorio", contractType: "Tipo de contrato", flsaClass: "Clasificación FLSA",
   riskClass: "Clasificación de riesgo", payFrequency: "Frecuencia de pago", professionalNotes: "Notas profesionales",
   country: "País",
+  vacationRate: "Vacaciones (días/mes)", accrued: "Acumuladas", used: "Usadas", available: "Disponibles",
+  maxAccrual: "Máx acumulable", sickRate: "Enfermedad (días/mes)", bonus: "Aguinaldo aplica", bonusPct: "Aguinaldo %",
+  medicalPlan: "Plan médico", provider: "Proveedor", policyNumber: "Nº póliza", employeeContribution: "Aporte empleado",
+  employerContribution: "Aporte patrono", retirementPlan: "Plan de retiro", planType: "Tipo", employerMatchPct: "Match patrono %",
+  lifeInsurance: "Seguro de vida", parking: "Estacionamiento", companyVehicle: "Vehículo asignado",
+  companyPhone: "Teléfono corporativo", otherBenefits: "Otros beneficios",
 } satisfies Partial<Record<TranslationKey, string>>;
