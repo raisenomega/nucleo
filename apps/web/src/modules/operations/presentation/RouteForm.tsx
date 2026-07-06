@@ -1,18 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useI18n } from "@shared/i18n";
 import { RouteStopsEditor, emptyStop } from "@operations/presentation/RouteStopsEditor";
-import type { RouteFormData, StopFormData } from "@operations/domain/route.types";
+import type { RouteFormData, EditableStop, RouteStop } from "@operations/domain/route.types";
 
 type Emp = { id: string; full_name: string };
 const STATUS = ["Planificada", "En progreso", "Completada", "Cancelada"];
+const toEditable = (s: RouteStop): EditableStop => ({ id: s.id, clientName: s.clientName, address: s.address, city: s.city ?? "", serviceType: s.serviceType, scheduledTime: s.scheduledTime, estimatedAmount: s.estimatedAmount, notes: s.notes ?? "" });
 
-export function RouteForm({ employees, initial, onSubmit, onCancel }: {
-  employees: Emp[]; initial?: RouteFormData;
-  onSubmit: (d: RouteFormData, stops: StopFormData[]) => void; onCancel: () => void;
+export function RouteForm({ employees, initial, initialStops, onSubmit, onCancel }: {
+  employees: Emp[]; initial?: RouteFormData; initialStops?: readonly RouteStop[];
+  onSubmit: (d: RouteFormData, stops: EditableStop[]) => void; onCancel: () => void;
 }) {
   const { t } = useI18n();
   const [f, setF] = useState<RouteFormData>(initial ?? { routeDate: "", assignedTo: "", status: "Planificada", notes: "" });
-  const [stops, setStops] = useState<StopFormData[]>(initial ? [] : [emptyStop()]);
+  const [stops, setStops] = useState<EditableStop[]>(initial ? [] : [emptyStop()]);
+  useEffect(() => { if (initialStops && initialStops.length) setStops(initialStops.map(toEditable)); }, [initialStops]);
   const fld = "w-full rounded-lg border border-border bg-background p-2 text-sm";
   const lbl = "text-xs font-bold text-muted-foreground";
   return (
@@ -31,7 +33,7 @@ export function RouteForm({ employees, initial, onSubmit, onCancel }: {
       </div>
       <label className="block space-y-1"><span className={lbl}>{t("notes")}</span>
         <input value={f.notes} onChange={(e) => setF({ ...f, notes: e.target.value })} className={fld} /></label>
-      {!initial && <div className="space-y-1"><span className={lbl}>{t("routeStops")}</span><RouteStopsEditor stops={stops} onChange={setStops} /></div>}
+      <div className="space-y-1"><span className={lbl}>{t("routeStops")}</span><RouteStopsEditor stops={stops} onChange={setStops} /></div>
       <div className="flex gap-2">
         <button type="submit" className="rounded-lg bg-primary text-primary-foreground px-4 py-2 text-sm font-bold">{t("save")}</button>
         <button type="button" onClick={onCancel} className="rounded-lg bg-secondary px-4 py-2 text-sm">{t("cancel")}</button>

@@ -1,11 +1,12 @@
 import type { ServiceRoute, RouteStop, StopFormData, StopPatch } from "@operations/domain/route.types";
 
-export type RRow = { id: string; route_date: string; assigned_to: string; status: string; notes: string | null; created_by: string; route_stops: { count: number }[] };
+export type RRow = { id: string; route_date: string; assigned_to: string; status: string; notes: string | null; created_by: string; route_stops: { status: string }[] };
 export type SRow = { id: string; route_id: string; stop_order: number; client_name: string; address: string; city: string | null; service_type: string; scheduled_time: string; estimated_amount: number | string; actual_amount: number | string | null; payment_method_id: string | null; status: string; notes: string | null; completed_at: string | null };
 
 export const toRoute = (r: RRow): ServiceRoute => ({
   id: r.id, routeDate: r.route_date, assignedTo: r.assigned_to, status: r.status,
-  notes: r.notes, createdBy: r.created_by, stopCount: r.route_stops?.[0]?.count ?? 0,
+  notes: r.notes, createdBy: r.created_by, stopCount: (r.route_stops ?? []).length,
+  completedCount: (r.route_stops ?? []).filter((s) => s.status === "Completada").length,
 });
 export const toStop = (s: SRow): RouteStop => ({
   id: s.id, routeId: s.route_id, stopOrder: s.stop_order, clientName: s.client_name,
@@ -24,6 +25,6 @@ export function stopPatch(p: StopPatch): Record<string, unknown> {
   set("client_name", p.clientName); set("address", p.address); set("city", p.city ?? undefined);
   set("service_type", p.serviceType); set("scheduled_time", p.scheduledTime);
   set("estimated_amount", p.estimatedAmount); set("status", p.status);
-  set("notes", p.notes); set("completed_at", p.completedAt);
+  set("notes", p.notes); set("completed_at", p.completedAt); set("stop_order", p.stopOrder);
   return r;
 }

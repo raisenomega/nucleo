@@ -3,9 +3,10 @@ import type { RepoResult, IRouteRepository } from "@operations/domain/route.type
 import { toRoute, toStop, stopRow, stopPatch, type RRow, type SRow } from "@operations/infrastructure/route.mapper";
 
 const ok = (e: { message: string } | null): RepoResult => (e ? { ok: false, error: e.message } : { ok: true });
-const ROUTE_SEL = "id,route_date,assigned_to,status,notes,created_by, route_stops(count)";
+const ROUTE_SEL = "id,route_date,assigned_to,status,notes,created_by, route_stops(status)";
 
 export const supabaseRouteRepository: IRouteRepository = {
+  async completeStop(stopId) { return ok((await supabase.rpc("complete_route_stop", { p_stop_id: stopId })).error); },
   async listRoutes(date) {
     const { data } = await supabase.from("service_routes").select(ROUTE_SEL)
       .eq("route_date", date).is("deleted_at", null).order("created_at");

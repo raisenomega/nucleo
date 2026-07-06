@@ -1,15 +1,15 @@
 import { Plus, Trash2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { CategoryPicker } from "@shared/components/CategoryPicker";
-import type { StopFormData } from "@operations/domain/route.types";
+import type { EditableStop } from "@operations/domain/route.types";
 
-export const emptyStop = (): StopFormData => ({ clientName: "", address: "", city: "", serviceType: "", scheduledTime: "09:00", estimatedAmount: 0, notes: "" });
+export const emptyStop = (): EditableStop => ({ clientName: "", address: "", city: "", serviceType: "", scheduledTime: "09:00", estimatedAmount: 0, notes: "" });
 
-// Editor en memoria de paradas (draft) para crear una ruta. service_type reutiliza categorías.
-export function RouteStopsEditor({ stops, onChange }: { stops: StopFormData[]; onChange: (s: StopFormData[]) => void }) {
+// Editor en memoria de paradas (crear o editar). Conserva el id de las existentes. service_type = categorías.
+export function RouteStopsEditor({ stops, onChange }: { stops: EditableStop[]; onChange: (s: EditableStop[]) => void }) {
   const { t } = useI18n();
   const fld = "w-full rounded-lg border border-border bg-background p-2 text-sm";
-  const set = (i: number, k: keyof StopFormData, v: string | number) => onChange(stops.map((s, idx) => idx === i ? { ...s, [k]: v } : s));
+  const set = (i: number, k: keyof EditableStop, v: string | number) => onChange(stops.map((s, idx) => idx === i ? { ...s, [k]: v } : s));
   return (
     <div className="space-y-2">
       {stops.map((s, i) => (

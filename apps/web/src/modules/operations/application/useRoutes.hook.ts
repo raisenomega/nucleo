@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import type {
-  IRouteRepository, ServiceRoute, RouteStop, RouteFormData, StopFormData, StopPatch,
+  IRouteRepository, ServiceRoute, RouteStop, RouteFormData, StopFormData, StopPatch, EditableStop,
 } from "@operations/domain/route.types";
 
 // DI del repo. Carga rutas del día + paradas de la ruta activa; mutaciones que refrescan.
@@ -19,6 +19,16 @@ export function useRoutes(repo: IRouteRepository, date: string) {
   const remove = useCallback(async (id: string) => { const r = await repo.remove(id); if (r.ok) await refresh(); return r; }, [repo, refresh]);
   const updateStop = useCallback(async (id: string, p: StopPatch) => { const r = await repo.updateStop(id, p); if (r.ok) await reloadStops(); return r; }, [repo, reloadStops]);
   const removeStop = useCallback(async (id: string) => { const r = await repo.removeStop(id); if (r.ok) await reloadStops(); return r; }, [repo, reloadStops]);
+  const completeStop = useCallback(async (id: string) => { const r = await repo.completeStop(id); if (r.ok) { await reloadStops(); await refresh(); } return r; }, [repo, reloadStops, refresh]);
+  // Diff al guardar edición: borra las quitadas, actualiza las existentes (orden = posición), agrega las nuevas.
+  const syncStops = useCallback(async (routeId: string, drafts: EditableStop[], original: readonly RouteStop[]) => {
+    const keep = new Set(drafts.map((d) => d.id).filter(Boolean));
+    for (const o of original) if (!keep.has(o.id)) await repo.removeStop(o.id);
+    for (const [i, d] of drafts.entries()) {
+      if (d.id) await repo.updateStop(d.id, { ...d, stopOrder: i + 1 }); else await repo.addStop(routeId, i + 1, d);
+    }
+    await refresh(); await reloadStops();
+  }, [repo, refresh, reloadStops]);
 
-  return { routes, stops, active, setActive, create, update, remove, updateStop, removeStop };
+  return { routes, stops, active, setActive, create, update, remove, updateStop, removeStop, completeStop, syncStops };
 }

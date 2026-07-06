@@ -3,6 +3,10 @@ import { useI18n } from "@shared/i18n";
 import type { ServiceRoute } from "@operations/domain/route.types";
 
 type Emp = { id: string; full_name: string };
+const COLOR: Record<string, string> = {
+  "Planificada": "bg-yellow-100 text-yellow-800", "En progreso": "bg-blue-100 text-blue-800",
+  "Completada": "bg-green-100 text-green-800", "Cancelada": "bg-red-100 text-red-800",
+};
 
 export function RouteTable({ rows, employees, onView, onEdit, onDelete }: {
   rows: readonly ServiceRoute[]; employees: Emp[];
@@ -26,8 +30,8 @@ export function RouteTable({ rows, employees, onView, onEdit, onDelete }: {
               <tr key={r.id} className="border-t border-border">
                 <td className="px-3 py-2">{r.routeDate}</td>
                 <td className="px-3 py-2">{nameOf(r.assignedTo)}</td>
-                <td className="px-3 py-2">{r.stopCount}</td>
-                <td className="px-3 py-2">{r.status}</td>
+                <td className="px-3 py-2">{r.completedCount}/{r.stopCount}</td>
+                <td className="px-3 py-2"><span className={`rounded px-2 py-0.5 text-xs font-bold ${COLOR[r.status] ?? "bg-secondary"}`}>{r.status}</span></td>
                 <td className="px-3 py-2"><div className="flex justify-end gap-2">
                   <button type="button" onClick={() => onView(r.id)} aria-label={t("viewDetail")} className="text-foreground"><Eye className="h-4 w-4" /></button>
                   {onEdit && <button type="button" onClick={() => onEdit(r.id)} aria-label={t("edit")} className="text-primary"><Pencil className="h-4 w-4" /></button>}

@@ -4,7 +4,7 @@ export type RepoResult = { ok: true } | { ok: false; error: string };
 export interface ServiceRoute {
   readonly id: string; readonly routeDate: string; readonly assignedTo: string;
   readonly status: string; readonly notes: string | null;
-  readonly createdBy: string; readonly stopCount: number;
+  readonly createdBy: string; readonly stopCount: number; readonly completedCount: number;
 }
 export interface RouteStop {
   readonly id: string; readonly routeId: string; readonly stopOrder: number;
@@ -19,9 +19,11 @@ export interface StopFormData {
   clientName: string; address: string; city: string; serviceType: string;
   scheduledTime: string; estimatedAmount: number; notes: string;
 }
-export type StopPatch = Partial<StopFormData> & { status?: string; completedAt?: string | null };
+export type EditableStop = StopFormData & { id?: string };
+export type StopPatch = Partial<StopFormData> & { status?: string; completedAt?: string | null; stopOrder?: number };
 
 export interface IRouteRepository {
+  completeStop(stopId: string): Promise<RepoResult>;
   listRoutes(date: string): Promise<readonly ServiceRoute[]>;
   listStops(routeId: string): Promise<readonly RouteStop[]>;
   create(d: RouteFormData, stops: readonly StopFormData[]): Promise<RepoResult>;

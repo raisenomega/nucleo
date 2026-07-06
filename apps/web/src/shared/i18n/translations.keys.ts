@@ -72,4 +72,4 @@ export type TranslationKey =
   | "employerMatchPct" | "lifeInsurance" | "parking" | "companyVehicle" | "companyPhone" | "otherBenefits"
   | "medicalExam" | "examDate" | "nextExam" | "drugTest" | "testDate" | "medicalConditions" | "confidential" | "allergies"
   | "bloodType" | "medications" | "limitations" | "uniform" | "shirtSize" | "pantsSize" | "shoeSize" | "protectiveEquipment"
-  | "assignedEquipment" | "certifications" | "certName" | "certNumber" | "expirationDate" | "addCert" | "requiredDocs" | "missing" | "uploadDoc" | "newRoute" | "routeStops" | "addStop";
+  | "assignedEquipment" | "certifications" | "certName" | "certNumber" | "expirationDate" | "addCert" | "requiredDocs" | "missing" | "uploadDoc" | "newRoute" | "routeStops" | "addStop" | "completeStop" | "stopCompleted" | "alreadyCompleted" | "stopsCompleted";

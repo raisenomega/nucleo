@@ -9,7 +9,7 @@ import { supabaseRouteRepository } from "@operations/infrastructure/supabase-rou
 import { RouteForm } from "@operations/presentation/RouteForm";
 import { RouteTable } from "@operations/presentation/RouteTable";
 import { RouteDetail } from "@operations/presentation/RouteDetail";
-import type { RouteFormData, StopFormData } from "@operations/domain/route.types";
+import type { RouteFormData, EditableStop } from "@operations/domain/route.types";
 
 export const Route = createFileRoute("/_authenticated/routes")({ component: RoutesPage });
 type Emp = { id: string; full_name: string };
@@ -24,10 +24,13 @@ function RoutesPage() {
   const [viewing, setViewing] = useState<string | null>(null);
   useEffect(() => { void supabase.from("profiles").select("id, full_name").then(({ data }) => setEmps((data as Emp[] | null) ?? [])); }, []);
 
-  async function submit(d: RouteFormData, stops: StopFormData[]) {
-    const r = editing && editing !== "new" ? await m.update(editing, d) : await m.create(d, stops);
+  async function submit(d: RouteFormData, stops: EditableStop[]) {
+    const editId = editing && editing !== "new" ? editing : null;
+    const r = editId ? await m.update(editId, d) : await m.create(d, stops);
+    if (r.ok && editId) await m.syncStops(editId, stops, m.stops);
     window.alert(r.ok ? "Guardado exitoso" : r.error); if (r.ok) setEditing(null);
   }
+  const complete = (id: string) => void m.completeStop(id).then((r) => { if (!r.ok) window.alert(r.error); });
   if (!can("routes", "view")) return <Navigate to="/dashboard" />;
   const cur = m.routes.find((r) => r.id === editing);
   const initial = cur ? { routeDate: cur.routeDate, assignedTo: cur.assignedTo, status: cur.status, notes: cur.notes ?? "" } : undefined;
@@ -41,12 +44,14 @@ function RoutesPage() {
           {can("routes", "create") && <button type="button" onClick={() => setEditing("new")} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-4 py-2 font-body font-bold"><Plus className="h-4 w-4" /> {t("newRoute")}</button>}
         </div>
       </div>
-      {editing !== null && <RouteForm employees={emps} initial={initial} onSubmit={submit} onCancel={() => setEditing(null)} />}
+      {editing !== null && <RouteForm key={editing} employees={emps} initial={initial}
+        initialStops={editing !== "new" ? m.stops : undefined} onSubmit={submit} onCancel={() => setEditing(null)} />}
       <RouteTable rows={m.routes} employees={emps} onView={(id) => { setViewing(id); m.setActive(id); }}
-        onEdit={can("routes", "edit") ? setEditing : undefined}
+        onEdit={can("routes", "edit") ? (id) => { setEditing(id); m.setActive(id); } : undefined}
         onDelete={can("routes", "delete") ? (id) => { if (window.confirm(`${t("delete")}?`)) void m.remove(id); } : undefined} />
       {viewRoute && <RouteDetail route={viewRoute} stops={m.stops} employees={emps} onClose={() => setViewing(null)}
-        onEdit={can("routes", "edit") ? () => { setEditing(viewRoute.id); setViewing(null); } : undefined} />}
+        onComplete={can("routes", "edit") ? complete : undefined}
+        onEdit={can("routes", "edit") ? () => { setEditing(viewRoute.id); m.setActive(viewRoute.id); setViewing(null); } : undefined} />}
     </div>
   );
 }
