@@ -3,20 +3,22 @@ import { Plus } from "lucide-react";
 import { supabase } from "@shared/lib/supabase";
 import { useI18n } from "@shared/i18n";
 import type { TranslationKey } from "@shared/i18n";
-import { useRoleGate } from "@shared/hooks/useRoleGate";
+import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 
 type Cat = { id: string; label: string };
 const CLASSES: { v: string; k: TranslationKey }[] = [
   { v: "fixed", k: "fixedExpense" }, { v: "variable", k: "variableExpense" },
   { v: "debt", k: "debtExpense" }, { v: "one_time", k: "oneTimeExpense" },
 ];
+// Mapea el kind de categoría al módulo del gate: quien puede crear en el módulo puede crear categorías.
+const MOD: Record<string, string> = { income: "income", expense: "expenses", payment_method: "income", channel: "marketing" };
 
-// Selector de categoría reutilizable con creación inline gateada por rol (useRoleGate coo+).
+// Selector de categoría reutilizable con creación inline gateada por can(módulo,"create").
 export function CategoryPicker({ kind, value, onChange, label, byLabel }: {
   kind: string; value: string; onChange: (v: string) => void; label: TranslationKey; byLabel?: boolean;
 }) {
   const { t } = useI18n();
-  const { canEdit } = useRoleGate();
+  const { can } = useModuleAccess();
   const [cats, setCats] = useState<Cat[]>([]);
   const [creating, setCreating] = useState(false);
   const [name, setName] = useState("");
@@ -54,7 +56,7 @@ export function CategoryPicker({ kind, value, onChange, label, byLabel }: {
           <select value={value} onChange={(e) => onChange(e.target.value)} className={field}>
             <option value="">—</option>{cats.map((c) => <option key={c.id} value={byLabel ? c.label : c.id}>{c.label}</option>)}
           </select>
-          {canEdit("coo") && <button type="button" onClick={() => setCreating(true)} className="shrink-0 rounded-lg border border-border p-2 text-primary" aria-label={t("newCategory")}><Plus className="h-4 w-4" /></button>}
+          {can(MOD[kind] ?? "income", "create") && <button type="button" onClick={() => setCreating(true)} className="shrink-0 rounded-lg border border-border p-2 text-primary" aria-label={t("newCategory")}><Plus className="h-4 w-4" /></button>}
         </div>
       )}
     </label>

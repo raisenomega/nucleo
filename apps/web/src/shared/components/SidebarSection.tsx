@@ -1,6 +1,7 @@
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useI18n } from "@shared/i18n";
+import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import type { NavSection } from "@shared/components/sidebar.nav";
 
 export function SidebarSection({ section, expanded, isOpen, activePath, onToggleSection, onExpandAndOpen, onNavigate }: {
@@ -8,8 +9,12 @@ export function SidebarSection({ section, expanded, isOpen, activePath, onToggle
   onToggleSection: () => void; onExpandAndOpen: () => void; onNavigate: () => void;
 }) {
   const { t } = useI18n();
+  const { can } = useModuleAccess();
   const Icon = section.icon;
   const item = "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-body transition";
+  // Ruteado -> can(mod,"view"); "próximamente" (sin to) -> solo roadmap (can settings.view = coo/ceo).
+  const items = section.items.filter((n) => n.to ? (n.mod ? can(n.mod, "view") : true) : can("settings", "view"));
+  if (items.length === 0) return null;
   if (!expanded) {
     // Colapsado: click en el icono abre el sidebar + su sección. No navega, no cierra.
     return (
@@ -25,7 +30,7 @@ export function SidebarSection({ section, expanded, isOpen, activePath, onToggle
         <Icon className="h-4 w-4" /><span className="flex-1 text-left">{t(section.title)}</span>
         {isOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
       </button>
-      {isOpen && section.items.map((n) => n.to ? (
+      {isOpen && items.map((n) => n.to ? (
         <Link key={n.key} to={n.to} onClick={onNavigate}
           className={`${item} ${activePath.startsWith(n.to) ? "bg-primary text-primary-foreground" : "hover:bg-secondary"}`}>
           <n.icon className="h-4 w-4" /> {t(n.key)}
