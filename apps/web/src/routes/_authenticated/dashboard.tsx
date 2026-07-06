@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { TrialBanner } from "@shared/components/TrialBanner";
 import { useI18n } from "@shared/i18n";
+import { useModuleAccess } from "@shared/hooks/useModuleAccess";
+import { useSession } from "@shared/providers/SessionProvider";
 import { useDashboard } from "@finance/application/useDashboard.hook";
 import { supabaseDashboardRepository } from "@finance/infrastructure/supabase-dashboard.repository";
 import { DashboardKpis } from "@finance/presentation/DashboardKpis";
@@ -10,44 +12,34 @@ import { DashboardFiscal } from "@finance/presentation/DashboardFiscal";
 import { DashboardRecent } from "@finance/presentation/DashboardRecent";
 import { DashboardRecentLeads } from "@finance/presentation/DashboardRecentLeads";
 
-export const Route = createFileRoute("/_authenticated/dashboard")({
-  component: Dashboard,
-});
+export const Route = createFileRoute("/_authenticated/dashboard")({ component: Dashboard });
 
 function Dashboard() {
   const { t } = useI18n();
+  const { can } = useModuleAccess();
+  const { session } = useSession();
   const { snapshot, crm, mkt, fiscal, isLoading } = useDashboard(supabaseDashboardRepository);
+  const finance = can("income", "view") || can("expenses", "view");
+  const sh = "text-xs font-bold uppercase tracking-wide text-muted-foreground";
   return (
     <div className="space-y-6 p-8">
       <TrialBanner />
-      <h1 className="font-display text-3xl font-bold text-primary">{t("welcome")}</h1>
-      {isLoading || !snapshot || !crm ? (
+      <div><h1 className="font-display text-3xl font-bold text-primary">{t("welcome")}</h1>
+        <p className="text-xs text-muted-foreground">{session?.email} · {session?.role ?? "—"}</p></div>
+      {can("dashboard", "view") && (isLoading || !snapshot || !crm ? (
         <p className="font-body text-muted-foreground">{t("noData")}</p>
       ) : (
         <div className="space-y-6">
-          <DashboardKpis s={snapshot} bankBalance={fiscal?.bankCalculated} />
-          <div className="space-y-2">
-            <h2 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("crmSection")}</h2>
-            <DashboardCrm c={crm} />
-          </div>
-          {fiscal && (
-            <div className="space-y-2">
-              <h2 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("fiscalSection")}</h2>
-              <DashboardFiscal f={fiscal} />
-            </div>
-          )}
-          {mkt && (
-            <div className="space-y-2">
-              <h2 className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("marketing")}</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-3"><DashboardMarketing m={mkt} /></div>
-            </div>
-          )}
+          {finance && <DashboardKpis s={snapshot} bankBalance={fiscal?.bankCalculated} />}
+          {can("leads", "view") && <div className="space-y-2"><h2 className={sh}>{t("crmSection")}</h2><DashboardCrm c={crm} /></div>}
+          {fiscal && can("reconciliation", "view") && <div className="space-y-2"><h2 className={sh}>{t("fiscalSection")}</h2><DashboardFiscal f={fiscal} /></div>}
+          {mkt && can("marketing", "view") && <div className="space-y-2"><h2 className={sh}>{t("marketing")}</h2><div className="grid grid-cols-1 sm:grid-cols-3"><DashboardMarketing m={mkt} /></div></div>}
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-            <DashboardRecent s={snapshot} />
-            <DashboardRecentLeads leads={crm.recentLeads} />
+            {finance && <DashboardRecent s={snapshot} />}
+            {can("leads", "view") && <DashboardRecentLeads leads={crm.recentLeads} />}
           </div>
         </div>
-      )}
+      ))}
     </div>
   );
 }
