@@ -1,6 +1,8 @@
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
+import { useRoleGate } from "@shared/hooks/useRoleGate";
+import { useSession } from "@shared/providers/SessionProvider";
 import { formatCurrency } from "@shared/lib/format";
 import type { Payroll } from "@finance/domain/payroll.types";
 
@@ -14,13 +16,16 @@ export function PayrollTable({ rows, onView, onEdit, onDelete }: {
 }) {
   const { t } = useI18n();
   const { can } = useModuleAccess();
+  const { canEdit } = useRoleGate(); const { session } = useSession();
   const money = can("payroll", "salary"); // salario/deducciones/patronal gateado por payroll.salary
-  const total = rows.reduce((s, i) => s + costOf(i), 0);
+  // coo+ ven todo; roles menores solo lo que crearon (espejo de la RLS 00068).
+  const visible = canEdit("coo") ? rows : rows.filter((r) => r.createdBy === session?.userId);
+  const total = visible.reduce((s, i) => s + costOf(i), 0);
   const th = "px-3 py-2 text-left font-bold";
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card">
       <div className="flex items-center justify-between border-b border-border p-4">
-        <h2 className="font-body font-bold">{t("payrollList")} ({rows.length})</h2>
+        <h2 className="font-body font-bold">{t("payrollList")} ({visible.length})</h2>
         {money && <span className="font-body font-bold text-primary">{t("totalEmployerCost")}: {formatCurrency(total)}</span>}
       </div>
       <div className="overflow-x-auto">
@@ -32,10 +37,10 @@ export function PayrollTable({ rows, onView, onEdit, onDelete }: {
             <th className={`${th} text-right`}>{t("actions")}</th>
           </tr></thead>
           <tbody>
-            {rows.length === 0 && (
+            {visible.length === 0 && (
               <tr><td colSpan={money ? 7 : 3} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>
             )}
-            {rows.map((i) => (
+            {visible.map((i) => (
               <tr key={i.id} className="border-t border-border">
                 <td className="px-3 py-2">{i.date}</td>
                 <td className="px-3 py-2">{i.employeeName}</td>

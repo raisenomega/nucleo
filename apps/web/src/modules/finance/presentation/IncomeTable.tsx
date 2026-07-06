@@ -1,5 +1,7 @@
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
+import { useRoleGate } from "@shared/hooks/useRoleGate";
+import { useSession } from "@shared/providers/SessionProvider";
 import { formatCurrency } from "@shared/lib/format";
 import type { Income } from "@finance/domain/income.types";
 
@@ -8,12 +10,15 @@ export function IncomeTable({ rows, onView, onEdit, onDelete }: {
   onView: (id: string) => void; onEdit?: (id: string) => void; onDelete?: (id: string) => void;
 }) {
   const { t } = useI18n();
-  const total = rows.reduce((s, i) => s + i.amount, 0);
+  const { canEdit } = useRoleGate(); const { session } = useSession();
+  // coo+ ven todo; roles menores solo lo que crearon (espejo de la RLS 00068).
+  const visible = canEdit("coo") ? rows : rows.filter((r) => r.createdBy === session?.userId);
+  const total = visible.reduce((s, i) => s + i.amount, 0);
   const th = "px-3 py-2 text-left font-bold";
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card">
       <div className="flex items-center justify-between border-b border-border p-4">
-        <h2 className="font-body font-bold">{t("incomeList")} ({rows.length})</h2>
+        <h2 className="font-body font-bold">{t("incomeList")} ({visible.length})</h2>
         <span className="font-body font-bold text-primary">{t("total")}: {formatCurrency(total)}</span>
       </div>
       <div className="overflow-x-auto">
@@ -25,10 +30,10 @@ export function IncomeTable({ rows, onView, onEdit, onDelete }: {
             <th className={th}>{t("paymentMethod")}</th><th className={`${th} text-right`}>{t("actions")}</th>
           </tr></thead>
           <tbody>
-            {rows.length === 0 && (
+            {visible.length === 0 && (
               <tr><td colSpan={8} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>
             )}
-            {rows.map((i) => (
+            {visible.map((i) => (
               <tr key={i.id} className="border-t border-border">
                 <td className="px-3 py-2">{i.date}</td>
                 <td className="px-3 py-2">{i.categoryLabel}</td>
