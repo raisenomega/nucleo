@@ -2,6 +2,7 @@ import { useState } from "react";
 import { MessageCircle } from "lucide-react";
 import { Outlet } from "@tanstack/react-router";
 import { Sidebar } from "@shared/components/Sidebar";
+import { MobileNav } from "@shared/components/MobileNav";
 import { useI18n } from "@shared/i18n";
 
 export function AppLayout() {
@@ -18,8 +19,9 @@ export function AppLayout() {
             <MessageCircle className="h-4 w-4" /> {t("aiChat")}
           </button>
         </header>
-        <main className="min-w-0 flex-1"><Outlet /></main>
+        <main className="min-w-0 flex-1 pb-20 md:pb-0"><Outlet /></main>
       </div>
+      <MobileNav />
     </div>
   );
 }

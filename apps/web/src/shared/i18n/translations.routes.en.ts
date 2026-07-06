@@ -7,4 +7,5 @@ export const enRoutes = {
   openMap: "Map", collectPayment: "Collect", amountReceived: "Received", changeAmount: "Change",
   notAttended: "Not attended", reason: "Reason", completeAndCollect: "Complete and collect", pendingDebt: "Pending debt",
   accountsReceivable: "Accounts Receivable", stopDetail: "Stop detail", callClient: "Call", membershipClient: "Membership client",
+  more: "More",
 } satisfies Partial<Record<TranslationKey, string>>;
