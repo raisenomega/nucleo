@@ -16,7 +16,9 @@ export function AdminSettingsTab({ settings, onSave }: {
   const field = "w-full rounded-lg border border-border bg-background p-2 text-sm";
   const lbl = "text-xs font-bold text-muted-foreground";
   async function save() {
-    await onSave("retention_pct", ret); await onSave("order_prefix", prefix); await onSave("fiscal_country", country);
+    const rs = await Promise.all([onSave("retention_pct", ret), onSave("order_prefix", prefix), onSave("fiscal_country", country)]);
+    const bad = rs.find((r) => !r.ok);
+    window.alert(bad ? bad.error : "Guardado exitoso");
   }
   return (
     <div className="max-w-md space-y-4 rounded-lg border border-border bg-card p-5">

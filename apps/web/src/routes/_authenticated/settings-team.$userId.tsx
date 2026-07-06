@@ -23,6 +23,7 @@ const TABS: { id: string; k: TranslationKey }[] = [
   { id: "personal", k: "personalTab" }, { id: "professional", k: "professionalTab" }, { id: "access", k: "accessTab" },
   { id: "benefits", k: "benefitsTab" }, { id: "health", k: "healthTab" }, { id: "documents", k: "documentsTab" },
 ];
+async function notify(p: Promise<{ ok: boolean; error?: string }>) { const r = await p; window.alert(r.ok ? "Guardado exitoso" : r.error ?? ""); }
 
 function MemberPage() {
   const { t } = useI18n();
@@ -55,16 +56,16 @@ function MemberPage() {
       </div>
       {tab === "personal" && <ProfilePersonalTab form={form} set={set} />}
       {tab === "professional" && <ProfileProfessionalTab form={form} set={set} />}
-      {tab === "access" && <ProfileAccessTab role={m.role} onRole={(r) => void tm.changeRole(r)} onPin={(p) => void tm.setPin(p)} form={form} set={set} />}
+      {tab === "access" && <ProfileAccessTab role={m.role} onRole={(r) => void tm.changeRole(r)} onPin={(p) => void notify(tm.setPin(p))} form={form} set={set} />}
       {tab === "benefits" && <ProfileBenefitsTab form={form} set={set} />}
       {tab === "health" && <div className="space-y-4"><ProfileHealthTab form={form} set={set} />
         <ProfileCertifications certs={ed.certs} onAdd={(c) => void ed.addCert(c)} onUpdate={(id, c) => void ed.updateCert(id, c)} onRemove={(id) => void ed.removeCert(id)} /></div>}
       {tab === "documents" && <ProfileDocumentsTab docs={ed.docs} onUpload={(f, ty, dt, n) => void ed.uploadDoc(session?.tenantId ?? "", f, ty, dt, n)} onRemove={(id, url) => void ed.removeDoc(id, url)} />}
       <div className="flex flex-wrap gap-2">
-        <button type="button" onClick={() => void ed.saveDetail(form)} className="rounded-lg bg-primary text-primary-foreground px-4 py-2 text-sm font-bold">{t("save")}</button>
+        <button type="button" onClick={() => void notify(ed.saveDetail(form))} className="rounded-lg bg-primary text-primary-foreground px-4 py-2 text-sm font-bold">{t("save")}</button>
         {active
-          ? <button type="button" onClick={() => { if (window.confirm(`${t("deactivate")}?`)) void tm.setStatus("rejected"); }} className="rounded-lg bg-destructive px-4 py-2 text-sm font-bold text-primary-foreground">{t("deactivate")}</button>
-          : <button type="button" onClick={() => void tm.setStatus("approved")} className="rounded-lg bg-green-600 px-4 py-2 text-sm font-bold text-white">{t("reactivate")}</button>}
+          ? <button type="button" onClick={() => { if (window.confirm(`${t("deactivate")}?`)) void notify(tm.setStatus("rejected")); }} className="rounded-lg bg-destructive px-4 py-2 text-sm font-bold text-primary-foreground">{t("deactivate")}</button>
+          : <button type="button" onClick={() => void notify(tm.setStatus("approved"))} className="rounded-lg bg-green-600 px-4 py-2 text-sm font-bold text-white">{t("reactivate")}</button>}
         <button type="button" onClick={() => void navigate({ to: "/settings" })} className="rounded-lg bg-secondary text-foreground px-4 py-2 text-sm font-body">{t("backToTeam")}</button>
       </div>
     </div>

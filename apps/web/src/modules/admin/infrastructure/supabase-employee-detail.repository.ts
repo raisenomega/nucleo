@@ -11,7 +11,9 @@ export const supabaseEmployeeDetailRepository: IEmployeeDetailRepository = {
     return (data as EmployeeDetail | null) ?? null;
   },
   async upsert(profileId, d: EmployeeDetailUpdate): Promise<RepoResult> {
+    // Normaliza "" -> null: inputs date/number vacíos romperían el upsert (invalid input syntax).
+    const clean = Object.fromEntries(Object.entries(d).map(([k, v]) => [k, v === "" ? null : v]));
     return ok((await supabase.from("employee_details")
-      .upsert({ profile_id: profileId, ...d }, { onConflict: "tenant_id,profile_id" })).error);
+      .upsert({ profile_id: profileId, ...clean }, { onConflict: "tenant_id,profile_id" })).error);
   },
 };

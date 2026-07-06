@@ -61,8 +61,8 @@ export function AdminTeamTab({ team, onInvite, onStatus, onRole }: {
                 <td className="px-3 py-2 text-center">{docCount(m.id)}/{REQUIRED.length} {docCount(m.id) === REQUIRED.length ? "✅" : "⚠️"}</td>
                 <td className="px-3 py-2">
                   <div className="flex justify-end gap-2 text-xs font-bold">
-                    {m.status !== "approved" && <button type="button" onClick={() => void onStatus(m.id, "approved")} className="text-green-600">{t("approve")}</button>}
-                    {m.status !== "rejected" && <button type="button" onClick={() => void onStatus(m.id, "rejected")} className="text-destructive">{t("deactivate")}</button>}
+                    {m.status !== "approved" && <button type="button" onClick={() => void onStatus(m.id, "approved").then((r) => window.alert(r.ok ? "Guardado exitoso" : r.error))} className="text-green-600">{t("approve")}</button>}
+                    {m.status !== "rejected" && <button type="button" onClick={() => void onStatus(m.id, "rejected").then((r) => window.alert(r.ok ? "Guardado exitoso" : r.error))} className="text-destructive">{t("deactivate")}</button>}
                   </div>
                 </td>
               </tr>
