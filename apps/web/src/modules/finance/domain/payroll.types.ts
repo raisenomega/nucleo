@@ -3,6 +3,12 @@ export type Result<T, E> =
   | { readonly ok: true; readonly value: T }
   | { readonly ok: false; readonly error: E };
 
+export type WorkerType = "employee" | "contractor";
+
+export interface PayrollDeduction {
+  readonly label: string; readonly rate: number; readonly base: number; readonly amount: number;
+}
+
 export interface Payroll {
   readonly id: string;
   readonly tenantId: string;
@@ -17,6 +23,12 @@ export interface Payroll {
   readonly createdBy: string;
   readonly createdAt: string;
   readonly evidenceUrls: readonly string[];
+  readonly workerType: WorkerType;
+  readonly grossSalary: number;
+  readonly deductionsEmployee: readonly PayrollDeduction[];
+  readonly contributionsEmployer: readonly PayrollDeduction[];
+  readonly netSalary: number;
+  readonly totalEmployerCost: number;
 }
 
 export interface PayrollFormData {
@@ -27,6 +39,8 @@ export interface PayrollFormData {
   readonly date: string;
   readonly notes: string;
   readonly evidenceUrls?: readonly string[];
+  readonly workerType?: WorkerType;
+  readonly grossSalary?: number;
 }
 
 export type PayrollListResult = Result<Payroll[], string>;
