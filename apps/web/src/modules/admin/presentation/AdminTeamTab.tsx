@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useI18n } from "@shared/i18n";
+import { supabase } from "@shared/lib/supabase";
 import type { TeamMember, AppRole, UserStatus, InviteData, RepoResult } from "@admin/domain/admin.types";
 
 const ROLES: { v: AppRole; l: string }[] = [
   { v: "ceo", l: "CEO" }, { v: "coo", l: "COO" }, { v: "operaciones", l: "Operaciones" }, { v: "servicio", l: "Servicio" },
 ];
+const REQUIRED = ["i9", "w4", "contract", "background_check", "drug_test", "medical_cert"];
 
 export function AdminTeamTab({ team, onInvite, onStatus, onRole }: {
   team: readonly TeamMember[];
@@ -16,7 +18,14 @@ export function AdminTeamTab({ team, onInvite, onStatus, onRole }: {
   const { t } = useI18n();
   const navigate = useNavigate();
   const [inv, setInv] = useState<InviteData>({ email: "", fullName: "", role: "servicio" });
+  const [docMap, setDocMap] = useState<Record<string, Set<string>>>({});
   const field = "rounded-lg border border-border bg-background p-2 text-sm";
+  useEffect(() => { void supabase.from("employee_documents").select("profile_id, doc_type").then(({ data }) => {
+    const m: Record<string, Set<string>> = {};
+    for (const d of (data as { profile_id: string; doc_type: string }[] | null) ?? []) (m[d.profile_id] ??= new Set()).add(d.doc_type);
+    setDocMap(m);
+  }); }, []);
+  const docCount = (id: string) => REQUIRED.filter((r) => docMap[id]?.has(r)).length;
   async function invite() {
     const r = await onInvite(inv);
     if (!r.ok) window.alert(r.error); else setInv({ email: "", fullName: "", role: "servicio" });
@@ -36,7 +45,7 @@ export function AdminTeamTab({ team, onInvite, onStatus, onRole }: {
           <thead className="bg-secondary text-xs uppercase text-muted-foreground"><tr>
             <th className="px-3 py-2 text-left">{t("contactName")}</th><th className="px-3 py-2 text-left">{t("email")}</th>
             <th className="px-3 py-2 text-left">{t("role")}</th><th className="px-3 py-2 text-left">{t("status")}</th>
-            <th className="px-3 py-2 text-right">{t("actions")}</th>
+            <th className="px-3 py-2 text-center">{t("documents")}</th><th className="px-3 py-2 text-right">{t("actions")}</th>
           </tr></thead>
           <tbody>
             {team.map((m) => (
@@ -49,6 +58,7 @@ export function AdminTeamTab({ team, onInvite, onStatus, onRole }: {
                   </select>
                 </td>
                 <td className="px-3 py-2">{m.status}</td>
+                <td className="px-3 py-2 text-center">{docCount(m.id)}/{REQUIRED.length} {docCount(m.id) === REQUIRED.length ? "✅" : "⚠️"}</td>
                 <td className="px-3 py-2">
                   <div className="flex justify-end gap-2 text-xs font-bold">
                     {m.status !== "approved" && <button type="button" onClick={() => void onStatus(m.id, "approved")} className="text-green-600">{t("approve")}</button>}
