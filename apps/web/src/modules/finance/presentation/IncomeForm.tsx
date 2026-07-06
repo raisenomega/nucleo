@@ -25,13 +25,13 @@ export function IncomeForm({ incomeCats, payCats, initial, onSubmit, onCancel }:
     <form onSubmit={(e) => { e.preventDefault(); onSubmit(f); }} className="space-y-4 rounded-lg border border-border bg-card p-5">
       <h2 className="font-body font-bold">{t("newIncome")}</h2>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <CategoryPicker kind="income" value={f.categoryId} onChange={(id) => setF({ ...f, categoryId: id })} label="category" />
+        <CategoryPicker kind="income" gateModule="income" value={f.categoryId} onChange={(id) => setF({ ...f, categoryId: id })} label="category" />
         <label className="space-y-1"><span className={lbl}>{t("amount")}</span>
           <input type="number" step="0.01" min="0" value={f.amount || ""}
             onChange={(e) => setF({ ...f, amount: Number(e.target.value) })} className={field} /></label>
         <label className="space-y-1"><span className={lbl}>{t("date")}</span>
           <input type="date" value={f.date} onChange={(e) => setF({ ...f, date: e.target.value })} className={field} /></label>
-        <CategoryPicker kind="payment_method" value={f.paymentMethodId} onChange={(id) => setF({ ...f, paymentMethodId: id })} label="paymentMethod" />
+        <CategoryPicker kind="payment_method" gateModule="income" value={f.paymentMethodId} onChange={(id) => setF({ ...f, paymentMethodId: id })} label="paymentMethod" />
         <label className="space-y-1 md:col-span-2"><span className={lbl}>{t("description")}</span>
           <input value={f.description} onChange={(e) => setF({ ...f, description: e.target.value })} className={field} /></label>
         <label className="space-y-1"><span className={lbl}>{t("clientReference")}</span>

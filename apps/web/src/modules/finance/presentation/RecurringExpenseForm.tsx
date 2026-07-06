@@ -18,7 +18,7 @@ export function RecurringExpenseForm({ initial, onSubmit, onCancel }: {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onCancel}>
       <form onSubmit={(e) => { e.preventDefault(); onSubmit(f); }} onClick={(e) => e.stopPropagation()} className="w-full max-w-md space-y-4 rounded-lg border border-border bg-card p-6">
         <h2 className="font-body font-bold">{t("addRecurring")}</h2>
-        <CategoryPicker kind="expense" value={f.categoryId} onChange={(id) => setF({ ...f, categoryId: id })} label="category" />
+        <CategoryPicker kind="expense" gateModule="recurring" value={f.categoryId} onChange={(id) => setF({ ...f, categoryId: id })} label="category" />
         <label className="block space-y-1"><span className={lbl}>{t("description")}</span>
           <input value={f.label} onChange={(e) => setF({ ...f, label: e.target.value })} className={field} required /></label>
         <div className="grid grid-cols-2 gap-4">

@@ -24,13 +24,13 @@ export function ExtraordinaryForm({ extraCats, payCats, initial, onSubmit, onCan
     <form onSubmit={(e) => { e.preventDefault(); onSubmit(f); }} className="space-y-4 rounded-lg border border-border bg-card p-5">
       <h2 className="font-body font-bold">{t("newExtraordinary")}</h2>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <CategoryPicker kind="extraordinary" value={f.categoryId} onChange={(id) => setF({ ...f, categoryId: id })} label="category" />
+        <CategoryPicker kind="extraordinary" gateModule="extraordinary" value={f.categoryId} onChange={(id) => setF({ ...f, categoryId: id })} label="category" />
         <label className="space-y-1"><span className={lbl}>{t("amount")}</span>
           <input type="number" step="0.01" min="0" value={f.amount || ""}
             onChange={(e) => setF({ ...f, amount: Number(e.target.value) })} className={field} /></label>
         <label className="space-y-1"><span className={lbl}>{t("date")}</span>
           <input type="date" value={f.date} onChange={(e) => setF({ ...f, date: e.target.value })} className={field} /></label>
-        <CategoryPicker kind="payment_method" value={f.paymentMethodId} onChange={(id) => setF({ ...f, paymentMethodId: id })} label="paymentMethod" />
+        <CategoryPicker kind="payment_method" gateModule="extraordinary" value={f.paymentMethodId} onChange={(id) => setF({ ...f, paymentMethodId: id })} label="paymentMethod" />
         <label className="space-y-1 md:col-span-3"><span className={lbl}>{t("justification")} (≥20)</span>
           <textarea rows={2} minLength={20} value={f.justification}
             onChange={(e) => setF({ ...f, justification: e.target.value })} className={field} /></label>

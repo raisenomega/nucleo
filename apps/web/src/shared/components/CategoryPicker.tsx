@@ -13,9 +13,9 @@ const CLASSES: { v: string; k: TranslationKey }[] = [
 // Mapea el kind de categoría al módulo del gate: quien puede crear en el módulo puede crear categorías.
 const MOD: Record<string, string> = { income: "income", expense: "expenses", payment_method: "income", channel: "marketing" };
 
-// Selector de categoría reutilizable con creación inline gateada por can(módulo,"create").
-export function CategoryPicker({ kind, value, onChange, label, byLabel }: {
-  kind: string; value: string; onChange: (v: string) => void; label: TranslationKey; byLabel?: boolean;
+// Selector de categoría reutilizable con creación inline gateada por can(gateModule,"create").
+export function CategoryPicker({ kind, value, onChange, label, byLabel, gateModule }: {
+  kind: string; value: string; onChange: (v: string) => void; label: TranslationKey; byLabel?: boolean; gateModule?: string;
 }) {
   const { t } = useI18n();
   const { can } = useModuleAccess();
@@ -56,7 +56,7 @@ export function CategoryPicker({ kind, value, onChange, label, byLabel }: {
           <select value={value} onChange={(e) => onChange(e.target.value)} className={field}>
             <option value="">—</option>{cats.map((c) => <option key={c.id} value={byLabel ? c.label : c.id}>{c.label}</option>)}
           </select>
-          {can(MOD[kind] ?? "income", "create") && <button type="button" onClick={() => setCreating(true)} className="shrink-0 rounded-lg border border-border p-2 text-primary" aria-label={t("newCategory")}><Plus className="h-4 w-4" /></button>}
+          {can(gateModule ?? MOD[kind] ?? "income", "create") && <button type="button" onClick={() => setCreating(true)} className="shrink-0 rounded-lg border border-border p-2 text-primary" aria-label={t("newCategory")}><Plus className="h-4 w-4" /></button>}
         </div>
       )}
     </label>
