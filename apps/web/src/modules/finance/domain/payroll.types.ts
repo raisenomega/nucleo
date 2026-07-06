@@ -45,10 +45,21 @@ export interface PayrollFormData {
 
 export type PayrollListResult = Result<Payroll[], string>;
 
+export interface PayrollCalc {
+  readonly gross: number;
+  readonly employeeDeductions: readonly PayrollDeduction[];
+  readonly employerContributions: readonly PayrollDeduction[];
+  readonly totalEmployeeDeductions: number;
+  readonly totalEmployerContributions: number;
+  readonly netSalary: number;
+  readonly totalEmployerCost: number;
+}
+
 // Puerto del repositorio — lo implementa infrastructure; lo consume application (DI).
 export interface IPayrollRepository {
   list(): Promise<PayrollListResult>;
   create(data: PayrollFormData): Promise<Result<Payroll, string>>;
   update(id: string, data: PayrollFormData): Promise<Result<Payroll, string>>;
   remove(id: string): Promise<Result<null, string>>;
+  preview(gross: number, workerType: WorkerType): Promise<PayrollCalc | null>;
 }

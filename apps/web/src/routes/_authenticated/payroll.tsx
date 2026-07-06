@@ -17,7 +17,7 @@ type Cat = { id: string; label: string; kind: string };
 
 function PayrollPage() {
   const { t } = useI18n();
-  const { items, create, update, remove } = usePayroll(supabasePayrollRepository);
+  const { items, create, update, remove, preview } = usePayroll(supabasePayrollRepository);
   const [emps, setEmps] = useState<Emp[]>([]);
   const [cats, setCats] = useState<Cat[]>([]);
   const [editing, setEditing] = useState<string | null>(null);
@@ -33,7 +33,8 @@ function PayrollPage() {
   const editRow = useMemo<PayrollFormData | undefined>(() => {
     const i = items.find((x) => x.id === editing);
     return i ? { employeeId: i.employeeId, amount: i.amount, period: i.period,
-      paymentMethodId: i.paymentMethodId, date: i.date, notes: i.notes, evidenceUrls: i.evidenceUrls } : undefined;
+      paymentMethodId: i.paymentMethodId, date: i.date, notes: i.notes, evidenceUrls: i.evidenceUrls,
+      workerType: i.workerType, grossSalary: i.grossSalary || i.amount } : undefined;
   }, [editing, items]);
 
   async function submit(d: PayrollFormData) {
@@ -55,7 +56,7 @@ function PayrollPage() {
         </button>
       </div>
       {editing !== null && (
-        <PayrollForm employees={emps} payCats={cats}
+        <PayrollForm employees={emps} payCats={cats} preview={preview}
           initial={editRow} onSubmit={submit} onCancel={() => setEditing(null)} />
       )}
       <PayrollTable rows={items} onView={setViewing} onEdit={setEditing}

@@ -45,4 +45,7 @@ export type TranslationKey =
   | "depositType" | "cash" | "check" | "transfer" | "other" | "referenceNumber"
   | "retentionAuto" | "retentionAutoNote" | "accumulated" | "operatingMargin"
   | "breakEven" | "surplus" | "shortfall" | "trend"
-  | "dashboardFiscal" | "breakEvenProgress" | "bankBalance";
+  | "dashboardFiscal" | "breakEvenProgress" | "bankBalance"
+  | "contractor" | "grossSalary" | "netSalary" | "withheld" | "employerCost" | "totalWithheld"
+  | "totalEmployerCost" | "employeeDeductions" | "employerContributions" | "remitToTreasury"
+  | "contractorReceives" | "payrollDisclaimer";

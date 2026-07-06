@@ -26,6 +26,19 @@ export function PayrollDetail({ item, onClose }: { item: Payroll; onClose: () =>
             {row("amount", formatCurrency(item.amount))}{row("paymentMethod", item.paymentMethodLabel)}
             {row("notes", item.notes)}
           </dl>
+          {item.deductionsEmployee.length > 0 && (
+            <div className="space-y-1 border-t border-border pt-2 text-sm">
+              <div className="text-xs font-bold text-muted-foreground">{t("employeeDeductions")}</div>
+              {item.deductionsEmployee.map((d) => (
+                <div key={d.label} className="flex justify-between"><span className="text-muted-foreground">{d.label} {d.rate}%</span><span>−{formatCurrency(d.amount)}</span></div>
+              ))}
+              <div className="flex justify-between font-bold text-primary"><span>{t("netSalary")}</span><span>{formatCurrency(item.netSalary)}</span></div>
+              {item.contributionsEmployer.map((d) => (
+                <div key={d.label} className="flex justify-between text-muted-foreground"><span>{d.label} {d.rate}%</span><span>{formatCurrency(d.amount)}</span></div>
+              ))}
+              <div className="flex justify-between font-bold text-primary"><span>{t("totalEmployerCost")}</span><span>{formatCurrency(item.totalEmployerCost)}</span></div>
+            </div>
+          )}
           {urls.length > 0 && (
             <div className="flex flex-wrap gap-2">
               {urls.map((src, i) => <img key={i} src={src} alt="" onClick={() => setPhoto(src)} className="h-24 w-24 cursor-pointer rounded object-cover" />)}

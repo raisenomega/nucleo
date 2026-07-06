@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import type { Payroll, PayrollFormData, IPayrollRepository } from "@finance/domain/payroll.types";
+import type { Payroll, PayrollFormData, IPayrollRepository, WorkerType } from "@finance/domain/payroll.types";
 
 // Recibe el repositorio por inyección (DI) — NO importa infrastructure (A9 + oráculo #3).
 export function usePayroll(repo: IPayrollRepository) {
@@ -35,5 +35,7 @@ export function usePayroll(repo: IPayrollRepository) {
     return r;
   }, [repo, refresh]);
 
-  return { items, isLoading, create, update, remove, refresh };
+  const preview = useCallback((gross: number, worker: WorkerType) => repo.preview(gross, worker), [repo]);
+
+  return { items, isLoading, create, update, remove, refresh, preview };
 }
