@@ -60,4 +60,9 @@ export type TranslationKey =
   | "minPassword" | "alreadyRegistered" | "invitedLink" | "accountCreated" | "goToLogin"
   | "businessOwner" | "trialFree"
   | "employeeProfile" | "personalInfo" | "roleAccess" | "assignPin" | "reactivate" | "lastAccess"
-  | "modulesVisible" | "backToTeam" | "phone" | "position" | "approvedDate" | "registeredDate";
+  | "modulesVisible" | "backToTeam" | "phone" | "position" | "approvedDate" | "registeredDate"
+  | "middleName" | "lastName" | "ssn" | "dateOfBirth" | "gender" | "maritalStatus" | "dependents"
+  | "alternatePhone" | "personalEmail" | "addressLine1" | "addressLine2" | "stateProvince"
+  | "emergencyContact" | "relationship" | "professionalInfo" | "department" | "employeeNumber"
+  | "hireDate" | "terminationDate" | "probationEnd" | "contractType" | "flsaClass" | "riskClass"
+  | "payFrequency" | "professionalNotes" | "country";
