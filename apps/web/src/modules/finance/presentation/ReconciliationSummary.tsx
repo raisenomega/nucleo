@@ -20,7 +20,7 @@ export function ReconciliationSummary({ summary }: { summary: SummaryPanel }) {
       <h2 className="font-body font-bold text-primary">{t("executiveSummary")}</h2>
       <div className="text-sm">
         {row(t("income"), summary.totalIncome)}
-        {row(t("expenses"), summary.totalExpenses, true)}
+        {summary.expenseBreakdown.map((e) => row(e.category, e.amount, true))}
         {row(t("payroll"), summary.totalPayroll, true)}
         {row(t("extraordinary"), summary.totalExtraordinary, true)}
         {row(t("marketing"), summary.totalMarketing, true)}

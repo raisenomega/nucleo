@@ -1,38 +1,39 @@
-import { Plus } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { formatCurrency } from "@shared/lib/format";
-import type { RetentionPanel, RetentionDeposit } from "@finance/domain/reconciliation.types";
+import type { RetentionPanel } from "@finance/domain/reconciliation.types";
 
-export function ReconciliationRetentionPanel({ retention, deposits, onRegister }: {
-  retention: RetentionPanel; deposits: readonly RetentionDeposit[]; onRegister: () => void;
-}) {
+const MONTHS = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+
+export function ReconciliationRetentionPanel({ retention }: { retention: RetentionPanel }) {
   const { t } = useI18n();
-  const pct = retention.required > 0 ? Math.min(100, (retention.deposited / retention.required) * 100) : 0;
+  const marginColor = (m: number) => (m > 20 ? "text-green-600" : m >= 0 ? "text-yellow-600" : "text-red-600");
   return (
     <div className="space-y-3 rounded-lg border border-border bg-card p-5">
-      <div className="flex items-center justify-between">
-        <h2 className="font-body font-bold text-primary">{t("retentionFund")} · {retention.retentionPct}%</h2>
-        <button type="button" onClick={onRegister} className="flex items-center gap-1 rounded-lg bg-primary text-primary-foreground px-3 py-1.5 text-sm font-bold"><Plus className="h-4 w-4" /> {t("registerDeposit")}</button>
+      <h2 className="font-body font-bold text-primary">{t("retentionAuto")} {retention.retentionPct}%</h2>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead><tr className="text-left text-xs text-muted-foreground">
+            <th className="py-1">{t("month")}</th><th className="text-right">{t("income")}</th>
+            <th className="text-right">{t("retentionFund")}</th><th className="text-right">{t("egresos")}</th>
+            <th className="text-right">{t("operatingProfit")}</th><th className="text-right">{t("operatingMargin")}</th>
+            <th className="text-right">{t("accumulated")}</th>
+          </tr></thead>
+          <tbody>
+            {retention.monthly.map((m) => (
+              <tr key={m.month} className="border-t border-border">
+                <td className="py-1">{MONTHS[m.month - 1]}</td>
+                <td className="text-right">{formatCurrency(m.income)}</td>
+                <td className="text-right font-semibold text-primary">{formatCurrency(m.retention)}</td>
+                <td className="text-right">{formatCurrency(m.totalOut)}</td>
+                <td className="text-right">{formatCurrency(m.operatingProfit)}</td>
+                <td className={`text-right ${marginColor(m.margin)}`}>{m.margin}%</td>
+                <td className="text-right font-semibold">{formatCurrency(m.accumulated)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-      <div className="h-3 w-full overflow-hidden rounded-full bg-secondary">
-        <div className="h-full bg-primary" style={{ width: `${pct}%` }} />
-      </div>
-      <div className="flex flex-wrap justify-between gap-2 text-xs text-muted-foreground">
-        <span>{t("required")}: <b className="text-primary">{formatCurrency(retention.required)}</b></span>
-        <span>{t("deposited")}: <b>{formatCurrency(retention.deposited)}</b></span>
-        <span>{t("pending")}: <b className="text-yellow-700">{formatCurrency(retention.pending)}</b></span>
-      </div>
-      <div>
-        <div className="mb-1 text-xs font-semibold">{t("history")}</div>
-        {deposits.length === 0 && <div className="text-xs text-muted-foreground">{t("noRecords")}</div>}
-        <ul className="space-y-1 text-sm">
-          {deposits.map((d) => (
-            <li key={d.id} className="flex justify-between border-b border-border py-1">
-              <span>{d.depositDate}{d.notes ? ` · ${d.notes}` : ""}</span><span className="font-semibold">{formatCurrency(d.amount)}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <p className="text-xs text-muted-foreground">{t("retentionAutoNote")}</p>
     </div>
   );
 }

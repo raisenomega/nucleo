@@ -9,7 +9,6 @@ export interface BankPanel {
   readonly accounts: readonly BankPanelAccount[];
   readonly openingBalance: number; readonly deposits: number; readonly egresos: number;
   readonly calculatedBalance: number; readonly realBalance: number; readonly difference: number;
-  readonly totalBank: number; readonly totalSystem: number; // compat v1 (Commit 2 los retira)
 }
 
 export interface TaxPanel {
@@ -20,7 +19,6 @@ export interface TaxPanel {
 export interface RetentionPanel {
   readonly retentionPct: number; readonly required: number;
   readonly monthly: readonly MonthlySeriesRow[];
-  readonly deposited: number; readonly pending: number; // compat v1 (Commit 2 los retira)
 }
 
 export interface SummaryPanel {
@@ -37,14 +35,19 @@ export interface ReconciliationSnapshot {
   readonly retention: RetentionPanel; readonly summary: SummaryPanel;
 }
 
-export interface RetentionDepositFormData {
-  readonly amount: number; readonly depositDate: string; readonly notes: string;
+export interface BankDepositFormData {
+  readonly bankAccountId: string; readonly amount: number; readonly depositType: string;
+  readonly depositDate: string; readonly referenceNumber: string; readonly notes: string;
+  readonly evidenceUrls: readonly string[];
 }
-export interface RetentionDeposit extends RetentionDepositFormData { readonly id: string; }
+export interface BankBalanceFormData {
+  readonly bankAccountId: string; readonly openingBalance: number;
+  readonly realBalance: number; readonly cutoffDate: string;
+}
 
-// Puerto — lo implementa infrastructure (RPC + retention_deposits), lo consume application (DI). month = 'yyyy-mm'.
+// Puerto — lo implementa infrastructure (RPC + writes), lo consume application (DI). month = 'yyyy-mm'.
 export interface IReconciliationRepository {
   getSnapshot(month: string): Promise<ReconciliationSnapshot | null>;
-  listDeposits(month: string): Promise<readonly RetentionDeposit[]>;
-  addDeposit(month: string, d: RetentionDepositFormData): Promise<RepoResult>;
+  addBankDeposit(d: BankDepositFormData): Promise<RepoResult>;
+  upsertBankBalance(month: string, d: BankBalanceFormData): Promise<RepoResult>;
 }

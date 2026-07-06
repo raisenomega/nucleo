@@ -1,6 +1,6 @@
 import type { TranslationKey } from "./translations.keys";
 
-export const es: Record<TranslationKey, string> = {
+export const es = {
   title: "NÚCLEO by raisen", tagline: "La base operativa de tu negocio",
   toggleTheme: "Cambiar tema", switchLang: "Cambiar idioma",
   welcome: "Bienvenido a NÚCLEO", role: "Rol", logout: "Cerrar sesión",
@@ -72,4 +72,4 @@ export const es: Record<TranslationKey, string> = {
   fiscalDisclaimer: "Cifras estimadas automáticamente. NO son asesoría fiscal ni sustituyen a un Contador Público Autorizado (CPA). Consulte a su profesional contable para declaraciones oficiales.",
   bankName: "Banco", accountLast4: "Últimos 4", accountType: "Tipo", isPrimary: "Cuenta principal",
   notAuthorized: "No tienes permiso para ver esta página.", fiscalSection: "Fiscal",
-};
+} satisfies Partial<Record<TranslationKey, string>>;

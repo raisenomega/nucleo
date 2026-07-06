@@ -9,17 +9,22 @@ import { ReconciliationBankPanel } from "@finance/presentation/ReconciliationBan
 import { ReconciliationTaxPanel } from "@finance/presentation/ReconciliationTaxPanel";
 import { ReconciliationRetentionPanel } from "@finance/presentation/ReconciliationRetentionPanel";
 import { ReconciliationSummary } from "@finance/presentation/ReconciliationSummary";
+import { ReconciliationHealth } from "@finance/presentation/ReconciliationHealth";
 import { BankAccountForm } from "@finance/presentation/BankAccountForm";
-import { RetentionDepositForm } from "@finance/presentation/RetentionDepositForm";
+import { BankDepositForm } from "@finance/presentation/BankDepositForm";
+import { BankBalanceForm } from "@finance/presentation/BankBalanceForm";
 
 export const Route = createFileRoute("/_authenticated/reconciliation")({ component: ReconciliationPage });
+
+type Modal = "account" | "deposit" | "balance" | null;
 
 function ReconciliationPage() {
   const { t } = useI18n();
   const { canEdit } = useRoleGate();
   const [month, setMonth] = useState(() => new Date().toISOString().slice(0, 7));
-  const [modal, setModal] = useState<"bank" | "deposit" | null>(null);
+  const [modal, setModal] = useState<Modal>(null);
   const m = useReconciliation(supabaseReconciliationRepository, supabaseBankAccountRepository, month);
+  const close = () => setModal(null);
 
   if (!canEdit("coo")) return <div className="p-8 text-sm text-muted-foreground">{t("notAuthorized")}</div>;
 
@@ -34,17 +39,20 @@ function ReconciliationPage() {
       </div>
       {m.loading || !m.snapshot ? <p className="text-sm text-muted-foreground">{t("noData")}</p> : (
         <div className="space-y-6">
-          <ReconciliationBankPanel bank={m.snapshot.bank} accounts={m.bankAccounts} onAdd={() => setModal("bank")}
-            onRemove={(id) => { if (window.confirm(`${t("delete")}?`)) void m.removeAccount(id); }} />
+          <ReconciliationBankPanel bank={m.snapshot.bank} accounts={m.bankAccounts}
+            onAddAccount={() => setModal("account")} onDeposit={() => setModal("deposit")} onRegisterBalance={() => setModal("balance")}
+            onRemoveAccount={(id) => { if (window.confirm(`${t("delete")}?`)) void m.removeAccount(id); }} />
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             <ReconciliationTaxPanel tax={m.snapshot.tax} />
             <ReconciliationSummary summary={m.snapshot.summary} />
           </div>
-          <ReconciliationRetentionPanel retention={m.snapshot.retention} deposits={m.deposits} onRegister={() => setModal("deposit")} />
+          <ReconciliationHealth health={m.snapshot.summary.health} />
+          <ReconciliationRetentionPanel retention={m.snapshot.retention} />
         </div>
       )}
-      {modal === "bank" && <BankAccountForm onCancel={() => setModal(null)} onSubmit={(d) => { void m.addAccount(d); setModal(null); }} />}
-      {modal === "deposit" && <RetentionDepositForm onCancel={() => setModal(null)} onSubmit={(d) => { void m.addDeposit(d); setModal(null); }} />}
+      {modal === "account" && <BankAccountForm onCancel={close} onSubmit={(d) => { void m.addAccount(d); close(); }} />}
+      {modal === "deposit" && <BankDepositForm accounts={m.bankAccounts} onCancel={close} onSubmit={(d) => { void m.addBankDeposit(d); close(); }} />}
+      {modal === "balance" && <BankBalanceForm accounts={m.bankAccounts} onCancel={close} onSubmit={(d) => { void m.upsertBankBalance(d); close(); }} />}
     </div>
   );
 }

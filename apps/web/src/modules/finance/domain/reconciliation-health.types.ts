@@ -6,7 +6,6 @@ export interface BankPanelAccount {
   readonly bankName: string;
   readonly openingBalance: number;
   readonly realBalance: number;
-  readonly balance: number; // compat v1 (= realBalance); se retira al reescribir el panel (Commit 2)
   readonly cutoffDate: string;
 }
 
