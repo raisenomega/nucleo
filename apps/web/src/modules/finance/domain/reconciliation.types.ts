@@ -1,29 +1,15 @@
-// BC finance — tipos del snapshot de conciliación (§4). Espeja get_reconciliation_snapshot. Puro.
+// BC finance — snapshot de conciliación v2. Espeja get_reconciliation_snapshot. Puro.
 import type { RepoResult } from "@finance/domain/bank-account.types";
-export type FiscalStatus = "healthy" | "tight" | "at_risk";
-
-// Línea del Panel 1 (cuenta con su balance del mes). La entidad CRUD vive en bank-account.types.ts.
-export interface BankPanelAccount {
-  readonly bankName: string;
-  readonly balance: number;
-  readonly cutoffDate: string;
-}
+import type {
+  FiscalStatus, BankPanelAccount, TaxObligation, MonthlySeriesRow, ExpenseBreakdownRow, HealthPanel,
+} from "@finance/domain/reconciliation-health.types";
+export type { FiscalStatus, BankPanelAccount, TaxObligation, MonthlySeriesRow, ExpenseBreakdownRow, HealthPanel };
 
 export interface BankPanel {
   readonly accounts: readonly BankPanelAccount[];
-  readonly totalBank: number;
-  readonly totalSystem: number;
-  readonly difference: number;
-}
-
-export interface TaxObligation {
-  readonly label: string;
-  readonly calcType: string;
-  readonly rate: number;
-  readonly base: number;
-  readonly estimated: number;
-  readonly frequency: string;
-  readonly notes: string;
+  readonly openingBalance: number; readonly deposits: number; readonly egresos: number;
+  readonly calculatedBalance: number; readonly realBalance: number; readonly difference: number;
+  readonly totalBank: number; readonly totalSystem: number; // compat v1 (Commit 2 los retira)
 }
 
 export interface TaxPanel {
@@ -32,30 +18,23 @@ export interface TaxPanel {
 }
 
 export interface RetentionPanel {
-  readonly retentionPct: number;
-  readonly required: number;
-  readonly deposited: number;
-  readonly pending: number;
+  readonly retentionPct: number; readonly required: number;
+  readonly monthly: readonly MonthlySeriesRow[];
+  readonly deposited: number; readonly pending: number; // compat v1 (Commit 2 los retira)
 }
 
 export interface SummaryPanel {
-  readonly totalIncome: number;
-  readonly totalExpenses: number;
-  readonly totalPayroll: number;
-  readonly totalExtraordinary: number;
-  readonly totalMarketing: number;
-  readonly operatingProfit: number;
-  readonly taxEstimated: number;
-  readonly retentionRequired: number;
-  readonly availableBalance: number;
+  readonly totalIncome: number; readonly totalExpenses: number; readonly totalPayroll: number;
+  readonly totalExtraordinary: number; readonly totalMarketing: number; readonly operatingProfit: number;
+  readonly taxEstimated: number; readonly retentionRequired: number; readonly availableBalance: number;
   readonly status: FiscalStatus;
+  readonly expenseBreakdown: readonly ExpenseBreakdownRow[];
+  readonly health: HealthPanel;
 }
 
 export interface ReconciliationSnapshot {
-  readonly bank: BankPanel;
-  readonly tax: TaxPanel;
-  readonly retention: RetentionPanel;
-  readonly summary: SummaryPanel;
+  readonly bank: BankPanel; readonly tax: TaxPanel;
+  readonly retention: RetentionPanel; readonly summary: SummaryPanel;
 }
 
 export interface RetentionDepositFormData {

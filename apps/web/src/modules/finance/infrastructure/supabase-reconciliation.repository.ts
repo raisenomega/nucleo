@@ -2,30 +2,47 @@ import { supabase } from "@shared/lib/supabase";
 import type {
   IReconciliationRepository, ReconciliationSnapshot, RetentionDeposit, RetentionDepositFormData,
 } from "@finance/domain/reconciliation.types";
+import type {
+  MonthlySeriesRow, ExpenseBreakdownRow, OperatingStatus,
+} from "@finance/domain/reconciliation-health.types";
 import type { RepoResult } from "@finance/domain/bank-account.types";
 
 interface RawObl { label: string; calcType: string; rate: number; base: number; estimated: number; frequency: string; notes: string; }
+interface RawHealth {
+  total_out: number; break_even: number; break_even_pct: number; shortfall: number; surplus: number;
+  operating_margin: number; operating_status: OperatingStatus; trend: MonthlySeriesRow[];
+}
 interface Raw {
-  bank_panel: { accounts: { bankName: string; balance: number; cutoffDate: string }[]; total_bank: number; total_system: number; difference: number };
+  bank_panel: { accounts: { bankName: string; openingBalance: number; realBalance: number; cutoffDate: string }[];
+    opening_balance: number; deposits: number; egresos: number; calculated_balance: number; real_balance: number; difference: number };
   tax_panel: { obligations: RawObl[]; total_estimated: number };
-  retention_panel: { retention_pct: number; required: number; deposited: number; pending: number };
-  summary_panel: Record<string, number> & { status: "healthy" | "tight" | "at_risk" };
+  retention_panel: { retention_pct: number; required: number; monthly: MonthlySeriesRow[] };
+  summary_panel: {
+    total_income: number; total_expenses: number; total_payroll: number; total_extraordinary: number; total_marketing: number;
+    operating_profit: number; tax_estimated: number; retention_required: number; available_balance: number;
+    status: "healthy" | "tight" | "at_risk"; expense_breakdown: ExpenseBreakdownRow[]; health: RawHealth;
+  };
 }
 
 const N = Number;
 function period(month: string) { const [y, m] = month.split("-"); return { py: N(y), pm: N(m) }; }
 
 function map(r: Raw): ReconciliationSnapshot {
-  const b = r.bank_panel, tx = r.tax_panel, rt = r.retention_panel, s = r.summary_panel;
+  const b = r.bank_panel, tx = r.tax_panel, rt = r.retention_panel, s = r.summary_panel, h = s.health;
   return {
-    bank: { accounts: b.accounts ?? [], totalBank: N(b.total_bank), totalSystem: N(b.total_system), difference: N(b.difference) },
+    bank: { accounts: (b.accounts ?? []).map((a) => ({ ...a, balance: N(a.realBalance) })),
+      openingBalance: N(b.opening_balance), deposits: N(b.deposits), egresos: N(b.egresos),
+      calculatedBalance: N(b.calculated_balance), realBalance: N(b.real_balance), difference: N(b.difference),
+      totalBank: N(b.real_balance), totalSystem: N(s.total_income) - N(s.total_expenses) },
     tax: { obligations: (tx.obligations ?? []).map((o) => ({ ...o, rate: N(o.rate), base: N(o.base), estimated: N(o.estimated) })), totalEstimated: N(tx.total_estimated) },
-    retention: { retentionPct: N(rt.retention_pct), required: N(rt.required), deposited: N(rt.deposited), pending: N(rt.pending) },
-    summary: {
-      totalIncome: N(s.total_income), totalExpenses: N(s.total_expenses), totalPayroll: N(s.total_payroll),
+    retention: { retentionPct: N(rt.retention_pct), required: N(rt.required), monthly: rt.monthly ?? [], deposited: 0, pending: N(rt.required) },
+    summary: { totalIncome: N(s.total_income), totalExpenses: N(s.total_expenses), totalPayroll: N(s.total_payroll),
       totalExtraordinary: N(s.total_extraordinary), totalMarketing: N(s.total_marketing), operatingProfit: N(s.operating_profit),
       taxEstimated: N(s.tax_estimated), retentionRequired: N(s.retention_required), availableBalance: N(s.available_balance), status: s.status,
-    },
+      expenseBreakdown: s.expense_breakdown ?? [],
+      health: { totalOut: N(h.total_out), breakEven: N(h.break_even), breakEvenPct: N(h.break_even_pct),
+        shortfall: N(h.shortfall), surplus: N(h.surplus), operatingMargin: N(h.operating_margin),
+        operatingStatus: h.operating_status, trend: h.trend ?? [] } },
   };
 }
 
