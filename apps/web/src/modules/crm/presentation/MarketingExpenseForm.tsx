@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useI18n } from "@shared/i18n";
 import { useSession } from "@shared/providers/SessionProvider";
 import { EvidenceUpload } from "@finance/presentation/EvidenceUpload";
+import { CategoryPicker } from "@shared/components/CategoryPicker";
 import type { MExpenseFormData } from "@crm/domain/marketing.types";
 
 export function MarketingExpenseForm({ channels, initial, onSubmit, onCancel }: {
@@ -18,11 +19,7 @@ export function MarketingExpenseForm({ channels, initial, onSubmit, onCancel }: 
     <form onSubmit={(e) => { e.preventDefault(); onSubmit(f); }} onClick={(e) => e.stopPropagation()} className="max-h-[90vh] w-full max-w-2xl space-y-4 overflow-y-auto rounded-lg border border-border bg-card p-6">
       <h2 className="font-body font-bold">{t("registerExpense")}</h2>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <label className="space-y-1"><span className={lbl}>{t("channel")}</span>
-          <select value={f.channel} onChange={(e) => setF({ ...f, channel: e.target.value })} className={field}>
-            <option value="">—</option>
-            {channels.map((c) => <option key={c} value={c}>{c}</option>)}
-          </select></label>
+        <CategoryPicker kind="channel" byLabel value={f.channel} onChange={(v) => setF({ ...f, channel: v })} label="channel" />
         <label className="space-y-1"><span className={lbl}>{t("date")}</span>
           <input type="date" value={f.date} onChange={(e) => setF({ ...f, date: e.target.value })} className={field} /></label>
         <label className="space-y-1"><span className={lbl}>{t("amount")}</span>

@@ -52,4 +52,5 @@ export type TranslationKey =
   | "fixedExpense" | "variableExpense" | "debtExpense" | "oneTimeExpense" | "unclassified"
   | "classifyCategories" | "breakEvenComposition" | "payrollCost" | "fixedCosts"
   | "recurringExpenses" | "recurringSubtitle" | "budgeted" | "paid" | "addRecurring"
-  | "registerPayment" | "coveredPercent" | "manageRecurring" | "frequencyLabel" | "newCategory";
+  | "registerPayment" | "coveredPercent" | "manageRecurring" | "frequencyLabel" | "newCategory"
+  | "createCategory" | "categoryName" | "selectExpenseClass";

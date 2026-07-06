@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useI18n } from "@shared/i18n";
 import { useSession } from "@shared/providers/SessionProvider";
 import { EvidenceUpload } from "@finance/presentation/EvidenceUpload";
-import { ExpenseClassBadge } from "@finance/presentation/ExpenseClassBadge";
+import { CategoryPicker } from "@shared/components/CategoryPicker";
 import type { ExpenseFormData } from "@finance/domain/expense.types";
 
 type Cat = { id: string; label: string; expenseClass?: string | null };
@@ -25,22 +25,13 @@ export function ExpenseForm({ expenseCats, payCats, employees, initial, onSubmit
     <form onSubmit={(e) => { e.preventDefault(); onSubmit(f); }} className="space-y-4 rounded-lg border border-border bg-card p-5">
       <h2 className="font-body font-bold">{t("newExpense")}</h2>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <label className="space-y-1"><span className="flex items-center gap-2"><span className={lbl}>{t("category")}</span>
-          <ExpenseClassBadge value={expenseCats.find((c) => c.id === f.categoryId)?.expenseClass ?? null} /></span>
-          <select value={f.categoryId} onChange={(e) => setF({ ...f, categoryId: e.target.value })} className={field}>
-            <option value="">—</option>
-            {expenseCats.map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}
-          </select></label>
+        <CategoryPicker kind="expense" value={f.categoryId} onChange={(id) => setF({ ...f, categoryId: id })} label="category" />
         <label className="space-y-1"><span className={lbl}>{t("amount")}</span>
           <input type="number" step="0.01" min="0" value={f.amount || ""}
             onChange={(e) => setF({ ...f, amount: Number(e.target.value) })} className={field} /></label>
         <label className="space-y-1"><span className={lbl}>{t("date")}</span>
           <input type="date" value={f.date} onChange={(e) => setF({ ...f, date: e.target.value })} className={field} /></label>
-        <label className="space-y-1"><span className={lbl}>{t("paymentMethod")}</span>
-          <select value={f.paymentMethodId} onChange={(e) => setF({ ...f, paymentMethodId: e.target.value })} className={field}>
-            <option value="">—</option>
-            {payCats.map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}
-          </select></label>
+        <CategoryPicker kind="payment_method" value={f.paymentMethodId} onChange={(id) => setF({ ...f, paymentMethodId: id })} label="paymentMethod" />
         <label className="space-y-1"><span className={lbl}>{t("paidBy")}</span>
           <select value={f.paidBy} onChange={(e) => setF({ ...f, paidBy: e.target.value })} className={field}>
             <option value="">—</option>
