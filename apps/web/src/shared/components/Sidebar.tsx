@@ -16,7 +16,7 @@ export function Sidebar({ expanded, onClose, onToggle }: { expanded: boolean; on
   const { pathname } = useLocation();
   const [openSection, setOpenSection] = useState<string>(() => activeSection(pathname));
   useEffect(() => { const s = activeSection(pathname); if (s) setOpenSection(s); }, [pathname]);
-  const onNavigate = () => { if (window.innerWidth < 768) onClose(); };
+  const onNavigate = () => onClose(); // solo un link de página cierra el sidebar
   const panelActive = pathname.startsWith("/dashboard");
   return (
     <>
@@ -35,7 +35,8 @@ export function Sidebar({ expanded, onClose, onToggle }: { expanded: boolean; on
           {SECTIONS.map((s) => (
             <SidebarSection key={s.title} section={s} expanded={expanded}
               isOpen={openSection === s.title} activePath={pathname}
-              onToggle={() => setOpenSection(openSection === s.title ? "" : s.title)}
+              onToggleSection={() => setOpenSection(openSection === s.title ? "" : s.title)}
+              onExpandAndOpen={() => { if (!expanded) onToggle(); setOpenSection(s.title); }}
               onNavigate={onNavigate} />
           ))}
         </nav>

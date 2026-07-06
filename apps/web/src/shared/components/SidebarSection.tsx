@@ -3,19 +3,24 @@ import { Link } from "@tanstack/react-router";
 import { useI18n } from "@shared/i18n";
 import type { NavSection } from "@shared/components/sidebar.nav";
 
-export function SidebarSection({ section, expanded, isOpen, activePath, onToggle, onNavigate }: {
+export function SidebarSection({ section, expanded, isOpen, activePath, onToggleSection, onExpandAndOpen, onNavigate }: {
   section: NavSection; expanded: boolean; isOpen: boolean; activePath: string;
-  onToggle: () => void; onNavigate: () => void;
+  onToggleSection: () => void; onExpandAndOpen: () => void; onNavigate: () => void;
 }) {
   const { t } = useI18n();
   const Icon = section.icon;
   const item = "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-body transition";
   if (!expanded) {
-    return <div className="grid place-items-center py-2" title={t(section.title)}><Icon className="h-5 w-5 text-muted-foreground" /></div>;
+    // Colapsado: click en el icono abre el sidebar + su sección. No navega, no cierra.
+    return (
+      <button type="button" onClick={onExpandAndOpen} title={t(section.title)} className="grid w-full place-items-center py-2 text-muted-foreground hover:text-foreground">
+        <Icon className="h-5 w-5" />
+      </button>
+    );
   }
   return (
     <div>
-      <button type="button" onClick={onToggle}
+      <button type="button" onClick={onToggleSection}
         className="flex w-full items-center gap-2 px-3 py-1 text-xs font-bold uppercase tracking-wide text-muted-foreground hover:text-foreground">
         <Icon className="h-4 w-4" /><span className="flex-1 text-left">{t(section.title)}</span>
         {isOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
