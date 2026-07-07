@@ -106,7 +106,14 @@ h1, h2, h3, h4, .font-display { font-family: var(--font-display); }
   backdrop-filter: blur(8px);
   padding-bottom: env(safe-area-inset-bottom);
   scrollbar-width: none;
+  /* Fade sutil en los bordes: sugiere que hay más iconos al scrollear. */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 16px, #000 calc(100% - 16px), transparent);
 }
 .mobile-nav::-webkit-scrollbar { display: none; }
+/* Feedback de tap: leve hundido + glow. El icono activo mantiene un glow suave. */
+.mobile-nav a:active, .mobile-nav button:active { transform: scale(0.94); }
+.mobile-nav .nav-current svg,
+.mobile-nav a:active svg, .mobile-nav button:active svg { filter: drop-shadow(0 0 6px hsl(var(--primary) / 0.55)); }
 @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 .animate-slide-up { animation: slideUp 0.25s ease-out; will-change: transform; }

@@ -30,14 +30,15 @@ export function MobileNav() {
   const { can } = useModuleAccess();
   const { pathname } = useLocation();
   const [account, setAccount] = useState(false);
-  const cell = "relative flex min-h-[52px] min-w-[64px] shrink-0 flex-col items-center justify-center gap-0.5 py-1.5 transition-colors";
+  // 24vw => ~4 iconos por pantalla; el resto entra con scroll horizontal.
+  const cell = "relative flex min-h-[52px] min-w-[24vw] shrink-0 flex-col items-center justify-center gap-0.5 py-1.5 transition-transform";
   return (
     <>
       <nav className="mobile-nav fixed bottom-0 left-0 right-0 z-50 flex overflow-x-auto border-t border-border bg-card/90 md:hidden">
         {NAV.filter((n) => can(n.mod, "view")).map((n) => {
           const on = pathname.startsWith(n.to);
           return (
-            <Link key={n.to} to={n.to} className={`${cell} ${on ? "text-primary" : "text-muted-foreground"}`}>
+            <Link key={n.to} to={n.to} className={`${cell} ${on ? "nav-current text-primary" : "text-muted-foreground"}`}>
               {on && <span className="absolute top-0 h-0.5 w-8 rounded-full bg-primary" />}
               <n.icon className="h-6 w-6" /><span className="text-[10px] font-bold">{t(n.key)}</span>
             </Link>
