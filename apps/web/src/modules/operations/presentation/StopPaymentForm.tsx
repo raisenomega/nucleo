@@ -17,7 +17,7 @@ export function StopPaymentForm({ stop, onClose, onSubmit }: { stop: RouteStop; 
   const [received, setReceived] = useState(0);
   useEffect(() => { void supabase.from("categories").select("id,label").eq("kind", "payment_method").eq("active", true).order("sort").then(({ data }) => setMethods((data as Cat[] | null) ?? [])); }, []);
   const cash = methods.find((m) => m.id === methodId)?.label === "Efectivo";
-  const change = cash && received > amount ? received - amount : 0;
+  const change = cash && received > amount ? Math.round((received - amount) * 100) / 100 : 0;
   const fld = "h-12 w-full rounded-lg border border-border bg-background p-3 text-lg";
   const lbl = "text-xs font-bold text-muted-foreground";
   return (

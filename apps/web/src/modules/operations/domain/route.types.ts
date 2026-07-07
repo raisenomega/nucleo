@@ -29,6 +29,7 @@ export interface SupplyUse { itemId: string; quantity: number; }
 
 export interface IRouteRepository {
   recordPayment(stopId: string, p: CompletePayload): Promise<RepoResult>;
+  completeStop(stopId: string): Promise<RepoResult>;
   setNotAttended(stopId: string, reason: string): Promise<RepoResult>;
   listRoutes(date: string): Promise<readonly ServiceRoute[]>;
   listStops(routeId: string): Promise<readonly RouteStop[]>;

@@ -126,6 +126,28 @@ else
   ok_line
 fi
 
+# 13. SECURITY DEFINER SIN GUARD DE AUTORIZACIÓN (advisory — no bloquea)
+# Toda función SECURITY DEFINER con grant a authenticated/anon debería contener un guard de rol/permiso
+# (can_access_module | is_superadmin | is_ceo_or_above | is_coo_or_above) o resolver el actor por auth.uid().
+# Es heurístico: NO incrementa ERRORS; solo lista para revisión humana (evita falsos positivos rojos).
+section "13. [ADVISORY] SECURITY DEFINER sin guard de autorización:"
+ADVISORY=""
+if [ -d "$MIG_DIR" ]; then
+  while IFS= read -r f; do
+    if grep -qiE "security[[:space:]]+definer" "$f" \
+       && grep -qiE "grant[[:space:]]+execute.*to[[:space:]]+(authenticated|anon)" "$f" \
+       && ! grep -qiE "can_access_module|is_superadmin|is_ceo_or_above|is_coo_or_above|auth\.uid\(\)" "$f"; then
+      ADVISORY="${ADVISORY}${f}\n"
+    fi
+  done < <(find "$MIG_DIR" -type f -name "*.sql" 2>/dev/null)
+fi
+if [ -n "$ADVISORY" ]; then
+  printf "$ADVISORY" | sed 's/^/   REVISAR /'
+  echo "   -> Confirmar que cada una filtra por rol/permiso o resuelve el actor por auth.uid()."
+else
+  ok_line
+fi
+
 # RESULTADO
 echo ""
 echo "======================================="

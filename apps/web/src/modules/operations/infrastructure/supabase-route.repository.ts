@@ -10,6 +10,7 @@ export const supabaseRouteRepository: IRouteRepository = {
     return ok((await supabase.rpc("record_stop_payment", { p_stop_id: stopId, p_amount: p.amount,
       p_payment_method_id: p.paymentMethodId || null, p_received: p.received, p_change: p.change, p_evidence: p.evidence })).error);
   },
+  async completeStop(stopId) { return ok((await supabase.rpc("complete_route_stop", { p_stop_id: stopId })).error); },
   async setNotAttended(stopId, reason) { return ok((await supabase.rpc("set_stop_not_attended", { p_stop_id: stopId, p_reason: reason })).error); },
   async listRoutes(date) {
     const { data } = await supabase.from("service_routes").select(ROUTE_SEL)

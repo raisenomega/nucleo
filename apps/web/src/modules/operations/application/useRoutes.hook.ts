@@ -20,6 +20,7 @@ export function useRoutes(repo: IRouteRepository, date: string) {
   const updateStop = useCallback(async (id: string, p: StopPatch) => { const r = await repo.updateStop(id, p); if (r.ok) await reloadStops(); return r; }, [repo, reloadStops]);
   const removeStop = useCallback(async (id: string) => { const r = await repo.removeStop(id); if (r.ok) await reloadStops(); return r; }, [repo, reloadStops]);
   const recordPayment = useCallback(async (id: string, p: CompletePayload) => { const r = await repo.recordPayment(id, p); if (r.ok) { await reloadStops(); await refresh(); } return r; }, [repo, reloadStops, refresh]);
+  const completeStop = useCallback(async (id: string) => { const r = await repo.completeStop(id); if (r.ok) { await reloadStops(); await refresh(); } return r; }, [repo, reloadStops, refresh]);
   const setNotAttended = useCallback(async (id: string, reason: string) => { const r = await repo.setNotAttended(id, reason); if (r.ok) { await reloadStops(); await refresh(); } return r; }, [repo, reloadStops, refresh]);
   // Diff al guardar edición: borra las quitadas, actualiza las existentes (orden = posición), agrega las nuevas.
   const syncStops = useCallback(async (routeId: string, drafts: EditableStop[], original: readonly RouteStop[]) => {
@@ -31,5 +32,5 @@ export function useRoutes(repo: IRouteRepository, date: string) {
     await refresh(); await reloadStops();
   }, [repo, refresh, reloadStops]);
 
-  return { routes, stops, active, setActive, create, update, remove, updateStop, removeStop, recordPayment, setNotAttended, syncStops };
+  return { routes, stops, active, setActive, create, update, remove, updateStop, removeStop, recordPayment, completeStop, setNotAttended, syncStops };
 }
