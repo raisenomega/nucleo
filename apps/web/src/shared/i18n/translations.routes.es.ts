@@ -9,4 +9,6 @@ export const esRoutes = {
   accountsReceivable: "Cuentas por cobrar", stopDetail: "Detalle de parada", callClient: "Llamar", membershipClient: "Cliente con membresía",
   more: "Más", account: "Cuenta", scheduledTime: "Hora", serviceDescription: "Descripción del servicio",
   supplies: "Insumos", usedSupplies: "Insumos usados",
+  pendingDebts: "Deudas pendientes de rutas no atendidas", totalPending: "Total pendiente",
+  collect: "Cobrar", forgive: "Perdonar", forgiveReason: "Razón para perdonar la deuda",
 } satisfies Partial<Record<TranslationKey, string>>;
