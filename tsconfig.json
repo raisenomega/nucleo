@@ -31,6 +31,7 @@
       "@cognition/*": ["./apps/web/src/modules/cognition/*"],
       "@crm/*":       ["./apps/web/src/modules/crm/*"],
       "@operations/*": ["./apps/web/src/modules/operations/*"],
+      "@hr/*":        ["./apps/web/src/modules/hr/*"],
       "@admin/*":     ["./apps/web/src/modules/admin/*"],
       "@shared/*":    ["./apps/web/src/shared/*"],
       "@brand/*":     ["./brand/*"]

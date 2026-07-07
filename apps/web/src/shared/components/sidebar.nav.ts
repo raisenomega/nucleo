@@ -8,7 +8,7 @@ import type { LucideIcon } from "lucide-react";
 import type { TranslationKey } from "@shared/i18n";
 
 // Solo las rutas ya construidas llevan `to`; el resto se renderiza deshabilitado.
-type EnabledPath = "/dashboard" | "/routes" | "/income" | "/expenses" | "/extraordinary" | "/payroll" | "/inventory" | "/leads" | "/marketing" | "/reconciliation" | "/recurring" | "/accounts-receivable" | "/reports" | "/settings";
+type EnabledPath = "/dashboard" | "/routes" | "/income" | "/expenses" | "/extraordinary" | "/payroll" | "/inventory" | "/leads" | "/marketing" | "/reconciliation" | "/recurring" | "/accounts-receivable" | "/reports" | "/evaluations" | "/settings";
 // mod = clave de módulo para el gate (can(mod,"view")). Items sin mod = "próximamente" (solo roadmap coo/ceo).
 export type NavItem = { key: TranslationKey; icon: LucideIcon; to?: EnabledPath; mod?: string };
 export type NavSection = { title: TranslationKey; icon: LucideIcon; items: NavItem[] };
@@ -31,7 +31,7 @@ export const SECTIONS: NavSection[] = [
     { key: "portal", icon: Home }, { key: "documents", icon: FileCheck },
   ] },
   { title: "management", icon: Briefcase, items: [
-    { key: "evaluations", icon: ClipboardCheck }, { key: "training", icon: GraduationCap },
+    { key: "evaluations", icon: ClipboardCheck, to: "/evaluations", mod: "evaluations" }, { key: "training", icon: GraduationCap },
     { key: "support", icon: LifeBuoy }, { key: "notifications", icon: Bell },
     { key: "settings", icon: Settings, to: "/settings", mod: "settings" },
   ] },

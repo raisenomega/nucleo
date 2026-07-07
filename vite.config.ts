@@ -24,6 +24,7 @@ export default defineConfig({
       "@cognition": r("apps/web/src/modules/cognition"),
       "@crm": r("apps/web/src/modules/crm"),
       "@operations": r("apps/web/src/modules/operations"),
+      "@hr": r("apps/web/src/modules/hr"),
       "@admin": r("apps/web/src/modules/admin"),
       "@shared": r("apps/web/src/shared"),
       "@brand": r("brand"),
