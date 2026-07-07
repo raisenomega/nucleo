@@ -40,12 +40,12 @@ function RoutesPage() {
   const initial = cur ? { routeDate: cur.routeDate, assignedTo: cur.assignedTo, status: cur.status, notes: cur.notes ?? "" } : undefined;
   const viewRoute = m.routes.find((r) => r.id === viewing);
   return (
-    <div className="space-y-6 p-8">
+    <div className="space-y-6 p-4 md:p-8">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="font-display text-3xl font-bold text-primary">{t("routes")}</h1>
+        <h1 className="font-display text-xl font-bold text-primary md:text-3xl">{t("routes")}</h1>
         <div className="flex items-center gap-2">
           <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="rounded-lg border border-border bg-background p-2 text-sm" />
-          {can("routes", "create") && <button type="button" onClick={() => setEditing("new")} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-4 py-2 font-body font-bold"><Plus className="h-4 w-4" /> {t("newRoute")}</button>}
+          {can("routes", "create") && <button type="button" onClick={() => setEditing("new")} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-body font-bold"><Plus className="h-4 w-4" /> {t("newRoute")}</button>}
         </div>
       </div>
       {editing !== null && <RouteForm key={editing} employees={emps} initial={initial}

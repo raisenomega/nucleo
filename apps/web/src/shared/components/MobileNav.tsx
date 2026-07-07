@@ -2,17 +2,16 @@ import { useState } from "react";
 import { Link, useLocation } from "@tanstack/react-router";
 import {
   LayoutDashboard, DollarSign, CreditCard, Route as RouteIcon, Package, UserPlus,
-  Megaphone, Users, Scale, Settings, MoreHorizontal,
+  Megaphone, Users, Scale, Settings, UserCircle,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import type { TranslationKey } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
-import { MobileMoreDrawer } from "@shared/components/MobileMoreDrawer";
+import { MobileAccountSheet } from "@shared/components/MobileAccountSheet";
 
 type Path = "/dashboard" | "/income" | "/expenses" | "/routes" | "/inventory" | "/leads" | "/marketing" | "/payroll" | "/reconciliation" | "/settings";
-export type NavEntry = { to: Path; icon: LucideIcon; key: TranslationKey; mod: string };
-const NAV: NavEntry[] = [
+const NAV: { to: Path; icon: LucideIcon; key: TranslationKey; mod: string }[] = [
   { to: "/dashboard", icon: LayoutDashboard, key: "panel", mod: "dashboard" },
   { to: "/income", icon: DollarSign, key: "income", mod: "income" },
   { to: "/expenses", icon: CreditCard, key: "expenses", mod: "expenses" },
@@ -25,20 +24,17 @@ const NAV: NavEntry[] = [
   { to: "/settings", icon: Settings, key: "settings", mod: "settings" },
 ];
 
-// Barra inferior PWA: solo módulos con can(mod,"view"). >5 -> 4 iconos + "Más" (drawer).
+// Barra inferior PWA: scroll horizontal con todos los módulos accesibles + cuenta (tema/idioma/logout).
 export function MobileNav() {
   const { t } = useI18n();
   const { can } = useModuleAccess();
   const { pathname } = useLocation();
-  const [more, setMore] = useState(false);
-  const access = NAV.filter((n) => can(n.mod, "view"));
-  const overflow = access.length > 5;
-  const bar = overflow ? access.slice(0, 4) : access.slice(0, 5);
-  const cell = "relative flex min-h-[44px] flex-1 flex-col items-center justify-center gap-0.5 py-1.5 transition-colors";
+  const [account, setAccount] = useState(false);
+  const cell = "relative flex min-h-[52px] min-w-[64px] shrink-0 flex-col items-center justify-center gap-0.5 py-1.5 transition-colors";
   return (
     <>
-      <nav className="mobile-nav fixed bottom-0 left-0 right-0 z-50 flex border-t border-border bg-card/90 md:hidden">
-        {bar.map((n) => {
+      <nav className="mobile-nav fixed bottom-0 left-0 right-0 z-50 flex overflow-x-auto border-t border-border bg-card/90 md:hidden">
+        {NAV.filter((n) => can(n.mod, "view")).map((n) => {
           const on = pathname.startsWith(n.to);
           return (
             <Link key={n.to} to={n.to} className={`${cell} ${on ? "text-primary" : "text-muted-foreground"}`}>
@@ -47,13 +43,11 @@ export function MobileNav() {
             </Link>
           );
         })}
-        {overflow && (
-          <button type="button" onClick={() => setMore(true)} className={`${cell} text-muted-foreground`}>
-            <MoreHorizontal className="h-6 w-6" /><span className="text-[10px] font-bold">{t("more")}</span>
-          </button>
-        )}
+        <button type="button" onClick={() => setAccount(true)} className={`${cell} text-muted-foreground`}>
+          <UserCircle className="h-6 w-6" /><span className="text-[10px] font-bold">{t("account")}</span>
+        </button>
       </nav>
-      {more && <MobileMoreDrawer items={access.slice(4)} onClose={() => setMore(false)} />}
+      {account && <MobileAccountSheet onClose={() => setAccount(false)} />}
     </>
   );
 }

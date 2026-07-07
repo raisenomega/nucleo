@@ -105,6 +105,8 @@ h1, h2, h3, h4, .font-display { font-family: var(--font-display); }
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   padding-bottom: env(safe-area-inset-bottom);
+  scrollbar-width: none;
 }
+.mobile-nav::-webkit-scrollbar { display: none; }
 @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 .animate-slide-up { animation: slideUp 0.25s ease-out; will-change: transform; }

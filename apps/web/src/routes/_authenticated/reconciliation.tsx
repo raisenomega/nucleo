@@ -34,10 +34,10 @@ function ReconciliationPage() {
   if (!can("reconciliation", "view")) return <Navigate to="/dashboard" />;
 
   return (
-    <div className="space-y-6 p-8">
+    <div className="space-y-6 p-4 md:p-8">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="font-display text-3xl font-bold text-primary">{t("reconciliation")}</h1>
+          <h1 className="font-display text-xl font-bold text-primary md:text-3xl">{t("reconciliation")}</h1>
           <p className="text-xs text-muted-foreground">{t("reconciliationSubtitle")}</p>
         </div>
         <input type="month" value={month} onChange={(e) => setMonth(e.target.value)} className="rounded-lg border border-border bg-background p-2 text-sm" />

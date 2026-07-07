@@ -42,7 +42,7 @@ function MemberPage() {
   if (tm.loading || !tm.member) return <div className="p-8 text-sm text-muted-foreground">{t("noData")}</div>;
   const m = tm.member, active = m.status !== "rejected";
   return (
-    <div className="space-y-6 p-8">
+    <div className="space-y-6 p-4 md:p-8">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <span className="grid h-14 w-14 place-items-center rounded-full bg-primary text-2xl font-bold text-primary-foreground">{m.fullName.charAt(0)}</span>

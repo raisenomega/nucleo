@@ -22,9 +22,9 @@ function Dashboard() {
   const finance = can("income", "view") || can("expenses", "view");
   const sh = "text-xs font-bold uppercase tracking-wide text-muted-foreground";
   return (
-    <div className="space-y-6 p-8">
+    <div className="space-y-6 p-4 md:p-8">
       <TrialBanner />
-      <div><h1 className="font-display text-3xl font-bold text-primary">{t("welcome")}</h1>
+      <div><h1 className="font-display text-xl font-bold text-primary md:text-3xl">{t("welcome")}</h1>
         <p className="text-xs text-muted-foreground">{session?.email} · {session?.role ?? "—"}</p></div>
       {can("dashboard", "view") && (isLoading || !snapshot || !crm ? (
         <p className="font-body text-muted-foreground">{t("noData")}</p>

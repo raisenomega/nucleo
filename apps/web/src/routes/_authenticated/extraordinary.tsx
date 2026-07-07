@@ -42,15 +42,15 @@ function ExtraordinaryPage() {
   if (!can("extraordinary", "view")) return <Navigate to="/dashboard" />;
   const viewItem = items.find((i) => i.id === viewing);
   return (
-    <div className="space-y-6 p-8">
+    <div className="space-y-6 p-4 md:p-8">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="font-display text-3xl font-bold text-primary">{t("extraordinary")}</h1>
+          <h1 className="font-display text-xl font-bold text-primary md:text-3xl">{t("extraordinary")}</h1>
           <p className="text-xs text-muted-foreground">{t("extraordinarySubtitle")}</p>
         </div>
         {can("extraordinary", "create") && (
           <button type="button" onClick={() => setEditing("new")}
-            className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-4 py-2 font-body font-bold">
+            className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-body font-bold">
             <Plus className="h-4 w-4" /> {t("newExtraordinary")}
           </button>
         )}

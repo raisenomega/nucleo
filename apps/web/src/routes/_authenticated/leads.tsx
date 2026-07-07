@@ -47,13 +47,13 @@ function LeadsPage() {
   if (!can("leads", "view")) return <Navigate to="/dashboard" />;
   const viewLead = leads.find((l) => l.id === viewing);
   return (
-    <div className="space-y-6 p-8">
+    <div className="space-y-6 p-4 md:p-8">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="font-display text-3xl font-bold text-primary">{t("leads")}</h1>
+          <h1 className="font-display text-xl font-bold text-primary md:text-3xl">{t("leads")}</h1>
           <p className="text-xs text-muted-foreground">{t("leadSubtitle")}</p>
         </div>
-        {can("leads", "create") && <button type="button" onClick={() => setEditing("new")} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-4 py-2 font-body font-bold"><Plus className="h-4 w-4" /> {t("newLead")}</button>}
+        {can("leads", "create") && <button type="button" onClick={() => setEditing("new")} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-body font-bold"><Plus className="h-4 w-4" /> {t("newLead")}</button>}
       </div>
       {editing !== null && (
         <LeadForm sources={cats.filter((c) => c.kind === "lead_source")} services={cats.filter((c) => c.kind === "service_type")}
