@@ -22,7 +22,9 @@ export function AccountsReceivableTable({ rows, onCollect, onForgive, onNote }: 
     <div className="flex gap-1 pt-1">
       {onCollect && <button type="button" onClick={() => onCollect(r)} title={t("collect")} className="text-green-600 hover:opacity-70"><DollarSign className="h-4 w-4" /></button>}
       {onForgive && <button type="button" onClick={() => onForgive(r)} title={t("forgive")} className="text-red-600 hover:opacity-70"><XCircle className="h-4 w-4" /></button>}
-      {r.phone && <a href={wa(r.phone, msg(r))} target="_blank" rel="noreferrer" title={t("reminder")} className="text-green-600 hover:opacity-70"><MessageCircle className="h-4 w-4" /></a>}
+      {r.phone
+        ? <a href={wa(r.phone, msg(r))} target="_blank" rel="noreferrer" title={t("reminder")} className="text-green-600 hover:opacity-70"><MessageCircle className="h-4 w-4" /></a>
+        : <span title={t("noPhone")} className="cursor-not-allowed text-muted-foreground opacity-40"><MessageCircle className="h-4 w-4" /></span>}
       {onNote && <button type="button" onClick={() => onNote(r)} title={t("addNote")} className="text-blue-600 hover:opacity-70"><FileText className="h-4 w-4" /></button>}
     </div>
   );

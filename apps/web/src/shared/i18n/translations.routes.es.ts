@@ -12,4 +12,5 @@ export const esRoutes = {
   pendingDebts: "Deudas pendientes de rutas no atendidas", totalPending: "Total pendiente",
   collect: "Cobrar", forgive: "Perdonar", forgiveReason: "Razón para perdonar la deuda",
   reminder: "Recordatorio WhatsApp", addNote: "Agregar nota", managementNote: "Nota de gestión", noteSaved: "Nota guardada",
+  noPhone: "Sin teléfono",
 } satisfies Partial<Record<TranslationKey, string>>;
