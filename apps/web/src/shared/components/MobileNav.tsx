@@ -35,6 +35,9 @@ export function MobileNav() {
   return (
     <>
       <nav className="mobile-nav fixed bottom-0 left-0 right-0 z-50 flex overflow-x-auto border-t border-border bg-card/90 md:hidden">
+        <button type="button" onClick={() => setAccount(true)} className={`${cell} text-muted-foreground`}>
+          <UserCircle className="h-6 w-6" /><span className="text-[10px] font-bold">{t("account")}</span>
+        </button>
         {NAV.filter((n) => can(n.mod, "view")).map((n) => {
           const on = pathname.startsWith(n.to);
           return (
@@ -44,9 +47,6 @@ export function MobileNav() {
             </Link>
           );
         })}
-        <button type="button" onClick={() => setAccount(true)} className={`${cell} text-muted-foreground`}>
-          <UserCircle className="h-6 w-6" /><span className="text-[10px] font-bold">{t("account")}</span>
-        </button>
       </nav>
       {account && <MobileAccountSheet onClose={() => setAccount(false)} />}
     </>
