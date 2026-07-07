@@ -26,4 +26,11 @@ export const supabaseArRepository: IAccountsReceivableRepository = {
   async forgiveDebt(stopId, reason) {
     return ok((await supabase.from("route_stops").update({ pending_collection: false, notes: reason }).eq("id", stopId)).error);
   },
+  async addNote(stopId, text) {
+    const { data } = await supabase.from("route_stops").select("notes").eq("id", stopId).single();
+    const prev = (data as { notes: string | null } | null)?.notes ?? "";
+    const stamp = new Date().toISOString().slice(0, 16).replace("T", " ");
+    const line = `[${stamp}] ${text}`;
+    return ok((await supabase.from("route_stops").update({ notes: prev ? `${prev}\n${line}` : line }).eq("id", stopId)).error);
+  },
 };

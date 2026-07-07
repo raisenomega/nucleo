@@ -12,5 +12,8 @@ export function useAccountsReceivable(repo: IAccountsReceivableRepository) {
   const forgive = useCallback(async (stopId: string, reason: string) => {
     const r = await repo.forgiveDebt(stopId, reason); if (r.ok) await refresh(); return r;
   }, [repo, refresh]);
-  return { snapshot, collect, forgive, refresh };
+  const addNote = useCallback(async (stopId: string, text: string) => {
+    const r = await repo.addNote(stopId, text); if (r.ok) await refresh(); return r;
+  }, [repo, refresh]);
+  return { snapshot, collect, forgive, addNote, refresh };
 }

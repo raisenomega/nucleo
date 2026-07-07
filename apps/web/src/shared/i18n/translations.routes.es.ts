@@ -11,4 +11,5 @@ export const esRoutes = {
   supplies: "Insumos", usedSupplies: "Insumos usados",
   pendingDebts: "Deudas pendientes de rutas no atendidas", totalPending: "Total pendiente",
   collect: "Cobrar", forgive: "Perdonar", forgiveReason: "Razón para perdonar la deuda",
+  reminder: "Recordatorio WhatsApp", addNote: "Agregar nota", managementNote: "Nota de gestión", noteSaved: "Nota guardada",
 } satisfies Partial<Record<TranslationKey, string>>;

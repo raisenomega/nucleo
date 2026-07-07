@@ -11,4 +11,5 @@ export const enRoutes = {
   supplies: "Supplies", usedSupplies: "Used supplies",
   pendingDebts: "Pending debts from unattended stops", totalPending: "Total pending",
   collect: "Collect", forgive: "Forgive", forgiveReason: "Reason to forgive the debt",
+  reminder: "WhatsApp reminder", addNote: "Add note", managementNote: "Management note", noteSaved: "Note saved",
 } satisfies Partial<Record<TranslationKey, string>>;

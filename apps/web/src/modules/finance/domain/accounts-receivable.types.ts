@@ -14,4 +14,5 @@ export interface IAccountsReceivableRepository {
   getAll(month?: string): Promise<ARSnapshot>;
   collectDebt(stopId: string, methodId: string): Promise<ARResult>;
   forgiveDebt(stopId: string, reason: string): Promise<ARResult>;
+  addNote(stopId: string, text: string): Promise<ARResult>;
 }
