@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Plus } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { RouteStopsEditor, emptyStop } from "@operations/presentation/RouteStopsEditor";
 import type { RouteFormData, EditableStop, RouteStop } from "@operations/domain/route.types";
@@ -34,9 +35,10 @@ export function RouteForm({ employees, initial, initialStops, onSubmit, onCancel
       <label className="block space-y-1"><span className={lbl}>{t("notes")}</span>
         <input value={f.notes} onChange={(e) => setF({ ...f, notes: e.target.value })} className={fld} /></label>
       <div className="space-y-1"><span className={lbl}>{t("routeStops")}</span><RouteStopsEditor stops={stops} onChange={setStops} /></div>
-      <div className="flex gap-2">
-        <button type="submit" className="rounded-lg bg-primary text-primary-foreground px-4 py-2 text-sm font-bold">{t("save")}</button>
+      <div className="flex flex-wrap gap-2">
+        <button type="button" onClick={() => setStops([...stops, emptyStop()])} className="flex items-center gap-1 rounded-lg border border-border px-3 py-2 text-sm font-bold text-primary"><Plus className="h-4 w-4" /> {t("addStop")}</button>
         <button type="button" onClick={onCancel} className="rounded-lg bg-secondary px-4 py-2 text-sm">{t("cancel")}</button>
+        <button type="submit" className="rounded-lg bg-primary text-primary-foreground px-4 py-2 text-sm font-bold">{t("save")}</button>
       </div>
     </form>
   );

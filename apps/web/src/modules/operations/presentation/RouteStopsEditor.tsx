@@ -1,4 +1,4 @@
-import { Plus, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { CategoryPicker } from "@shared/components/CategoryPicker";
 import { TimePicker } from "@shared/components/TimePicker";
@@ -31,7 +31,6 @@ export function RouteStopsEditor({ stops, onChange }: { stops: EditableStop[]; o
           </div>
         </div>
       ))}
-      <button type="button" onClick={() => onChange([...stops, emptyStop()])} className="flex items-center gap-1 rounded-lg border border-border px-3 py-2 text-sm font-bold text-primary"><Plus className="h-4 w-4" /> {t("addStop")}</button>
     </div>
   );
 }
