@@ -28,7 +28,7 @@ export interface StopSupply { readonly itemId: string; readonly name: string; re
 export interface SupplyUse { itemId: string; quantity: number; }
 
 export interface IRouteRepository {
-  completeStop(stopId: string, p: CompletePayload): Promise<RepoResult>;
+  recordPayment(stopId: string, p: CompletePayload): Promise<RepoResult>;
   setNotAttended(stopId: string, reason: string): Promise<RepoResult>;
   listRoutes(date: string): Promise<readonly ServiceRoute[]>;
   listStops(routeId: string): Promise<readonly RouteStop[]>;

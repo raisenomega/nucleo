@@ -32,7 +32,7 @@ function RoutesPage() {
     if (r.ok && editId) await m.syncStops(editId, stops, m.stops);
     window.alert(r.ok ? "Guardado exitoso" : r.error); if (r.ok) setEditing(null);
   }
-  const doComplete = (id: string, p: CompletePayload) => void m.completeStop(id, p).then((r) => { if (!r.ok) window.alert(r.error); });
+  const doPay = (id: string, p: CompletePayload) => void m.recordPayment(id, p).then((r) => { if (!r.ok) window.alert(r.error); });
   const doNotAttended = (id: string, reason: string) => void m.setNotAttended(id, reason).then((r) => { if (!r.ok) window.alert(r.error); });
   const doEvidence = (id: string, paths: string[]) => void m.updateStop(id, { evidenceUrls: paths });
   const doMarkDone = (id: string) => void m.updateStop(id, { status: "Completada", completedAt: new Date().toISOString() }).then((r) => { if (!r.ok) window.alert(r.error); });
@@ -55,7 +55,7 @@ function RoutesPage() {
         onEdit={can("routes", "edit") ? (id) => { setEditing(id); m.setActive(id); } : undefined}
         onDelete={can("routes", "delete") ? (id) => { if (window.confirm(`${t("delete")}?`)) void m.remove(id); } : undefined} />
       {viewRoute && <RouteDetail route={viewRoute} stops={m.stops} employees={emps} tenantId={session?.tenantId ?? ""} onClose={() => setViewing(null)}
-        onComplete={doComplete} onNotAttended={doNotAttended} onEvidence={doEvidence} onMarkDone={doMarkDone} />}
+        onPay={doPay} onNotAttended={doNotAttended} onEvidence={doEvidence} onMarkDone={doMarkDone} />}
     </div>
   );
 }

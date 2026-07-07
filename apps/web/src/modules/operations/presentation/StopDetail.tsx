@@ -10,9 +10,9 @@ import { StopPaymentForm } from "@operations/presentation/StopPaymentForm";
 import { StopSuppliesForm } from "@operations/presentation/StopSuppliesForm";
 import type { RouteStop, CompletePayload } from "@operations/domain/route.types";
 
-export function StopDetail({ stop, tenantId, onClose, onComplete, onNotAttended, onEvidence, onMarkDone }: {
+export function StopDetail({ stop, tenantId, onClose, onPay, onNotAttended, onEvidence, onMarkDone }: {
   stop: RouteStop; tenantId: string; onClose: () => void; onMarkDone: () => void;
-  onComplete: (p: CompletePayload) => void; onNotAttended: (r: string) => void; onEvidence: (paths: string[]) => void;
+  onPay: (p: CompletePayload) => void; onNotAttended: (r: string) => void; onEvidence: (paths: string[]) => void;
 }) {
   const { t } = useI18n();
   const [mode, setMode] = useState<"" | "reason">("");
@@ -44,7 +44,7 @@ export function StopDetail({ stop, tenantId, onClose, onComplete, onNotAttended,
           : <button type="button" onClick={onMarkDone} className="w-full rounded-lg bg-green-600 p-3 text-center font-bold text-white">{t("completeStop")}</button>}
       </div>
     </ScreenModal>
-    {paying && <StopPaymentForm stop={stop} onClose={() => setPaying(false)} onSubmit={onComplete} />}
+    {paying && <StopPaymentForm stop={stop} onClose={() => setPaying(false)} onSubmit={(p) => { onPay(p); setPaying(false); }} />}
     {supplies && <StopSuppliesForm stopId={stop.id} onClose={() => setSupplies(false)} />}
     </>
   );

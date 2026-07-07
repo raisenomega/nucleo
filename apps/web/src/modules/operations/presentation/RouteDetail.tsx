@@ -8,9 +8,9 @@ import type { ServiceRoute, RouteStop, CompletePayload } from "@operations/domai
 
 type Emp = { id: string; full_name: string };
 
-export function RouteDetail({ route, stops, employees, tenantId, onClose, onComplete, onNotAttended, onEvidence, onMarkDone }: {
+export function RouteDetail({ route, stops, employees, tenantId, onClose, onPay, onNotAttended, onEvidence, onMarkDone }: {
   route: ServiceRoute; stops: readonly RouteStop[]; employees: Emp[]; tenantId: string; onClose: () => void;
-  onComplete: (id: string, p: CompletePayload) => void; onNotAttended: (id: string, r: string) => void;
+  onPay: (id: string, p: CompletePayload) => void; onNotAttended: (id: string, r: string) => void;
   onEvidence: (id: string, paths: string[]) => void; onMarkDone: (id: string) => void;
 }) {
   const { t } = useI18n();
@@ -31,7 +31,7 @@ export function RouteDetail({ route, stops, employees, tenantId, onClose, onComp
         </div>
       </ScreenModal>
       {cur && <StopDetail stop={cur} tenantId={tenantId} onClose={() => setOpen(null)}
-        onComplete={(p) => { onComplete(cur.id, p); setOpen(null); }}
+        onPay={(p) => onPay(cur.id, p)}
         onNotAttended={(r) => { onNotAttended(cur.id, r); setOpen(null); }}
         onMarkDone={() => { onMarkDone(cur.id); setOpen(null); }}
         onEvidence={(paths) => onEvidence(cur.id, paths)} />}
