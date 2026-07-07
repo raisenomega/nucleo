@@ -21,10 +21,17 @@ export interface InventoryFormData {
 
 export type InventoryListResult = Result<InventoryItem[], string>;
 
+export interface InventoryMovement {
+  readonly id: string; readonly type: string; readonly quantity: number;
+  readonly date: string; readonly notes: string | null; readonly employee: string;
+  readonly clientName: string | null; readonly serviceType: string | null; readonly routeDate: string | null;
+}
+
 // Puerto del repositorio — lo implementa infrastructure; lo consume application (DI).
 export interface IInventoryRepository {
   list(): Promise<InventoryListResult>;
   create(data: InventoryFormData): Promise<Result<InventoryItem, string>>;
   update(id: string, data: InventoryFormData): Promise<Result<InventoryItem, string>>;
   remove(id: string): Promise<Result<null, string>>;
+  listMovements(itemId: string): Promise<InventoryMovement[]>;
 }

@@ -1,7 +1,12 @@
 import { supabase } from "@shared/lib/supabase";
 import type {
-  InventoryItem, InventoryFormData, InventoryListResult, IInventoryRepository, Result,
+  InventoryItem, InventoryFormData, InventoryListResult, IInventoryRepository, Result, InventoryMovement,
 } from "@fieldops/domain/inventory.types";
+
+interface MovRow {
+  id: string; movement_type: string; quantity: number | string; movement_date: string;
+  notes: string | null; employee: string; client_name: string | null; service_type: string | null; route_date: string | null;
+}
 
 interface Row {
   id: string; tenant_id: string; name: string;
@@ -41,5 +46,12 @@ export const supabaseInventoryRepository: IInventoryRepository = {
     const { error } = await supabase.from("inventory_items").delete().eq("id", id);
     if (error) return { ok: false, error: error.message };
     return { ok: true, value: null };
+  },
+  async listMovements(itemId): Promise<InventoryMovement[]> {
+    const { data } = await supabase.rpc("list_item_movements", { p_item_id: itemId });
+    return ((data as MovRow[] | null) ?? []).map((r) => ({
+      id: r.id, type: r.movement_type, quantity: Number(r.quantity), date: r.movement_date,
+      notes: r.notes, employee: r.employee, clientName: r.client_name, serviceType: r.service_type, routeDate: r.route_date,
+    }));
   },
 };

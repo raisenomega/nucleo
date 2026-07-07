@@ -3,6 +3,7 @@ import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { formatCurrency } from "@shared/lib/format";
 import { ScreenModal } from "@shared/components/ScreenModal";
+import { InventoryMovements } from "@fieldops/presentation/InventoryMovements";
 import type { InventoryItem } from "@fieldops/domain/inventory.types";
 
 export function InventoryDetail({ item, onClose }: { item: InventoryItem; onClose: () => void }) {
@@ -23,7 +24,7 @@ export function InventoryDetail({ item, onClose }: { item: InventoryItem; onClos
           {can("inventory", "cost") && row(t("unitCost"), formatCurrency(item.unitCost))}
           {row(t("minStock"), String(item.minStock))}
         </dl>
-        <p className="text-xs text-muted-foreground">{t("movementsSoon")}</p>
+        <InventoryMovements itemId={item.id} />
       </div>
     </ScreenModal>
   );
