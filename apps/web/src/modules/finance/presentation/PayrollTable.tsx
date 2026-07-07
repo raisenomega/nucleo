@@ -4,6 +4,7 @@ import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { useRoleGate } from "@shared/hooks/useRoleGate";
 import { useSession } from "@shared/providers/SessionProvider";
 import { formatCurrency } from "@shared/lib/format";
+import { MobileCard } from "@shared/components/MobileCard";
 import type { Payroll } from "@finance/domain/payroll.types";
 
 const grossOf = (i: Payroll) => i.grossSalary || i.amount;
@@ -23,7 +24,8 @@ export function PayrollTable({ rows, onView, onEdit, onDelete }: {
   const total = visible.reduce((s, i) => s + costOf(i), 0);
   const th = "px-3 py-2 text-left font-bold";
   return (
-    <div className="overflow-hidden rounded-lg border border-border bg-card">
+    <>
+    <div className="hidden overflow-hidden rounded-lg border border-border bg-card md:block">
       <div className="flex items-center justify-between border-b border-border p-4">
         <h2 className="font-body font-bold">{t("payrollList")} ({visible.length})</h2>
         {money && <span className="font-body font-bold text-primary">{t("totalEmployerCost")}: {formatCurrency(total)}</span>}
@@ -61,5 +63,11 @@ export function PayrollTable({ rows, onView, onEdit, onDelete }: {
         </table>
       </div>
     </div>
+    <div className="space-y-2 md:hidden">
+      {visible.map((i) => <MobileCard key={i.id} title={i.employeeName} amount={money ? formatCurrency(costOf(i)) : undefined}
+        lines={[i.period, money ? `${t("grossSalary")} ${formatCurrency(grossOf(i))} · ${t("netSalary")} ${formatCurrency(netOf(i))}` : ""]}
+        onView={() => onView(i.id)} onEdit={onEdit ? () => onEdit(i.id) : undefined} onDelete={onDelete ? () => onDelete(i.id) : undefined} />)}
+    </div>
+    </>
   );
 }

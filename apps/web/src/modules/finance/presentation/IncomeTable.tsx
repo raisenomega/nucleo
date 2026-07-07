@@ -3,6 +3,7 @@ import { useI18n } from "@shared/i18n";
 import { useRoleGate } from "@shared/hooks/useRoleGate";
 import { useSession } from "@shared/providers/SessionProvider";
 import { formatCurrency } from "@shared/lib/format";
+import { MobileCard } from "@shared/components/MobileCard";
 import type { Income } from "@finance/domain/income.types";
 
 export function IncomeTable({ rows, onView, onEdit, onDelete }: {
@@ -16,7 +17,8 @@ export function IncomeTable({ rows, onView, onEdit, onDelete }: {
   const total = visible.reduce((s, i) => s + i.amount, 0);
   const th = "px-3 py-2 text-left font-bold";
   return (
-    <div className="overflow-hidden rounded-lg border border-border bg-card">
+    <>
+    <div className="hidden overflow-hidden rounded-lg border border-border bg-card md:block">
       <div className="flex items-center justify-between border-b border-border p-4">
         <h2 className="font-body font-bold">{t("incomeList")} ({visible.length})</h2>
         <span className="font-body font-bold text-primary">{t("total")}: {formatCurrency(total)}</span>
@@ -55,5 +57,11 @@ export function IncomeTable({ rows, onView, onEdit, onDelete }: {
         </table>
       </div>
     </div>
+    <div className="space-y-2 md:hidden">
+      {visible.map((i) => <MobileCard key={i.id} title={i.categoryLabel} amount={formatCurrency(i.amount)}
+        lines={[`${i.date} · ${i.paymentMethodLabel}`, [i.clientReference, i.orderNumber].filter(Boolean).join(" · ")]}
+        onView={() => onView(i.id)} onEdit={onEdit ? () => onEdit(i.id) : undefined} onDelete={onDelete ? () => onDelete(i.id) : undefined} />)}
+    </div>
+    </>
   );
 }

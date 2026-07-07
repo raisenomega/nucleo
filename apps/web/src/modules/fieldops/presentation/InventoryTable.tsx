@@ -2,6 +2,7 @@ import { AlertTriangle, Eye, Pencil, Trash2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { formatCurrency } from "@shared/lib/format";
+import { MobileCard } from "@shared/components/MobileCard";
 import type { InventoryItem } from "@fieldops/domain/inventory.types";
 
 export function InventoryTable({ rows, onView, onEdit, onDelete }: {
@@ -12,7 +13,8 @@ export function InventoryTable({ rows, onView, onEdit, onDelete }: {
   const showCost = can("inventory", "cost"); // costo gateado por checkbox inventory.cost
   const th = "px-3 py-2 text-left font-bold";
   return (
-    <div className="overflow-hidden rounded-lg border border-border bg-card">
+    <>
+    <div className="hidden overflow-hidden rounded-lg border border-border bg-card md:block">
       <div className="border-b border-border p-4"><h2 className="font-body font-bold">{t("inventoryList")} ({rows.length})</h2></div>
       <div className="overflow-x-auto">
         <table className="w-full font-body text-sm">
@@ -51,5 +53,12 @@ export function InventoryTable({ rows, onView, onEdit, onDelete }: {
         </table>
       </div>
     </div>
+    <div className="space-y-2 md:hidden">
+      {rows.map((i) => <MobileCard key={i.id} title={i.name} amount={showCost ? formatCurrency(i.unitCost) : undefined}
+        lines={[`${t("stock")}: ${i.stock} · ${t("minStock")}: ${i.minStock}`]}
+        extra={i.minStock > 0 && i.stock < i.minStock ? <span className="inline-flex items-center gap-1 rounded bg-destructive/10 px-1.5 text-xs text-destructive"><AlertTriangle className="h-3 w-3" /> {t("lowStock")}</span> : undefined}
+        onView={() => onView(i.id)} onEdit={can("inventory", "edit") ? () => onEdit(i.id) : undefined} onDelete={can("inventory", "delete") ? () => onDelete(i.id) : undefined} />)}
+    </div>
+    </>
   );
 }

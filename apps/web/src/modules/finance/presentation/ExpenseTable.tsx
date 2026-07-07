@@ -3,6 +3,7 @@ import { useI18n } from "@shared/i18n";
 import { useRoleGate } from "@shared/hooks/useRoleGate";
 import { useSession } from "@shared/providers/SessionProvider";
 import { formatCurrency } from "@shared/lib/format";
+import { MobileCard } from "@shared/components/MobileCard";
 import { ExpenseClassBadge } from "@finance/presentation/ExpenseClassBadge";
 import type { Expense } from "@finance/domain/expense.types";
 
@@ -20,7 +21,8 @@ export function ExpenseTable({ rows, employees, classOf, onView, onEdit, onDelet
   const nameOf = (id: string) => employees.find((e) => e.id === id)?.full_name ?? "—";
   const th = "px-3 py-2 text-left font-bold";
   return (
-    <div className="overflow-hidden rounded-lg border border-border bg-card">
+    <>
+    <div className="hidden overflow-hidden rounded-lg border border-border bg-card md:block">
       <div className="flex items-center justify-between border-b border-border p-4">
         <h2 className="font-body font-bold">{t("expenseList")} ({visible.length})</h2>
         <span className="font-body font-bold text-primary">{t("total")}: {formatCurrency(total)}</span>
@@ -58,5 +60,12 @@ export function ExpenseTable({ rows, employees, classOf, onView, onEdit, onDelet
         </table>
       </div>
     </div>
+    <div className="space-y-2 md:hidden">
+      {visible.map((i) => <MobileCard key={i.id} title={i.categoryLabel} amount={formatCurrency(i.amount)}
+        lines={[`${i.date} · ${i.paymentMethodLabel}`, `${nameOf(i.paidBy)} · ${i.description}`]}
+        extra={<ExpenseClassBadge value={classOf(i.categoryId)} />}
+        onView={() => onView(i.id)} onEdit={onEdit ? () => onEdit(i.id) : undefined} onDelete={onDelete ? () => onDelete(i.id) : undefined} />)}
+    </div>
+    </>
   );
 }

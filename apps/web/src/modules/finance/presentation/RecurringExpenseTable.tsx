@@ -1,6 +1,7 @@
 import { Pencil, Trash2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { formatCurrency } from "@shared/lib/format";
+import { MobileCard } from "@shared/components/MobileCard";
 import type { RecurringExpense } from "@finance/domain/recurring-expense.types";
 
 export function RecurringExpenseTable({ items, paid, onPay, onEdit, onDelete }: {
@@ -23,7 +24,7 @@ export function RecurringExpenseTable({ items, paid, onPay, onEdit, onDelete }: 
         <span>{t("paid")}: <b className="text-green-600">{formatCurrency(totalPaid)}</b></span>
         <span>{t("pending")}: <b className="text-yellow-700">{formatCurrency(Math.max(0, totalBudget - totalPaid))}</b></span>
       </div>
-      <div className="overflow-x-auto">
+      <div className="hidden overflow-x-auto md:block">
         <table className="w-full text-sm">
           <thead className="bg-secondary text-xs uppercase text-muted-foreground"><tr>
             <th className={th}>{t("category")}</th><th className={th}>{t("description")}</th>
@@ -52,6 +53,12 @@ export function RecurringExpenseTable({ items, paid, onPay, onEdit, onDelete }: 
             })}
           </tbody>
         </table>
+      </div>
+      <div className="space-y-2 md:hidden">
+        {items.map((i) => { const p = paidOf(i); return <MobileCard key={i.id} title={i.categoryLabel} amount={formatCurrency(i.budgetedAmount)}
+          lines={[i.label, `${t("paid")}: ${p > 0 ? formatCurrency(p) : t("pending")}`]}
+          extra={p === 0 && onPay ? <button type="button" onClick={() => onPay(i.categoryId)} className="rounded bg-primary text-primary-foreground px-2 py-1 text-xs font-bold">{t("registerPayment")}</button> : undefined}
+          onEdit={onEdit ? () => onEdit(i.id) : undefined} onDelete={onDelete ? () => onDelete(i.id) : undefined} />; })}
       </div>
     </div>
   );

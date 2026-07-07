@@ -1,6 +1,7 @@
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { formatCurrency } from "@shared/lib/format";
+import { MobileCard } from "@shared/components/MobileCard";
 import type { MarketingExpense } from "@crm/domain/marketing.types";
 
 export function MarketingExpenseTable({ rows, onView, onEdit, onDelete }: {
@@ -10,7 +11,8 @@ export function MarketingExpenseTable({ rows, onView, onEdit, onDelete }: {
   const total = rows.reduce((s, e) => s + e.amount, 0);
   const th = "px-3 py-2 text-left font-bold";
   return (
-    <div className="overflow-hidden rounded-lg border border-border bg-card">
+    <>
+    <div className="hidden overflow-hidden rounded-lg border border-border bg-card md:block">
       <div className="flex items-center justify-between border-b border-border p-4">
         <h2 className="font-body font-bold">{t("mExpenseList")} ({rows.length})</h2>
         <span className="font-body font-bold text-primary">{t("total")}: {formatCurrency(total)}</span>
@@ -44,5 +46,11 @@ export function MarketingExpenseTable({ rows, onView, onEdit, onDelete }: {
         </table>
       </div>
     </div>
+    <div className="space-y-2 md:hidden">
+      {rows.map((e) => <MobileCard key={e.id} title={e.channel} amount={formatCurrency(e.amount)}
+        lines={[`${e.date} · ${e.campaignName || "—"}`, e.description]}
+        onView={() => onView(e.id)} onEdit={onEdit ? () => onEdit(e.id) : undefined} onDelete={onDelete ? () => onDelete(e.id) : undefined} />)}
+    </div>
+    </>
   );
 }

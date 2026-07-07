@@ -1,5 +1,6 @@
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
+import { MobileCard } from "@shared/components/MobileCard";
 import type { ServiceRoute } from "@operations/domain/route.types";
 
 type Emp = { id: string; full_name: string };
@@ -16,7 +17,8 @@ export function RouteTable({ rows, employees, onView, onEdit, onDelete }: {
   const nameOf = (id: string) => employees.find((e) => e.id === id)?.full_name ?? "—";
   const th = "px-3 py-2 text-left font-bold";
   return (
-    <div className="overflow-hidden rounded-lg border border-border bg-card">
+    <>
+    <div className="hidden overflow-hidden rounded-lg border border-border bg-card md:block">
       <div className="border-b border-border p-4"><h2 className="font-body font-bold">{t("routes")} ({rows.length})</h2></div>
       <div className="overflow-x-auto">
         <table className="w-full font-body text-sm">
@@ -43,5 +45,12 @@ export function RouteTable({ rows, employees, onView, onEdit, onDelete }: {
         </table>
       </div>
     </div>
+    <div className="space-y-2 md:hidden">
+      {rows.map((r) => <MobileCard key={r.id} title={`${r.routeDate} · ${nameOf(r.assignedTo)}`}
+        lines={[`${r.completedCount}/${r.stopCount} ${t("routeStops")}`]}
+        extra={<span className={`inline-block rounded px-2 py-0.5 text-xs font-bold ${COLOR[r.status] ?? "bg-secondary"}`}>{r.status}</span>}
+        onView={() => onView(r.id)} onEdit={onEdit ? () => onEdit(r.id) : undefined} onDelete={onDelete ? () => onDelete(r.id) : undefined} />)}
+    </div>
+    </>
   );
 }

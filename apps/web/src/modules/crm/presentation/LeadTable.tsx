@@ -2,6 +2,7 @@ import { Eye, FileText, MessageCircle, Pencil, Receipt, Trash2 } from "lucide-re
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { formatCurrency } from "@shared/lib/format";
+import { MobileCard } from "@shared/components/MobileCard";
 import { StatusBadge, TempBadge } from "@crm/presentation/LeadBadges";
 import type { Lead } from "@crm/domain/lead.types";
 
@@ -13,7 +14,8 @@ export function LeadTable({ rows, onView, onEdit, onDelete }: {
   const docs = can("leads", "documents");
   const th = "px-3 py-2 text-left font-bold";
   return (
-    <div className="overflow-hidden rounded-lg border border-border bg-card">
+    <>
+    <div className="hidden overflow-hidden rounded-lg border border-border bg-card md:block">
       <div className="border-b border-border p-4"><h2 className="font-body font-bold">{t("leadList")} ({rows.length})</h2></div>
       <div className="overflow-x-auto">
         <table className="w-full font-body text-sm">
@@ -57,5 +59,12 @@ export function LeadTable({ rows, onView, onEdit, onDelete }: {
         </table>
       </div>
     </div>
+    <div className="space-y-2 md:hidden">
+      {rows.map((l) => <MobileCard key={l.id} title={l.contactName} amount={formatCurrency(l.quotedPrice)}
+        lines={[l.phone, `${l.leadSourceLabel || "—"} · ${l.serviceTypeLabel || "—"}`]}
+        extra={<div className="flex gap-2"><TempBadge value={l.temperature} /><StatusBadge value={l.status} /></div>}
+        onView={() => onView(l.id)} onEdit={onEdit ? () => onEdit(l.id) : undefined} onDelete={onDelete ? () => onDelete(l.id) : undefined} />)}
+    </div>
+    </>
   );
 }
