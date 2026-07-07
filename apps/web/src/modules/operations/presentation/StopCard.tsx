@@ -15,6 +15,7 @@ export function StopCard({ stop, onOpen }: { stop: RouteStop; onOpen: (s: RouteS
         <span className={`rounded px-2 py-0.5 text-xs font-bold ${badge}`}>{stop.status}</span>
       </div>
       <p className="text-xs text-muted-foreground">{stop.address}{stop.city ? `, ${stop.city}` : ""} · {stop.serviceType} · {stop.scheduledTime.slice(0, 5)}</p>
+      {stop.phone && <p className="text-xs text-muted-foreground">{t("phone")}: {stop.phone}</p>}
       <p className={`text-sm font-bold ${debt ? "text-yellow-700" : "text-primary"}`}>{debt ? `${t("pendingDebt")}: ` : ""}{formatCurrency(stop.estimatedAmount)}</p>
     </button>
   );
