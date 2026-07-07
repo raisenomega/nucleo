@@ -10,8 +10,10 @@ import { esEmployee } from "./translations.employee.es";
 import { enEmployee } from "./translations.employee.en";
 import { esRoutes } from "./translations.routes.es";
 import { enRoutes } from "./translations.routes.en";
+import { esReports } from "./translations.reports.es";
+import { enReports } from "./translations.reports.en";
 
 export const translations: Record<Locale, Record<TranslationKey, string>> = {
-  es: { ...es, ...esRecon, ...esPayroll, ...esEmployee, ...esRoutes },
-  en: { ...en, ...enRecon, ...enPayroll, ...enEmployee, ...enRoutes },
+  es: { ...es, ...esRecon, ...esPayroll, ...esEmployee, ...esRoutes, ...esReports },
+  en: { ...en, ...enRecon, ...enPayroll, ...enEmployee, ...enRoutes, ...enReports },
 };

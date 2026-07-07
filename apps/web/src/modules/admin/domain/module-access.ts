@@ -21,6 +21,7 @@ export const ACCESS_MODULES: { key: string; label: string; crud: Perm[]; note: s
   { key: "reconciliation", label: "Conciliación", crud: [...ALL, "bank", "fiscal"], note: "bank/fiscal = datos sensibles" },
   { key: "recurring", label: "Gastos recurrentes", crud: ALL, note: "" },
   { key: "accounts_receivable", label: "Cuentas por cobrar", crud: ["view", "edit"], note: "edit = cobrar/perdonar" },
+  { key: "reports", label: "Reportes", crud: ["view"], note: "operaciones = solo su rendimiento" },
   { key: "settings", label: "Configuración", crud: ["view", "edit", "categories"], note: "categories = crear categorías" },
 ];
 
@@ -34,7 +35,8 @@ export const ROLE_DEFAULTS: Record<AppRole, ModuleAccess> = {
   ceo: everything(),
   coo: { ...everything(), settings: { view: true, categories: true } },
   operaciones: { dashboard: V, expenses: { view: true, create: true }, inventory: { view: true, edit: true },
-    accounts_receivable: { view: true }, routes: { view: true, create: true, edit: true, delete: true } },
+    accounts_receivable: { view: true }, reports: { view: true },
+    routes: { view: true, create: true, edit: true, delete: true } },
   servicio: { dashboard: V, inventory: V, routes: { view: true, create: true, edit: true } },
 };
 
