@@ -10,8 +10,8 @@ import { StopPaymentForm } from "@operations/presentation/StopPaymentForm";
 import { StopSuppliesForm } from "@operations/presentation/StopSuppliesForm";
 import type { RouteStop, CompletePayload } from "@operations/domain/route.types";
 
-export function StopDetail({ stop, tenantId, onClose, onComplete, onNotAttended, onEvidence }: {
-  stop: RouteStop; tenantId: string; onClose: () => void;
+export function StopDetail({ stop, tenantId, onClose, onComplete, onNotAttended, onEvidence, onMarkDone }: {
+  stop: RouteStop; tenantId: string; onClose: () => void; onMarkDone: () => void;
   onComplete: (p: CompletePayload) => void; onNotAttended: (r: string) => void; onEvidence: (paths: string[]) => void;
 }) {
   const { t } = useI18n();
@@ -39,10 +39,9 @@ export function StopDetail({ stop, tenantId, onClose, onComplete, onNotAttended,
         )}
         <div className="space-y-1"><span className="text-xs font-bold text-muted-foreground">{t("addEvidence")}</span>
           <EvidenceUpload tenantId={tenantId} value={stop.evidenceUrls} onChange={onEvidence} /></div>
-        <div className={`rounded-lg p-3 text-center font-bold ${done ? "bg-green-50 text-green-700" : debt ? "bg-yellow-50 text-yellow-700" : "bg-secondary"}`}>
-          {done ? `${t("stopCompleted")}: ${formatCurrency(stop.actualAmount ?? stop.estimatedAmount)}`
-            : debt ? `${t("pendingDebt")}: ${formatCurrency(stop.estimatedAmount)}` : stop.status}
-        </div>
+        {done ? <div className="rounded-lg bg-green-50 p-3 text-center font-bold text-green-700">{t("stopCompleted")}: {formatCurrency(stop.actualAmount ?? stop.estimatedAmount)}</div>
+          : debt ? <div className="rounded-lg bg-yellow-50 p-3 text-center font-bold text-yellow-700">{t("pendingDebt")}: {formatCurrency(stop.estimatedAmount)}</div>
+          : <button type="button" onClick={onMarkDone} className="w-full rounded-lg bg-green-600 p-3 text-center font-bold text-white">{t("completeStop")}</button>}
       </div>
     </ScreenModal>
     {paying && <StopPaymentForm stop={stop} onClose={() => setPaying(false)} onSubmit={onComplete} />}

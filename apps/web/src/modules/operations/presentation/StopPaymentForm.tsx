@@ -39,7 +39,7 @@ export function StopPaymentForm({ stop, onClose, onSubmit }: { stop: RouteStop; 
             <div><span className={lbl}>{t("changeAmount")}</span><p className="p-3 text-lg font-bold text-primary">{formatCurrency(change)}</p></div>
           </div>
         )}
-        <button type="submit" disabled={!methodId} className="mt-auto h-14 w-full rounded-lg bg-primary text-lg font-bold text-primary-foreground disabled:opacity-50">{t("completeAndCollect")}</button>
+        <button type="submit" disabled={!methodId} className="mt-auto h-14 w-full rounded-lg bg-primary text-lg font-bold text-primary-foreground disabled:opacity-50">{t("save")}</button>
       </form>
     </ScreenModal>
   );

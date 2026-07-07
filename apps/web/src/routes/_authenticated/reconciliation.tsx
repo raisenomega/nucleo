@@ -35,12 +35,12 @@ function ReconciliationPage() {
 
   return (
     <div className="space-y-6 p-4 md:p-8">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
+      <div className="space-y-2">
+        <div className="flex items-center justify-between gap-4">
           <h1 className="font-display text-xl font-bold text-primary md:text-3xl">{t("reconciliation")}</h1>
-          <p className="text-xs text-muted-foreground">{t("reconciliationSubtitle")}</p>
+          <input type="month" value={month} onChange={(e) => setMonth(e.target.value)} className="rounded-lg border border-border bg-background p-2 text-sm" />
         </div>
-        <input type="month" value={month} onChange={(e) => setMonth(e.target.value)} className="rounded-lg border border-border bg-background p-2 text-sm" />
+        <p className="text-xs text-muted-foreground">{t("reconciliationSubtitle")}</p>
       </div>
       {m.loading || !m.snapshot ? <p className="text-sm text-muted-foreground">{t("noData")}</p> : (
         <div className="space-y-6">

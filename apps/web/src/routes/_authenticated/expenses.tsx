@@ -53,10 +53,12 @@ function ExpensePage() {
   const viewExpense = expenses.find((i) => i.id === viewing);
   return (
     <div className="space-y-6 p-4 md:p-8">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div><h1 className="font-display text-xl font-bold text-primary md:text-3xl">{t("expenses")}</h1>
-          <p className="text-xs text-muted-foreground">{t("expenseSubtitle")}</p></div>
-        {can("expenses", "create") && <button type="button" onClick={() => setEditing("new")} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-body font-bold"><Plus className="h-4 w-4" /> {t("newExpense")}</button>}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between gap-4">
+          <h1 className="font-display text-xl font-bold text-primary md:text-3xl">{t("expenses")}</h1>
+          {can("expenses", "create") && <button type="button" onClick={() => setEditing("new")} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-body font-bold"><Plus className="h-4 w-4" /> {t("newExpense")}</button>}
+        </div>
+        <p className="text-xs text-muted-foreground">{t("expenseSubtitle")}</p>
       </div>
       {editing !== null && (
         <ExpenseForm expenseCats={cats.filter((c) => c.kind === "expense").map((c) => ({ id: c.id, label: c.label, expenseClass: c.expense_class }))}

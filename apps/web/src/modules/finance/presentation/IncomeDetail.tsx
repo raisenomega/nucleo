@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { PhotoLightbox } from "@shared/components/PhotoLightbox";
 import { X } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { formatCurrency } from "@shared/lib/format";
@@ -35,12 +36,7 @@ export function IncomeDetail({ income, onClose }: { income: Income; onClose: () 
           )}
         </div>
       </ScreenModal>
-      {photo && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4" onClick={() => setPhoto(null)}>
-          <button type="button" onClick={() => setPhoto(null)} aria-label={t("cancel")} className="absolute right-4 top-4 text-white"><X className="h-6 w-6" /></button>
-          <img src={photo} alt="" className="max-h-full max-w-full object-contain" />
-        </div>
-      )}
+      {photo && <PhotoLightbox src={photo} onClose={() => setPhoto(null)} />}
     </>
   );
 }
