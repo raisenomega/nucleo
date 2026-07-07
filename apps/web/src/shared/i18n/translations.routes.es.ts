@@ -8,4 +8,5 @@ export const esRoutes = {
   notAttended: "No atendido", reason: "Razón", completeAndCollect: "Completar y cobrar", pendingDebt: "Deuda pendiente",
   accountsReceivable: "Cuentas por cobrar", stopDetail: "Detalle de parada", callClient: "Llamar", membershipClient: "Cliente con membresía",
   more: "Más", account: "Cuenta", scheduledTime: "Hora", serviceDescription: "Descripción del servicio",
+  supplies: "Insumos", usedSupplies: "Insumos usados",
 } satisfies Partial<Record<TranslationKey, string>>;

@@ -7,6 +7,7 @@ import { EvidenceUpload } from "@finance/presentation/EvidenceUpload";
 import { StopClientSection } from "@operations/presentation/StopClientSection";
 import { StopActionsGrid } from "@operations/presentation/StopActionsGrid";
 import { StopPaymentForm } from "@operations/presentation/StopPaymentForm";
+import { StopSuppliesForm } from "@operations/presentation/StopSuppliesForm";
 import type { RouteStop, CompletePayload } from "@operations/domain/route.types";
 
 export function StopDetail({ stop, tenantId, onClose, onComplete, onNotAttended, onEvidence }: {
@@ -17,6 +18,7 @@ export function StopDetail({ stop, tenantId, onClose, onComplete, onNotAttended,
   const [mode, setMode] = useState<"" | "reason">("");
   const [reason, setReason] = useState("");
   const [paying, setPaying] = useState(false);
+  const [supplies, setSupplies] = useState(false);
   const done = stop.status === "Completada";
   const debt = stop.status === "No atendido" && stop.pendingCollection;
   return (
@@ -28,7 +30,7 @@ export function StopDetail({ stop, tenantId, onClose, onComplete, onNotAttended,
       </div>
       <div className="space-y-4 p-4">
         <StopClientSection stop={stop} />
-        {!done && <StopActionsGrid stop={stop} onPay={() => setPaying(true)} onNotAttended={() => setMode(mode === "reason" ? "" : "reason")} />}
+        {!done && <StopActionsGrid stop={stop} onPay={() => setPaying(true)} onSupplies={() => setSupplies(true)} onNotAttended={() => setMode(mode === "reason" ? "" : "reason")} />}
         {mode === "reason" && (
           <div className="space-y-2">
             <input value={reason} onChange={(e) => setReason(e.target.value)} placeholder={t("reason")} className="h-12 w-full rounded-lg border border-border bg-background p-3" />
@@ -44,6 +46,7 @@ export function StopDetail({ stop, tenantId, onClose, onComplete, onNotAttended,
       </div>
     </ScreenModal>
     {paying && <StopPaymentForm stop={stop} onClose={() => setPaying(false)} onSubmit={onComplete} />}
+    {supplies && <StopSuppliesForm stopId={stop.id} onClose={() => setSupplies(false)} />}
     </>
   );
 }

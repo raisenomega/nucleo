@@ -47,4 +47,13 @@ export const supabaseRouteRepository: IRouteRepository = {
     }
     return { ok: true };
   },
+  async recordSupplies(stopId, items) {
+    return ok((await supabase.rpc("record_stop_supplies", { p_stop_id: stopId,
+      p_items: items.map((i) => ({ item_id: i.itemId, quantity: i.quantity })) })).error);
+  },
+  async listSupplies(stopId) {
+    const { data } = await supabase.rpc("get_stop_supplies", { p_stop_id: stopId });
+    return ((data as { item_id: string; name: string; quantity: number }[] | null) ?? [])
+      .map((r) => ({ itemId: r.item_id, name: r.name, quantity: Number(r.quantity) }));
+  },
 };

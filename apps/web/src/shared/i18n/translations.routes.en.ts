@@ -8,4 +8,5 @@ export const enRoutes = {
   notAttended: "Not attended", reason: "Reason", completeAndCollect: "Complete and collect", pendingDebt: "Pending debt",
   accountsReceivable: "Accounts Receivable", stopDetail: "Stop detail", callClient: "Call", membershipClient: "Membership client",
   more: "More", account: "Account", scheduledTime: "Time", serviceDescription: "Service description",
+  supplies: "Supplies", usedSupplies: "Used supplies",
 } satisfies Partial<Record<TranslationKey, string>>;

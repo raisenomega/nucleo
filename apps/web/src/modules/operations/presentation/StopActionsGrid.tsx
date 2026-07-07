@@ -1,10 +1,12 @@
-import { MessageCircle, MapPin, DollarSign, XCircle } from "lucide-react";
+import { MessageCircle, MapPin, DollarSign, XCircle, Boxes } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { waLink, mapLink } from "@operations/presentation/stop-links";
 import type { RouteStop } from "@operations/domain/route.types";
 
-// Grid 2x2 de acciones grandes (min-h 56px). Solo Lucide, sin emojis.
-export function StopActionsGrid({ stop, onPay, onNotAttended }: { stop: RouteStop; onPay: () => void; onNotAttended: () => void }) {
+// Grid de acciones grandes (min-h 56px). Solo Lucide, sin emojis.
+export function StopActionsGrid({ stop, onPay, onNotAttended, onSupplies }: {
+  stop: RouteStop; onPay: () => void; onNotAttended: () => void; onSupplies: () => void;
+}) {
   const { t } = useI18n();
   const c = "flex min-h-[56px] items-center justify-center gap-2 rounded-xl border text-sm font-bold";
   return (
@@ -15,6 +17,7 @@ export function StopActionsGrid({ stop, onPay, onNotAttended }: { stop: RouteSto
         className={`${c} border-blue-200 bg-blue-50 text-blue-700`}><MapPin className="h-5 w-5" /> {t("openMap")}</a>
       <button type="button" onClick={onPay} className={`${c} border-primary/20 bg-primary/10 text-primary`}><DollarSign className="h-5 w-5" /> {t("collectPayment")}</button>
       <button type="button" onClick={onNotAttended} className={`${c} border-red-200 bg-red-50 text-red-700`}><XCircle className="h-5 w-5" /> {t("notAttended")}</button>
+      <button type="button" onClick={onSupplies} className={`${c} col-span-2 border-amber-200 bg-amber-50 text-amber-700`}><Boxes className="h-5 w-5" /> {t("supplies")}</button>
     </div>
   );
 }

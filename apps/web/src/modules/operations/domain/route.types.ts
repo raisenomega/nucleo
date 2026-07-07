@@ -24,6 +24,8 @@ export interface StopFormData {
 export interface CompletePayload { amount: number; paymentMethodId: string; received: number | null; change: number | null; evidence: string[]; }
 export type EditableStop = StopFormData & { id?: string };
 export type StopPatch = Partial<StopFormData> & { status?: string; completedAt?: string | null; stopOrder?: number; evidenceUrls?: string[] };
+export interface StopSupply { readonly itemId: string; readonly name: string; readonly quantity: number; }
+export interface SupplyUse { itemId: string; quantity: number; }
 
 export interface IRouteRepository {
   completeStop(stopId: string, p: CompletePayload): Promise<RepoResult>;
@@ -37,4 +39,6 @@ export interface IRouteRepository {
   updateStop(id: string, patch: StopPatch): Promise<RepoResult>;
   removeStop(id: string): Promise<RepoResult>;
   reorderStops(orderedIds: readonly string[]): Promise<RepoResult>;
+  recordSupplies(stopId: string, items: SupplyUse[]): Promise<RepoResult>;
+  listSupplies(stopId: string): Promise<readonly StopSupply[]>;
 }
