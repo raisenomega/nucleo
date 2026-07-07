@@ -19,8 +19,8 @@ export function StopDetail({ stop, tenantId, onClose, onComplete, onNotAttended,
   const [paying, setPaying] = useState(false);
   const done = stop.status === "Completada";
   const debt = stop.status === "No atendido" && stop.pendingCollection;
-  if (paying) return <StopPaymentForm stop={stop} onClose={() => setPaying(false)} onSubmit={onComplete} />;
   return (
+    <>
     <ScreenModal onClose={onClose}>
       <div className="flex items-center justify-between border-b border-border p-4">
         <h2 className="font-display text-lg font-bold text-primary">{t("stopDetail")} #{stop.stopOrder} — {stop.clientName}</h2>
@@ -43,5 +43,7 @@ export function StopDetail({ stop, tenantId, onClose, onComplete, onNotAttended,
         </div>
       </div>
     </ScreenModal>
+    {paying && <StopPaymentForm stop={stop} onClose={() => setPaying(false)} onSubmit={onComplete} />}
+    </>
   );
 }

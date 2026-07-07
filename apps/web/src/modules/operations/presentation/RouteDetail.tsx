@@ -16,23 +16,23 @@ export function RouteDetail({ route, stops, employees, tenantId, onClose, onComp
   const [open, setOpen] = useState<RouteStop | null>(null);
   const emp = employees.find((e) => e.id === route.assignedTo)?.full_name ?? "—";
   const cur = open ? (stops.find((s) => s.id === open.id) ?? open) : null;
-  if (cur) return (
-    <StopDetail stop={cur} tenantId={tenantId} onClose={() => setOpen(null)}
-      onComplete={(p) => { onComplete(cur.id, p); setOpen(null); }}
-      onNotAttended={(r) => { onNotAttended(cur.id, r); setOpen(null); }}
-      onEvidence={(paths) => onEvidence(cur.id, paths)} />
-  );
   return (
-    <ScreenModal onClose={onClose}>
-      <div className="flex items-start justify-between border-b border-border p-4">
-        <div><h2 className="font-display text-lg font-bold text-primary">{route.routeDate} · {emp}</h2>
-          <p className="text-xs text-muted-foreground">{route.status} · {route.completedCount}/{route.stopCount} {t("stopsCompleted")}</p></div>
-        <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button>
-      </div>
-      <div className="space-y-2 p-4">
-        {stops.length === 0 && <p className="text-xs text-muted-foreground">{t("noRecords")}</p>}
-        {stops.map((s) => <StopCard key={s.id} stop={s} onOpen={setOpen} />)}
-      </div>
-    </ScreenModal>
+    <>
+      <ScreenModal onClose={onClose}>
+        <div className="flex items-start justify-between border-b border-border p-4">
+          <div><h2 className="font-display text-lg font-bold text-primary">{route.routeDate} · {emp}</h2>
+            <p className="text-xs text-muted-foreground">{route.status} · {route.completedCount}/{route.stopCount} {t("stopsCompleted")}</p></div>
+          <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button>
+        </div>
+        <div className="space-y-2 p-4">
+          {stops.length === 0 && <p className="text-xs text-muted-foreground">{t("noRecords")}</p>}
+          {stops.map((s) => <StopCard key={s.id} stop={s} onOpen={setOpen} />)}
+        </div>
+      </ScreenModal>
+      {cur && <StopDetail stop={cur} tenantId={tenantId} onClose={() => setOpen(null)}
+        onComplete={(p) => { onComplete(cur.id, p); setOpen(null); }}
+        onNotAttended={(r) => { onNotAttended(cur.id, r); setOpen(null); }}
+        onEvidence={(paths) => onEvidence(cur.id, paths)} />}
+    </>
   );
 }
