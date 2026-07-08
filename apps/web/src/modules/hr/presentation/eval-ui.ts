@@ -1,5 +1,9 @@
 import type { TranslationKey } from "@shared/i18n";
-import type { Classification } from "@hr/domain/evaluation.types";
+import type { Classification, EvalType } from "@hr/domain/evaluation.types";
+
+export const EVT_KEY: Record<EvalType, TranslationKey> = {
+  top_down: "evTopDown", peer: "evPeer", bottom_up: "evBottomUp", self: "evSelf",
+};
 
 // Color por clasificación (Tailwind, no hex) + key de traducción.
 export const CLASS_COLOR: Record<Classification, string> = {

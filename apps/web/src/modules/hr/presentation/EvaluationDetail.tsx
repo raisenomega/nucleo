@@ -5,16 +5,23 @@ import { useI18n } from "@shared/i18n";
 import { ScreenModal } from "@shared/components/ScreenModal";
 import { CLASS_COLOR, CLASS_KEY } from "@hr/presentation/eval-ui";
 import { CAT_COLOR, CAT_KEY } from "@hr/presentation/obs-ui";
+import { FB_KEY, FB_COLOR } from "@hr/presentation/fb-ui";
 import { supabaseObservationRepository } from "@hr/infrastructure/supabase-observation.repository";
+import { supabaseFeedbackRepository } from "@hr/infrastructure/supabase-feedback.repository";
 import type { Observation } from "@hr/domain/observation.types";
+import type { Feedback } from "@hr/domain/feedback.types";
 import type { EvaluationDetail as ED } from "@hr/domain/evaluation.types";
 
-// Detalle: radar de scores + composite + clasificación + Ley 80 + notas + observaciones del empleado (contexto).
+// Detalle: radar + composite + Ley 80 + notas + observaciones + feedback del empleado (contexto para el evaluador).
 export function EvaluationDetail({ ev, onClose }: { ev: ED; onClose: () => void }) {
   const { t } = useI18n();
   const data = ev.scores.map((s) => ({ criterion: s.label, score: s.score }));
   const [obs, setObs] = useState<Observation[]>([]);
-  useEffect(() => { void supabaseObservationRepository.listForEmployee(ev.employeeId).then(setObs); }, [ev.employeeId]);
+  const [fb, setFb] = useState<Feedback[]>([]);
+  useEffect(() => {
+    void supabaseObservationRepository.listForEmployee(ev.employeeId).then(setObs);
+    void supabaseFeedbackRepository.listForTarget(ev.employeeId).then(setFb);
+  }, [ev.employeeId]);
   return (
     <ScreenModal onClose={onClose}>
       <div className="flex items-center justify-between border-b border-border p-4">
@@ -43,6 +50,15 @@ export function EvaluationDetail({ ev, onClose }: { ev: ED; onClose: () => void 
                   <span className={`rounded px-2 py-0.5 text-xs font-bold ${CAT_COLOR[o.category]}`}>{t(CAT_KEY[o.category])}</span>
                   <span className="text-xs text-muted-foreground">{o.createdAt.slice(0, 10)}</span></div>
                 <p className="mt-1 text-muted-foreground">{o.notes}</p></div>))}
+          </div>)}
+        {fb.length > 0 && (
+          <div className="space-y-2">
+            <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("periodFeedback")}</p>
+            {fb.map((f) => (
+              <div key={f.id} className="rounded-lg border border-border p-2 text-sm">
+                <span className={`rounded px-2 py-0.5 text-xs font-bold ${FB_COLOR[f.feedbackType]}`}>{t(FB_KEY[f.feedbackType])}</span>
+                <p className="mt-1 text-muted-foreground">{f.content}</p>
+                {f.aiSentiment && <p className="text-xs text-muted-foreground">IA: {f.aiSentiment}</p>}</div>))}
           </div>)}
       </div>
     </ScreenModal>

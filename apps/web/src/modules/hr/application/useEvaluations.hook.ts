@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import type { IEvaluationRepository, Criterion, Evaluation, SaveScore } from "@hr/domain/evaluation.types";
+import type { IEvaluationRepository, Criterion, Evaluation, SaveScore, EvalType } from "@hr/domain/evaluation.types";
 
 // DI del repo. Carga criterios + evaluaciones; guardar refresca. suggest/detail se exponen directo.
 export function useEvaluations(repo: IEvaluationRepository) {
@@ -10,8 +10,8 @@ export function useEvaluations(repo: IEvaluationRepository) {
     setCriteria(c); setList(l);
   }, [repo]);
   useEffect(() => { void load(); }, [load]);
-  const save = useCallback(async (employeeId: string, period: string, scores: SaveScore[], notes: string) => {
-    const r = await repo.save(employeeId, period, scores, notes); if (r.ok) await load(); return r;
+  const save = useCallback(async (employeeId: string, period: string, scores: SaveScore[], notes: string, evalType: EvalType, isAnonymous: boolean) => {
+    const r = await repo.save(employeeId, period, scores, notes, evalType, isAnonymous); if (r.ok) await load(); return r;
   }, [repo, load]);
   return { criteria, list, save, suggest: repo.suggest, detail: repo.detail, refresh: load };
 }

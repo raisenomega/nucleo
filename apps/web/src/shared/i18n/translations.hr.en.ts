@@ -11,4 +11,10 @@ export const enHr = {
   newObservation: "New observation", followUp: "Follow-up date", recentObservations: "Recent observations",
   obsLogro: "Achievement", obsMejora: "Improvement opportunity", obsIncidente: "Incident",
   obsCultural: "Cultural behavior", obsDesarrollo: "Development suggestion",
+  anonymous: "Anonymous", author: "Author", acknowledge: "Acknowledge",
+  evTopDown: "Formal evaluation", evPeer: "Peer review", evBottomUp: "Bottom-up (my manager)", evSelf: "Self-evaluation",
+  fbTab: "Feedback", newFeedback: "New feedback", fbGeneral: "Company (general)", fbContent: "Write your feedback…",
+  fbSuggestion: "Suggestion", fbPraise: "Praise", fbConcern: "Concern", fbCulture: "Culture", fbTip: "Anonymous",
+  currentPeriod: "Current period", freqWeekly: "Weekly", freqBiweekly: "Biweekly", freqMonthly: "Monthly",
+  periodFeedback: "Period feedback",
 } satisfies Partial<Record<TranslationKey, string>>;

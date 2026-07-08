@@ -6,15 +6,17 @@ import type {
 interface Row {
   id: string; employee_id: string; period: string; composite_score: number | string | null;
   classification: string | null; in_probation: boolean; requires_legal_validation: boolean;
+  eval_type: string; is_anonymous: boolean; evaluator_id: string;
   status: string; notes: string | null; created_at: string; profiles: { full_name: string } | null;
 }
 const toEval = (r: Row): Evaluation => ({
   id: r.id, employeeId: r.employee_id, employeeName: r.profiles?.full_name ?? "—", period: r.period,
   compositeScore: Number(r.composite_score ?? 0), classification: (r.classification as Classification | null),
   inProbation: r.in_probation, requiresLegalValidation: r.requires_legal_validation,
+  evalType: r.eval_type as Evaluation["evalType"], isAnonymous: r.is_anonymous, evaluatorId: r.evaluator_id,
   status: r.status, notes: r.notes, createdAt: r.created_at,
 });
-const SEL = "id,employee_id,period,composite_score,classification,in_probation,requires_legal_validation,status,notes,created_at,profiles:employee_id(full_name)";
+const SEL = "id,employee_id,period,composite_score,classification,in_probation,requires_legal_validation,eval_type,is_anonymous,evaluator_id,status,notes,created_at,profiles:employee_id(full_name)";
 
 export const supabaseEvaluationRepository: IEvaluationRepository = {
   async getCriteria(): Promise<Criterion[]> {
@@ -34,10 +36,11 @@ export const supabaseEvaluationRepository: IEvaluationRepository = {
       .map((s) => ({ criterionId: s.criterion_id, label: s.evaluation_criteria?.label ?? "—", score: Number(s.score) }));
     return { ...toEval(data as unknown as Row), scores };
   },
-  async save(employeeId, period, scores: SaveScore[], notes): Promise<EvalResult> {
+  async save(employeeId, period, scores: SaveScore[], notes, evalType, isAnonymous): Promise<EvalResult> {
     const { error } = await supabase.rpc("save_evaluation", {
       p_employee_id: employeeId, p_period: period,
       p_scores: scores.map((s) => ({ criterion_id: s.criterionId, score: s.score })), p_notes: notes || null,
+      p_eval_type: evalType, p_is_anonymous: isAnonymous,
     });
     return error ? { ok: false, error: error.message } : { ok: true };
   },

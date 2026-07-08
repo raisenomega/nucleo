@@ -1,20 +1,23 @@
 import { useState } from "react";
 import { useI18n } from "@shared/i18n";
 import { classify } from "@hr/domain/evaluation.types";
-import type { Criterion, SaveScore, Suggestion, EvalResult } from "@hr/domain/evaluation.types";
-import { CLASS_COLOR, CLASS_KEY } from "@hr/presentation/eval-ui";
+import type { Criterion, SaveScore, Suggestion, EvalResult, EvalType } from "@hr/domain/evaluation.types";
+import { CLASS_COLOR, CLASS_KEY, EVT_KEY } from "@hr/presentation/eval-ui";
 
 type Emp = { id: string; full_name: string };
 
-export function EvaluationForm({ employees, criteria, onSuggest, onSubmit, onCancel }: {
-  employees: Emp[]; criteria: Criterion[];
+export function EvaluationForm({ employees, criteria, canFormal, onSuggest, onSubmit, onCancel }: {
+  employees: Emp[]; criteria: Criterion[]; canFormal: boolean;
   onSuggest: (id: string, from: string, to: string) => Promise<Suggestion>;
-  onSubmit: (id: string, period: string, scores: SaveScore[], notes: string) => Promise<EvalResult>;
+  onSubmit: (id: string, period: string, scores: SaveScore[], notes: string, evalType: EvalType, anon: boolean) => Promise<EvalResult>;
   onCancel: () => void;
 }) {
   const { t } = useI18n();
+  const TYPES: EvalType[] = canFormal ? ["top_down", "peer", "bottom_up", "self"] : ["peer", "bottom_up", "self"];
   const [emp, setEmp] = useState("");
   const [period, setPeriod] = useState("");
+  const [evalType, setEvalType] = useState<EvalType>(canFormal ? "top_down" : "peer");
+  const [anon, setAnon] = useState(false);
   const [scores, setScores] = useState<Record<string, number>>({});
   const [notes, setNotes] = useState("");
   const [busy, setBusy] = useState(false);
@@ -32,10 +35,11 @@ export function EvaluationForm({ employees, criteria, onSuggest, onSubmit, onCan
   async function submit() {
     if (!emp || !period) return;
     setBusy(true);
-    const r = await onSubmit(emp, period, criteria.map((c) => ({ criterionId: c.id, score: scores[c.id] ?? 0 })), notes);
+    const r = await onSubmit(emp, period, criteria.map((c) => ({ criterionId: c.id, score: scores[c.id] ?? 0 })), notes, evalType, anon);
     setBusy(false);
     if (!r.ok) window.alert(r.error); else onCancel();
   }
+  const anonAllowed = evalType === "peer" || evalType === "bottom_up";
   const fld = "w-full rounded-lg border border-border bg-background p-2 text-sm";
   return (
     <form onSubmit={(e) => { e.preventDefault(); void submit(); }} className="space-y-4 rounded-lg border border-border bg-card p-5">
@@ -43,6 +47,9 @@ export function EvaluationForm({ employees, criteria, onSuggest, onSubmit, onCan
         <select required value={emp} onChange={(e) => setEmp(e.target.value)} className={fld}>
           <option value="">{t("employee")}</option>{employees.map((x) => <option key={x.id} value={x.id}>{x.full_name}</option>)}</select>
         <input required value={period} onChange={(e) => setPeriod(e.target.value)} placeholder={t("period")} className={fld} />
+        <select value={evalType} onChange={(e) => setEvalType(e.target.value as EvalType)} className={fld}>
+          {TYPES.map((v) => <option key={v} value={v}>{t(EVT_KEY[v])}</option>)}</select>
+        {anonAllowed && <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={anon} onChange={(e) => setAnon(e.target.checked)} /> {t("anonymous")}</label>}
       </div>
       <button type="button" onClick={() => void suggest()} disabled={!emp}
         className="rounded-lg border border-border px-3 py-2 text-sm font-bold text-primary disabled:opacity-50">{t("autoSuggest")}</button>

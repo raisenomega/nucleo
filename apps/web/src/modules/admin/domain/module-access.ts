@@ -37,9 +37,10 @@ export const ROLE_DEFAULTS: Record<AppRole, ModuleAccess> = {
   ceo: everything(),
   coo: { ...everything(), settings: { view: true, categories: true } },
   operaciones: { dashboard: V, expenses: { view: true, create: true }, inventory: { view: true, edit: true },
-    accounts_receivable: { view: true }, reports: { view: true },
+    accounts_receivable: { view: true }, reports: { view: true }, evaluations: { view: true, create: true },
     routes: { view: true, create: true, edit: true, delete: true } },
-  servicio: { dashboard: V, inventory: V, routes: { view: true, create: true, edit: true } },
+  servicio: { dashboard: V, inventory: V, evaluations: { view: true, create: true },
+    routes: { view: true, create: true, edit: true } },
 };
 
 export function defaultsFor(role: AppRole | null): ModuleAccess {
