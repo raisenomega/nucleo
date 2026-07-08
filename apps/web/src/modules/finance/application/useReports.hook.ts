@@ -26,5 +26,5 @@ export function useReports(repo: IReportRepository) {
     setSeries(s); setEmployees(e);
   }, [repo, range]);
   useEffect(() => { void load(); }, [load]);
-  return { period, setPeriod, series, employees };
+  return { period, setPeriod, series, employees, range };
 }

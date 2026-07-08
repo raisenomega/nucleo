@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { X, AlertTriangle } from "lucide-react";
+import { X, AlertTriangle, FileDown } from "lucide-react";
+import { usePdf } from "@shared/hooks/usePdf";
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer } from "recharts";
 import { useI18n } from "@shared/i18n";
 import { ScreenModal } from "@shared/components/ScreenModal";
@@ -16,6 +17,7 @@ import type { EvaluationDetail as ED } from "@hr/domain/evaluation.types";
 // Detalle: radar + composite + Ley 80 + notas + observaciones + feedback del empleado (contexto para el evaluador).
 export function EvaluationDetail({ ev, onClose }: { ev: ED; onClose: () => void }) {
   const { t } = useI18n();
+  const pdf = usePdf();
   const data = ev.scores.map((s) => ({ criterion: s.label, score: s.score }));
   const [obs, setObs] = useState<Observation[]>([]);
   const [fb, setFb] = useState<Feedback[]>([]);
@@ -30,7 +32,9 @@ export function EvaluationDetail({ ev, onClose }: { ev: ED; onClose: () => void 
     <ScreenModal onClose={onClose}>
       <div className="flex items-center justify-between border-b border-border p-4">
         <h2 className="font-display text-lg font-bold text-primary">{ev.employeeName} — {ev.period}</h2>
-        <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button>
+        <div className="flex items-center gap-3">
+          <button type="button" disabled={pdf.generating} onClick={() => void pdf.generatePdf("evaluation", ev.id)} aria-label={t("downloadPdf")} className="text-muted-foreground hover:text-foreground disabled:opacity-50"><FileDown className="h-5 w-5" /></button>
+          <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button></div>
       </div>
       <div className="space-y-4 p-4">
         <div className={`flex items-center justify-between rounded-lg p-3 ${ev.classification ? CLASS_COLOR[ev.classification] : "bg-secondary"}`}>

@@ -11,5 +11,4 @@ export const enReports = {
   rMargin: "Operating margin", rBreakeven: "Break-even (trend)", rBudgetVsSpent: "Budget vs spent",
   rCacByChannel: "CAC by channel", rRoiByChannel: "ROI by channel",
   pMonth: "This month", p3m: "3 months", p6m: "6 months", pYear: "This year",
-  pdfSoon: "Export PDF — coming soon (Gotenberg)",
 } satisfies Partial<Record<TranslationKey, string>>;

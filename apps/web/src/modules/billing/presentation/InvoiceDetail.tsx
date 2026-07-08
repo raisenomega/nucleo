@@ -1,5 +1,6 @@
-import { X, Check, MessageCircle, Ban } from "lucide-react";
+import { X, Check, MessageCircle, Ban, FileDown } from "lucide-react";
 import { useI18n } from "@shared/i18n";
+import { usePdf } from "@shared/hooks/usePdf";
 import { formatCurrency } from "@shared/lib/format";
 import { ScreenModal } from "@shared/components/ScreenModal";
 import { INV_ST_KEY, INV_ST_COLOR } from "@billing/presentation/billing-ui";
@@ -12,6 +13,7 @@ export function InvoiceDetail({ inv, canManage, onPay, onCancel, onClose }: {
   inv: Invoice; canManage: boolean; onPay: () => void; onCancel: () => void; onClose: () => void;
 }) {
   const { t } = useI18n();
+  const pdf = usePdf();
   const open = inv.status !== "paid" && inv.status !== "cancelled";
   const msg = `${t("invoice")} ${inv.invoiceNumber ?? ""} — ${formatCurrency(inv.total)}`;
   return (
@@ -33,6 +35,8 @@ export function InvoiceDetail({ inv, canManage, onPay, onCancel, onClose }: {
         </div>
         {inv.dueDate && <p className="text-sm"><span className="font-bold">{t("dueDate")}: </span>{inv.dueDate}</p>}
         <div className="flex flex-wrap gap-2">
+          <button type="button" disabled={pdf.generating} onClick={() => void pdf.generatePdf("invoice", inv.id)}
+            className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-sm font-bold disabled:opacity-50"><FileDown className="h-4 w-4" /> {pdf.generating ? t("generatingPdf") : t("downloadPdf")}</button>
           {inv.phone && <a href={wa(inv, msg)} target="_blank" rel="noreferrer" className="flex items-center gap-1 rounded-lg bg-green-600 px-3 py-2 text-sm font-bold text-white"><MessageCircle className="h-4 w-4" /> {t("whatsapp")}</a>}
           {canManage && open && <button type="button" onClick={onPay} className="flex items-center gap-1 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-bold"><Check className="h-4 w-4" /> {t("markPaid")}</button>}
           {canManage && open && <button type="button" onClick={onCancel} className="flex items-center gap-1 rounded-lg bg-destructive px-3 py-2 text-sm font-bold text-white"><Ban className="h-4 w-4" /> {t("cancel")}</button>}

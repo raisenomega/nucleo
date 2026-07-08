@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { createFileRoute, Navigate } from "@tanstack/react-router";
+import { FileText } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
+import { usePdf } from "@shared/hooks/usePdf";
+import { buildFiscalBody } from "@finance/presentation/recon-pdf";
 import { useReconciliation } from "@finance/application/useReconciliation.hook";
 import { supabaseReconciliationRepository } from "@finance/infrastructure/supabase-reconciliation.repository";
 import { supabaseBankAccountRepository } from "@finance/infrastructure/supabase-bank-account.repository";
@@ -16,7 +19,6 @@ import { BankBalanceForm } from "@finance/presentation/BankBalanceForm";
 import type { RepoResult } from "@finance/domain/bank-account.types";
 
 export const Route = createFileRoute("/_authenticated/reconciliation")({ component: ReconciliationPage });
-
 type Modal = "account" | "deposit" | "balance" | null;
 
 function ReconciliationPage() {
@@ -25,6 +27,7 @@ function ReconciliationPage() {
   const [month, setMonth] = useState(() => new Date().toISOString().slice(0, 7));
   const [modal, setModal] = useState<Modal>(null);
   const m = useReconciliation(supabaseReconciliationRepository, supabaseBankAccountRepository, month);
+  const pdf = usePdf();
   const close = () => setModal(null);
   const submit = async (op: Promise<RepoResult>) => {
     try { const r = await op; if (!r.ok) { window.alert(r.error); return; } close(); }
@@ -36,9 +39,14 @@ function ReconciliationPage() {
   return (
     <div className="space-y-6 p-4 md:p-8">
       <div className="space-y-2">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <h1 className="font-display text-xl font-bold text-primary md:text-3xl">{t("reconciliation")}</h1>
-          <input type="month" value={month} onChange={(e) => setMonth(e.target.value)} className="rounded-lg border border-border bg-background p-2 text-sm" />
+          <div className="flex items-center gap-2">
+            {can("reconciliation", "fiscal") && (
+              <button type="button" disabled={pdf.generating || !m.snapshot} onClick={() => { if (m.snapshot) void pdf.generatePdf("report", null, buildFiscalBody(month, m.snapshot, t("fiscalReport"))); }}
+                className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold disabled:opacity-50"><FileText className="h-4 w-4" /> {pdf.generating ? t("generatingPdf") : t("fiscalReport")}</button>)}
+            <input type="month" value={month} onChange={(e) => setMonth(e.target.value)} className="rounded-lg border border-border bg-background p-2 text-sm" />
+          </div>
         </div>
         <p className="text-xs text-muted-foreground">{t("reconciliationSubtitle")}</p>
       </div>

@@ -11,5 +11,4 @@ export const esReports = {
   rMargin: "Margen operativo", rBreakeven: "Break-even (evolución)", rBudgetVsSpent: "Presupuesto vs ejecutado",
   rCacByChannel: "CAC por canal", rRoiByChannel: "ROI por canal",
   pMonth: "Este mes", p3m: "3 meses", p6m: "6 meses", pYear: "Este año",
-  pdfSoon: "Exportar PDF — próximamente (Gotenberg)",
 } satisfies Partial<Record<TranslationKey, string>>;
