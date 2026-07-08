@@ -20,15 +20,14 @@ function Registro() {
     e.preventDefault();
     setBusy(true);
     setError(null);
-    const signUp = await supabase.auth.signUp({ email: form.email, password: form.password });
-    if (signUp.error) return void (setBusy(false), setError(signUp.error.message));
-    const { data, error: rpcError } = await supabase.rpc("create_trial_tenant", {
-      name: form.name, email: form.email, business_name: form.business_name, phone: form.phone,
+    // El trigger handle_new_user (migr 111) crea tenant+profile+role desde estos metadatos,
+    // server-side en el INSERT de auth.users → no depende de que haya sesión (email sin confirmar).
+    const signUp = await supabase.auth.signUp({
+      email: form.email, password: form.password,
+      options: { data: { full_name: form.name, business_name: form.business_name, phone: form.phone } },
     });
     setBusy(false);
-    if (rpcError || (data && typeof data === "object" && "error" in data)) {
-      return void setError(rpcError?.message ?? "No se pudo crear la prueba");
-    }
+    if (signUp.error) return void setError(signUp.error.message);
     setDone(true);
   }
 
