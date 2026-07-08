@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>{% block title %}Documento{% endblock %}</title>
+<style>
+  :root { --primary: {{ brand.primary_color }}; --accent: {{ brand.accent_color }}; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: Helvetica, Arial, sans-serif; font-size: 11px; color: #222; }
+  .header { display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 3px solid var(--primary); padding-bottom: 12px; margin-bottom: 20px; }
+  .header .brand { display: flex; align-items: center; gap: 12px; }
+  .header img.logo { height: 44px; }
+  .header h1 { font-size: 18px; color: var(--primary); }
+  .header .doc-meta { text-align: right; font-size: 10px; color: #666; }
+  .doc-meta .doc-number { font-size: 14px; font-weight: bold; color: var(--primary); }
+  h2 { font-size: 13px; color: var(--primary); margin: 14px 0 6px; }
+  table.items { width: 100%; border-collapse: collapse; margin: 10px 0; }
+  table.items th { background: var(--primary); color: #fff; padding: 6px 8px; text-align: left; font-size: 10px; }
+  table.items td { padding: 6px 8px; border-bottom: 1px solid #ddd; }
+  table.items td.num, table.items th.num { text-align: right; }
+  .totals { margin-left: auto; width: 240px; margin-top: 8px; }
+  .totals div { display: flex; justify-content: space-between; padding: 3px 8px; }
+  .totals .grand { border-top: 2px solid var(--primary); font-weight: bold; font-size: 13px;
+                   color: var(--primary); margin-top: 4px; padding-top: 6px; }
+  .box { border: 1px solid #ddd; border-radius: 6px; padding: 10px; margin: 8px 0; }
+  .muted { color: #666; font-size: 10px; }
+  .watermark { position: fixed; top: 40%; left: 15%; font-size: 80px; font-weight: bold;
+               color: rgba(200, 0, 0, 0.12); transform: rotate(-25deg); z-index: -1; }
+  .watermark.ok { color: rgba(0, 140, 60, 0.12); }
+  {% block styles %}{% endblock %}
+</style>
+</head>
+<body>
+  {% block watermark %}{% endblock %}
+  <div class="header">
+    <div class="brand">
+      {% if brand.logo_url %}<img class="logo" src="{{ brand.logo_url }}" alt="">{% endif %}
+      <h1>{{ brand.legal_name }}</h1>
+    </div>
+    <div class="doc-meta">{% block meta %}{% endblock %}</div>
+  </div>
+  {% block content %}{% endblock %}
+</body>
+</html>

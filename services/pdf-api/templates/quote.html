@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Cotización {{ q.quote_number }}{% endblock %}
+
+{% block watermark %}
+  {% if q.status in ('accepted', 'converted') %}<div class="watermark ok">ACEPTADA</div>
+  {% elif q.status == 'rejected' %}<div class="watermark">RECHAZADA</div>
+  {% elif q.status == 'expired' %}<div class="watermark">EXPIRADA</div>{% endif %}
+{% endblock %}
+
+{% block meta %}
+  <div class="doc-number">COTIZACIÓN {{ q.quote_number }}</div>
+  <div>Fecha: {{ q.created_at[:10] }}</div>
+  {% if q.valid_until %}<div><strong>Válida hasta: {{ q.valid_until }}</strong></div>{% endif %}
+{% endblock %}
+
+{% block content %}
+  <div class="box">
+    <h2>Cliente</h2>
+    <strong>{{ q.client_name }}</strong><br>
+    {% if q.client_phone %}Tel: {{ q.client_phone }}<br>{% endif %}
+    {% if q.client_email %}{{ q.client_email }}<br>{% endif %}
+    {% if q.client_address %}{{ q.client_address }}{% endif %}
+  </div>
+
+  <table class="items">
+    <thead><tr>
+      <th>Descripción</th><th class="num">Cant.</th><th class="num">Precio</th>
+      <th class="num">Desc %</th><th class="num">Imp %</th><th class="num">Total</th>
+    </tr></thead>
+    <tbody>
+    {% for it in q["items"] %}
+      <tr>
+        <td>{{ it.description }}</td><td class="num">{{ it.quantity }}</td>
+        <td class="num">${{ "%.2f"|format(it.unit_price) }}</td>
+        <td class="num">{{ it.discount_pct }}</td><td class="num">{{ it.tax_pct }}</td>
+        <td class="num">${{ "%.2f"|format(it.line_total) }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="totals">
+    <div><span>Subtotal</span><span>${{ "%.2f"|format(q.subtotal) }}</span></div>
+    <div><span>Impuestos</span><span>${{ "%.2f"|format(q.tax_total) }}</span></div>
+    <div class="grand"><span>TOTAL</span><span>${{ "%.2f"|format(q.total) }}</span></div>
+  </div>
+
+  {% if q.notes %}<div class="box"><h2>Notas</h2><p>{{ q.notes }}</p></div>{% endif %}
+  {% if q.terms %}<div class="box"><h2>Términos y condiciones</h2><p class="muted">{{ q.terms }}</p></div>{% endif %}
+{% endblock %}

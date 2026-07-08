@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Reporte {{ r.title }}{% endblock %}
+
+{% block styles %}
+  .kpis { display: flex; gap: 10px; margin: 10px 0; }
+  .kpi { flex: 1; border: 1px solid #ddd; border-radius: 6px; padding: 10px; text-align: center; }
+  .kpi .val { font-size: 16px; font-weight: bold; color: var(--primary); }
+  .kpi .lbl { font-size: 9px; color: #666; text-transform: uppercase; }
+  .chart { margin: 12px 0; text-align: center; }
+{% endblock %}
+
+{% block meta %}
+  <div class="doc-number">{{ r.title|upper }}</div>
+  <div>{{ r.date_from }} → {{ r.date_to }}</div>
+{% endblock %}
+
+{% block content %}
+  <div class="kpis">
+    {% for k in r.kpis %}
+      <div class="kpi"><div class="val">{{ k.value }}</div><div class="lbl">{{ k.label }}</div></div>
+    {% endfor %}
+  </div>
+
+  {# Charts pre-renderizados como SVG inline (pasados en el context; sin JS en el PDF). #}
+  {% for chart in r.charts %}
+    <div class="chart"><h2>{{ chart.title }}</h2>{{ chart.svg|safe }}</div>
+  {% endfor %}
+
+  {% for tbl in r.tables %}
+    <h2>{{ tbl.title }}</h2>
+    <table class="items">
+      <thead><tr>{% for h in tbl.headers %}<th>{{ h }}</th>{% endfor %}</tr></thead>
+      <tbody>
+      {% for row in tbl.rows %}
+        <tr>{% for cell in row %}<td>{{ cell }}</td>{% endfor %}</tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% endfor %}
+{% endblock %}

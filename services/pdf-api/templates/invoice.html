@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Factura {{ inv.invoice_number }}{% endblock %}
+
+{% block watermark %}
+  {% if inv.status == 'paid' %}<div class="watermark ok">PAGADA</div>
+  {% elif inv.status == 'overdue' %}<div class="watermark">VENCIDA</div>
+  {% elif inv.status == 'cancelled' %}<div class="watermark">CANCELADA</div>{% endif %}
+{% endblock %}
+
+{% block meta %}
+  <div class="doc-number">FACTURA {{ inv.invoice_number }}</div>
+  <div>Fecha: {{ inv.created_at[:10] }}</div>
+  {% if inv.due_date %}<div>Vence: {{ inv.due_date }}</div>{% endif %}
+{% endblock %}
+
+{% block content %}
+  <div class="box">
+    <h2>Cliente</h2>
+    <strong>{{ inv.client_name }}</strong><br>
+    {% if inv.phone %}Tel: {{ inv.phone }}<br>{% endif %}
+    {% if inv.email %}{{ inv.email }}{% endif %}
+  </div>
+
+  <table class="items">
+    <thead><tr>
+      <th>Descripción</th><th class="num">Cant.</th><th class="num">Precio</th>
+      <th class="num">Desc %</th><th class="num">Imp %</th><th class="num">Total</th>
+    </tr></thead>
+    <tbody>
+    {% for it in inv["items"] %}
+      <tr>
+        <td>{{ it.description }}</td><td class="num">{{ it.quantity }}</td>
+        <td class="num">${{ "%.2f"|format(it.unit_price) }}</td>
+        <td class="num">{{ it.discount_pct }}</td><td class="num">{{ it.tax_pct }}</td>
+        <td class="num">${{ "%.2f"|format(it.line_total) }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="totals">
+    <div><span>Subtotal</span><span>${{ "%.2f"|format(inv.subtotal) }}</span></div>
+    <div><span>Impuestos</span><span>${{ "%.2f"|format(inv.tax) }}</span></div>
+    <div class="grand"><span>TOTAL</span><span>${{ "%.2f"|format(inv.total) }}</span></div>
+  </div>
+
+  {% if inv.notes %}<p class="muted">{{ inv.notes }}</p>{% endif %}
+{% endblock %}

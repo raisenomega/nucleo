@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Recibo de pago{% endblock %}
+
+{% block meta %}
+  <div class="doc-number">RECIBO DE PAGO</div>
+  <div>Periodo: {{ p.period }}</div>
+  <div>Fecha: {{ p.created_at[:10] }}</div>
+{% endblock %}
+
+{% block content %}
+  <div class="box">
+    <h2>Empleado</h2>
+    <strong>{{ p.employee_name }}</strong><br>
+    {% if p.position %}{{ p.position }}<br>{% endif %}
+    {% if p.employee_number %}Núm. empleado: {{ p.employee_number }}{% endif %}
+  </div>
+
+  <table class="items">
+    <thead><tr><th>Concepto</th><th class="num">Monto</th></tr></thead>
+    <tbody>
+      <tr><td>Salario bruto</td><td class="num">${{ "%.2f"|format(p.gross_salary) }}</td></tr>
+      {% for d in p.deductions %}
+        <tr><td>&nbsp;&nbsp;(−) {{ d.label }}</td><td class="num">−${{ "%.2f"|format(d.amount) }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="totals">
+    <div><span>Total deducciones</span><span>−${{ "%.2f"|format(p.total_deductions) }}</span></div>
+    <div class="grand"><span>NETO A PAGAR</span><span>${{ "%.2f"|format(p.net_salary) }}</span></div>
+  </div>
+
+  {% if p.employer_contributions %}
+  <h2>Aportes patronales (informativo)</h2>
+  <table class="items">
+    <tbody>
+    {% for c in p.employer_contributions %}
+      <tr><td>{{ c.label }}</td><td class="num">${{ "%.2f"|format(c.amount) }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+
+  <p class="muted">Este documento es informativo y no sustituye asesoría de un CPA.
+  Cálculos según configuración fiscal del negocio (Puerto Rico).</p>
+{% endblock %}
