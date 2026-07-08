@@ -8,7 +8,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from routes import evaluation, invoice, payroll, quote, report
+from routes import evaluation, expense, extraordinary, income, invoice, lead, payroll, quote, reconciliation, report, route, training
 
 app = FastAPI(title="NÚCLEO pdf-api", docs_url=None, redoc_url=None)
 
@@ -31,6 +31,8 @@ app.include_router(quote.router)
 app.include_router(payroll.router)
 app.include_router(report.router)
 app.include_router(evaluation.router)
+for r in (income, expense, extraordinary, lead, route, training, reconciliation):
+    app.include_router(r.router)
 
 
 @app.get("/health")

@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}Reporte fiscal {{ month }}{% endblock %}
+
+{% block styles %}
+  .kpis { display:flex; gap:8px; margin:10px 0; }
+  .kpi { flex:1; border:1px solid #ddd; border-radius:6px; padding:8px; text-align:center; }
+  .kpi .val { font-size:14px; font-weight:bold; color:var(--primary); }
+  .kpi .lbl { font-size:8px; color:#666; text-transform:uppercase; }
+  .status { display:inline-block; border-radius:4px; padding:2px 10px; font-size:10px; font-weight:bold; }
+  .st-healthy { background:#e6f6ec; color:#116b36; } .st-tight { background:#fdf3dd; color:#8a6100; }
+  .st-at_risk, .st-deficit { background:#fdeaea; color:#a11a1a; } .st-surplus { background:#e6f6ec; color:#116b36; }
+{% endblock %}
+
+{% block meta %}
+  <div class="doc-number">REPORTE FISCAL — {{ month }}</div>
+  {% if summary.status %}<div><span class="status st-{{ summary.status }}">{{ summary.status|upper }}</span></div>{% endif %}
+{% endblock %}
+
+{% block content %}
+  {# ═══ 1. RESUMEN EJECUTIVO ═══ #}
+  <h2>Resumen ejecutivo</h2>
+  <div class="kpis">
+    <div class="kpi"><div class="val">${{ "%.2f"|format(summary.totalIncome or 0) }}</div><div class="lbl">Ingresos</div></div>
+    <div class="kpi"><div class="val">${{ "%.2f"|format(summary.totalExpenses or 0) }}</div><div class="lbl">Gastos</div></div>
+    <div class="kpi"><div class="val">${{ "%.2f"|format(summary.operatingProfit or 0) }}</div><div class="lbl">Ganancia operativa</div></div>
+    <div class="kpi"><div class="val">${{ "%.2f"|format(summary.availableBalance or 0) }}</div><div class="lbl">Disponible</div></div>
+  </div>
+  <table class="items"><tbody>
+    <tr><td>Nómina</td><td class="num">${{ "%.2f"|format(summary.totalPayroll or 0) }}</td>
+        <td>Extraordinarios</td><td class="num">${{ "%.2f"|format(summary.totalExtraordinary or 0) }}</td></tr>
+    <tr><td>Marketing</td><td class="num">${{ "%.2f"|format(summary.totalMarketing or 0) }}</td>
+        <td>Impuesto estimado</td><td class="num">${{ "%.2f"|format(summary.taxEstimated or 0) }}</td></tr>
+    <tr><td>Retención requerida</td><td class="num">${{ "%.2f"|format(summary.retentionRequired or 0) }}</td><td></td><td></td></tr>
+  </tbody></table>
+
+  {# ═══ 2. BANCO ═══ #}
+  <h2>Banco</h2>
+  {% if bank.accounts %}
+  <table class="items">
+    <thead><tr><th>Cuenta</th><th class="num">Inicial</th><th class="num">Depósitos</th>
+      <th class="num">Calculado</th><th class="num">Real</th><th class="num">Diferencia</th><th>Corte</th></tr></thead>
+    <tbody>
+    {% for a in bank.accounts %}
+      <tr><td>{{ a.bankName }}</td><td class="num">${{ "%.2f"|format(a.openingBalance or 0) }}</td>
+        <td class="num">${{ "%.2f"|format(a.deposits or 0) }}</td><td class="num">${{ "%.2f"|format(a.calculatedBalance or 0) }}</td>
+        <td class="num">${{ "%.2f"|format(a.realBalance or 0) }}</td><td class="num">${{ "%.2f"|format(a.difference or 0) }}</td>
+        <td>{{ a.cutoffDate or "—" }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+  <table class="items"><tbody>
+    <tr><td>Balance inicial</td><td class="num">${{ "%.2f"|format(bank.openingBalance or 0) }}</td>
+        <td>Depósitos</td><td class="num">${{ "%.2f"|format(bank.deposits or 0) }}</td></tr>
+    <tr><td>Egresos</td><td class="num">${{ "%.2f"|format(bank.egresos or 0) }}</td>
+        <td>Balance calculado</td><td class="num">${{ "%.2f"|format(bank.calculatedBalance or 0) }}</td></tr>
+    <tr><td>Balance real</td><td class="num">${{ "%.2f"|format(bank.realBalance or 0) }}</td>
+        <td>Diferencia</td><td class="num">${{ "%.2f"|format(bank.difference or 0) }}</td></tr>
+  </tbody></table>
+
+  {# ═══ 3. OBLIGACIONES FISCALES ═══ #}
+  <h2>Obligaciones fiscales</h2>
+  {% if tax.obligations %}
+  <table class="items">
+    <thead><tr><th>Obligación</th><th class="num">Tasa</th><th class="num">Base</th>
+      <th class="num">Estimado</th><th>Frecuencia</th><th>Notas</th></tr></thead>
+    <tbody>
+    {% for o in tax.obligations %}
+      <tr><td>{{ o.label }}</td><td class="num">{{ o.rate }}%</td><td class="num">${{ "%.2f"|format(o.base or 0) }}</td>
+        <td class="num">${{ "%.2f"|format(o.estimated or 0) }}</td><td>{{ o.frequency }}</td>
+        <td class="muted">{{ o.notes or "" }}</td></tr>
+    {% endfor %}
+      <tr><td colspan="3"><strong>Total estimado</strong></td>
+        <td class="num"><strong>${{ "%.2f"|format(tax.totalEstimated or 0) }}</strong></td><td colspan="2"></td></tr>
+    </tbody>
+  </table>
+  {% else %}<p class="muted">Sin obligaciones configuradas.</p>{% endif %}
+
+  {# ═══ 4. RETENCIÓN (fondo {{ retention.retentionPct }}%) ═══ #}
+  <h2>Fondo de retención ({{ retention.retentionPct or 0 }}% · requerido ${{ "%.2f"|format(retention.required or 0) }})</h2>
+  {% if retention.monthly %}
+  <table class="items">
+    <thead><tr><th>Mes</th><th class="num">Ingresos</th><th class="num">Retenido</th><th class="num">Egresos</th>
+      <th class="num">Ganancia op.</th><th class="num">Margen</th><th class="num">Acumulado</th></tr></thead>
+    <tbody>
+    {% for m in retention.monthly %}
+      <tr><td>{{ m.month }}</td><td class="num">${{ "%.2f"|format(m.income or 0) }}</td>
+        <td class="num">${{ "%.2f"|format(m.retention or 0) }}</td><td class="num">${{ "%.2f"|format(m.totalOut or 0) }}</td>
+        <td class="num">${{ "%.2f"|format(m.operatingProfit or 0) }}</td><td class="num">{{ "%.1f"|format(m.margin or 0) }}%</td>
+        <td class="num">${{ "%.2f"|format(m.accumulated or 0) }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+
+  {# ═══ 5. SALUD OPERATIVA ═══ #}
+  {% if health %}
+  <h2>Salud operativa
+    {% if health.operatingStatus %}<span class="status st-{{ health.operatingStatus }}">{{ health.operatingStatus|upper }}</span>{% endif %}</h2>
+  <div class="kpis">
+    <div class="kpi"><div class="val">${{ "%.2f"|format(health.breakEven or 0) }}</div><div class="lbl">Punto de equilibrio</div></div>
+    <div class="kpi"><div class="val">{{ "%.0f"|format(health.breakEvenPct or 0) }}%</div><div class="lbl">Cobertura</div></div>
+    <div class="kpi"><div class="val">{{ "%.1f"|format(health.operatingMargin or 0) }}%</div><div class="lbl">Margen operativo</div></div>
+    <div class="kpi"><div class="val">${{ "%.2f"|format((health.surplus or 0) if (health.surplus or 0) > 0 else (health.shortfall or 0)) }}</div>
+      <div class="lbl">{{ "Superávit" if (health.surplus or 0) > 0 else "Déficit" }}</div></div>
+  </div>
+  <table class="items"><tbody>
+    <tr><td>Gastos fijos</td><td class="num">${{ "%.2f"|format(health.fixedExpenses or 0) }}</td>
+        <td>Variables</td><td class="num">${{ "%.2f"|format(health.variableExpenses or 0) }}</td></tr>
+    <tr><td>Deuda</td><td class="num">${{ "%.2f"|format(health.debtExpenses or 0) }}</td>
+        <td>Únicos</td><td class="num">${{ "%.2f"|format(health.oneTimeExpenses or 0) }}</td></tr>
+  </tbody></table>
+  {% endif %}
+
+  {# ═══ 6. DESGLOSE DE GASTOS ═══ #}
+  {% if summary.expenseBreakdown %}
+  <h2>Gastos por categoría</h2>
+  <table class="items">
+    <thead><tr><th>Categoría</th><th class="num">Monto</th></tr></thead>
+    <tbody>{% for e in summary.expenseBreakdown %}
+      <tr><td>{{ e.category }}</td><td class="num">${{ "%.2f"|format(e.amount or 0) }}</td></tr>{% endfor %}</tbody>
+  </table>
+  {% endif %}
+
+  <p class="muted">Documento informativo — no sustituye asesoría de un CPA.</p>
+{% endblock %}

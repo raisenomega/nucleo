@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Certificado — {{ employee }}{% endblock %}
+
+{% block styles %}
+  .cert { text-align:center; margin-top:60px; padding:40px; border:3px double var(--primary); border-radius:8px; }
+  .cert h1 { font-size:26px; color:var(--primary); letter-spacing:2px; margin-bottom:24px; }
+  .cert .who { font-size:20px; font-weight:bold; margin:16px 0; }
+  .cert .what { font-size:13px; line-height:1.8; }
+  .sig { margin-top:70px; display:flex; justify-content:center; }
+  .sig .line { border-top: 1px solid #444; width: 240px; padding-top:6px; font-size:10px; color:#666; text-align:center; }
+{% endblock %}
+
+{% block meta %}
+  <div class="doc-number">CERTIFICADO</div>
+  <div>{{ date }}</div>
+{% endblock %}
+
+{% block content %}
+  <div class="cert">
+    <h1>CERTIFICADO DE CAPACITACIÓN</h1>
+    <p class="what">{{ brand.legal_name }} certifica que</p>
+    <p class="who">{{ employee }}</p>
+    <p class="what">
+      completó satisfactoriamente el curso<br>
+      <strong>«{{ course }}»</strong><br>
+      {% if hours %}({{ hours }} horas){% endif %}
+      {% if score is not none %}con una puntuación de <strong>{{ "%.0f"|format(score) }}/100</strong>{% endif %}<br>
+      el día {{ date }}.
+    </p>
+    <div class="sig"><div class="line">Firma autorizada — {{ brand.legal_name }}</div></div>
+  </div>
+{% endblock %}

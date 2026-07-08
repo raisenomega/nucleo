@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Recibo de ingreso{% endblock %}
+
+{% block meta %}
+  <div class="doc-number">RECIBO DE INGRESO</div>
+  <div>Fecha: {{ r.income_date }}</div>
+{% endblock %}
+
+{% block content %}
+  <div class="box" style="max-width:420px;">
+    <table class="items"><tbody>
+      <tr><td>Categoría</td><td class="num">{{ category }}</td></tr>
+      <tr><td>Método de pago</td><td class="num">{{ method }}</td></tr>
+      {% if r.client_reference %}<tr><td>Cliente</td><td class="num">{{ r.client_reference }}</td></tr>{% endif %}
+      {% if r.order_number %}<tr><td>Orden</td><td class="num">{{ r.order_number }}</td></tr>{% endif %}
+      {% if r.retention_amount and r.retention_amount > 0 %}<tr><td>Retención</td><td class="num">${{ "%.2f"|format(r.retention_amount) }}</td></tr>{% endif %}
+    </tbody></table>
+    <div class="totals" style="width:100%;">
+      <div class="grand"><span>MONTO</span><span>${{ "%.2f"|format(r.amount) }}</span></div>
+    </div>
+    {% if r.notes %}<p class="muted">{{ r.notes }}</p>{% endif %}
+  </div>
+{% endblock %}

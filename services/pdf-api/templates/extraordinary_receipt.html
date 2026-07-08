@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Pago extraordinario{% endblock %}
+
+{% block meta %}
+  <div class="doc-number">PAGO EXTRAORDINARIO</div>
+  <div>Fecha: {{ r.payment_date }}</div>
+{% endblock %}
+
+{% block content %}
+  <div class="box" style="max-width:420px;">
+    <table class="items"><tbody>
+      <tr><td>Categoría</td><td class="num">{{ category }}</td></tr>
+      <tr><td>Método de pago</td><td class="num">{{ method }}</td></tr>
+    </tbody></table>
+    <div class="totals" style="width:100%;">
+      <div class="grand"><span>MONTO</span><span>${{ "%.2f"|format(r.amount) }}</span></div>
+    </div>
+    <h2>Justificación</h2>
+    <p>{{ r.justification }}</p>
+  </div>
+{% endblock %}

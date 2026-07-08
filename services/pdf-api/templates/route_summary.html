@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Resumen de ruta {{ route.route_date }}{% endblock %}
+
+{% block meta %}
+  <div class="doc-number">RESUMEN DE RUTA</div>
+  <div>Fecha: {{ route.route_date }}</div>
+  <div>Empleado: {{ employee }}</div>
+{% endblock %}
+
+{% block content %}
+  <div class="kpis" style="display:flex; gap:10px; margin:10px 0;">
+    <div class="box" style="flex:1; text-align:center;"><strong>{{ stops|length }}</strong><br><span class="muted">Paradas</span></div>
+    <div class="box" style="flex:1; text-align:center;"><strong>{{ completed }}</strong><br><span class="muted">Completadas ✅</span></div>
+    <div class="box" style="flex:1; text-align:center;"><strong>{{ not_attended }}</strong><br><span class="muted">No atendidas ⚠️</span></div>
+    <div class="box" style="flex:1; text-align:center;"><strong>${{ "%.2f"|format(collected) }}</strong><br><span class="muted">Cobrado</span></div>
+  </div>
+
+  <table class="items">
+    <thead><tr>
+      <th>#</th><th>Cliente</th><th>Servicio</th><th>Hora</th><th>Estado</th><th class="num">Estimado</th><th class="num">Cobrado</th>
+    </tr></thead>
+    <tbody>
+    {% for s in stops %}
+      <tr>
+        <td>{{ s.stop_order }}</td><td>{{ s.client_name }}<br><span class="muted">{{ s.address }}</span></td>
+        <td>{{ s.service_type }}</td><td>{{ s.scheduled_time[:5] if s.scheduled_time else "—" }}</td>
+        <td>{% if s.status == 'Completada' %}✅ {{ s.status }}{% elif s.status == 'No atendida' %}⚠️ {{ s.status }}{% else %}{{ s.status }}{% endif %}</td>
+        <td class="num">${{ "%.2f"|format(s.estimated_amount or 0) }}</td>
+        <td class="num">{% if s.actual_amount is not none %}${{ "%.2f"|format(s.actual_amount) }}{% else %}—{% endif %}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  {% if route.notes %}<p class="muted">{{ route.notes }}</p>{% endif %}
+{% endblock %}
