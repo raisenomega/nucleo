@@ -19,5 +19,4 @@ PDF_BUCKET = os.environ.get("PDF_BUCKET", "tenant-pdfs")
 BRAND_BUCKET = os.environ.get("BRAND_BUCKET", "brand")
 SIGNED_URL_TTL = int(os.environ.get("SIGNED_URL_TTL", "3600"))
 
-# CSV de orígenes permitidos para CORS (el dominio del app).
-ALLOWED_ORIGINS = [o.strip() for o in os.environ.get("ALLOWED_ORIGINS", "http://localhost:3000").split(",") if o.strip()]
+# CORS (ALLOWED_ORIGINS) se parsea en main.py, junto al middleware.
