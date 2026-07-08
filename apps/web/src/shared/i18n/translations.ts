@@ -16,8 +16,10 @@ import { esHr } from "./translations.hr.es";
 import { enHr } from "./translations.hr.en";
 import { esDocs } from "./translations.docs.es";
 import { enDocs } from "./translations.docs.en";
+import { esBilling } from "./translations.billing.es";
+import { enBilling } from "./translations.billing.en";
 
 export const translations: Record<Locale, Record<TranslationKey, string>> = {
-  es: { ...es, ...esRecon, ...esPayroll, ...esEmployee, ...esRoutes, ...esReports, ...esHr, ...esDocs },
-  en: { ...en, ...enRecon, ...enPayroll, ...enEmployee, ...enRoutes, ...enReports, ...enHr, ...enDocs },
+  es: { ...es, ...esRecon, ...esPayroll, ...esEmployee, ...esRoutes, ...esReports, ...esHr, ...esDocs, ...esBilling },
+  en: { ...en, ...enRecon, ...enPayroll, ...enEmployee, ...enRoutes, ...enReports, ...enHr, ...enDocs, ...enBilling },
 };

@@ -30,7 +30,7 @@ export function LeadDetail({ lead, onClose, onEdit, onDuplicate, onArchive }: {
           <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button>
         </div>
         <div className="space-y-3 p-4 md:p-6">
-          <LeadDetailActions onEdit={onEdit} onDuplicate={onDuplicate} onArchive={onArchive} />
+          <LeadDetailActions leadId={lead.id} onEdit={onEdit} onDuplicate={onDuplicate} onArchive={onArchive} />
           <dl className="space-y-1 font-body text-sm">
             {row("phone", lead.phone)}{row("email", lead.email)}
             {row("leadSource", lead.leadSourceLabel)}{row("serviceRequested", lead.serviceTypeLabel)}

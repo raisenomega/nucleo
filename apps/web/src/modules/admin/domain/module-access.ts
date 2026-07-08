@@ -21,6 +21,7 @@ export const ACCESS_MODULES: { key: string; label: string; crud: Perm[]; note: s
   { key: "reconciliation", label: "Conciliación", crud: [...ALL, "bank", "fiscal"], note: "bank/fiscal = datos sensibles" },
   { key: "recurring", label: "Gastos recurrentes", crud: ALL, note: "" },
   { key: "accounts_receivable", label: "Cuentas por cobrar", crud: ["view", "edit"], note: "edit = cobrar/perdonar" },
+  { key: "billing", label: "Facturación", crud: ALL, note: "facturas + planes (ceo/coo)" },
   { key: "reports", label: "Reportes", crud: ["view"], note: "operaciones = solo su rendimiento" },
   { key: "evaluations", label: "Evaluaciones", crud: ALL, note: "desempeño (ceo/coo)" },
   { key: "observations", label: "Observaciones", crud: ALL, note: "coaching (ceo/coo)" },

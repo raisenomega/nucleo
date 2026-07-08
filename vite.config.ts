@@ -26,6 +26,7 @@ export default defineConfig({
       "@operations": r("apps/web/src/modules/operations"),
       "@hr": r("apps/web/src/modules/hr"),
       "@documents": r("apps/web/src/modules/documents"),
+      "@billing": r("apps/web/src/modules/billing"),
       "@admin": r("apps/web/src/modules/admin"),
       "@shared": r("apps/web/src/shared"),
       "@brand": r("brand"),
