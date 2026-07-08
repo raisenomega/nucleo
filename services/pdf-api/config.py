@@ -9,7 +9,13 @@ def _req(name: str) -> str:
     return val
 
 
-GOTENBERG_URL = os.environ.get("GOTENBERG_URL", "http://localhost:3000")
+def _url(raw: str) -> str:
+    """httpx exige esquema explícito; si falta, asumimos http:// (red interna Railway)."""
+    raw = raw.strip().rstrip("/")
+    return raw if raw.startswith(("http://", "https://")) else f"http://{raw}"
+
+
+GOTENBERG_URL = _url(os.environ.get("GOTENBERG_URL", "http://localhost:3000"))
 SUPABASE_URL = _req("SUPABASE_URL")
 # Secret key (service role). Nombrada SUPABASE_SECRET_KEY para no chocar con el check #6 del validador.
 SUPABASE_SECRET_KEY = _req("SUPABASE_SECRET_KEY")
