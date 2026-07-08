@@ -39,7 +39,7 @@ async def html_to_pdf(html: str) -> bytes:
         "marginRight": "0.4",
         "printBackground": "true",
     }
-    async with httpx.AsyncClient(timeout=60) as client:
+    async with httpx.AsyncClient(timeout=60, follow_redirects=True) as client:
         resp = await client.post(f"{GOTENBERG_URL}/forms/chromium/convert/html", files=files, data=data)
     if resp.status_code != 200:
         raise HTTPException(status_code=502, detail=f"Gotenberg falló ({resp.status_code})")

@@ -10,9 +10,13 @@ def _req(name: str) -> str:
 
 
 def _url(raw: str) -> str:
-    """httpx exige esquema explícito; si falta, asumimos http:// (red interna Railway)."""
+    """httpx exige esquema explícito. Sin esquema: http:// para red interna
+    (railway.internal/localhost), https:// para dominios públicos."""
     raw = raw.strip().rstrip("/")
-    return raw if raw.startswith(("http://", "https://")) else f"http://{raw}"
+    if raw.startswith(("http://", "https://")):
+        return raw
+    internal = ".railway.internal" in raw or raw.startswith(("localhost", "127."))
+    return f"{'http' if internal else 'https'}://{raw}"
 
 
 GOTENBERG_URL = _url(os.environ.get("GOTENBERG_URL", "http://localhost:3000"))
