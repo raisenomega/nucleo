@@ -57,7 +57,7 @@ function Registro() {
         <input value={form.phone} onChange={set("phone")} placeholder="teléfono" autoComplete="tel" className={field} />
         {error ? <p className="text-sm text-destructive">{error}</p> : null}
         <button type="submit" disabled={busy} className="w-full rounded-lg bg-primary text-primary-foreground p-3 font-body font-bold disabled:opacity-50">
-          {busy ? "Creando tu prueba…" : "Empezar 3 días gratis"}
+          {busy ? "Creando tu prueba…" : "Empezar 7 días gratis"}
         </button>
         <p className="text-sm text-muted-foreground text-center">
           ¿Ya tienes cuenta? <Link to="/login" className="text-primary">Inicia sesión</Link>
