@@ -32,7 +32,7 @@ function AgendarConsulta() {
     return (
       <main className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
         <p className="max-w-md text-center font-body text-lg text-primary">
-          Gracias, un representante de raisen te contactará.
+          Gracias, un representante de NÚCLEO le contactará.
         </p>
       </main>
     );
