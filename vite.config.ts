@@ -25,6 +25,7 @@ export default defineConfig({
       "@crm": r("apps/web/src/modules/crm"),
       "@operations": r("apps/web/src/modules/operations"),
       "@hr": r("apps/web/src/modules/hr"),
+      "@documents": r("apps/web/src/modules/documents"),
       "@admin": r("apps/web/src/modules/admin"),
       "@shared": r("apps/web/src/shared"),
       "@brand": r("brand"),

@@ -26,6 +26,7 @@ export const ACCESS_MODULES: { key: string; label: string; crud: Perm[]; note: s
   { key: "observations", label: "Observaciones", crud: ALL, note: "coaching (ceo/coo)" },
   { key: "training", label: "Capacitación", crud: ALL, note: "cursos (ceo/coo)" },
   { key: "support", label: "Soporte", crud: ALL, note: "tickets internos" },
+  { key: "documents", label: "Documentos", crud: ALL, note: "contratos (ceo/coo)" },
   { key: "settings", label: "Configuración", crud: ["view", "edit", "categories"], note: "categories = crear categorías" },
 ];
 
