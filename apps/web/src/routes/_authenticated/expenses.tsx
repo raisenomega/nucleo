@@ -6,6 +6,8 @@ import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { useExpense } from "@finance/application/useExpense.hook";
 import { supabaseExpenseRepository } from "@finance/infrastructure/supabase-expense.repository";
+import { FinanceReportButton } from "@finance/presentation/FinanceReportButton";
+import { expenseReportBody } from "@finance/presentation/finance-reports";
 import { ExpenseForm } from "@finance/presentation/ExpenseForm";
 import { ExpenseTable } from "@finance/presentation/ExpenseTable";
 import { ExpenseDetail } from "@finance/presentation/ExpenseDetail";
@@ -40,8 +42,7 @@ function ExpensePage() {
   const editRow = useMemo<ExpenseFormData | undefined>(() => {
     if (editing === "new") return category ? { categoryId: category, amount: 0, description: "", date: "", paymentMethodId: "", paidBy: "", evidenceUrls: [] } : undefined;
     const i = expenses.find((x) => x.id === editing);
-    return i ? { categoryId: i.categoryId, amount: i.amount, description: i.description,
-      date: i.date, paymentMethodId: i.paymentMethodId, paidBy: i.paidBy, evidenceUrls: i.evidenceUrls } : undefined;
+    return i ? { categoryId: i.categoryId, amount: i.amount, description: i.description, date: i.date, paymentMethodId: i.paymentMethodId, paidBy: i.paidBy, evidenceUrls: i.evidenceUrls } : undefined;
   }, [editing, expenses, category]);
 
   async function submit(d: ExpenseFormData) {
@@ -54,17 +55,18 @@ function ExpensePage() {
   return (
     <div className="space-y-6 p-4 md:p-8">
       <div className="space-y-2">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <h1 className="font-display text-xl font-bold text-primary md:text-3xl">{t("expenses")}</h1>
-          {can("expenses", "create") && <button type="button" onClick={() => setEditing("new")} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-body font-bold"><Plus className="h-4 w-4" /> {t("newExpense")}</button>}
+          <div className="flex items-center gap-2">
+            <FinanceReportButton title={t("expenses")} makeBody={(f, to) => expenseReportBody(expenses, f, to)} />
+            {can("expenses", "create") && <button type="button" onClick={() => setEditing("new")} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-body font-bold"><Plus className="h-4 w-4" /> {t("newExpense")}</button>}
+          </div>
         </div>
         <p className="text-xs text-muted-foreground">{t("expenseSubtitle")}</p>
       </div>
       {editing !== null && (
         <ExpenseForm expenseCats={cats.filter((c) => c.kind === "expense").map((c) => ({ id: c.id, label: c.label, expenseClass: c.expense_class }))}
-          payCats={cats.filter((c) => c.kind === "payment_method")} employees={emps}
-          initial={editRow} onSubmit={submit} onCancel={() => setEditing(null)} />
-      )}
+          payCats={cats.filter((c) => c.kind === "payment_method")} employees={emps} initial={editRow} onSubmit={submit} onCancel={() => setEditing(null)} />)}
       <ExpenseTable rows={expenses} employees={emps} classOf={(id) => cats.find((c) => c.id === id)?.expense_class ?? null} onView={setViewing} onEdit={can("expenses", "edit") ? setEditing : undefined}
         onDelete={can("expenses", "delete") ? (id) => { if (window.confirm(`${t("delete")}?`)) void remove(id); } : undefined} />
       {viewExpense && <ExpenseDetail expense={viewExpense} employees={emps} onClose={() => setViewing(null)} />}

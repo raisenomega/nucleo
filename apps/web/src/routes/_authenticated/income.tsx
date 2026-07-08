@@ -6,6 +6,8 @@ import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { useIncome } from "@finance/application/useIncome.hook";
 import { supabaseIncomeRepository } from "@finance/infrastructure/supabase-income.repository";
+import { FinanceReportButton } from "@finance/presentation/FinanceReportButton";
+import { incomeReportBody } from "@finance/presentation/finance-reports";
 import { IncomeForm } from "@finance/presentation/IncomeForm";
 import { IncomeTable } from "@finance/presentation/IncomeTable";
 import { IncomeDetail } from "@finance/presentation/IncomeDetail";
@@ -45,14 +47,16 @@ function IncomePage() {
   return (
     <div className="space-y-6 p-4 md:p-8">
       <div className="space-y-2">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <h1 className="font-display text-xl font-bold text-primary md:text-3xl">{t("income")}</h1>
-          {can("income", "create") && (
-            <button type="button" onClick={() => setEditing("new")}
-              className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-body font-bold">
-              <Plus className="h-4 w-4" /> {t("newIncome")}
-            </button>
-          )}
+          <div className="flex items-center gap-2">
+            <FinanceReportButton title={t("income")} makeBody={(f, to) => incomeReportBody(incomes, f, to)} />
+            {can("income", "create") && (
+              <button type="button" onClick={() => setEditing("new")}
+                className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-body font-bold">
+                <Plus className="h-4 w-4" /> {t("newIncome")}</button>
+            )}
+          </div>
         </div>
         <p className="text-xs text-muted-foreground">{t("incomeSubtitle")}</p>
       </div>

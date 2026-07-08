@@ -6,6 +6,8 @@ import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { usePayroll } from "@finance/application/usePayroll.hook";
 import { supabasePayrollRepository } from "@finance/infrastructure/supabase-payroll.repository";
+import { FinanceReportButton } from "@finance/presentation/FinanceReportButton";
+import { payrollReportBody } from "@finance/presentation/finance-reports";
 import { PayrollForm } from "@finance/presentation/PayrollForm";
 import { PayrollTable } from "@finance/presentation/PayrollTable";
 import { PayrollDetail } from "@finance/presentation/PayrollDetail";
@@ -49,14 +51,12 @@ function PayrollPage() {
   return (
     <div className="space-y-6 p-4 md:p-8">
       <div className="space-y-2">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <h1 className="font-display text-xl font-bold text-primary md:text-3xl">{t("payroll")}</h1>
-          {can("payroll", "create") && (
-            <button type="button" onClick={() => setEditing("new")}
-              className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-body font-bold">
-              <Plus className="h-4 w-4" /> {t("newPayroll")}
-            </button>
-          )}
+          <div className="flex items-center gap-2">
+            {can("payroll", "salary") && <FinanceReportButton title={t("payroll")} makeBody={(f, to) => payrollReportBody(items, f, to)} />}
+            {can("payroll", "create") && <button type="button" onClick={() => setEditing("new")} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-body font-bold"><Plus className="h-4 w-4" /> {t("newPayroll")}</button>}
+          </div>
         </div>
         <p className="text-xs text-muted-foreground">{t("payrollSubtitle")}</p>
       </div>

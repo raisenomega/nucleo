@@ -7,4 +7,6 @@ export const esPdf = {
   fiscalReport: "Reporte fiscal", payslipPdf: "Recibo PDF",
   receiptPdf: "Recibo PDF", inventoryReport: "Reporte inventario", debtsReport: "Reporte deudas",
   certificatePdf: "Certificado PDF", routePdf: "Resumen PDF",
+  showing: "Mostrando", ofTotal: "de", prev: "Anterior", next: "Siguiente",
+  from: "Desde", to: "Hasta", generateReport: "Generar reporte",
 } satisfies Partial<Record<TranslationKey, string>>;
