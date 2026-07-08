@@ -5,7 +5,7 @@ export const es = {
   toggleTheme: "Cambiar tema", switchLang: "Cambiar idioma",
   welcome: "Bienvenido a", yourBusiness: "tu negocio", role: "Rol", logout: "Cerrar sesión",
   trialBanner: "Te quedan {days} días de prueba", trialEnded: "Tu prueba terminó",
-  trialEndedDesc: "Agenda una consulta para seguir con NÚCLEO.", scheduleConsultation: "Agendar consulta",
+  trialEndedDesc: "Tu período de prueba terminó. Para seguir usando la plataforma, contáctanos.", scheduleConsultation: "Agendar consulta",
   income: "Ingresos", incomeList: "Lista de ingresos", newIncome: "Nuevo ingreso",
   amount: "Monto", category: "Categoría", description: "Descripción", date: "Fecha",
   paymentMethod: "Método de pago", save: "Guardar", cancel: "Cancelar",

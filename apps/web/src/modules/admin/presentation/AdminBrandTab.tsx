@@ -14,9 +14,10 @@ export function AdminBrandTab({ tenantId, settings, onSaveSetting }: {
   const repo = supabaseBrandRepository;
   const [identity, setIdentity] = useState<TenantIdentity | null>(null);
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
+  const [theme, setTheme] = useState<Record<string, string | null>>({});
   const load = useCallback(async () => {
-    const [id, url] = await Promise.all([repo.getIdentity(), repo.logoUrl(tenantId)]);
-    setIdentity(id); setLogoUrl(url);
+    const [id, url, th] = await Promise.all([repo.getIdentity(), repo.logoUrl(tenantId), repo.getTheme()]);
+    setIdentity(id); setLogoUrl(url); setTheme(th);
   }, [repo, tenantId]);
   useEffect(() => { void load(); }, [load]);
 
@@ -24,6 +25,11 @@ export function AdminBrandTab({ tenantId, settings, onSaveSetting }: {
   const saveMany = async (fields: Record<string, string>): Promise<RepoResult> => {
     const rs = await Promise.all(Object.entries(fields).map(([k, v]) => onSaveSetting(k, v)));
     return rs.find((r) => !r.ok) ?? { ok: true };
+  };
+  const saveColors = async (fields: Record<string, string | null>): Promise<RepoResult> => {
+    const r = await repo.saveTheme(tenantId, fields);
+    if (r.ok) await load();
+    return r;
   };
   const saveIdentity = async (legal: string, display: string, fields: Record<string, string>): Promise<RepoResult> => {
     const r = await repo.updateIdentity(legal, display);
@@ -40,7 +46,7 @@ export function AdminBrandTab({ tenantId, settings, onSaveSetting }: {
   return (
     <div className="max-w-2xl space-y-6">
       <AdminBrandIdentity identity={identity} logoUrl={logoUrl} get={get} onUploadLogo={uploadLogo} onSave={saveIdentity} />
-      <AdminBrandStyle get={get} logoUrl={logoUrl} companyName={identity?.displayName || identity?.legalName || ""} onSave={saveMany} />
+      <AdminBrandStyle theme={theme} logoUrl={logoUrl} companyName={identity?.displayName || identity?.legalName || ""} onSave={saveColors} />
       <AdminTemplatesInfo />
     </div>
   );

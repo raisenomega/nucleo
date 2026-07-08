@@ -6,8 +6,8 @@ export interface TenantIdentity {
   readonly displayName: string;
 }
 
-// Claves de settings usadas por el branding (los PDFs las leen del lado del pdf-api).
-export const BRAND_KEYS = ["company_address", "company_phone", "company_email", "company_website", "company_tax_id", "primary_color", "accent_color"] as const;
+// Datos de contacto del negocio que siguen en settings (NO son tema). Los colores viven en tenant_themes.
+export const BRAND_KEYS = ["company_address", "company_phone", "company_email", "company_website", "company_tax_id"] as const;
 export type BrandKey = (typeof BRAND_KEYS)[number];
 
 export interface IBrandRepository {
@@ -15,4 +15,6 @@ export interface IBrandRepository {
   updateIdentity(legalName: string, displayName: string): Promise<RepoResult>;
   uploadLogo(tenantId: string, file: File): Promise<RepoResult>;
   logoUrl(tenantId: string): Promise<string | null>;
+  getTheme(): Promise<Record<string, string | null>>;
+  saveTheme(tenantId: string, fields: Record<string, string | null>): Promise<RepoResult>;
 }

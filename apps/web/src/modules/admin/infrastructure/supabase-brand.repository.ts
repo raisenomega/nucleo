@@ -20,7 +20,16 @@ export const supabaseBrandRepository: IBrandRepository = {
     return ok(error);
   },
   async logoUrl(tenantId): Promise<string | null> {
-    const { data } = await supabase.storage.from(BUCKET).createSignedUrl(`${tenantId}/logo.png`, 3600);
-    return data?.signedUrl ?? null;
+    // Bucket público: URL directa sin firmar. Solo si el logo existe (evita 404 en <img>).
+    const { data: files } = await supabase.storage.from(BUCKET).list(tenantId);
+    const has = ((files as { name: string }[] | null) ?? []).some((f) => f.name === "logo.png");
+    return has ? supabase.storage.from(BUCKET).getPublicUrl(`${tenantId}/logo.png`).data.publicUrl : null;
+  },
+  async getTheme(): Promise<Record<string, string | null>> {
+    const { data } = await supabase.from("tenant_themes").select("*").limit(1);  // RLS acota al tenant actual
+    return (data as Record<string, string | null>[] | null)?.[0] ?? {};
+  },
+  async saveTheme(tenantId, fields): Promise<RepoResult> {
+    return ok((await supabase.from("tenant_themes").update(fields).eq("tenant_id", tenantId)).error);
   },
 };

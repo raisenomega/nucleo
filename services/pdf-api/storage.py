@@ -23,22 +23,24 @@ def fetch_row(table: str, row_id: str, tenant_id: str) -> dict | None:
 
 
 def fetch_branding(tenant_id: str) -> dict:
-    """legal_name de tenants + colores de settings + logo (signed) del bucket brand."""
+    """Nombre de tenants + colores de tenant_themes (NULL→default) + logo (URL pública del bucket brand)."""
     sb = admin()
-    tenant = sb.table("tenants").select("legal_name").eq("id", tenant_id).limit(1).execute()
-    rows = sb.table("settings").select("key,value").eq("tenant_id", tenant_id).in_("key", ["primary_color", "accent_color"]).execute()
-    settings = {r["key"]: r["value"] for r in (rows.data or [])}
+    tenant = sb.table("tenants").select("legal_name,display_name").eq("id", tenant_id).limit(1).execute()
+    theme = sb.table("tenant_themes").select("primary_color,accent_color").eq("tenant_id", tenant_id).limit(1).execute()
+    t0 = tenant.data[0] if tenant.data else {}
+    th = theme.data[0] if theme.data else {}
     logo_url = ""
-    try:
-        signed = sb.storage.from_(BRAND_BUCKET).create_signed_url(f"{tenant_id}/logo.png", SIGNED_URL_TTL)
-        logo_url = signed.get("signedURL") or signed.get("signedUrl") or ""
+    try:  # bucket público: URL directa, sin firmar. Solo si el logo existe.
+        files = sb.storage.from_(BRAND_BUCKET).list(tenant_id)
+        if any(f.get("name") == "logo.png" for f in (files or [])):
+            pub = sb.storage.from_(BRAND_BUCKET).get_public_url(f"{tenant_id}/logo.png")
+            logo_url = pub if isinstance(pub, str) else (pub.get("publicUrl") or "")
     except Exception:
         pass  # sin logo → el template muestra solo el nombre
-    pick = lambda k, fb: settings[k] if isinstance(settings.get(k), str) and settings.get(k) else fb  # noqa: E731
     return {
-        "legal_name": tenant.data[0]["legal_name"] if tenant.data else "NÚCLEO",
-        "primary_color": pick("primary_color", "#1a1a2e"),
-        "accent_color": pick("accent_color", "#4a4a6a"),
+        "legal_name": t0.get("display_name") or t0.get("legal_name") or "NÚCLEO",
+        "primary_color": th.get("primary_color") or "#1a1a2e",
+        "accent_color": th.get("accent_color") or "#4a4a6a",
         "logo_url": logo_url,
     }
 

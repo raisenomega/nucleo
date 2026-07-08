@@ -26,7 +26,7 @@ export const enRecon = {
   changeRole: "Change role", deactivate: "Deactivate", categories: "Categories",
   generalSettings: "General settings", retentionPct: "Retention %", orderPrefix: "Order prefix",
   fiscalCountry: "Fiscal country",
-  joinTeam: "Join your team", invitedSubtitle: "Your admin invited you to NÚCLEO. Create your password to sign in.",
+  joinTeam: "Join your team", invitedSubtitle: "Your administrator invited you. Create your password to enter.",
   createPassword: "Create your password", confirmPassword: "Confirm your password",
   passwordMismatch: "Passwords don't match", minPassword: "Minimum 8 characters",
   alreadyRegistered: "This email already has an account. Sign in.", invitedLink: "Invited? Create your account",

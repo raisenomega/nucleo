@@ -27,8 +27,8 @@ export function Sidebar({ expanded, onClose, onToggle }: { expanded: boolean; on
         <button type="button" onClick={onToggle} aria-label={t("menu")} className="flex items-center gap-2 border-b border-border px-4 py-5 text-left">
           {brand.logoUrl
             ? <img src={brand.logoUrl} alt="" className="h-9 w-9 shrink-0 rounded-full object-cover" />
-            : <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-primary font-display font-bold text-primary-foreground">{(brand.displayName.trim()[0] || "N").toUpperCase()}</span>}
-          {expanded && <span className="font-display text-lg font-bold text-primary">{brand.displayName || "NÚCLEO"}</span>}
+            : <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-primary font-display font-bold text-primary-foreground">{((brand.displayName || brand.legalName).trim()[0] || "M").toUpperCase()}</span>}
+          {expanded && <span className="font-display text-lg font-bold text-primary">{brand.displayName || brand.legalName || "Mi Negocio"}</span>}
         </button>
         <nav className="flex-1 space-y-1 overflow-y-auto p-2">
           <Link to="/dashboard" onClick={onNavigate}

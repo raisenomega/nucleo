@@ -1,47 +1,49 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { supabase } from "@shared/lib/supabase";
 import { useSession } from "@shared/providers/SessionProvider";
-import { applyBranding } from "@shared/lib/apply-branding";
+import { ThemeLoader } from "@shared/providers/ThemeLoader";
+import { BrandContext, EMPTY_BRAND, type Brand } from "@shared/providers/brand-context";
+import type { TenantTheme } from "@shared/lib/theme-vars";
 
-export interface Brand {
-  displayName: string; legalName: string; logoUrl: string | null;
-  primaryColor: string; accentColor: string; isLoading: boolean;
+interface ThemeRow {
+  primary_color: string | null; secondary_color: string | null; accent_color: string | null;
+  sidebar_bg: string | null; sidebar_text: string | null; sidebar_hover: string | null;
+  danger_color: string | null; success_color: string | null; warning_color: string | null; default_mode: string | null;
 }
-const EMPTY: Brand = { displayName: "", legalName: "", logoUrl: null, primaryColor: "", accentColor: "", isLoading: true };
-const BrandContext = createContext<Brand>(EMPTY);
+const toTheme = (r: ThemeRow | undefined): TenantTheme => ({
+  primaryColor: r?.primary_color ?? null, secondaryColor: r?.secondary_color ?? null, accentColor: r?.accent_color ?? null,
+  sidebarBg: r?.sidebar_bg ?? null, sidebarText: r?.sidebar_text ?? null, sidebarHover: r?.sidebar_hover ?? null,
+  dangerColor: r?.danger_color ?? null, successColor: r?.success_color ?? null, warningColor: r?.warning_color ?? null,
+  defaultMode: r?.default_mode ?? null,
+});
 
-// Lee la marca del tenant UNA vez (tras haber sesión) y la aplica: colores, logo, favicon, título.
-// Vive por encima del Outlet → no refetch al navegar. Sin datos → defaults NÚCLEO intactos.
+// Lee marca del tenant UNA vez (tras haber sesión). ThemeLoader aplica las CSS vars. Fuente única = tenant_themes + tenants.
 export function BrandProvider({ children }: { children: ReactNode }) {
   const { session } = useSession();
   const tenantId = session?.tenantId ?? null;
-  const [brand, setBrand] = useState<Brand>(EMPTY);
+  const [brand, setBrand] = useState<Brand>(EMPTY_BRAND);
   useEffect(() => {
-    if (!tenantId) { setBrand({ ...EMPTY, isLoading: false }); return; }
+    if (!tenantId) { setBrand({ ...EMPTY_BRAND, isLoading: false }); return; }
     let alive = true;
     void (async () => {
-      const [ten, logo, cfg] = await Promise.all([
+      const [ten, theme, files] = await Promise.all([
         supabase.from("tenants").select("legal_name,display_name").limit(1),
-        supabase.storage.from("brand").createSignedUrl(`${tenantId}/logo.png`, 3600),
-        supabase.from("settings").select("key,value").in("key", ["primary_color", "accent_color"]),
+        supabase.from("tenant_themes").select("*").limit(1),
+        supabase.storage.from("brand").list(tenantId),
       ]);
       if (!alive) return;
       const row = (ten.data as { legal_name: string; display_name: string | null }[] | null)?.[0];
-      const s = Object.fromEntries(((cfg.data as { key: string; value: string }[] | null) ?? []).map((r) => [r.key, r.value]));
-      const b: Brand = {
-        displayName: row?.display_name ?? "", legalName: row?.legal_name ?? "",
-        logoUrl: logo.data?.signedUrl ?? null,
-        primaryColor: s.primary_color ?? "", accentColor: s.accent_color ?? "", isLoading: false,
-      };
-      setBrand(b);
-      applyBranding(b);
+      const hasLogo = ((files.data as { name: string }[] | null) ?? []).some((f) => f.name === "logo.png");
+      const logoUrl = hasLogo ? supabase.storage.from("brand").getPublicUrl(`${tenantId}/logo.png`).data.publicUrl : null;
+      setBrand({
+        tenantId, displayName: row?.display_name ?? "", legalName: row?.legal_name ?? "",
+        logoUrl, theme: toTheme((theme.data as ThemeRow[] | null)?.[0]), isLoading: false,
+      });
     })();
     return () => { alive = false; };
   }, [tenantId]);
-  return <BrandContext.Provider value={brand}>{children}</BrandContext.Provider>;
+  return <BrandContext.Provider value={brand}><ThemeLoader />{children}</BrandContext.Provider>;
 }
 
-export function useBrand(): Brand {
-  return useContext(BrandContext);
-}
+export { useBrand } from "@shared/providers/brand-context";

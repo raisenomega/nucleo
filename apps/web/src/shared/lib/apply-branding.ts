@@ -1,29 +1,16 @@
-import { hexToHsl, foregroundFor } from "@shared/lib/color";
+import { themeVars, type TenantTheme } from "@shared/lib/theme-vars";
 
-// Efectos DOM del branding (solo cliente): colores → CSS vars del :root, favicon canvas, título del tab.
-// Sin color configurado → no toca nada (quedan los defaults dorado NÚCLEO).
-export interface BrandLike {
-  displayName: string; legalName: string; primaryColor: string; accentColor: string;
-}
+// Aplica el tema del tenant al :root (solo valores no-null), favicon, título, y cachea para anti-flash.
+export const THEME_CACHE_KEY = "nucleo:theme-cache:v1";
 
-export function applyBranding(b: BrandLike): void {
+export function applyBranding(b: { tenantId: string; displayName: string; legalName: string; theme: TenantTheme }): void {
   if (typeof document === "undefined") return;
+  const vars = themeVars(b.theme);
   const root = document.documentElement.style;
-  if (b.primaryColor) {
-    const hsl = hexToHsl(b.primaryColor);
-    if (hsl) {
-      root.setProperty("--primary", hsl);
-      root.setProperty("--primary-hover", hsl);
-      root.setProperty("--sidebar-primary", hsl);
-      root.setProperty("--primary-foreground", foregroundFor(b.primaryColor));
-      applyFavicon(b.primaryColor, b.displayName || b.legalName);
-    }
-  }
-  if (b.accentColor) {
-    const a = hexToHsl(b.accentColor);
-    if (a) root.setProperty("--accent", a);
-  }
+  for (const k in vars) root.setProperty(k, vars[k]!);
   document.title = b.displayName || b.legalName || "NÚCLEO by raisen";
+  if (b.theme.primaryColor) applyFavicon(b.theme.primaryColor, b.displayName || b.legalName);
+  try { localStorage.setItem(THEME_CACHE_KEY, JSON.stringify({ tenantId: b.tenantId, vars })); } catch { /* noop */ }
 }
 
 function applyFavicon(color: string, name: string): void {

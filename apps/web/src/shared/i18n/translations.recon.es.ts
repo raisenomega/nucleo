@@ -26,7 +26,7 @@ export const esRecon = {
   changeRole: "Cambiar rol", deactivate: "Desactivar", categories: "Categorías",
   generalSettings: "Configuración general", retentionPct: "Retención %", orderPrefix: "Prefijo de orden",
   fiscalCountry: "País fiscal",
-  joinTeam: "Únete a tu equipo", invitedSubtitle: "Tu administrador te invitó a NÚCLEO. Crea tu contraseña para entrar.",
+  joinTeam: "Únete a tu equipo", invitedSubtitle: "Tu administrador te invitó. Crea tu contraseña para entrar.",
   createPassword: "Crea tu contraseña", confirmPassword: "Confirma tu contraseña",
   passwordMismatch: "Las contraseñas no coinciden", minPassword: "Mínimo 8 caracteres",
   alreadyRegistered: "Este email ya tiene cuenta. Inicia sesión.", invitedLink: "¿Te invitaron? Crea tu cuenta",

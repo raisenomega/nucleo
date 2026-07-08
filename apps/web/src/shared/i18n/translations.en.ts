@@ -5,7 +5,7 @@ export const en = {
   toggleTheme: "Toggle theme", switchLang: "Switch language",
   welcome: "Welcome to", yourBusiness: "your business", role: "Role", logout: "Log out",
   trialBanner: "You have {days} days left in your trial", trialEnded: "Your trial has ended",
-  trialEndedDesc: "Schedule a consultation to keep using NÚCLEO.", scheduleConsultation: "Schedule consultation",
+  trialEndedDesc: "Your trial period ended. To keep using the platform, contact us.", scheduleConsultation: "Schedule consultation",
   income: "Income", incomeList: "Income list", newIncome: "New income",
   amount: "Amount", category: "Category", description: "Description", date: "Date",
   paymentMethod: "Payment method", save: "Save", cancel: "Cancel",

@@ -6,18 +6,18 @@ import type { RepoResult } from "@admin/domain/admin.types";
 const DEF_PRIMARY = "#" + "1a1a2e";
 const DEF_ACCENT = "#" + "4a4a6a";
 
-// Sección 2 — colores del PDF + preview en vivo del encabezado.
-export function AdminBrandStyle({ get, logoUrl, companyName, onSave }: {
-  get: (k: string) => string; logoUrl: string | null; companyName: string;
-  onSave: (fields: Record<string, string>) => Promise<RepoResult>;
+// Sección 2 — colores (tenant_themes) + preview del encabezado. NULL en la fila = hereda default.
+export function AdminBrandStyle({ theme, logoUrl, companyName, onSave }: {
+  theme: Record<string, string | null>; logoUrl: string | null; companyName: string;
+  onSave: (fields: Record<string, string | null>) => Promise<RepoResult>;
 }) {
   const { t } = useI18n();
   const [primary, setPrimary] = useState(DEF_PRIMARY);
   const [accent, setAccent] = useState(DEF_ACCENT);
   const [busy, setBusy] = useState(false);
   useEffect(() => {
-    setPrimary(get("primary_color") || DEF_PRIMARY); setAccent(get("accent_color") || DEF_ACCENT);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    setPrimary(theme.primary_color || DEF_PRIMARY); setAccent(theme.accent_color || DEF_ACCENT);
+  }, [theme]);
   async function save() {
     setBusy(true);
     const r = await onSave({ primary_color: primary, accent_color: accent });
