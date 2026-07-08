@@ -17,4 +17,8 @@ export const enHr = {
   fbSuggestion: "Suggestion", fbPraise: "Praise", fbConcern: "Concern", fbCulture: "Culture", fbTip: "Anonymous",
   currentPeriod: "Current period", freqWeekly: "Weekly", freqBiweekly: "Biweekly", freqMonthly: "Monthly",
   periodFeedback: "Period feedback",
+  trainingSubtitle: "Courses + assignments + completion", courses: "Courses", assignments: "Assignments",
+  newCourse: "New course", assignCourse: "Assign course", courseTitle: "Course title", hours: "Hours",
+  required: "Required", completion: "Completion", markComplete: "Mark complete", course: "Course", trainingPct: "Training",
+  stNotStarted: "Not started", stInProgress: "In progress", stCompleted: "Completed", stExpired: "Expired",
 } satisfies Partial<Record<TranslationKey, string>>;

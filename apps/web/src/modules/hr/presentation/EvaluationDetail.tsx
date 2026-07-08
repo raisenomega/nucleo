@@ -8,6 +8,7 @@ import { CAT_COLOR, CAT_KEY } from "@hr/presentation/obs-ui";
 import { FB_KEY, FB_COLOR } from "@hr/presentation/fb-ui";
 import { supabaseObservationRepository } from "@hr/infrastructure/supabase-observation.repository";
 import { supabaseFeedbackRepository } from "@hr/infrastructure/supabase-feedback.repository";
+import { supabaseTrainingRepository } from "@hr/infrastructure/supabase-training.repository";
 import type { Observation } from "@hr/domain/observation.types";
 import type { Feedback } from "@hr/domain/feedback.types";
 import type { EvaluationDetail as ED } from "@hr/domain/evaluation.types";
@@ -18,9 +19,12 @@ export function EvaluationDetail({ ev, onClose }: { ev: ED; onClose: () => void 
   const data = ev.scores.map((s) => ({ criterion: s.label, score: s.score }));
   const [obs, setObs] = useState<Observation[]>([]);
   const [fb, setFb] = useState<Feedback[]>([]);
+  const [trPct, setTrPct] = useState<number | null>(null);
   useEffect(() => {
     void supabaseObservationRepository.listForEmployee(ev.employeeId).then(setObs);
     void supabaseFeedbackRepository.listForTarget(ev.employeeId).then(setFb);
+    void supabaseTrainingRepository.listForEmployee(ev.employeeId).then((e) =>
+      setTrPct(e.length ? Math.round(100 * e.filter((x) => x.status === "completed").length / e.length) : null));
   }, [ev.employeeId]);
   return (
     <ScreenModal onClose={onClose}>
@@ -35,6 +39,7 @@ export function EvaluationDetail({ ev, onClose }: { ev: ED; onClose: () => void 
         {ev.requiresLegalValidation && (
           <div className="flex gap-2 rounded-lg bg-red-50 p-3 text-sm text-red-700">
             <AlertTriangle className="h-5 w-5 shrink-0" /><span>{t("legalWarning")}</span></div>)}
+        {trPct != null && <p className="text-sm text-muted-foreground">{t("trainingPct")}: <span className="font-bold text-primary">{trPct}%</span></p>}
         {data.length > 0 && (
           <ResponsiveContainer width="100%" height={260}>
             <RadarChart data={data}><PolarGrid /><PolarAngleAxis dataKey="criterion" tick={{ fontSize: 11 }} />
