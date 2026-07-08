@@ -1,14 +1,20 @@
+import { useEffect, useState } from "react";
 import { X, AlertTriangle } from "lucide-react";
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer } from "recharts";
 import { useI18n } from "@shared/i18n";
 import { ScreenModal } from "@shared/components/ScreenModal";
 import { CLASS_COLOR, CLASS_KEY } from "@hr/presentation/eval-ui";
+import { CAT_COLOR, CAT_KEY } from "@hr/presentation/obs-ui";
+import { supabaseObservationRepository } from "@hr/infrastructure/supabase-observation.repository";
+import type { Observation } from "@hr/domain/observation.types";
 import type { EvaluationDetail as ED } from "@hr/domain/evaluation.types";
 
-// Detalle: radar de scores por criterio + composite + clasificación + Ley 80 + notas.
+// Detalle: radar de scores + composite + clasificación + Ley 80 + notas + observaciones del empleado (contexto).
 export function EvaluationDetail({ ev, onClose }: { ev: ED; onClose: () => void }) {
   const { t } = useI18n();
   const data = ev.scores.map((s) => ({ criterion: s.label, score: s.score }));
+  const [obs, setObs] = useState<Observation[]>([]);
+  useEffect(() => { void supabaseObservationRepository.listForEmployee(ev.employeeId).then(setObs); }, [ev.employeeId]);
   return (
     <ScreenModal onClose={onClose}>
       <div className="flex items-center justify-between border-b border-border p-4">
@@ -28,6 +34,16 @@ export function EvaluationDetail({ ev, onClose }: { ev: ED; onClose: () => void 
               <Radar dataKey="score" stroke="hsl(38 85% 55%)" fill="hsl(38 85% 55%)" fillOpacity={0.5} /></RadarChart>
           </ResponsiveContainer>)}
         {ev.notes && <div className="rounded-lg bg-secondary p-3 text-sm"><span className="font-bold">{t("notes")}: </span>{ev.notes}</div>}
+        {obs.length > 0 && (
+          <div className="space-y-2">
+            <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("recentObservations")}</p>
+            {obs.map((o) => (
+              <div key={o.id} className="rounded-lg border border-border p-2 text-sm">
+                <div className="flex items-center justify-between">
+                  <span className={`rounded px-2 py-0.5 text-xs font-bold ${CAT_COLOR[o.category]}`}>{t(CAT_KEY[o.category])}</span>
+                  <span className="text-xs text-muted-foreground">{o.createdAt.slice(0, 10)}</span></div>
+                <p className="mt-1 text-muted-foreground">{o.notes}</p></div>))}
+          </div>)}
       </div>
     </ScreenModal>
   );

@@ -7,4 +7,8 @@ export const enHr = {
   composite: "Composite score", classification: "Classification",
   clExcelente: "Excellent", clBueno: "Good", clNecesitaMejora: "Needs improvement", clInsuficiente: "Insufficient",
   legalWarning: "Requires legal validation (Act 80): dismissal with documented cause.",
+  observations: "Observations", observationsSubtitle: "Coaching & incident log per employee",
+  newObservation: "New observation", followUp: "Follow-up date", recentObservations: "Recent observations",
+  obsLogro: "Achievement", obsMejora: "Improvement opportunity", obsIncidente: "Incident",
+  obsCultural: "Cultural behavior", obsDesarrollo: "Development suggestion",
 } satisfies Partial<Record<TranslationKey, string>>;

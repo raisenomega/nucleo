@@ -23,6 +23,7 @@ export const ACCESS_MODULES: { key: string; label: string; crud: Perm[]; note: s
   { key: "accounts_receivable", label: "Cuentas por cobrar", crud: ["view", "edit"], note: "edit = cobrar/perdonar" },
   { key: "reports", label: "Reportes", crud: ["view"], note: "operaciones = solo su rendimiento" },
   { key: "evaluations", label: "Evaluaciones", crud: ALL, note: "desempeño (ceo/coo)" },
+  { key: "observations", label: "Observaciones", crud: ALL, note: "coaching (ceo/coo)" },
   { key: "settings", label: "Configuración", crud: ["view", "edit", "categories"], note: "categories = crear categorías" },
 ];
 
