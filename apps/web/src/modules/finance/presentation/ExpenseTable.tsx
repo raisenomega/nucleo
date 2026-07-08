@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
+import { Pagination } from "@shared/components/Pagination";
 import { useRoleGate } from "@shared/hooks/useRoleGate";
 import { useSession } from "@shared/providers/SessionProvider";
 import { formatCurrency } from "@shared/lib/format";
@@ -18,6 +20,8 @@ export function ExpenseTable({ rows, employees, classOf, onView, onEdit, onDelet
   // coo+ ven todo; roles menores solo lo que crearon (espejo de la RLS 00068).
   const visible = canEdit("coo") ? rows : rows.filter((r) => r.createdBy === session?.userId);
   const total = visible.reduce((s, i) => s + i.amount, 0);
+  const [page, setPage] = useState(1);
+  const paged = visible.slice((page - 1) * 12, page * 12);
   const nameOf = (id: string) => employees.find((e) => e.id === id)?.full_name ?? "—";
   const th = "px-3 py-2 text-left font-bold";
   return (
@@ -36,10 +40,8 @@ export function ExpenseTable({ rows, employees, classOf, onView, onEdit, onDelet
             <th className={`${th} text-right`}>{t("actions")}</th>
           </tr></thead>
           <tbody>
-            {visible.length === 0 && (
-              <tr><td colSpan={7} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>
-            )}
-            {visible.map((i) => (
+            {visible.length === 0 && <tr><td colSpan={7} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>}
+            {paged.map((i) => (
               <tr key={i.id} className="border-t border-border">
                 <td className="px-3 py-2">{i.date}</td>
                 <td className="px-3 py-2"><span className="flex items-center gap-2">{i.categoryLabel} <ExpenseClassBadge value={classOf(i.categoryId)} /></span></td>
@@ -61,11 +63,12 @@ export function ExpenseTable({ rows, employees, classOf, onView, onEdit, onDelet
       </div>
     </div>
     <div className="space-y-2 md:hidden">
-      {visible.map((i) => <MobileCard key={i.id} title={i.categoryLabel} amount={formatCurrency(i.amount)}
+      {paged.map((i) => <MobileCard key={i.id} title={i.categoryLabel} amount={formatCurrency(i.amount)}
         lines={[`${i.date} · ${i.paymentMethodLabel}`, `${nameOf(i.paidBy)} · ${i.description}`]}
         extra={<ExpenseClassBadge value={classOf(i.categoryId)} />}
         onView={() => onView(i.id)} onEdit={onEdit ? () => onEdit(i.id) : undefined} onDelete={onDelete ? () => onDelete(i.id) : undefined} />)}
     </div>
+    <Pagination total={visible.length} page={page} onPageChange={setPage} />
     </>
   );
 }

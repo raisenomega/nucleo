@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
+import { Pagination } from "@shared/components/Pagination";
 import { formatCurrency } from "@shared/lib/format";
 import { MobileCard } from "@shared/components/MobileCard";
 import type { RecurringExpense } from "@finance/domain/recurring-expense.types";
@@ -9,6 +11,8 @@ export function RecurringExpenseTable({ items, paid, onPay, onEdit, onDelete }: 
   onPay?: (categoryId: string) => void; onEdit?: (id: string) => void; onDelete?: (id: string) => void;
 }) {
   const { t } = useI18n();
+  const [page, setPage] = useState(1);
+  const visible = items.slice((page - 1) * 12, page * 12);
   const paidOf = (i: RecurringExpense) => paid[i.categoryId] ?? 0;
   const covered = items.filter((i) => paidOf(i) > 0).length;
   const pct = items.length ? Math.round((covered / items.length) * 100) : 0;
@@ -33,7 +37,7 @@ export function RecurringExpenseTable({ items, paid, onPay, onEdit, onDelete }: 
           </tr></thead>
           <tbody>
             {items.length === 0 && <tr><td colSpan={5} className="py-6 text-center text-muted-foreground">{t("noRecords")}</td></tr>}
-            {items.map((i) => {
+            {visible.map((i) => {
               const p = paidOf(i);
               return (
                 <tr key={i.id} className="border-t border-border">
@@ -55,11 +59,12 @@ export function RecurringExpenseTable({ items, paid, onPay, onEdit, onDelete }: 
         </table>
       </div>
       <div className="space-y-2 md:hidden">
-        {items.map((i) => { const p = paidOf(i); return <MobileCard key={i.id} title={i.categoryLabel} amount={formatCurrency(i.budgetedAmount)}
+        {visible.map((i) => { const p = paidOf(i); return <MobileCard key={i.id} title={i.categoryLabel} amount={formatCurrency(i.budgetedAmount)}
           lines={[i.label, `${t("paid")}: ${p > 0 ? formatCurrency(p) : t("pending")}`]}
           extra={p === 0 && onPay ? <button type="button" onClick={() => onPay(i.categoryId)} className="rounded bg-primary text-primary-foreground px-2 py-1 text-xs font-bold">{t("registerPayment")}</button> : undefined}
           onEdit={onEdit ? () => onEdit(i.id) : undefined} onDelete={onDelete ? () => onDelete(i.id) : undefined} />; })}
       </div>
+      <Pagination total={items.length} page={page} onPageChange={setPage} />
     </div>
   );
 }

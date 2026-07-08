@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { DollarSign, XCircle, MessageCircle, FileText } from "lucide-react";
 import { useI18n } from "@shared/i18n";
+import { Pagination } from "@shared/components/Pagination";
 import { formatCurrency } from "@shared/lib/format";
 import { MobileCard } from "@shared/components/MobileCard";
 import type { AccountReceivable } from "@finance/domain/accounts-receivable.types";
@@ -16,7 +18,9 @@ export function AccountsReceivableTable({ rows, onCollect, onForgive, onNote }: 
   onForgive?: (r: AccountReceivable) => void; onNote?: (r: AccountReceivable) => void;
 }) {
   const { t } = useI18n();
+  const [page, setPage] = useState(1);
   if (rows.length === 0) return <p className="text-sm text-muted-foreground">{t("noRecords")}</p>;
+  const visible = rows.slice((page - 1) * 12, page * 12);
   const msg = (r: AccountReceivable) => `Hola ${r.clientName}, le recordamos que tiene un balance pendiente de ${formatCurrency(r.amount)} por el servicio del ${r.routeDate}. Favor comunicarse para coordinar el pago.`;
   const acts = (r: AccountReceivable) => (
     <div className="flex gap-1 pt-1">
@@ -34,7 +38,7 @@ export function AccountsReceivableTable({ rows, onCollect, onForgive, onNote }: 
         <thead><tr className="border-b border-border text-left text-xs text-muted-foreground">
           <th className="p-2">{t("contactName")}</th><th className="p-2">{t("amount")}</th><th className="p-2">{t("date")}</th>
           <th className="p-2">{t("employee")}</th><th className="p-2">{t("reason")}</th><th className="p-2">{t("actions")}</th></tr></thead>
-        <tbody>{rows.map((r) => (
+        <tbody>{visible.map((r) => (
           <tr key={r.stopId} className="border-b border-border align-top">
             <td className="p-2 font-semibold">{r.clientName}</td>
             <td className="p-2 font-bold text-primary">{formatCurrency(r.amount)}</td>
@@ -42,10 +46,11 @@ export function AccountsReceivableTable({ rows, onCollect, onForgive, onNote }: 
             <td className="max-w-xs whitespace-pre-line p-2 text-muted-foreground">{r.reason ?? "—"}</td>
             <td className="p-2">{acts(r)}</td></tr>))}</tbody>
       </table>
-      <div className="space-y-2 md:hidden">{rows.map((r) => (
+      <div className="space-y-2 md:hidden">{visible.map((r) => (
         <MobileCard key={r.stopId} title={r.clientName} amount={formatCurrency(r.amount)}
           lines={[`${r.routeDate} · ${r.assignedTo}`, r.reason ?? undefined]} extra={acts(r)} />
       ))}</div>
+      <Pagination total={rows.length} page={page} onPageChange={setPage} />
     </>
   );
 }

@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { AlertTriangle, Check, Trash2, FileDown } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { usePdf } from "@shared/hooks/usePdf";
 import { MobileCard } from "@shared/components/MobileCard";
+import { Pagination } from "@shared/components/Pagination";
 import { ENROLL_KEY, ENROLL_COLOR } from "@hr/presentation/tr-ui";
 import type { Enrollment } from "@hr/domain/training.types";
 
@@ -11,7 +13,9 @@ export function EnrollmentTable({ rows, onComplete, onDelete }: {
 }) {
   const { t } = useI18n();
   const pdf = usePdf();
+  const [page, setPage] = useState(1);
   if (rows.length === 0) return <p className="text-sm text-muted-foreground">{t("noRecords")}</p>;
+  const visible = rows.slice((page - 1) * 12, page * 12);
   const badge = (e: Enrollment) => <span className={`rounded px-2 py-0.5 text-xs font-bold ${ENROLL_COLOR[e.status]}`}>{t(ENROLL_KEY[e.status])}</span>;
   const warn = (e: Enrollment) => e.courseRequired && e.status !== "completed" ? <span title={t("required")} className="text-amber-600"><AlertTriangle className="inline h-4 w-4" /></span> : null;
   const acts = (e: Enrollment) => (
@@ -26,15 +30,16 @@ export function EnrollmentTable({ rows, onComplete, onDelete }: {
         <thead><tr className="border-b border-border text-left text-xs text-muted-foreground">
           <th className="p-2">{t("employee")}</th><th className="p-2">{t("course")}</th><th className="p-2">{t("status")}</th>
           <th className="p-2">{t("followUp")}</th><th className="p-2"></th></tr></thead>
-        <tbody>{rows.map((e) => (
+        <tbody>{visible.map((e) => (
           <tr key={e.id} className="border-b border-border">
             <td className="p-2 font-semibold">{e.employeeName}</td><td className="p-2">{e.courseTitle}</td>
             <td className="p-2">{badge(e)} {warn(e)}</td><td className="p-2">{e.dueDate ?? "—"}</td>
             <td className="p-2">{acts(e)}</td></tr>))}</tbody>
       </table>
-      <div className="space-y-2 md:hidden">{rows.map((e) => (
+      <div className="space-y-2 md:hidden">{visible.map((e) => (
         <MobileCard key={e.id} title={e.employeeName} lines={[e.courseTitle, e.dueDate ?? undefined]}
           extra={<div className="flex items-center justify-between gap-2 pt-1"><span className="flex items-center gap-2">{badge(e)} {warn(e)}</span>{acts(e)}</div>} />))}</div>
+      <Pagination total={rows.length} page={page} onPageChange={setPage} />
     </>
   );
 }

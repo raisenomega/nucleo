@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
+import { Pagination } from "@shared/components/Pagination";
 import { useRoleGate } from "@shared/hooks/useRoleGate";
 import { useSession } from "@shared/providers/SessionProvider";
 import { formatCurrency } from "@shared/lib/format";
@@ -15,6 +17,8 @@ export function IncomeTable({ rows, onView, onEdit, onDelete }: {
   // coo+ ven todo; roles menores solo lo que crearon (espejo de la RLS 00068).
   const visible = canEdit("coo") ? rows : rows.filter((r) => r.createdBy === session?.userId);
   const total = visible.reduce((s, i) => s + i.amount, 0);
+  const [page, setPage] = useState(1);
+  const paged = visible.slice((page - 1) * 12, page * 12);
   const th = "px-3 py-2 text-left font-bold";
   return (
     <>
@@ -35,7 +39,7 @@ export function IncomeTable({ rows, onView, onEdit, onDelete }: {
             {visible.length === 0 && (
               <tr><td colSpan={8} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>
             )}
-            {visible.map((i) => (
+            {paged.map((i) => (
               <tr key={i.id} className="border-t border-border">
                 <td className="px-3 py-2">{i.date}</td>
                 <td className="px-3 py-2">{i.categoryLabel}</td>
@@ -58,10 +62,11 @@ export function IncomeTable({ rows, onView, onEdit, onDelete }: {
       </div>
     </div>
     <div className="space-y-2 md:hidden">
-      {visible.map((i) => <MobileCard key={i.id} title={i.categoryLabel} amount={formatCurrency(i.amount)}
+      {paged.map((i) => <MobileCard key={i.id} title={i.categoryLabel} amount={formatCurrency(i.amount)}
         lines={[`${i.date} · ${i.paymentMethodLabel}`, [i.clientReference, i.orderNumber].filter(Boolean).join(" · ")]}
         onView={() => onView(i.id)} onEdit={onEdit ? () => onEdit(i.id) : undefined} onDelete={onDelete ? () => onDelete(i.id) : undefined} />)}
     </div>
+    <Pagination total={visible.length} page={page} onPageChange={setPage} />
     </>
   );
 }

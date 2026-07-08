@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useI18n } from "@shared/i18n";
 import { supabase } from "@shared/lib/supabase";
+import { Pagination } from "@shared/components/Pagination";
 import type { TeamMember, AppRole, UserStatus, RepoResult } from "@admin/domain/admin.types";
 
 export const ROLES: { v: AppRole; l: string }[] = [
@@ -17,6 +18,8 @@ export function TeamList({ team, onStatus, onRole }: {
   const { t } = useI18n();
   const navigate = useNavigate();
   const [docMap, setDocMap] = useState<Record<string, Set<string>>>({});
+  const [page, setPage] = useState(1);
+  const visible = team.slice((page - 1) * 12, page * 12);
   const fld = "rounded-lg border border-border bg-background p-2 text-sm";
   useEffect(() => { void supabase.from("employee_documents").select("profile_id, doc_type").then(({ data }) => {
     const map: Record<string, Set<string>> = {};
@@ -39,7 +42,7 @@ export function TeamList({ team, onStatus, onRole }: {
             <th className="px-3 py-2 text-center">{t("documents")}</th><th className="px-3 py-2 text-right">{t("actions")}</th>
           </tr></thead>
           <tbody>
-            {team.map((m) => (
+            {visible.map((m) => (
               <tr key={m.id} className="border-t border-border">
                 <td className="px-3 py-2">{name(m)}</td><td className="px-3 py-2">{m.email}</td>
                 <td className="px-3 py-2">{roleSel(m)}</td><td className="px-3 py-2">{m.status}</td>
@@ -51,7 +54,7 @@ export function TeamList({ team, onStatus, onRole }: {
         </table>
       </div>
       <div className="space-y-2 md:hidden">
-        {team.map((m) => (
+        {visible.map((m) => (
           <div key={m.id} className="space-y-2 rounded-lg border border-border bg-card p-3">
             <div className="flex items-center justify-between gap-2 text-base">{name(m)}<span className="text-xs text-muted-foreground">{m.status} · {docs(m.id)}</span></div>
             <p className="text-sm text-muted-foreground">{m.email}</p>
@@ -59,6 +62,7 @@ export function TeamList({ team, onStatus, onRole }: {
           </div>
         ))}
       </div>
+      <Pagination total={team.length} page={page} onPageChange={setPage} />
     </>
   );
 }

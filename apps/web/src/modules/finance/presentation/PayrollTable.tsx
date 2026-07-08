@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
+import { Pagination } from "@shared/components/Pagination";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { useRoleGate } from "@shared/hooks/useRoleGate";
 import { useSession } from "@shared/providers/SessionProvider";
@@ -7,21 +9,20 @@ import { formatCurrency } from "@shared/lib/format";
 import { MobileCard } from "@shared/components/MobileCard";
 import type { Payroll } from "@finance/domain/payroll.types";
 
-const grossOf = (i: Payroll) => i.grossSalary || i.amount;
-const netOf = (i: Payroll) => i.netSalary || i.amount;
-const costOf = (i: Payroll) => i.totalEmployerCost || i.amount;
+const grossOf = (i: Payroll) => i.grossSalary || i.amount, netOf = (i: Payroll) => i.netSalary || i.amount, costOf = (i: Payroll) => i.totalEmployerCost || i.amount;
 
 export function PayrollTable({ rows, onView, onEdit, onDelete }: {
   rows: readonly Payroll[];
   onView: (id: string) => void; onEdit?: (id: string) => void; onDelete?: (id: string) => void;
 }) {
   const { t } = useI18n();
-  const { can } = useModuleAccess();
-  const { canEdit } = useRoleGate(); const { session } = useSession();
+  const { can } = useModuleAccess(); const { canEdit } = useRoleGate(); const { session } = useSession();
   const money = can("payroll", "salary"); // salario/deducciones/patronal gateado por payroll.salary
   // coo+ ven todo; roles menores solo lo que crearon (espejo de la RLS 00068).
   const visible = canEdit("coo") ? rows : rows.filter((r) => r.createdBy === session?.userId);
   const total = visible.reduce((s, i) => s + costOf(i), 0);
+  const [page, setPage] = useState(1);
+  const paged = visible.slice((page - 1) * 12, page * 12);
   const th = "px-3 py-2 text-left font-bold";
   return (
     <>
@@ -42,7 +43,7 @@ export function PayrollTable({ rows, onView, onEdit, onDelete }: {
             {visible.length === 0 && (
               <tr><td colSpan={money ? 7 : 3} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>
             )}
-            {visible.map((i) => (
+            {paged.map((i) => (
               <tr key={i.id} className="border-t border-border">
                 <td className="px-3 py-2">{i.date}</td>
                 <td className="px-3 py-2">{i.employeeName}</td>
@@ -64,10 +65,11 @@ export function PayrollTable({ rows, onView, onEdit, onDelete }: {
       </div>
     </div>
     <div className="space-y-2 md:hidden">
-      {visible.map((i) => <MobileCard key={i.id} title={i.employeeName} amount={money ? formatCurrency(costOf(i)) : undefined}
+      {paged.map((i) => <MobileCard key={i.id} title={i.employeeName} amount={money ? formatCurrency(costOf(i)) : undefined}
         lines={[i.period, money ? `${t("grossSalary")} ${formatCurrency(grossOf(i))} · ${t("netSalary")} ${formatCurrency(netOf(i))}` : ""]}
         onView={() => onView(i.id)} onEdit={onEdit ? () => onEdit(i.id) : undefined} onDelete={onDelete ? () => onDelete(i.id) : undefined} />)}
     </div>
+    <Pagination total={visible.length} page={page} onPageChange={setPage} />
     </>
   );
 }

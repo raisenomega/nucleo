@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useI18n } from "@shared/i18n";
 import { formatCurrency } from "@shared/lib/format";
+import { Pagination } from "@shared/components/Pagination";
 import type { Budget } from "@crm/domain/marketing.types";
 
 export function MarketingBudgetTable({ channels, budgets, month, canEdit, onSave }: {
@@ -16,6 +17,8 @@ export function MarketingBudgetTable({ channels, budgets, month, canEdit, onSave
   }, [budgets, channels]);
   const total = channels.reduce((s, c) => s + Number(vals[c] || 0), 0);
   const th = "px-3 py-2 text-left font-bold";
+  const [page, setPage] = useState(1);
+  const visible = channels.slice((page - 1) * 12, page * 12);
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-card">
       <div className="flex items-center justify-between border-b border-border p-4">
@@ -27,7 +30,7 @@ export function MarketingBudgetTable({ channels, budgets, month, canEdit, onSave
           <th className={th}>{t("channel")}</th><th className={th}>{t("budgetedAmount")}</th>{canEdit && <th className={th} />}
         </tr></thead>
         <tbody>
-          {channels.map((c) => (
+          {visible.map((c) => (
             <tr key={c} className="border-t border-border">
               <td className="px-3 py-2">{c}</td>
               <td className="px-3 py-2">
@@ -45,6 +48,7 @@ export function MarketingBudgetTable({ channels, budgets, month, canEdit, onSave
           ))}
         </tbody>
       </table>
+      <Pagination total={channels.length} page={page} onPageChange={setPage} />
     </div>
   );
 }

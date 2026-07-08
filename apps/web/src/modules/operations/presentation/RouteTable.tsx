@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { MobileCard } from "@shared/components/MobileCard";
+import { Pagination } from "@shared/components/Pagination";
 import type { ServiceRoute } from "@operations/domain/route.types";
 
 type Emp = { id: string; full_name: string };
@@ -16,6 +18,8 @@ export function RouteTable({ rows, employees, onView, onEdit, onDelete }: {
   const { t } = useI18n();
   const nameOf = (id: string) => employees.find((e) => e.id === id)?.full_name ?? "—";
   const th = "px-3 py-2 text-left font-bold";
+  const [page, setPage] = useState(1);
+  const visible = rows.slice((page - 1) * 12, page * 12);
   return (
     <>
     <div className="hidden overflow-hidden rounded-lg border border-border bg-card md:block">
@@ -28,7 +32,7 @@ export function RouteTable({ rows, employees, onView, onEdit, onDelete }: {
             <th className={`${th} text-right`}>{t("actions")}</th></tr></thead>
           <tbody>
             {rows.length === 0 && <tr><td colSpan={5} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>}
-            {rows.map((r) => (
+            {visible.map((r) => (
               <tr key={r.id} className="border-t border-border">
                 <td className="px-3 py-2">{r.routeDate}</td>
                 <td className="px-3 py-2">{nameOf(r.assignedTo)}</td>
@@ -46,11 +50,12 @@ export function RouteTable({ rows, employees, onView, onEdit, onDelete }: {
       </div>
     </div>
     <div className="space-y-2 md:hidden">
-      {rows.map((r) => <MobileCard key={r.id} title={`${r.routeDate} · ${nameOf(r.assignedTo)}`}
+      {visible.map((r) => <MobileCard key={r.id} title={`${r.routeDate} · ${nameOf(r.assignedTo)}`}
         lines={[`${r.completedCount}/${r.stopCount} ${t("routeStops")}`]}
         extra={<span className={`inline-block rounded px-2 py-0.5 text-xs font-bold ${COLOR[r.status] ?? "bg-secondary"}`}>{r.status}</span>}
         onView={() => onView(r.id)} onEdit={onEdit ? () => onEdit(r.id) : undefined} onDelete={onDelete ? () => onDelete(r.id) : undefined} />)}
     </div>
+    <Pagination total={rows.length} page={page} onPageChange={setPage} />
     </>
   );
 }

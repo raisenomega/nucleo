@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { AlertTriangle, Eye, Pencil, Trash2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { formatCurrency } from "@shared/lib/format";
 import { MobileCard } from "@shared/components/MobileCard";
+import { Pagination } from "@shared/components/Pagination";
 import type { InventoryItem } from "@fieldops/domain/inventory.types";
 
 export function InventoryTable({ rows, onView, onEdit, onDelete }: {
@@ -12,6 +14,8 @@ export function InventoryTable({ rows, onView, onEdit, onDelete }: {
   const { can } = useModuleAccess();
   const showCost = can("inventory", "cost"); // costo gateado por checkbox inventory.cost
   const th = "px-3 py-2 text-left font-bold";
+  const [page, setPage] = useState(1);
+  const visible = rows.slice((page - 1) * 12, page * 12);
   return (
     <>
     <div className="hidden overflow-hidden rounded-lg border border-border bg-card md:block">
@@ -27,7 +31,7 @@ export function InventoryTable({ rows, onView, onEdit, onDelete }: {
             {rows.length === 0 && (
               <tr><td colSpan={showCost ? 5 : 4} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>
             )}
-            {rows.map((i) => (
+            {visible.map((i) => (
               <tr key={i.id} className="border-t border-border">
                 <td className="px-3 py-2">{i.name}</td>
                 <td className="px-3 py-2 text-right">
@@ -54,11 +58,12 @@ export function InventoryTable({ rows, onView, onEdit, onDelete }: {
       </div>
     </div>
     <div className="space-y-2 md:hidden">
-      {rows.map((i) => <MobileCard key={i.id} title={i.name} amount={showCost ? formatCurrency(i.unitCost) : undefined}
+      {visible.map((i) => <MobileCard key={i.id} title={i.name} amount={showCost ? formatCurrency(i.unitCost) : undefined}
         lines={[`${t("stock")}: ${i.stock} · ${t("minStock")}: ${i.minStock}`]}
         extra={i.minStock > 0 && i.stock < i.minStock ? <span className="inline-flex items-center gap-1 rounded bg-destructive/10 px-1.5 text-xs text-destructive"><AlertTriangle className="h-3 w-3" /> {t("lowStock")}</span> : undefined}
         onView={() => onView(i.id)} onEdit={can("inventory", "edit") ? () => onEdit(i.id) : undefined} onDelete={can("inventory", "delete") ? () => onDelete(i.id) : undefined} />)}
     </div>
+    <Pagination total={rows.length} page={page} onPageChange={setPage} />
     </>
   );
 }
