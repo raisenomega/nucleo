@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createFileRoute, Navigate } from "@tanstack/react-router";
+import { ShoppingCart } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { InvoicesTab } from "@billing/presentation/InvoicesTab";
@@ -26,7 +27,12 @@ function BillingPage() {
           className={`rounded-lg px-3 py-1.5 text-sm font-bold ${tab === x.k ? "bg-primary text-primary-foreground" : "bg-secondary"}`}>{x.label}</button>))}</div>
       {tab === "invoices" && <InvoicesTab />}
       {tab === "plans" && <PlansTab />}
-      {tab === "orders" && <p className="text-sm text-muted-foreground">{t("comingSoon")}</p>}
+      {tab === "orders" && (
+        <div className="rounded-xl border border-dashed border-border bg-card p-8 text-center">
+          <ShoppingCart className="mx-auto h-8 w-8 text-muted-foreground" />
+          <p className="mt-3 text-sm font-bold text-foreground">{t("ordersSetupTitle")}</p>
+          <p className="mt-1 text-xs text-muted-foreground">{t("ordersSetupHint")}</p>
+        </div>)}
     </div>
   );
 }

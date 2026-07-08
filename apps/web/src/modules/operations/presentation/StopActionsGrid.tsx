@@ -11,8 +11,10 @@ export function StopActionsGrid({ stop, onPay, onNotAttended, onSupplies }: {
   const c = "flex min-h-[56px] items-center justify-center gap-2 rounded-xl border text-sm font-bold";
   return (
     <div className="grid grid-cols-2 gap-3">
-      <a href={stop.phone ? waLink(stop.phone, `${stop.clientName} - ${stop.serviceType}`) : undefined} target="_blank" rel="noreferrer"
-        className={`${c} border-green-200 bg-green-50 text-green-700`}><MessageCircle className="h-5 w-5" /> WhatsApp</a>
+      {stop.phone
+        ? <a href={waLink(stop.phone, `${stop.clientName} - ${stop.serviceType}`)} target="_blank" rel="noreferrer"
+            className={`${c} border-green-200 bg-green-50 text-green-700`}><MessageCircle className="h-5 w-5" /> WhatsApp</a>
+        : <span className={`${c} cursor-not-allowed border-border bg-secondary text-muted-foreground opacity-60`} title={t("noPhone")}><MessageCircle className="h-5 w-5" /> WhatsApp</span>}
       <a href={mapLink(stop.address, stop.city)} target="_blank" rel="noreferrer"
         className={`${c} border-blue-200 bg-blue-50 text-blue-700`}><MapPin className="h-5 w-5" /> {t("openMap")}</a>
       <button type="button" onClick={onPay} className={`${c} border-primary/20 bg-primary/10 text-primary`}><DollarSign className="h-5 w-5" /> {t("collectPayment")}</button>

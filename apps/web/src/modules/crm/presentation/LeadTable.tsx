@@ -1,9 +1,13 @@
+import { useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { Eye, FileText, MessageCircle, Pencil, Receipt, Trash2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { formatCurrency } from "@shared/lib/format";
 import { MobileCard } from "@shared/components/MobileCard";
+import { Pagination } from "@shared/components/Pagination";
 import { StatusBadge, TempBadge } from "@crm/presentation/LeadBadges";
+import { leadQuoteId, leadInvoiceId, leadWaHref } from "@crm/presentation/lead-docs";
 import type { Lead } from "@crm/domain/lead.types";
 
 export function LeadTable({ rows, onView, onEdit, onDelete }: {
@@ -11,8 +15,11 @@ export function LeadTable({ rows, onView, onEdit, onDelete }: {
 }) {
   const { t } = useI18n();
   const { can } = useModuleAccess();
+  const nav = useNavigate();
   const docs = can("leads", "documents");
   const th = "px-3 py-2 text-left font-bold";
+  const [page, setPage] = useState(1);
+  const visible = rows.slice((page - 1) * 12, page * 12);
   return (
     <>
     <div className="hidden overflow-hidden rounded-lg border border-border bg-card md:block">
@@ -27,10 +34,8 @@ export function LeadTable({ rows, onView, onEdit, onDelete }: {
             <th className={`${th} text-right`}>{t("actions")}</th>
           </tr></thead>
           <tbody>
-            {rows.length === 0 && (
-              <tr><td colSpan={9} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>
-            )}
-            {rows.map((l) => (
+            {rows.length === 0 && <tr><td colSpan={9} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>}
+            {visible.map((l) => (
               <tr key={l.id} className="border-t border-border">
                 <td className="px-3 py-2">{l.callDate}</td>
                 <td className="px-3 py-2">
@@ -44,10 +49,9 @@ export function LeadTable({ rows, onView, onEdit, onDelete }: {
                 <td className="px-3 py-2 text-right font-semibold">{formatCurrency(l.quotedPrice)}</td>
                 <td className="px-3 py-2">
                   <div className="flex justify-end gap-2">
-                    {docs && <button type="button" aria-label={t("whatsapp")} className="text-green-600"
-                      onClick={() => window.open(`https://wa.me/${l.phone.replace(/\D/g, "")}?text=${encodeURIComponent(t("whatsappMessage", { name: l.contactName, total: formatCurrency(l.quotedPrice) }))}`, "_blank")}><MessageCircle className="h-4 w-4" /></button>}
-                    {docs && <button type="button" onClick={() => window.alert(t("quotePlaceholder"))} aria-label={t("quote")} className="text-primary"><FileText className="h-4 w-4" /></button>}
-                    {docs && <button type="button" onClick={() => window.alert(t("invoicePlaceholder"))} aria-label={t("invoice")} className="text-primary"><Receipt className="h-4 w-4" /></button>}
+                    {docs && <button type="button" aria-label={t("whatsapp")} className="text-green-600" onClick={() => window.open(leadWaHref(l, t("whatsappMessage", { name: l.contactName, total: formatCurrency(l.quotedPrice) })), "_blank")}><MessageCircle className="h-4 w-4" /></button>}
+                    {docs && <button type="button" onClick={() => void leadQuoteId(l.id).then((q) => { if (q) nav({ to: "/quotes" }); })} aria-label={t("quote")} className="text-primary"><FileText className="h-4 w-4" /></button>}
+                    {docs && <button type="button" onClick={() => void leadInvoiceId(l.id).then((i) => { if (i) nav({ to: "/billing" }); })} aria-label={t("invoice")} className="text-primary"><Receipt className="h-4 w-4" /></button>}
                     <button type="button" onClick={() => onView(l.id)} aria-label={t("viewDetail")} className="text-foreground"><Eye className="h-4 w-4" /></button>
                     {onEdit && <button type="button" onClick={() => onEdit(l.id)} aria-label={t("edit")} className="text-primary"><Pencil className="h-4 w-4" /></button>}
                     {onDelete && <button type="button" onClick={() => onDelete(l.id)} aria-label={t("delete")} className="text-destructive"><Trash2 className="h-4 w-4" /></button>}
@@ -60,11 +64,12 @@ export function LeadTable({ rows, onView, onEdit, onDelete }: {
       </div>
     </div>
     <div className="space-y-2 md:hidden">
-      {rows.map((l) => <MobileCard key={l.id} title={l.contactName} amount={formatCurrency(l.quotedPrice)}
+      {visible.map((l) => <MobileCard key={l.id} title={l.contactName} amount={formatCurrency(l.quotedPrice)}
         lines={[l.phone, `${l.leadSourceLabel || "—"} · ${l.serviceTypeLabel || "—"}`]}
         extra={<div className="flex gap-2"><TempBadge value={l.temperature} /><StatusBadge value={l.status} /></div>}
         onView={() => onView(l.id)} onEdit={onEdit ? () => onEdit(l.id) : undefined} onDelete={onDelete ? () => onDelete(l.id) : undefined} />)}
     </div>
+    <Pagination total={rows.length} page={page} onPageChange={setPage} />
     </>
   );
 }

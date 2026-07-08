@@ -21,7 +21,6 @@ export const esRecon = {
   registerPayment: "Registrar pago", manageRecurring: "Gestionar recurrentes", frequencyLabel: "Frecuencia",
   coveredPercent: "Has cubierto {done} de {total} gastos fijos ({pct}%)", newCategory: "Nueva categoría",
   createCategory: "Crear", categoryName: "Nombre de la categoría", selectExpenseClass: "Tipo de gasto",
-  movementsSoon: "Historial de movimientos próximamente",
   movementHistory: "Historial de movimientos", stockIn: "Entrada", stockOut: "Salida",
   team: "Equipo", inviteEmployee: "Invitar empleado", approve: "Aprobar", reject: "Rechazar",
   changeRole: "Cambiar rol", deactivate: "Desactivar", categories: "Categorías",

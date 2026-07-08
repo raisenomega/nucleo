@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FileText, MessageCircle, Receipt } from "lucide-react";
+import { Check, MessageCircle } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { formatCurrency } from "@shared/lib/format";
 import { LeadFields } from "@crm/presentation/LeadFields";
@@ -39,9 +39,8 @@ export function LeadForm({ sources, services, initial, onSubmit, onCancel, canSu
       {error && <p className="text-sm text-destructive">{error}</p>}
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap gap-2">
+          {canSubmit && <button type="button" onClick={() => act(() => undefined)} className={`${b} bg-primary text-primary-foreground`}><Check className="h-4 w-4" /> {t("save")}</button>}
           {canSubmit && <button type="button" onClick={() => act(wa)} className={`${b} bg-green-600 text-white`}><MessageCircle className="h-4 w-4" /> {t("whatsapp")}</button>}
-          {canSubmit && <button type="button" onClick={() => act(() => window.alert(t("quoteSaved")))} className={`${b} bg-primary text-primary-foreground`}><FileText className="h-4 w-4" /> {t("quote")}</button>}
-          {canSubmit && <button type="button" onClick={() => act(() => window.alert(t("invoiceSaved")))} className={`${b} bg-primary text-primary-foreground`}><Receipt className="h-4 w-4" /> {t("invoice")}</button>}
         </div>
         <button type="button" onClick={onCancel} className="px-3 py-2 text-sm font-body text-muted-foreground hover:underline">{t("cancel")}</button>
       </div>
