@@ -21,4 +21,10 @@ export const esHr = {
   newCourse: "Nuevo curso", assignCourse: "Asignar curso", courseTitle: "Título del curso", hours: "Horas",
   required: "Obligatorio", completion: "Cumplimiento", markComplete: "Marcar completado", course: "Curso", trainingPct: "Capacitación",
   stNotStarted: "Sin iniciar", stInProgress: "En progreso", stCompleted: "Completado", stExpired: "Vencido",
+  supportSubtitle: "Tickets internos + comentarios + adjuntos", newTicket: "Nuevo ticket", subject: "Asunto",
+  priority: "Prioridad", assignedTo: "Asignado a", unassigned: "Sin asignar", takeTicket: "Tomar ticket",
+  comments: "Comentarios", attachment: "Adjunto",
+  prioLow: "Baja", prioNormal: "Normal", prioHigh: "Alta", prioUrgent: "Urgente",
+  addComment: "Escribir comentario…",
+  tkOpen: "Abierto", tkInProgress: "En progreso", tkResolved: "Resuelto", tkClosed: "Cerrado",
 } satisfies Partial<Record<TranslationKey, string>>;

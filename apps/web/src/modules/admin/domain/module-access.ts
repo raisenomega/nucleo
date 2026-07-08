@@ -25,6 +25,7 @@ export const ACCESS_MODULES: { key: string; label: string; crud: Perm[]; note: s
   { key: "evaluations", label: "Evaluaciones", crud: ALL, note: "desempeño (ceo/coo)" },
   { key: "observations", label: "Observaciones", crud: ALL, note: "coaching (ceo/coo)" },
   { key: "training", label: "Capacitación", crud: ALL, note: "cursos (ceo/coo)" },
+  { key: "support", label: "Soporte", crud: ALL, note: "tickets internos" },
   { key: "settings", label: "Configuración", crud: ["view", "edit", "categories"], note: "categories = crear categorías" },
 ];
 
@@ -39,9 +40,9 @@ export const ROLE_DEFAULTS: Record<AppRole, ModuleAccess> = {
   coo: { ...everything(), settings: { view: true, categories: true } },
   operaciones: { dashboard: V, expenses: { view: true, create: true }, inventory: { view: true, edit: true },
     accounts_receivable: { view: true }, reports: { view: true }, evaluations: { view: true, create: true },
-    routes: { view: true, create: true, edit: true, delete: true } },
+    support: { view: true, create: true }, routes: { view: true, create: true, edit: true, delete: true } },
   servicio: { dashboard: V, inventory: V, evaluations: { view: true, create: true },
-    routes: { view: true, create: true, edit: true } },
+    support: { view: true, create: true }, routes: { view: true, create: true, edit: true } },
 };
 
 export function defaultsFor(role: AppRole | null): ModuleAccess {
