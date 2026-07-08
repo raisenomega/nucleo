@@ -8,7 +8,7 @@ import type { LucideIcon } from "lucide-react";
 import type { TranslationKey } from "@shared/i18n";
 
 // Solo las rutas ya construidas llevan `to`; el resto se renderiza deshabilitado.
-type EnabledPath = "/dashboard" | "/routes" | "/income" | "/expenses" | "/extraordinary" | "/payroll" | "/inventory" | "/leads" | "/marketing" | "/reconciliation" | "/recurring" | "/accounts-receivable" | "/billing" | "/reports" | "/evaluations" | "/observations" | "/training" | "/support" | "/documents" | "/settings";
+type EnabledPath = "/dashboard" | "/routes" | "/income" | "/expenses" | "/extraordinary" | "/payroll" | "/inventory" | "/leads" | "/marketing" | "/reconciliation" | "/recurring" | "/accounts-receivable" | "/billing" | "/quotes" | "/reports" | "/evaluations" | "/observations" | "/training" | "/support" | "/documents" | "/settings";
 // mod = clave de módulo para el gate (can(mod,"view")). Items sin mod = "próximamente" (solo roadmap coo/ceo).
 export type NavItem = { key: TranslationKey; icon: LucideIcon; to?: EnabledPath; mod?: string };
 export type NavSection = { title: TranslationKey; icon: LucideIcon; items: NavItem[] };
@@ -27,7 +27,7 @@ export const SECTIONS: NavSection[] = [
   ] },
   { title: "salesCrm", icon: Store, items: [
     { key: "leads", icon: UserPlus, to: "/leads", mod: "leads" }, { key: "marketing", icon: Megaphone, to: "/marketing", mod: "marketing" },
-    { key: "orders", icon: ShoppingCart }, { key: "quotes", icon: FileText },
+    { key: "orders", icon: ShoppingCart }, { key: "quotes", icon: FileText, to: "/quotes", mod: "quotes" },
     { key: "portal", icon: Home }, { key: "documents", icon: FileCheck, to: "/documents", mod: "documents" },
   ] },
   { title: "management", icon: Briefcase, items: [

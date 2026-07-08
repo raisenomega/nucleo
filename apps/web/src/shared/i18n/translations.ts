@@ -18,8 +18,10 @@ import { esDocs } from "./translations.docs.es";
 import { enDocs } from "./translations.docs.en";
 import { esBilling } from "./translations.billing.es";
 import { enBilling } from "./translations.billing.en";
+import { esQuotes } from "./translations.quotes.es";
+import { enQuotes } from "./translations.quotes.en";
 
 export const translations: Record<Locale, Record<TranslationKey, string>> = {
-  es: { ...es, ...esRecon, ...esPayroll, ...esEmployee, ...esRoutes, ...esReports, ...esHr, ...esDocs, ...esBilling },
-  en: { ...en, ...enRecon, ...enPayroll, ...enEmployee, ...enRoutes, ...enReports, ...enHr, ...enDocs, ...enBilling },
+  es: { ...es, ...esRecon, ...esPayroll, ...esEmployee, ...esRoutes, ...esReports, ...esHr, ...esDocs, ...esBilling, ...esQuotes },
+  en: { ...en, ...enRecon, ...enPayroll, ...enEmployee, ...enRoutes, ...enReports, ...enHr, ...enDocs, ...enBilling, ...enQuotes },
 };
