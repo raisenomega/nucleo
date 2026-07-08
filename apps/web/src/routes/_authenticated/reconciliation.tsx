@@ -43,7 +43,7 @@ function ReconciliationPage() {
           <h1 className="font-display text-xl font-bold text-primary md:text-3xl">{t("reconciliation")}</h1>
           <div className="flex items-center gap-2">
             {can("reconciliation", "fiscal") && (
-              <button type="button" disabled={pdf.generating || !m.snapshot} onClick={() => { if (m.snapshot) void pdf.generatePdf("report", null, buildFiscalBody(month, m.snapshot, t("fiscalReport"))); }}
+              <button type="button" disabled={pdf.generating || !m.snapshot} onClick={() => { if (m.snapshot) void pdf.generatePdf("reconciliation", null, buildFiscalBody(month, m.snapshot)); }}
                 className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold disabled:opacity-50"><FileText className="h-4 w-4" /> {pdf.generating ? t("generatingPdf") : t("fiscalReport")}</button>)}
             <input type="month" value={month} onChange={(e) => setMonth(e.target.value)} className="rounded-lg border border-border bg-background p-2 text-sm" />
           </div>

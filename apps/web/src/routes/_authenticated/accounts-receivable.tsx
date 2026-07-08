@@ -2,7 +2,9 @@ import { useState } from "react";
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { useI18n } from "@shared/i18n";
 import { formatCurrency } from "@shared/lib/format";
+import { FileText } from "lucide-react";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
+import { usePdf } from "@shared/hooks/usePdf";
 import { useAccountsReceivable } from "@finance/application/useAccountsReceivable.hook";
 import { supabaseArRepository } from "@finance/infrastructure/supabase-ar.repository";
 import { AccountsReceivableTable } from "@finance/presentation/AccountsReceivableTable";
@@ -18,6 +20,13 @@ function ARPage() {
   const m = useAccountsReceivable(supabaseArRepository);
   const [collecting, setCollecting] = useState<AccountReceivable | null>(null);
   const [noting, setNoting] = useState<AccountReceivable | null>(null);
+  const pdf = usePdf();
+  const exportPdf = () => { const rows = m.snapshot?.items ?? []; void pdf.generatePdf("report", null, {
+    title: t("accountsReceivable"), date_from: "", date_to: "",
+    kpis: [{ label: t("totalPending"), value: `$${(m.snapshot?.totalPending ?? 0).toFixed(2)}` }, { label: t("pendingDebts"), value: String(m.snapshot?.count ?? 0) }],
+    tables: [{ title: t("pendingDebts"), headers: [t("contactName"), t("phone"), t("amount"), t("date"), t("employee")],
+      rows: rows.map((r) => [r.clientName, r.phone ?? "—", `$${r.amount.toFixed(2)}`, r.routeDate, r.assignedTo]) }], charts: [],
+  }); };
   if (!can("accounts_receivable", "view")) return <Navigate to="/dashboard" />;
   const canAct = can("accounts_receivable", "edit") || can("routes", "edit");
   const forgive = (r: AccountReceivable) => {
@@ -35,7 +44,11 @@ function ARPage() {
   return (
     <div className="space-y-6 p-4 md:p-8">
       <div className="space-y-2">
-        <h1 className="font-display text-xl font-bold text-primary md:text-3xl">{t("accountsReceivable")}</h1>
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <h1 className="font-display text-xl font-bold text-primary md:text-3xl">{t("accountsReceivable")}</h1>
+          <button type="button" disabled={pdf.generating || !m.snapshot?.count} onClick={exportPdf}
+            className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold disabled:opacity-50"><FileText className="h-4 w-4" /> {pdf.generating ? t("generatingPdf") : t("debtsReport")}</button>
+        </div>
         <p className="text-xs text-muted-foreground">{t("pendingDebts")}</p>
       </div>
       {m.snapshot && (

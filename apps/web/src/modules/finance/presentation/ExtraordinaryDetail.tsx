@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { PhotoLightbox } from "@shared/components/PhotoLightbox";
-import { X } from "lucide-react";
+import { X, FileDown } from "lucide-react";
 import { useI18n } from "@shared/i18n";
+import { usePdf } from "@shared/hooks/usePdf";
 import { formatCurrency } from "@shared/lib/format";
 import { ScreenModal } from "@shared/components/ScreenModal";
 import { signEvidence } from "@finance/infrastructure/supabase-evidence.storage";
@@ -9,6 +10,7 @@ import type { ExtraPayment } from "@finance/domain/extraordinary.types";
 
 export function ExtraordinaryDetail({ item, onClose }: { item: ExtraPayment; onClose: () => void }) {
   const { t } = useI18n();
+  const pdf = usePdf();
   const [urls, setUrls] = useState<string[]>([]);
   const [photo, setPhoto] = useState<string | null>(null);
   useEffect(() => { void signEvidence(item.evidenceUrls).then(setUrls); }, [item]);
@@ -28,6 +30,7 @@ export function ExtraordinaryDetail({ item, onClose }: { item: ExtraPayment; onC
             {row("amount", formatCurrency(item.amount))}
             {row("paymentMethod", item.paymentMethodLabel)}{row("justification", item.justification)}
           </dl>
+          <button type="button" disabled={pdf.generating} onClick={() => void pdf.generatePdf("extraordinary", item.id)} className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-sm font-bold disabled:opacity-50"><FileDown className="h-4 w-4" /> {pdf.generating ? t("generatingPdf") : t("receiptPdf")}</button>
           {urls.length > 0 && (
             <div className="flex flex-wrap gap-2">
               {urls.map((src, i) => <img key={i} src={src} alt="" onClick={() => setPhoto(src)} className="h-24 w-24 cursor-pointer rounded object-cover" />)}
