@@ -1,6 +1,6 @@
 export type Locale = "es" | "en";
 export type TranslationKey =
-  | "title" | "tagline" | "toggleTheme" | "switchLang" | "welcome" | "role" | "logout"
+  | "title" | "tagline" | "toggleTheme" | "switchLang" | "welcome" | "yourBusiness" | "role" | "logout"
   | "trialBanner" | "trialEnded" | "trialEndedDesc" | "scheduleConsultation"
   | "income" | "incomeList" | "newIncome" | "amount" | "category" | "description" | "date"
   | "paymentMethod" | "save" | "cancel" | "edit" | "delete" | "noRecords" | "createdBy"

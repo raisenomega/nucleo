@@ -3,7 +3,7 @@ import type { TranslationKey } from "./translations.keys";
 export const es = {
   title: "NÚCLEO by raisen", tagline: "La base operativa de tu negocio",
   toggleTheme: "Cambiar tema", switchLang: "Cambiar idioma",
-  welcome: "Bienvenido a NÚCLEO", role: "Rol", logout: "Cerrar sesión",
+  welcome: "Bienvenido a", yourBusiness: "tu negocio", role: "Rol", logout: "Cerrar sesión",
   trialBanner: "Te quedan {days} días de prueba", trialEnded: "Tu prueba terminó",
   trialEndedDesc: "Agenda una consulta para seguir con NÚCLEO.", scheduleConsultation: "Agendar consulta",
   income: "Ingresos", incomeList: "Lista de ingresos", newIncome: "Nuevo ingreso",

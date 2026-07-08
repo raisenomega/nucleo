@@ -3,6 +3,7 @@ import { TrialBanner } from "@shared/components/TrialBanner";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { useSession } from "@shared/providers/SessionProvider";
+import { useBrand } from "@shared/providers/BrandProvider";
 import { useDashboard } from "@finance/application/useDashboard.hook";
 import { supabaseDashboardRepository } from "@finance/infrastructure/supabase-dashboard.repository";
 import { DashboardKpis } from "@finance/presentation/DashboardKpis";
@@ -18,13 +19,16 @@ function Dashboard() {
   const { t } = useI18n();
   const { can } = useModuleAccess();
   const { session } = useSession();
+  const brand = useBrand();
   const { snapshot, crm, mkt, fiscal, isLoading } = useDashboard(supabaseDashboardRepository);
   const finance = can("income", "view") || can("expenses", "view");
   const sh = "text-xs font-bold uppercase tracking-wide text-muted-foreground";
+  const rawName = brand.displayName || brand.legalName;
+  const tenantName = !rawName || rawName === "Mi Negocio" ? t("yourBusiness") : rawName;
   return (
     <div className="space-y-6 p-4 md:p-8">
       <TrialBanner />
-      <div><h1 className="font-display text-xl font-bold text-primary md:text-3xl">{t("welcome")}</h1>
+      <div><h1 className="font-display text-xl font-bold text-primary md:text-3xl">{t("welcome")} {tenantName}</h1>
         <p className="text-xs text-muted-foreground">{session?.email} · {session?.role ?? "—"}</p></div>
       {can("dashboard", "view") && (isLoading || !snapshot || !crm ? (
         <p className="font-body text-muted-foreground">{t("noData")}</p>

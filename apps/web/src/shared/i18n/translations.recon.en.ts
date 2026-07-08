@@ -31,7 +31,7 @@ export const enRecon = {
   passwordMismatch: "Passwords don't match", minPassword: "Minimum 8 characters",
   alreadyRegistered: "This email already has an account. Sign in.", invitedLink: "Invited? Create your account",
   accountCreated: "Account created! Check your email to confirm. Then you can sign in.",
-  goToLogin: "Go to sign in", businessOwner: "Business owner?", trialFree: "Try free for 3 days",
+  goToLogin: "Go to sign in", businessOwner: "Business owner?", trialFree: "Try free for 7 days",
   employeeProfile: "Employee profile", personalInfo: "Personal info", roleAccess: "Role & access",
   assignPin: "Assign PIN", reactivate: "Reactivate", lastAccess: "Last access", modulesVisible: "Visible modules",
   backToTeam: "Back to team", phone: "Phone", position: "Position",
