@@ -39,8 +39,12 @@ function applyFavicon(color: string, name: string): void {
   setFavicon(c.toDataURL("image/png"));
 }
 
+// Deja UN solo <link rel="icon"> autoritativo: elimina los default hardcodeados (svg+ico) y
+// cualquier type/sizes previo que hacían que el browser ignorara el favicon del tenant.
 function setFavicon(href: string): void {
-  let link = document.querySelector<HTMLLinkElement>("link[rel~='icon']");
-  if (!link) { link = document.createElement("link"); link.rel = "icon"; document.head.appendChild(link); }
+  document.querySelectorAll("link[rel~='icon']").forEach((l) => l.remove());
+  const link = document.createElement("link");
+  link.rel = "icon";
   link.href = href;
+  document.head.appendChild(link);
 }
