@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { supabase } from "@shared/lib/supabase";
 import { useSession } from "@shared/providers/SessionProvider";
@@ -23,6 +23,8 @@ export function BrandProvider({ children }: { children: ReactNode }) {
   const { session } = useSession();
   const tenantId = session?.tenantId ?? null;
   const [brand, setBrand] = useState<Brand>(EMPTY_BRAND);
+  const [nonce, setNonce] = useState(0);
+  const reload = useCallback(() => setNonce((n) => n + 1), []);
   useEffect(() => {
     if (!tenantId) { setBrand({ ...EMPTY_BRAND, isLoading: false }); return; }
     let alive = true;
@@ -34,15 +36,18 @@ export function BrandProvider({ children }: { children: ReactNode }) {
       ]);
       if (!alive) return;
       const row = (ten.data as { legal_name: string; display_name: string | null }[] | null)?.[0];
-      const hasLogo = ((files.data as { name: string }[] | null) ?? []).some((f) => f.name === "logo.png");
-      const logoUrl = hasLogo ? supabase.storage.from("brand").getPublicUrl(`${tenantId}/logo.png`).data.publicUrl : null;
+      const names = ((files.data as { name: string }[] | null) ?? []).map((f) => f.name);
+      const url = (kind: string) => {
+        const f = names.find((n) => n.startsWith(`${kind}.`));
+        return f ? supabase.storage.from("brand").getPublicUrl(`${tenantId}/${f}`).data.publicUrl : null;
+      };
       setBrand({
         tenantId, displayName: row?.display_name ?? "", legalName: row?.legal_name ?? "",
-        logoUrl, theme: toTheme((theme.data as ThemeRow[] | null)?.[0]), isLoading: false,
+        logoUrl: url("logo"), faviconUrl: url("favicon"), theme: toTheme((theme.data as ThemeRow[] | null)?.[0]), isLoading: false, reload,
       });
     })();
     return () => { alive = false; };
-  }, [tenantId]);
+  }, [tenantId, nonce, reload]);
   return <BrandContext.Provider value={brand}><ThemeLoader />{children}</BrandContext.Provider>;
 }
 

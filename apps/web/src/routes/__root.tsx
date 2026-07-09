@@ -3,7 +3,7 @@ import appCss from "../styles/index.css?url";
 import { I18nProvider, useI18n } from "@shared/i18n";
 import { ThemeToggle } from "@shared/components/ThemeToggle";
 
-const THEME_SCRIPT = `(function(){try{var s=localStorage.getItem("theme"),m=window.matchMedia,d;if(s==="dark"||s==="light"){d=s==="dark";}else if(m&&m("(prefers-color-scheme: dark)").matches){d=true;}else if(m&&m("(prefers-color-scheme: light)").matches){d=false;}else{d=true;}document.documentElement.classList.toggle("dark",d);var c=JSON.parse(localStorage.getItem("nucleo:theme-cache:v1")||"null");if(c&&c.vars){for(var k in c.vars){document.documentElement.style.setProperty(k,c.vars[k]);}}}catch(e){}})();`;
+const THEME_SCRIPT = `(function(){try{var c=JSON.parse(localStorage.getItem("nucleo:theme-cache:v1")||"null"),s=localStorage.getItem("theme"),m=window.matchMedia,dm=c&&c.defaultMode,d;if(s==="dark"||s==="light"){d=s==="dark";}else if(dm==="dark"||dm==="light"){d=dm==="dark";}else if(m&&m("(prefers-color-scheme: light)").matches){d=false;}else{d=true;}document.documentElement.classList.toggle("dark",d);if(c&&c.vars){for(var k in c.vars){document.documentElement.style.setProperty(k,c.vars[k]);}}}catch(e){}})();`;
 
 // Registra el service worker solo en producción (no en localhost).
 const SW_SCRIPT = `if("serviceWorker" in navigator&&location.hostname!=="localhost"){window.addEventListener("load",function(){navigator.serviceWorker.register("/service-worker.js").catch(function(){});});}`;

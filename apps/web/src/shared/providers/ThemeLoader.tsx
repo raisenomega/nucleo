@@ -8,7 +8,7 @@ export function ThemeLoader() {
   const brand = useBrand();
   useEffect(() => {
     if (brand.isLoading || !brand.tenantId) return;
-    applyBranding({ tenantId: brand.tenantId, displayName: brand.displayName, legalName: brand.legalName, theme: brand.theme });
+    applyBranding({ tenantId: brand.tenantId, displayName: brand.displayName, legalName: brand.legalName, theme: brand.theme, faviconUrl: brand.faviconUrl });
   }, [brand]);
   return null;
 }

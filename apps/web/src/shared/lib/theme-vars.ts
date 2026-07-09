@@ -37,3 +37,15 @@ export function themeVars(t: TenantTheme): Record<string, string> {
   if (t.primaryColor) vars["--primary-foreground"] = foregroundFor(t.primaryColor);
   return vars;
 }
+
+// Todos los tokens que gestiona el tema (para poder revertir en el preview en vivo).
+export const THEME_TOKENS = [...new Set(MAP.flatMap(([, toks]) => toks)), "--primary-foreground"];
+
+// Preview en vivo: quita TODAS las overrides gestionadas y aplica solo las no-null (revertir colores borrados).
+export function previewTheme(t: TenantTheme): void {
+  if (typeof document === "undefined") return;
+  const root = document.documentElement.style;
+  for (const tok of THEME_TOKENS) root.removeProperty(tok);
+  const vars = themeVars(t);
+  for (const k in vars) root.setProperty(k, vars[k]!);
+}

@@ -8,11 +8,12 @@ import { AdminTeamTab } from "@admin/presentation/AdminTeamTab";
 import { AdminCategoriesTab } from "@admin/presentation/AdminCategoriesTab";
 import { AdminSettingsTab } from "@admin/presentation/AdminSettingsTab";
 import { AdminBrandTab } from "@admin/presentation/AdminBrandTab";
+import { AdminThemesTab } from "@admin/presentation/AdminThemesTab";
 import { useSession } from "@shared/providers/SessionProvider";
 
 export const Route = createFileRoute("/_authenticated/settings")({ component: SettingsPage });
 
-type Tab = "team" | "categories" | "general" | "brand";
+type Tab = "team" | "categories" | "general" | "brand" | "themes";
 
 function SettingsPage() {
   const { t } = useI18n();
@@ -29,6 +30,7 @@ function SettingsPage() {
     { id: "categories", label: t("categories"), show: true },
     { id: "general", label: t("generalSettings"), show: isCeo },
     { id: "brand", label: t("templatesTab"), show: isCeo },
+    { id: "themes", label: t("themesTab"), show: isCeo },
   ];
   return (
     <div className="space-y-6 p-4 md:p-8">
@@ -43,6 +45,7 @@ function SettingsPage() {
       {tab === "categories" && <AdminCategoriesTab categories={m.categories} onSave={m.saveCategory} onToggle={m.toggleCategory} />}
       {tab === "general" && isCeo && <AdminSettingsTab settings={m.settings} onSave={m.upsertSetting} />}
       {tab === "brand" && isCeo && <AdminBrandTab tenantId={session?.tenantId ?? ""} settings={m.settings} onSaveSetting={m.upsertSetting} />}
+      {tab === "themes" && isCeo && <AdminThemesTab tenantId={session?.tenantId ?? ""} />}
     </div>
   );
 }

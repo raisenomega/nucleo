@@ -15,6 +15,7 @@ export interface IBrandRepository {
   updateIdentity(legalName: string, displayName: string): Promise<RepoResult>;
   uploadLogo(tenantId: string, file: File): Promise<RepoResult>;
   logoUrl(tenantId: string): Promise<string | null>;
+  faviconUrl(tenantId: string): Promise<string | null>;
   getTheme(): Promise<Record<string, string | null>>;
   saveTheme(tenantId: string, fields: Record<string, string | null>): Promise<RepoResult>;
 }

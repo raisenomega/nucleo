@@ -1,9 +1,17 @@
 import { supabase } from "@shared/lib/supabase";
+import { uploadBrandAsset } from "@shared/lib/upload-brand-asset";
 import type { RepoResult } from "@admin/domain/admin.types";
 import type { IBrandRepository, TenantIdentity } from "@admin/domain/brand.types";
 
 const BUCKET = "brand";
 const ok = (e: { message: string } | null): RepoResult => (e ? { ok: false, error: e.message } : { ok: true });
+
+// URL pública del asset {kind}.* del tenant (bucket público). Null si no existe. Soporta png/jpg/webp/svg.
+async function assetUrl(tenantId: string, kind: "logo" | "favicon"): Promise<string | null> {
+  const { data: files } = await supabase.storage.from(BUCKET).list(tenantId);
+  const f = ((files as { name: string }[] | null) ?? []).find((x) => x.name.startsWith(`${kind}.`));
+  return f ? supabase.storage.from(BUCKET).getPublicUrl(`${tenantId}/${f.name}`).data.publicUrl : null;
+}
 
 export const supabaseBrandRepository: IBrandRepository = {
   async getIdentity(): Promise<TenantIdentity | null> {
@@ -15,16 +23,11 @@ export const supabaseBrandRepository: IBrandRepository = {
     return ok((await supabase.rpc("update_tenant_identity", { p_legal_name: legalName, p_display_name: displayName })).error);
   },
   async uploadLogo(tenantId, file): Promise<RepoResult> {
-    // Path fijo {tenant}/logo.png — es el que lee el pdf-api para el header del PDF.
-    const { error } = await supabase.storage.from(BUCKET).upload(`${tenantId}/logo.png`, file, { upsert: true, contentType: file.type || "image/png" });
-    return ok(error);
+    const r = await uploadBrandAsset(tenantId, "logo", file);  // delega en el helper compartido
+    return r.ok ? { ok: true } : { ok: false, error: r.error };
   },
-  async logoUrl(tenantId): Promise<string | null> {
-    // Bucket público: URL directa sin firmar. Solo si el logo existe (evita 404 en <img>).
-    const { data: files } = await supabase.storage.from(BUCKET).list(tenantId);
-    const has = ((files as { name: string }[] | null) ?? []).some((f) => f.name === "logo.png");
-    return has ? supabase.storage.from(BUCKET).getPublicUrl(`${tenantId}/logo.png`).data.publicUrl : null;
-  },
+  logoUrl(tenantId): Promise<string | null> { return assetUrl(tenantId, "logo"); },
+  faviconUrl(tenantId): Promise<string | null> { return assetUrl(tenantId, "favicon"); },
   async getTheme(): Promise<Record<string, string | null>> {
     const { data } = await supabase.from("tenant_themes").select("*").limit(1);  // RLS acota al tenant actual
     return (data as Record<string, string | null>[] | null)?.[0] ?? {};

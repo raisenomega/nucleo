@@ -30,10 +30,11 @@ def fetch_branding(tenant_id: str) -> dict:
     t0 = tenant.data[0] if tenant.data else {}
     th = theme.data[0] if theme.data else {}
     logo_url = ""
-    try:  # bucket público: URL directa, sin firmar. Solo si el logo existe.
+    try:  # bucket público: URL directa, sin firmar. Busca logo.* (png/jpg/webp/svg).
         files = sb.storage.from_(BRAND_BUCKET).list(tenant_id)
-        if any(f.get("name") == "logo.png" for f in (files or [])):
-            pub = sb.storage.from_(BRAND_BUCKET).get_public_url(f"{tenant_id}/logo.png")
+        logo = next((f["name"] for f in (files or []) if f.get("name", "").startswith("logo.")), None)
+        if logo:
+            pub = sb.storage.from_(BRAND_BUCKET).get_public_url(f"{tenant_id}/{logo}")
             logo_url = pub if isinstance(pub, str) else (pub.get("publicUrl") or "")
     except Exception:
         pass  # sin logo → el template muestra solo el nombre
