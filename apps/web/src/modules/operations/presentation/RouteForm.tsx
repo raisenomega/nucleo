@@ -6,7 +6,6 @@ import { RouteStopsEditor, emptyStop } from "@operations/presentation/RouteStops
 import type { RouteFormData, EditableStop, RouteStop } from "@operations/domain/route.types";
 
 type Emp = { id: string; full_name: string };
-const STATUS = ["Planificada", "En progreso", "Completada", "Cancelada"];
 const toEditable = (s: RouteStop): EditableStop => ({ id: s.id, clientName: s.clientName, address: s.address, city: s.city ?? "", serviceType: s.serviceType, scheduledTime: s.scheduledTime, estimatedAmount: s.estimatedAmount, notes: s.notes ?? "", phone: s.phone ?? "" });
 
 export function RouteForm({ employees, initial, initialStops, onSubmit, onCancel }: {
@@ -18,7 +17,7 @@ export function RouteForm({ employees, initial, initialStops, onSubmit, onCancel
   const isServicio = session?.role === "servicio";
   const uid = session?.userId ?? "";
   const ownName = employees.find((e) => e.id === uid)?.full_name || session?.email || uid;
-  const [f, setF] = useState<RouteFormData>(initial ?? { routeDate: "", assignedTo: "", status: "Planificada", notes: "" });
+  const [f, setF] = useState<RouteFormData>(initial ?? { routeDate: "", assignedTo: "", notes: "" });
   const [stops, setStops] = useState<EditableStop[]>(initial ? [] : [emptyStop()]);
   useEffect(() => { if (initialStops && initialStops.length) setStops(initialStops.map(toEditable)); }, [initialStops]);
   const fld = "w-full rounded-lg border border-border bg-background p-2 text-sm";
@@ -36,7 +35,9 @@ export function RouteForm({ employees, initial, initialStops, onSubmit, onCancel
     <form onSubmit={submit}
       className="space-y-4 rounded-lg border border-border bg-card p-5">
       <h2 className="font-body font-bold">{t("newRoute")}</h2>
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+      {/* El estado del día se DERIVA de los stops (Completada, En progreso, Planificada). NO agregar
+          dropdown manual — la lógica vive en el mapper (deriveDayStatus) al listar. Ver B.3.c / migr 120. */}
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
         <label className="space-y-1"><span className={lbl}>{t("date")}</span>
           <input type="date" required value={f.routeDate} onChange={(e) => setF({ ...f, routeDate: e.target.value })} className={fld} /></label>
         <label className="space-y-1"><span className={lbl}>{t("employee")}</span>
@@ -44,9 +45,6 @@ export function RouteForm({ employees, initial, initialStops, onSubmit, onCancel
             ? <input type="text" readOnly value={ownName} className={`${fld} opacity-70`} />
             : <select required value={f.assignedTo} onChange={(e) => setF({ ...f, assignedTo: e.target.value })} className={fld}>
                 <option value="">—</option>{employees.map((emp) => <option key={emp.id} value={emp.id}>{emp.full_name}</option>)}</select>}</label>
-        <label className="space-y-1"><span className={lbl}>{t("status")}</span>
-          <select value={f.status} onChange={(e) => setF({ ...f, status: e.target.value })} className={fld}>
-            {STATUS.map((s) => <option key={s} value={s}>{s}</option>)}</select></label>
       </div>
       <label className="block space-y-1"><span className={lbl}>{t("notes")}</span>
         <input value={f.notes} onChange={(e) => setF({ ...f, notes: e.target.value })} className={fld} /></label>

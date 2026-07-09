@@ -17,7 +17,8 @@ export interface RouteStop {
   readonly evidenceUrls: string[]; readonly amountReceived: number | null;
   readonly changeAmount: number | null; readonly pendingCollection: boolean;
 }
-export interface RouteFormData { routeDate: string; assignedTo: string; status: string; notes: string; }
+// status NO va en el form: el estado del día se DERIVA de los stops (B.3.c/120). Ver deriveDayStatus.
+export interface RouteFormData { routeDate: string; assignedTo: string; notes: string; }
 export interface StopFormData {
   clientName: string; address: string; city: string; serviceType: string;
   scheduledTime: string; estimatedAmount: number; notes: string; phone: string;

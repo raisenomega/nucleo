@@ -3,7 +3,7 @@ import type { RepoResult, IRouteRepository } from "@operations/domain/route.type
 import { toRoute, toStop, stopRow, stopPatch, type RRow, type SRow } from "@operations/infrastructure/route.mapper";
 
 const ok = (e: { message: string } | null): RepoResult => (e ? { ok: false, error: e.message } : { ok: true });
-const ROUTE_SEL = "id,route_date,assigned_to,status,notes,created_by,deleted_at,deleted_by,deleted_reason, route_stops(status)";
+const ROUTE_SEL = "id,route_date,assigned_to,status,notes,created_by,deleted_at,deleted_by,deleted_reason, route_stops(status,deleted_at)";
 
 export const supabaseRouteRepository: IRouteRepository = {
   async recordPayment(stopId, p) {
@@ -23,18 +23,19 @@ export const supabaseRouteRepository: IRouteRepository = {
     return ((data as SRow[] | null) ?? []).map(toStop);
   },
   async create(d, stops) {
-    const { data, error } = await supabase.from("service_routes")
-      .insert({ route_date: d.routeDate, assigned_to: d.assignedTo, status: d.status, notes: d.notes || null }).select("id").single();
-    if (error) return { ok: false, error: error.message };
-    if (stops.length) {
-      const e = (await supabase.from("route_stops").insert(stops.map((s, i) => stopRow((data as { id: string }).id, i + 1, s)))).error;
-      if (e) return { ok: false, error: e.message };
-    }
-    return { ok: true };
+    // upsert_route (120): atómico append-on-create. Si ya hay ruta del día+empleado, agrega stops
+    // a la existente (RLS 117 + unique index son el guard). NO manda status (se deriva).
+    return ok((await supabase.rpc("upsert_route", {
+      p_date: d.routeDate, p_assigned_to: d.assignedTo, p_notes: d.notes,
+      p_stops: stops.map((s) => ({
+        client_name: s.clientName, address: s.address, city: s.city || null, service_type: s.serviceType,
+        scheduled_time: s.scheduledTime, estimated_amount: s.estimatedAmount, notes: s.notes || null, phone: s.phone || null,
+      })),
+    })).error);
   },
   async update(id, d) {
     return ok((await supabase.from("service_routes")
-      .update({ route_date: d.routeDate, assigned_to: d.assignedTo, status: d.status, notes: d.notes || null }).eq("id", id)).error);
+      .update({ route_date: d.routeDate, assigned_to: d.assignedTo, notes: d.notes || null }).eq("id", id)).error);
   },
   async voidRow(id, reason) {
     return ok((await supabase.rpc("void_route", { p_id: id, p_reason: reason })).error);

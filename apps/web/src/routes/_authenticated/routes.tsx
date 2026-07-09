@@ -38,7 +38,7 @@ function RoutesPage() {
   const doMarkDone = (id: string) => void m.completeStop(id).then((r) => { if (!r.ok) window.alert(r.error); });
   if (!can("routes", "view")) return <Navigate to="/dashboard" />;
   const cur = m.routes.find((r) => r.id === editing);
-  const initial = cur ? { routeDate: cur.routeDate, assignedTo: cur.assignedTo, status: cur.status, notes: cur.notes ?? "" } : undefined;
+  const initial = cur ? { routeDate: cur.routeDate, assignedTo: cur.assignedTo, notes: cur.notes ?? "" } : undefined;
   const viewRoute = m.routes.find((r) => r.id === viewing);
   return (
     <div className="space-y-6 p-4 md:p-8">

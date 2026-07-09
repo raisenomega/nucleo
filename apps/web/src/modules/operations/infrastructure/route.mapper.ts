@@ -1,15 +1,32 @@
 import type { ServiceRoute, RouteStop, StopFormData, StopPatch } from "@operations/domain/route.types";
 
-export type RRow = { id: string; route_date: string; assigned_to: string; status: string; notes: string | null; created_by: string; route_stops: { status: string }[]; deleted_at: string | null; deleted_by: string | null; deleted_reason: string | null };
+type SStat = { status: string; deleted_at: string | null };
+export type RRow = { id: string; route_date: string; assigned_to: string; status: string; notes: string | null; created_by: string; route_stops: SStat[]; deleted_at: string | null; deleted_by: string | null; deleted_reason: string | null };
+
+// Estado del día DERIVADO de los stops (B.3.c/120). VOID excluidos; 'No atendido' (No cobrado)
+// cuenta como completado. La columna service_routes.status queda vestigial (Camino 1).
+// Follow-up: eliminar la columna DB si ningún otro consumer la lee.
+const DONE = new Set(["Completada", "No atendido"]);
+export const deriveDayStatus = (stops: SStat[]): string => {
+  const active = stops.filter((s) => !s.deleted_at);
+  if (active.length === 0) return "Planificada";
+  if (active.every((s) => DONE.has(s.status))) return "Completada";
+  if (active.every((s) => s.status === "Pendiente")) return "Planificada";
+  return "En progreso";
+};
 export type SRow = { id: string; route_id: string; stop_order: number; client_name: string; address: string; city: string | null; service_type: string; scheduled_time: string; phone: string | null; estimated_amount: number | string; actual_amount: number | string | null; payment_method_id: string | null; status: string; notes: string | null; completed_at: string | null; evidence_urls: string[] | null; amount_received: number | string | null; change_amount: number | string | null; pending_collection: boolean | null };
 const num = (v: number | string | null) => (v == null ? null : Number(v));
 
-export const toRoute = (r: RRow): ServiceRoute => ({
-  id: r.id, routeDate: r.route_date, assignedTo: r.assigned_to, status: r.status,
-  notes: r.notes, createdBy: r.created_by, stopCount: (r.route_stops ?? []).length,
-  completedCount: (r.route_stops ?? []).filter((s) => s.status === "Completada").length,
-  deletedAt: r.deleted_at, deletedBy: r.deleted_by, deletedReason: r.deleted_reason,
-});
+export const toRoute = (r: RRow): ServiceRoute => {
+  const active = (r.route_stops ?? []).filter((s) => !s.deleted_at);
+  return {
+    id: r.id, routeDate: r.route_date, assignedTo: r.assigned_to,
+    status: deriveDayStatus(r.route_stops ?? []),   // derivado; ignora r.status (vestigial)
+    notes: r.notes, createdBy: r.created_by, stopCount: active.length,
+    completedCount: active.filter((s) => DONE.has(s.status)).length,   // Completada + No cobrado
+    deletedAt: r.deleted_at, deletedBy: r.deleted_by, deletedReason: r.deleted_reason,
+  };
+};
 export const toStop = (s: SRow): RouteStop => ({
   id: s.id, routeId: s.route_id, stopOrder: s.stop_order, clientName: s.client_name,
   address: s.address, city: s.city, serviceType: s.service_type, scheduledTime: s.scheduled_time,
