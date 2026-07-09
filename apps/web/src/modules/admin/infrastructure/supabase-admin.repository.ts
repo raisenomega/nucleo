@@ -36,8 +36,13 @@ export const supabaseAdminRepository: IAdminRepository = {
   async changeRole(userId, role): Promise<RepoResult> {
     return ok((await supabase.rpc("change_user_role", { p_user_id: userId, p_role: role })).error);
   },
+  // upsert ON CONFLICT DO NOTHING: re-invitar el mismo email no rompe ni re-dispara el trigger de
+  // notificación (113). PK = (tenant_id, email); tenant_id lo pone el default current_tenant().
   async invite(d): Promise<RepoResult> {
-    return ok((await supabase.from("allowed_emails").insert({ email: d.email.toLowerCase(), full_name: d.fullName, role: d.role })).error);
+    return ok((await supabase.from("allowed_emails").upsert(
+      { email: d.email.toLowerCase(), full_name: d.fullName, role: d.role },
+      { onConflict: "tenant_id,email", ignoreDuplicates: true },
+    )).error);
   },
   async listCategories(): Promise<readonly CategoryConfig[]> {
     const { data } = await supabase.from("categories").select("id,kind,label,expense_class,active").order("kind").order("sort");
