@@ -7,7 +7,7 @@ import { supabaseInventoryRepository } from "@fieldops/infrastructure/supabase-i
 import type { InventoryItem } from "@fieldops/domain/inventory.types";
 import type { StopSupply } from "@operations/domain/route.types";
 
-// Insumos usados en una parada: descuenta stock (RPC). Muestra lo ya registrado.
+// Materiales usados en una parada: descuenta stock (RPC). Muestra lo ya registrado.
 export function StopSuppliesForm({ stopId, onClose }: { stopId: string; onClose: () => void }) {
   const { t } = useI18n();
   const [items, setItems] = useState<InventoryItem[]>([]);
