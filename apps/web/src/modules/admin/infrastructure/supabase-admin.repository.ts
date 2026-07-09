@@ -1,6 +1,6 @@
 import { supabase } from "@shared/lib/supabase";
 import type {
-  IAdminRepository, TeamMember, TeamMemberDetail, TeamMemberUpdate, CategoryConfig, SettingEntry, RepoResult, AppRole, UserStatus,
+  IAdminRepository, TeamMember, TeamMemberDetail, TeamMemberUpdate, CategoryConfig, SettingEntry, RepoResult, InviteResult, AppRole, UserStatus,
 } from "@admin/domain/admin.types";
 
 const ok = (error: { message: string } | null): RepoResult => (error ? { ok: false, error: error.message } : { ok: true });
@@ -36,13 +36,15 @@ export const supabaseAdminRepository: IAdminRepository = {
   async changeRole(userId, role): Promise<RepoResult> {
     return ok((await supabase.rpc("change_user_role", { p_user_id: userId, p_role: role })).error);
   },
-  // upsert ON CONFLICT DO NOTHING: re-invitar el mismo email no rompe ni re-dispara el trigger de
-  // notificación (113). PK = (tenant_id, email); tenant_id lo pone el default current_tenant().
-  async invite(d): Promise<RepoResult> {
-    return ok((await supabase.from("allowed_emails").upsert(
-      { email: d.email.toLowerCase(), full_name: d.fullName, role: d.role },
+  // upsert ON CONFLICT DO NOTHING + .select(): re-invitar el mismo email no rompe ni re-dispara el
+  // trigger (113); data.length===0 => ignorado por duplicado. PK = (tenant_id, email).
+  async invite(d): Promise<InviteResult> {
+    const { data, error } = await supabase.from("allowed_emails").upsert(
+      { email: d.email.toLowerCase().trim(), full_name: d.fullName.trim(), role: d.role },
       { onConflict: "tenant_id,email", ignoreDuplicates: true },
-    )).error);
+    ).select();
+    if (error) return { ok: false, error: error.message };
+    return { ok: true, duplicated: !data || data.length === 0 };
   },
   async listCategories(): Promise<readonly CategoryConfig[]> {
     const { data } = await supabase.from("categories").select("id,kind,label,expense_class,active").order("kind").order("sort");

@@ -33,6 +33,8 @@ export interface CategoryConfig {
 export interface SettingEntry { readonly key: string; readonly value: string; }
 
 export type RepoResult = { readonly ok: true } | { readonly ok: false; readonly error: string };
+// invite distingue insertado-nuevo (duplicated:false) de ignorado-por-duplicado (duplicated:true).
+export type InviteResult = { readonly ok: true; readonly duplicated: boolean } | { readonly ok: false; readonly error: string };
 
 // Puerto — lo implementa infrastructure; lo consume application (DI).
 export interface IAdminRepository {
@@ -42,7 +44,7 @@ export interface IAdminRepository {
   setPin(userId: string, pin: string): Promise<RepoResult>;
   setStatus(id: string, status: UserStatus): Promise<RepoResult>;
   changeRole(userId: string, role: AppRole): Promise<RepoResult>;
-  invite(d: InviteData): Promise<RepoResult>;
+  invite(d: InviteData): Promise<InviteResult>;
   listCategories(): Promise<readonly CategoryConfig[]>;
   saveCategory(id: string | null, kind: string, label: string, expenseClass: string | null): Promise<RepoResult>;
   toggleCategory(id: string, active: boolean): Promise<RepoResult>;

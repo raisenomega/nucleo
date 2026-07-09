@@ -53,7 +53,7 @@ export type TranslationKey =
   | "recurringExpenses" | "recurringSubtitle" | "budgeted" | "paid" | "addRecurring"
   | "registerPayment" | "coveredPercent" | "manageRecurring" | "frequencyLabel" | "newCategory"
   | "createCategory" | "categoryName" | "selectExpenseClass"
-  | "team" | "inviteEmployee" | "approve" | "reject" | "changeRole" | "deactivate"
+  | "team" | "inviteEmployee" | "approve" | "reject" | "changeRole" | "deactivate" | "emailInvalid" | "nameRequired" | "inviteAlreadyExists" | "inviteSent" | "pendingInvites" | "invited" | "cancelInvite" | "inviteCanceled"
   | "categories" | "generalSettings" | "retentionPct" | "orderPrefix" | "fiscalCountry"
   | "joinTeam" | "invitedSubtitle" | "createPassword" | "confirmPassword" | "passwordMismatch"
   | "minPassword" | "alreadyRegistered" | "invitedLink" | "accountCreated" | "goToLogin"

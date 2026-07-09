@@ -2,6 +2,7 @@ import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { SessionProvider, useSession } from "@shared/providers/SessionProvider";
 import { ModuleAccessProvider } from "@shared/providers/ModuleAccessProvider";
 import { BrandProvider } from "@shared/providers/BrandProvider";
+import { ToastProvider } from "@shared/providers/ToastProvider";
 import { AppLayout } from "@shared/components/AppLayout";
 
 export const Route = createFileRoute("/_authenticated")({
@@ -30,7 +31,9 @@ function Guard() {
   return (
     <BrandProvider>
       <ModuleAccessProvider>
-        <AppLayout />
+        <ToastProvider>
+          <AppLayout />
+        </ToastProvider>
       </ModuleAccessProvider>
     </BrandProvider>
   );
