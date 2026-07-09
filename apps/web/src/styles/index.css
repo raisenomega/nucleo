@@ -117,3 +117,7 @@ h1, h2, h3, h4, .font-display { font-family: var(--font-display); }
 .mobile-nav a:active svg, .mobile-nav button:active svg { filter: drop-shadow(0 0 6px hsl(var(--primary) / 0.55)); }
 @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 .animate-slide-up { animation: slideUp 0.25s ease-out; will-change: transform; }
+
+/* Scroll funcional pero sin barra visible (sidebar y submenús). Patrón Notion/Linear. */
+.no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
