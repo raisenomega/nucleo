@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Plus } from "lucide-react";
 import { useI18n } from "@shared/i18n";
+import { useSession } from "@shared/providers/SessionProvider";
 import { RouteStopsEditor, emptyStop } from "@operations/presentation/RouteStopsEditor";
 import type { RouteFormData, EditableStop, RouteStop } from "@operations/domain/route.types";
 
@@ -13,6 +14,10 @@ export function RouteForm({ employees, initial, initialStops, onSubmit, onCancel
   onSubmit: (d: RouteFormData, stops: EditableStop[]) => void; onCancel: () => void;
 }) {
   const { t } = useI18n();
+  const { session } = useSession();
+  const isServicio = session?.role === "servicio";
+  const uid = session?.userId ?? "";
+  const ownName = employees.find((e) => e.id === uid)?.full_name || session?.email || uid;
   const [f, setF] = useState<RouteFormData>(initial ?? { routeDate: "", assignedTo: "", status: "Planificada", notes: "" });
   const [stops, setStops] = useState<EditableStop[]>(initial ? [] : [emptyStop()]);
   useEffect(() => { if (initialStops && initialStops.length) setStops(initialStops.map(toEditable)); }, [initialStops]);
@@ -22,8 +27,11 @@ export function RouteForm({ employees, initial, initialStops, onSubmit, onCancel
     e.preventDefault();
     const kept = stops.filter((s) => s.clientName && s.address);
     if (kept.some((s) => !s.scheduledTime)) { window.alert(t("stopTimeRequired")); return; }
-    onSubmit(f, kept);
+    onSubmit({ ...f, assignedTo: isServicio ? uid : f.assignedTo }, kept);  // servicio: forzado a sí mismo
   };
+  // Servicio no edita rutas ajenas (edge case pre-117: ruta que creó pero asignó a otro).
+  if (isServicio && initial && initial.assignedTo && initial.assignedTo !== uid)
+    return <div className="rounded-lg border border-border bg-card p-5 text-sm text-destructive">{t("cannotEditOthersRoute")}</div>;
   return (
     <form onSubmit={submit}
       className="space-y-4 rounded-lg border border-border bg-card p-5">
@@ -32,8 +40,10 @@ export function RouteForm({ employees, initial, initialStops, onSubmit, onCancel
         <label className="space-y-1"><span className={lbl}>{t("date")}</span>
           <input type="date" required value={f.routeDate} onChange={(e) => setF({ ...f, routeDate: e.target.value })} className={fld} /></label>
         <label className="space-y-1"><span className={lbl}>{t("employee")}</span>
-          <select required value={f.assignedTo} onChange={(e) => setF({ ...f, assignedTo: e.target.value })} className={fld}>
-            <option value="">—</option>{employees.map((emp) => <option key={emp.id} value={emp.id}>{emp.full_name}</option>)}</select></label>
+          {isServicio
+            ? <input type="text" readOnly value={ownName} className={`${fld} opacity-70`} />
+            : <select required value={f.assignedTo} onChange={(e) => setF({ ...f, assignedTo: e.target.value })} className={fld}>
+                <option value="">—</option>{employees.map((emp) => <option key={emp.id} value={emp.id}>{emp.full_name}</option>)}</select>}</label>
         <label className="space-y-1"><span className={lbl}>{t("status")}</span>
           <select value={f.status} onChange={(e) => setF({ ...f, status: e.target.value })} className={fld}>
             {STATUS.map((s) => <option key={s} value={s}>{s}</option>)}</select></label>

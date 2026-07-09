@@ -21,4 +21,5 @@ export const esRoutes = {
   voidSuccess: "Registro anulado", voidError: "No se pudo anular el registro",
   deleteForeverBtn: "Eliminar definitivamente", deleteForeverConfirm: "Esta acción es permanente y no se puede deshacer. ¿Continuar?",
   deleteForeverSuccess: "Registro eliminado permanentemente", hideVoided: "Ocultar anuladas", showVoided: "Mostrar anuladas",
+  cannotEditOthersRoute: "No puedes editar rutas de otros empleados",
 } satisfies Partial<Record<TranslationKey, string>>;

@@ -21,4 +21,5 @@ export const enRoutes = {
   voidSuccess: "Record voided", voidError: "Could not void record",
   deleteForeverBtn: "Delete permanently", deleteForeverConfirm: "This action is permanent and cannot be undone. Continue?",
   deleteForeverSuccess: "Record permanently deleted", hideVoided: "Hide voided", showVoided: "Show voided",
+  cannotEditOthersRoute: "You can't edit other employees' routes",
 } satisfies Partial<Record<TranslationKey, string>>;
