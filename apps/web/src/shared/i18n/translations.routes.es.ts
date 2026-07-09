@@ -2,7 +2,7 @@ import type { TranslationKey } from "./translations.keys";
 
 // Diccionario suplementario (rutas de servicio). Se fusiona en translations.ts.
 export const esRoutes = {
-  newRoute: "Nueva ruta", routeStops: "Paradas", addStop: "Agregar parada",
+  newRoute: "Nueva ruta", routeStops: "Paradas", addStop: "Agregar parada", stopTimeRequired: "Indica la hora de cada parada antes de guardar.",
   completeStop: "Completar", stopCompleted: "Cobrada", alreadyCompleted: "Ya completada", stopsCompleted: "completadas",
   openMap: "Mapa", collectPayment: "Cobrar", amountReceived: "Recibido", changeAmount: "Cambio",
   notAttended: "No atendido", reason: "Razón", completeAndCollect: "Completar y cobrar", pendingDebt: "Deuda pendiente",

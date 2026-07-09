@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { Plus } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { RouteStopsEditor, emptyStop } from "@operations/presentation/RouteStopsEditor";
@@ -18,8 +18,14 @@ export function RouteForm({ employees, initial, initialStops, onSubmit, onCancel
   useEffect(() => { if (initialStops && initialStops.length) setStops(initialStops.map(toEditable)); }, [initialStops]);
   const fld = "w-full rounded-lg border border-border bg-background p-2 text-sm";
   const lbl = "text-xs font-bold text-muted-foreground";
+  const submit = (e: FormEvent) => {
+    e.preventDefault();
+    const kept = stops.filter((s) => s.clientName && s.address);
+    if (kept.some((s) => !s.scheduledTime)) { window.alert(t("stopTimeRequired")); return; }
+    onSubmit(f, kept);
+  };
   return (
-    <form onSubmit={(e) => { e.preventDefault(); onSubmit(f, stops.filter((s) => s.clientName && s.address)); }}
+    <form onSubmit={submit}
       className="space-y-4 rounded-lg border border-border bg-card p-5">
       <h2 className="font-body font-bold">{t("newRoute")}</h2>
       <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
