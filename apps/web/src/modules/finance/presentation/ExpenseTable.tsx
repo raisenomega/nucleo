@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Eye, Pencil } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { Pagination } from "@shared/components/Pagination";
 import { useSession } from "@shared/providers/SessionProvider";
@@ -45,13 +45,13 @@ export function ExpenseTable({ rows, employees, classOf, onView, onEdit, onVoid,
           <tbody>
             {rows.length === 0 && <tr><td colSpan={7} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>}
             {paged.map((i) => (
-              <tr key={i.id} className={`border-t border-border ${i.deletedAt ? "text-muted-foreground line-through opacity-60" : ""}`}>
+              <tr key={i.id} onClick={() => onView(i.id)}
+                className={`cursor-pointer border-t border-border transition-colors hover:bg-secondary ${i.deletedAt ? "text-muted-foreground line-through opacity-60" : ""}`}>
                 <td className="px-3 py-2">{i.date}</td>
                 <td className="px-3 py-2"><span className="flex items-center gap-2">{i.categoryLabel} <ExpenseClassBadge value={classOf(i.categoryId)} /></span></td>
                 <td className="px-3 py-2">{i.description}</td><td className="px-3 py-2 text-right font-semibold">{formatCurrency(i.amount)}</td>
                 <td className="px-3 py-2">{i.paymentMethodLabel}</td><td className="px-3 py-2">{nameOf(i.paidBy)}</td>
-                <td className="px-3 py-2"><div className="flex justify-end gap-2 no-underline">
-                  {!i.deletedAt && <button type="button" onClick={() => onView(i.id)} aria-label={t("viewDetail")} className="text-foreground"><Eye className="h-4 w-4" /></button>}
+                <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}><div className="flex justify-end gap-2 no-underline">
                   {!i.deletedAt && onEdit && <button type="button" onClick={() => onEdit(i.id)} aria-label={t("edit")} className="text-primary"><Pencil className="h-4 w-4" /></button>}
                   {vc(i)}
                 </div></td>
