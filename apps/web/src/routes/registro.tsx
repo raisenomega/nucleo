@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { supabase } from "@shared/lib/supabase";
+import { PasswordInput } from "@shared/components/PasswordInput";
 
 export const Route = createFileRoute("/registro")({
   component: Registro,
@@ -51,7 +52,7 @@ function Registro() {
         <h1 className="font-display text-3xl font-bold text-primary text-center">Prueba NÚCLEO gratis</h1>
         <input value={form.name} onChange={set("name")} placeholder="tu nombre" autoComplete="name" className={field} />
         <input type="email" value={form.email} onChange={set("email")} placeholder="correo" autoComplete="email" className={field} />
-        <input type="password" value={form.password} onChange={set("password")} placeholder="contraseña" autoComplete="new-password" className={field} />
+        <PasswordInput value={form.password} onChange={set("password")} placeholder="contraseña" autoComplete="new-password" className={field} />
         <input value={form.business_name} onChange={set("business_name")} placeholder="nombre del negocio" className={field} />
         <input value={form.phone} onChange={set("phone")} placeholder="teléfono" autoComplete="tel" className={field} />
         {error ? <p className="text-sm text-destructive">{error}</p> : null}

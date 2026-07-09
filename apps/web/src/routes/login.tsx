@@ -2,6 +2,7 @@ import { useState } from "react";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useAuth } from "@identity/application/useAuth.hook";
 import { supabaseAuthAdapter } from "@identity/infrastructure/supabase-auth.adapter";
+import { PasswordInput } from "@shared/components/PasswordInput";
 
 export const Route = createFileRoute("/login")({
   component: Login,
@@ -38,8 +39,7 @@ function Login() {
           autoComplete="email"
           className="w-full rounded-lg bg-secondary text-foreground p-3 font-body"
         />
-        <input
-          type="password"
+        <PasswordInput
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="contraseña"

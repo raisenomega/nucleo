@@ -2,7 +2,7 @@ import type { TranslationKey } from "./translations.keys";
 
 export const en = {
   title: "NÚCLEO by raisen", tagline: "The operating core for your business",
-  toggleTheme: "Toggle theme", switchLang: "Switch language",
+  toggleTheme: "Toggle theme", switchLang: "Switch language", showPassword: "Show password", hidePassword: "Hide password",
   welcome: "Welcome to", yourBusiness: "your business", role: "Role", logout: "Log out",
   trialBanner: "You have {days} days left in your trial", trialEnded: "Your trial has ended",
   trialEndedDesc: "Your trial period ended. To keep using the platform, contact us.", scheduleConsultation: "Schedule consultation",
