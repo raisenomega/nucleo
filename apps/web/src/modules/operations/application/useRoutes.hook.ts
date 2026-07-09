@@ -16,6 +16,7 @@ export function useRoutes(repo: IRouteRepository, date: string) {
 
   const create = useCallback(async (d: RouteFormData, s: StopFormData[]) => { const r = await repo.create(d, s); if (r.ok) await refresh(); return r; }, [repo, refresh]);
   const update = useCallback(async (id: string, d: RouteFormData) => { const r = await repo.update(id, d); if (r.ok) await refresh(); return r; }, [repo, refresh]);
+  const voidRow = useCallback(async (id: string, reason: string) => { const r = await repo.voidRow(id, reason); if (r.ok) await refresh(); return r; }, [repo, refresh]);
   const remove = useCallback(async (id: string) => { const r = await repo.remove(id); if (r.ok) await refresh(); return r; }, [repo, refresh]);
   const updateStop = useCallback(async (id: string, p: StopPatch) => { const r = await repo.updateStop(id, p); if (r.ok) await reloadStops(); return r; }, [repo, reloadStops]);
   const removeStop = useCallback(async (id: string) => { const r = await repo.removeStop(id); if (r.ok) await reloadStops(); return r; }, [repo, reloadStops]);
@@ -32,5 +33,5 @@ export function useRoutes(repo: IRouteRepository, date: string) {
     await refresh(); await reloadStops();
   }, [repo, refresh, reloadStops]);
 
-  return { routes, stops, active, setActive, create, update, remove, updateStop, removeStop, recordPayment, completeStop, setNotAttended, syncStops };
+  return { routes, stops, active, setActive, create, update, voidRow, remove, updateStop, removeStop, recordPayment, completeStop, setNotAttended, syncStops };
 }

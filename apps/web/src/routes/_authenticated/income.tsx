@@ -20,7 +20,7 @@ type Cat = { id: string; label: string; kind: string };
 function IncomePage() {
   const { t } = useI18n();
   const { can } = useModuleAccess();
-  const { incomes, create, update, remove } = useIncome(supabaseIncomeRepository);
+  const { incomes, create, update, voidRow, remove } = useIncome(supabaseIncomeRepository);
   const [cats, setCats] = useState<Cat[]>([]);
   const [editing, setEditing] = useState<string | null>(null);
   const [viewing, setViewing] = useState<string | null>(null);
@@ -66,7 +66,7 @@ function IncomePage() {
           initial={editRow} onSubmit={submit} onCancel={() => setEditing(null)} />
       )}
       <IncomeTable rows={incomes} onView={setViewing} onEdit={can("income", "edit") ? setEditing : undefined}
-        onDelete={can("income", "delete") ? (id) => { if (window.confirm(`${t("delete")}?`)) void remove(id); } : undefined} />
+        onVoid={voidRow} onDeleteForever={remove} />
       {viewIncome && <IncomeDetail income={viewIncome} onClose={() => setViewing(null)} />}
     </div>
   );

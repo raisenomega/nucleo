@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { Eye, Pencil, Trash2 } from "lucide-react";
+import { Eye, Pencil } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { MobileCard } from "@shared/components/MobileCard";
 import { Pagination } from "@shared/components/Pagination";
-import type { ServiceRoute } from "@operations/domain/route.types";
+import { useSession } from "@shared/providers/SessionProvider";
+import { VoidControls } from "@shared/components/VoidControls";
+import type { ServiceRoute, RepoResult } from "@operations/domain/route.types";
 
 type Emp = { id: string; full_name: string };
 const COLOR: Record<string, string> = {
@@ -11,15 +13,20 @@ const COLOR: Record<string, string> = {
   "Completada": "bg-green-100 text-green-800", "Cancelada": "bg-red-100 text-red-800",
 };
 
-export function RouteTable({ rows, employees, onView, onEdit, onDelete }: {
-  rows: readonly ServiceRoute[]; employees: Emp[];
-  onView: (id: string) => void; onEdit?: (id: string) => void; onDelete?: (id: string) => void;
+// onVoid llama void_route (cascada a stops); onDeleteForever hard-delete (solo CEO, ya anulada).
+export function RouteTable({ rows, employees, onView, onEdit, onVoid, onDeleteForever }: {
+  rows: readonly ServiceRoute[]; employees: Emp[]; onView: (id: string) => void; onEdit?: (id: string) => void;
+  onVoid: (id: string, reason: string) => Promise<RepoResult>; onDeleteForever: (id: string) => Promise<RepoResult>;
 }) {
   const { t } = useI18n();
-  const nameOf = (id: string) => employees.find((e) => e.id === id)?.full_name ?? "—";
+  const { session } = useSession();
+  const isCeo = session?.role === "ceo";
+  const nameOf = (id: string | null) => (id ? employees.find((e) => e.id === id)?.full_name ?? "—" : "—");
   const th = "px-3 py-2 text-left font-bold";
   const [page, setPage] = useState(1);
   const visible = rows.slice((page - 1) * 12, page * 12);
+  const vc = (r: ServiceRoute) => <VoidControls id={r.id} deletedAt={r.deletedAt} deletedByName={nameOf(r.deletedBy)}
+    deletedReason={r.deletedReason} isCeo={isCeo} onVoid={onVoid} onDeleteForever={onDeleteForever} />;
   return (
     <>
     <div className="hidden overflow-hidden rounded-lg border border-border bg-card md:block">
@@ -33,15 +40,15 @@ export function RouteTable({ rows, employees, onView, onEdit, onDelete }: {
           <tbody>
             {rows.length === 0 && <tr><td colSpan={5} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>}
             {visible.map((r) => (
-              <tr key={r.id} className="border-t border-border">
+              <tr key={r.id} className={`border-t border-border ${r.deletedAt ? "text-muted-foreground line-through opacity-60" : ""}`}>
                 <td className="px-3 py-2">{r.routeDate}</td>
                 <td className="px-3 py-2">{nameOf(r.assignedTo)}</td>
                 <td className="px-3 py-2">{r.completedCount}/{r.stopCount}</td>
                 <td className="px-3 py-2"><span className={`rounded px-2 py-0.5 text-xs font-bold ${COLOR[r.status] ?? "bg-secondary"}`}>{r.status}</span></td>
-                <td className="px-3 py-2"><div className="flex justify-end gap-2">
-                  <button type="button" onClick={() => onView(r.id)} aria-label={t("viewDetail")} className="text-foreground"><Eye className="h-4 w-4" /></button>
-                  {onEdit && <button type="button" onClick={() => onEdit(r.id)} aria-label={t("edit")} className="text-primary"><Pencil className="h-4 w-4" /></button>}
-                  {onDelete && <button type="button" onClick={() => onDelete(r.id)} aria-label={t("delete")} className="text-destructive"><Trash2 className="h-4 w-4" /></button>}
+                <td className="px-3 py-2"><div className="flex justify-end gap-2 no-underline">
+                  {!r.deletedAt && <button type="button" onClick={() => onView(r.id)} aria-label={t("viewDetail")} className="text-foreground"><Eye className="h-4 w-4" /></button>}
+                  {!r.deletedAt && onEdit && <button type="button" onClick={() => onEdit(r.id)} aria-label={t("edit")} className="text-primary"><Pencil className="h-4 w-4" /></button>}
+                  {vc(r)}
                 </div></td>
               </tr>
             ))}
@@ -52,8 +59,8 @@ export function RouteTable({ rows, employees, onView, onEdit, onDelete }: {
     <div className="space-y-2 md:hidden">
       {visible.map((r) => <MobileCard key={r.id} title={`${r.routeDate} · ${nameOf(r.assignedTo)}`}
         lines={[`${r.completedCount}/${r.stopCount} ${t("routeStops")}`]}
-        extra={<span className={`inline-block rounded px-2 py-0.5 text-xs font-bold ${COLOR[r.status] ?? "bg-secondary"}`}>{r.status}</span>}
-        onView={() => onView(r.id)} onEdit={onEdit ? () => onEdit(r.id) : undefined} onDelete={onDelete ? () => onDelete(r.id) : undefined} />)}
+        extra={<span className="flex items-center gap-2"><span className={`inline-block rounded px-2 py-0.5 text-xs font-bold ${COLOR[r.status] ?? "bg-secondary"}`}>{r.status}</span>{vc(r)}</span>}
+        onView={r.deletedAt ? undefined : () => onView(r.id)} onEdit={!r.deletedAt && onEdit ? () => onEdit(r.id) : undefined} />)}
     </div>
     <Pagination total={rows.length} page={page} onPageChange={setPage} />
     </>

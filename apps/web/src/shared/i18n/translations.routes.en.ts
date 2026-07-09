@@ -13,4 +13,12 @@ export const enRoutes = {
   collect: "Collect", forgive: "Forgive", forgiveReason: "Reason to forgive the debt",
   reminder: "WhatsApp reminder", addNote: "Add note", managementNote: "Management note", noteSaved: "Note saved",
   noPhone: "No phone",
+  voidBtn: "VOID", voidTitle: "Confirm VOID", voidReasonLabel: "VOID reason",
+  voidReasonPlaceholder: "Briefly explain why you're voiding (minimum 3 characters)",
+  voidConfirmBtn: "Confirm VOID", voidCancelBtn: "Cancel", voidedBadge: "VOID",
+  voidedTooltip: "Voided by {name} on {date}", voidedReasonTooltip: "Reason: {reason}",
+  voidReasonTooShort: "Reason must be at least 3 characters",
+  voidSuccess: "Record voided", voidError: "Could not void record",
+  deleteForeverBtn: "Delete permanently", deleteForeverConfirm: "This action is permanent and cannot be undone. Continue?",
+  deleteForeverSuccess: "Record permanently deleted", hideVoided: "Hide voided", showVoided: "Show voided",
 } satisfies Partial<Record<TranslationKey, string>>;

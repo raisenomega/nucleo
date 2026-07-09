@@ -18,6 +18,9 @@ export interface Income {
   readonly createdBy: string;
   readonly createdAt: string;
   readonly evidenceUrls: readonly string[]; // rutas de storage (bucket evidence)
+  readonly deletedAt: string | null;   // VOID (soft-delete): fecha de anulación
+  readonly deletedBy: string | null;
+  readonly deletedReason: string | null;
 }
 
 export interface IncomeFormData {
@@ -38,5 +41,6 @@ export interface IIncomeRepository {
   list(): Promise<IncomeListResult>;
   create(data: IncomeFormData): Promise<Result<Income, string>>;
   update(id: string, data: IncomeFormData): Promise<Result<Income, string>>;
-  remove(id: string): Promise<Result<null, string>>;
+  voidRow(id: string, reason: string): Promise<Result<null, string>>;  // VOID vía RPC void_income
+  remove(id: string): Promise<Result<null, string>>;                   // hard delete (solo CEO, ya anulada)
 }

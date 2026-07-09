@@ -1,6 +1,6 @@
 import type { ServiceRoute, RouteStop, StopFormData, StopPatch } from "@operations/domain/route.types";
 
-export type RRow = { id: string; route_date: string; assigned_to: string; status: string; notes: string | null; created_by: string; route_stops: { status: string }[] };
+export type RRow = { id: string; route_date: string; assigned_to: string; status: string; notes: string | null; created_by: string; route_stops: { status: string }[]; deleted_at: string | null; deleted_by: string | null; deleted_reason: string | null };
 export type SRow = { id: string; route_id: string; stop_order: number; client_name: string; address: string; city: string | null; service_type: string; scheduled_time: string; phone: string | null; estimated_amount: number | string; actual_amount: number | string | null; payment_method_id: string | null; status: string; notes: string | null; completed_at: string | null; evidence_urls: string[] | null; amount_received: number | string | null; change_amount: number | string | null; pending_collection: boolean | null };
 const num = (v: number | string | null) => (v == null ? null : Number(v));
 
@@ -8,6 +8,7 @@ export const toRoute = (r: RRow): ServiceRoute => ({
   id: r.id, routeDate: r.route_date, assignedTo: r.assigned_to, status: r.status,
   notes: r.notes, createdBy: r.created_by, stopCount: (r.route_stops ?? []).length,
   completedCount: (r.route_stops ?? []).filter((s) => s.status === "Completada").length,
+  deletedAt: r.deleted_at, deletedBy: r.deleted_by, deletedReason: r.deleted_reason,
 });
 export const toStop = (s: SRow): RouteStop => ({
   id: s.id, routeId: s.route_id, stopOrder: s.stop_order, clientName: s.client_name,

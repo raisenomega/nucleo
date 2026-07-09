@@ -53,7 +53,7 @@ function RoutesPage() {
         initialStops={editing !== "new" ? m.stops : undefined} onSubmit={submit} onCancel={() => setEditing(null)} />}
       <RouteTable rows={m.routes} employees={emps} onView={(id) => { setViewing(id); m.setActive(id); }}
         onEdit={can("routes", "edit") ? (id) => { setEditing(id); m.setActive(id); } : undefined}
-        onDelete={can("routes", "delete") ? (id) => { if (window.confirm(`${t("delete")}?`)) void m.remove(id); } : undefined} />
+        onVoid={m.voidRow} onDeleteForever={m.remove} />
       {viewRoute && <RouteDetail route={viewRoute} stops={m.stops} employees={emps} tenantId={session?.tenantId ?? ""} onClose={() => setViewing(null)}
         onPay={doPay} onNotAttended={doNotAttended} onEvidence={doEvidence} onMarkDone={doMarkDone} />}
     </div>

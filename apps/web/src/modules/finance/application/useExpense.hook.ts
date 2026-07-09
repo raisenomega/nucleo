@@ -29,11 +29,17 @@ export function useExpense(repo: IExpenseRepository) {
     return r;
   }, [repo, refresh]);
 
+  const voidRow = useCallback(async (id: string, reason: string) => {
+    const r = await repo.voidRow(id, reason);
+    if (r.ok) await refresh();
+    return r;
+  }, [repo, refresh]);
+
   const remove = useCallback(async (id: string) => {
     const r = await repo.remove(id);
     if (r.ok) await refresh();
     return r;
   }, [repo, refresh]);
 
-  return { expenses, isLoading, create, update, remove, refresh };
+  return { expenses, isLoading, create, update, voidRow, remove, refresh };
 }

@@ -5,6 +5,7 @@ export interface ServiceRoute {
   readonly id: string; readonly routeDate: string; readonly assignedTo: string;
   readonly status: string; readonly notes: string | null;
   readonly createdBy: string; readonly stopCount: number; readonly completedCount: number;
+  readonly deletedAt: string | null; readonly deletedBy: string | null; readonly deletedReason: string | null;
 }
 export interface RouteStop {
   readonly id: string; readonly routeId: string; readonly stopOrder: number;
@@ -35,7 +36,8 @@ export interface IRouteRepository {
   listStops(routeId: string): Promise<readonly RouteStop[]>;
   create(d: RouteFormData, stops: readonly StopFormData[]): Promise<RepoResult>;
   update(id: string, d: RouteFormData): Promise<RepoResult>;
-  remove(id: string): Promise<RepoResult>;
+  voidRow(id: string, reason: string): Promise<RepoResult>;  // VOID vía RPC void_route (+ cascada stops)
+  remove(id: string): Promise<RepoResult>;                   // hard delete (solo CEO, ya anulada)
   addStop(routeId: string, order: number, s: StopFormData): Promise<RepoResult>;
   updateStop(id: string, patch: StopPatch): Promise<RepoResult>;
   removeStop(id: string): Promise<RepoResult>;

@@ -3,7 +3,7 @@ import type { RepoResult, IRouteRepository } from "@operations/domain/route.type
 import { toRoute, toStop, stopRow, stopPatch, type RRow, type SRow } from "@operations/infrastructure/route.mapper";
 
 const ok = (e: { message: string } | null): RepoResult => (e ? { ok: false, error: e.message } : { ok: true });
-const ROUTE_SEL = "id,route_date,assigned_to,status,notes,created_by, route_stops(status)";
+const ROUTE_SEL = "id,route_date,assigned_to,status,notes,created_by,deleted_at,deleted_by,deleted_reason, route_stops(status)";
 
 export const supabaseRouteRepository: IRouteRepository = {
   async recordPayment(stopId, p) {
@@ -13,8 +13,9 @@ export const supabaseRouteRepository: IRouteRepository = {
   async completeStop(stopId) { return ok((await supabase.rpc("complete_route_stop", { p_stop_id: stopId })).error); },
   async setNotAttended(stopId, reason) { return ok((await supabase.rpc("set_stop_not_attended", { p_stop_id: stopId, p_reason: reason })).error); },
   async listRoutes(date) {
+    // Incluye anuladas (deleted_at != null) — se muestran tachadas en la tabla (auditoría).
     const { data } = await supabase.from("service_routes").select(ROUTE_SEL)
-      .eq("route_date", date).is("deleted_at", null).order("created_at");
+      .eq("route_date", date).order("created_at");
     return ((data as RRow[] | null) ?? []).map(toRoute);
   },
   async listStops(routeId) {
@@ -35,8 +36,11 @@ export const supabaseRouteRepository: IRouteRepository = {
     return ok((await supabase.from("service_routes")
       .update({ route_date: d.routeDate, assigned_to: d.assignedTo, status: d.status, notes: d.notes || null }).eq("id", id)).error);
   },
-  async remove(id) {
-    return ok((await supabase.from("service_routes").update({ deleted_at: new Date().toISOString() }).eq("id", id)).error);
+  async voidRow(id, reason) {
+    return ok((await supabase.rpc("void_route", { p_id: id, p_reason: reason })).error);
+  },
+  async remove(id) {   // hard delete (solo CEO, sobre rutas ya anuladas)
+    return ok((await supabase.from("service_routes").delete().eq("id", id)).error);
   },
   async addStop(routeId, order, s) { return ok((await supabase.from("route_stops").insert(stopRow(routeId, order, s))).error); },
   async updateStop(id, patch) { return ok((await supabase.from("route_stops").update(stopPatch(patch)).eq("id", id)).error); },

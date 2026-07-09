@@ -17,6 +17,9 @@ export interface Expense {
   readonly createdBy: string;
   readonly createdAt: string;
   readonly evidenceUrls: readonly string[]; // rutas de storage (bucket evidence)
+  readonly deletedAt: string | null;   // VOID (soft-delete)
+  readonly deletedBy: string | null;
+  readonly deletedReason: string | null;
 }
 
 export interface ExpenseFormData {
@@ -36,5 +39,6 @@ export interface IExpenseRepository {
   list(): Promise<ExpenseListResult>;
   create(data: ExpenseFormData): Promise<Result<Expense, string>>;
   update(id: string, data: ExpenseFormData): Promise<Result<Expense, string>>;
-  remove(id: string): Promise<Result<null, string>>;
+  voidRow(id: string, reason: string): Promise<Result<null, string>>;  // VOID vía RPC void_expense
+  remove(id: string): Promise<Result<null, string>>;                   // hard delete (solo CEO, ya anulada)
 }

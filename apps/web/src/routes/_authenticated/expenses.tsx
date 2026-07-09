@@ -24,7 +24,7 @@ type Emp = { id: string; full_name: string };
 function ExpensePage() {
   const { t } = useI18n(); const { can } = useModuleAccess();
   const { category } = Route.useSearch();
-  const { expenses, create, update, remove } = useExpense(supabaseExpenseRepository);
+  const { expenses, create, update, voidRow, remove } = useExpense(supabaseExpenseRepository);
   const [cats, setCats] = useState<Cat[]>([]);
   const [emps, setEmps] = useState<Emp[]>([]);
   const [editing, setEditing] = useState<string | null>(null);
@@ -68,7 +68,7 @@ function ExpensePage() {
         <ExpenseForm expenseCats={cats.filter((c) => c.kind === "expense").map((c) => ({ id: c.id, label: c.label, expenseClass: c.expense_class }))}
           payCats={cats.filter((c) => c.kind === "payment_method")} employees={emps} initial={editRow} onSubmit={submit} onCancel={() => setEditing(null)} />)}
       <ExpenseTable rows={expenses} employees={emps} classOf={(id) => cats.find((c) => c.id === id)?.expense_class ?? null} onView={setViewing} onEdit={can("expenses", "edit") ? setEditing : undefined}
-        onDelete={can("expenses", "delete") ? (id) => { if (window.confirm(`${t("delete")}?`)) void remove(id); } : undefined} />
+        onVoid={voidRow} onDeleteForever={remove} />
       {viewExpense && <ExpenseDetail expense={viewExpense} employees={emps} onClose={() => setViewing(null)} />}
     </div>
   );

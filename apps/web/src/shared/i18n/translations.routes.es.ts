@@ -13,4 +13,12 @@ export const esRoutes = {
   collect: "Cobrar", forgive: "Perdonar", forgiveReason: "Razón para perdonar la deuda",
   reminder: "Recordatorio WhatsApp", addNote: "Agregar nota", managementNote: "Nota de gestión", noteSaved: "Nota guardada",
   noPhone: "Sin teléfono",
+  voidBtn: "VOID", voidTitle: "Confirmar VOID", voidReasonLabel: "Motivo del VOID",
+  voidReasonPlaceholder: "Explica brevemente por qué haces VOID (mínimo 3 caracteres)",
+  voidConfirmBtn: "Confirmar VOID", voidCancelBtn: "Cancelar", voidedBadge: "VOID",
+  voidedTooltip: "Anulado por {name} el {date}", voidedReasonTooltip: "Motivo: {reason}",
+  voidReasonTooShort: "El motivo debe tener al menos 3 caracteres",
+  voidSuccess: "Registro anulado", voidError: "No se pudo anular el registro",
+  deleteForeverBtn: "Eliminar definitivamente", deleteForeverConfirm: "Esta acción es permanente y no se puede deshacer. ¿Continuar?",
+  deleteForeverSuccess: "Registro eliminado permanentemente", hideVoided: "Ocultar anuladas", showVoided: "Mostrar anuladas",
 } satisfies Partial<Record<TranslationKey, string>>;

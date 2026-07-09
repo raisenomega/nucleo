@@ -9,10 +9,11 @@ interface Row {
   amount: number | string; expense_date: string; notes: string | null; paid_by: string | null;
   created_by: string; created_at: string; category: Cat; paymentMethod: Cat;
   evidence_urls: unknown;
+  deleted_at: string | null; deleted_by: string | null; deleted_reason: string | null;
 }
 
 const SELECT =
-  "id, tenant_id, category_id, payment_method_id, amount, expense_date, notes, paid_by, created_by, created_at, evidence_urls," +
+  "id, tenant_id, category_id, payment_method_id, amount, expense_date, notes, paid_by, created_by, created_at, evidence_urls, deleted_at, deleted_by, deleted_reason," +
   " category:categories!expenses_category_id_fkey(label)," +
   " paymentMethod:categories!expenses_payment_method_id_fkey(label)";
 
@@ -24,6 +25,7 @@ function toExpense(r: Row): Expense {
     paymentMethodId: r.payment_method_id, paymentMethodLabel: r.paymentMethod?.label ?? "",
     paidBy: r.paid_by ?? "", createdBy: r.created_by, createdAt: r.created_at,
     evidenceUrls: Array.isArray(r.evidence_urls) ? (r.evidence_urls as string[]) : [],
+    deletedAt: r.deleted_at, deletedBy: r.deleted_by, deletedReason: r.deleted_reason,
   };
 }
 
@@ -52,6 +54,11 @@ export const supabaseExpenseRepository: IExpenseRepository = {
     const { data, error } = await supabase.from("expenses").update(toRow(d)).eq("id", id).select(SELECT).single();
     if (error || !data) return { ok: false, error: error?.message ?? "error" };
     return { ok: true, value: toExpense(data as unknown as Row) };
+  },
+  async voidRow(id, reason): Promise<Result<null, string>> {
+    const { error } = await supabase.rpc("void_expense", { p_id: id, p_reason: reason });
+    if (error) return { ok: false, error: error.message };
+    return { ok: true, value: null };
   },
   async remove(id): Promise<Result<null, string>> {
     const { error } = await supabase.from("expenses").delete().eq("id", id);
