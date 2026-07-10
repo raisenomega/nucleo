@@ -3,6 +3,7 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useAuth } from "@identity/application/useAuth.hook";
 import { supabaseAuthAdapter } from "@identity/infrastructure/supabase-auth.adapter";
 import { PasswordInput } from "@shared/components/PasswordInput";
+import { useHostBrand } from "@shared/providers/HostBrandProvider";
 
 export const Route = createFileRoute("/login")({
   component: Login,
@@ -11,6 +12,7 @@ export const Route = createFileRoute("/login")({
 // Composition root: aquí se cablea el adapter concreto en el hook (DI).
 function Login() {
   const { signIn } = useAuth(supabaseAuthAdapter);
+  const hostBrand = useHostBrand();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,7 +32,7 @@ function Login() {
   return (
     <main className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
       <form onSubmit={onSubmit} className="w-full max-w-sm space-y-4">
-        <h1 className="font-display text-3xl font-bold text-primary text-center">Núcleo</h1>
+        <h1 className="font-display text-3xl font-bold text-primary text-center">{hostBrand?.display_name ?? ""}</h1>
         <input
           type="email"
           value={email}

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { supabase } from "@shared/lib/supabase";
 import { PasswordInput } from "@shared/components/PasswordInput";
+import { isRaisenHost } from "@shared/lib/brand-host";
+import { useRaisenGuard } from "@shared/hooks/useRaisenGuard";
 
 export const Route = createFileRoute("/registro")({
   component: Registro,
@@ -12,6 +14,8 @@ function Registro() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
+  useRaisenGuard();
+  if (!isRaisenHost()) return null; // D2: producto Raisen solo en dominios operacionales
 
   function set(k: keyof typeof form) {
     return (e: React.ChangeEvent<HTMLInputElement>) => setForm((f) => ({ ...f, [k]: e.target.value }));

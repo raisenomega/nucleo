@@ -2,6 +2,9 @@ import { useCallback, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { supabase } from "@shared/lib/supabase";
 import { useSession } from "@shared/providers/SessionProvider";
+import { useHostBrand } from "@shared/providers/HostBrandProvider";
+import { useToast } from "@shared/providers/toast-context";
+import { useI18n } from "@shared/i18n";
 import { ThemeLoader } from "@shared/providers/ThemeLoader";
 import { BrandContext, EMPTY_BRAND, type Brand } from "@shared/providers/brand-context";
 import type { TenantTheme } from "@shared/lib/theme-vars";
@@ -20,11 +23,19 @@ const toTheme = (r: ThemeRow | undefined): TenantTheme => ({
 
 // Lee marca del tenant UNA vez (tras haber sesión). ThemeLoader aplica las CSS vars. Fuente única = tenant_themes + tenants.
 export function BrandProvider({ children }: { children: ReactNode }) {
-  const { session } = useSession();
+  const { session, signOut } = useSession();
+  const hostBrand = useHostBrand();
+  const toast = useToast();
+  const { t } = useI18n();
   const tenantId = session?.tenantId ?? null;
   const [brand, setBrand] = useState<Brand>(EMPTY_BRAND);
   const [nonce, setNonce] = useState(0);
   const reload = useCallback(() => setNonce((n) => n + 1), []);
+  // D6: si el JWT es de otro tenant que el dueño del dominio (salvo dominios Raisen) → sign-out.
+  useEffect(() => {
+    if (!tenantId || !hostBrand?.tenant_id || hostBrand.is_raisen) return;
+    if (tenantId !== hostBrand.tenant_id) { toast.error(t("wrongTenantDomain")); void signOut(); }
+  }, [tenantId, hostBrand, signOut, toast, t]);
   useEffect(() => {
     if (!tenantId) { setBrand({ ...EMPTY_BRAND, isLoading: false }); return; }
     let alive = true;

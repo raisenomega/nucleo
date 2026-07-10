@@ -2,6 +2,7 @@ import { HeadContent, Outlet, Scripts, createRootRoute, useLocation } from "@tan
 import appCss from "../styles/index.css?url";
 import { I18nProvider, useI18n } from "@shared/i18n";
 import { ThemeToggle } from "@shared/components/ThemeToggle";
+import { HostBrandProvider } from "@shared/providers/HostBrandProvider";
 
 const THEME_SCRIPT = `(function(){try{var c=JSON.parse(localStorage.getItem("nucleo:theme-cache:v1")||"null"),s=localStorage.getItem("theme"),m=window.matchMedia,dm=c&&c.defaultMode,d;if(s==="dark"||s==="light"){d=s==="dark";}else if(dm==="dark"||dm==="light"){d=dm==="dark";}else if(m&&m("(prefers-color-scheme: light)").matches){d=false;}else{d=true;}document.documentElement.classList.toggle("dark",d);if(c&&c.vars){for(var k in c.vars){document.documentElement.style.setProperty(k,c.vars[k]);}}}catch(e){}})();`;
 
@@ -13,7 +14,7 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { title: "NÚCLEO by raisen" },
+      { title: "Portal" },
       { name: "theme-color", content: "hsl(38 85% 55%)" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
     ],
@@ -31,7 +32,9 @@ export const Route = createRootRoute({
 function RootComponent() {
   return (
     <I18nProvider>
-      <Document />
+      <HostBrandProvider>
+        <Document />
+      </HostBrandProvider>
     </I18nProvider>
   );
 }
@@ -46,14 +49,8 @@ function GlobalControls() {
   return (
     <div className="fixed top-4 right-4 z-50 flex gap-2">
       <ThemeToggle />
-      <button
-        type="button"
-        onClick={() => setLocale(locale === "es" ? "en" : "es")}
-        aria-label={t("switchLang")}
-        className="bg-secondary text-foreground rounded-lg p-2 font-body"
-      >
-        {locale === "es" ? "EN" : "ES"}
-      </button>
+      <button type="button" onClick={() => setLocale(locale === "es" ? "en" : "es")} aria-label={t("switchLang")}
+        className="bg-secondary text-foreground rounded-lg p-2 font-body">{locale === "es" ? "EN" : "ES"}</button>
     </div>
   );
 }
