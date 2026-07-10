@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { Pause, Play, Ban, FilePlus } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { formatCurrency } from "@shared/lib/format";
 import { MobileCard } from "@shared/components/MobileCard";
+import { Pagination } from "@shared/components/Pagination";
 import { FREQ_KEY, PLAN_ST_KEY, PLAN_ST_COLOR } from "@billing/presentation/billing-ui";
 import type { BillingPlan, PlanStatus } from "@billing/domain/billing-plan.types";
 
@@ -10,6 +12,8 @@ export function BillingPlanTable({ rows, canManage, onStatus, onGenerate }: {
   onStatus: (id: string, st: PlanStatus) => void; onGenerate: (p: BillingPlan) => void;
 }) {
   const { t } = useI18n();
+  const [page, setPage] = useState(1);
+  const paged = rows.slice((page - 1) * 12, page * 12);
   if (rows.length === 0) return <p className="text-sm text-muted-foreground">{t("noRecords")}</p>;
   const st = (p: BillingPlan) => <span className={`rounded px-2 py-0.5 text-xs font-bold ${PLAN_ST_COLOR[p.status]}`}>{t(PLAN_ST_KEY[p.status])}</span>;
   const acts = (p: BillingPlan) => canManage ? (
@@ -20,9 +24,12 @@ export function BillingPlanTable({ rows, canManage, onStatus, onGenerate }: {
       {p.status === "active" && <button type="button" onClick={() => onGenerate(p)} aria-label={t("generateInvoice")} className="text-primary"><FilePlus className="h-5 w-5" /></button>}
     </div>) : null;
   return (
-    <div className="space-y-2">{rows.map((p) => (
-      <MobileCard key={p.id} title={p.clientName} amount={formatCurrency(p.amount)}
-        lines={[`${t(FREQ_KEY[p.frequency])} · ${t("nextBilling")}: ${p.nextBillingDate}`]}
-        extra={<div className="flex items-center gap-2">{st(p)}{acts(p)}</div>} />))}</div>
+    <>
+      <div className="space-y-2">{paged.map((p) => (
+        <MobileCard key={p.id} title={p.clientName} amount={formatCurrency(p.amount)}
+          lines={[`${t(FREQ_KEY[p.frequency])} · ${t("nextBilling")}: ${p.nextBillingDate}`]}
+          extra={<div className="flex items-center gap-2">{st(p)}{acts(p)}</div>} />))}</div>
+      <Pagination total={rows.length} page={page} pageSize={12} onPageChange={setPage} />
+    </>
   );
 }
