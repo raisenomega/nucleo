@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Eye, Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { Pagination } from "@shared/components/Pagination";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
@@ -44,16 +44,15 @@ export function PayrollTable({ rows, onView, onEdit, onDelete }: {
               <tr><td colSpan={money ? 7 : 3} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>
             )}
             {paged.map((i) => (
-              <tr key={i.id} className="border-t border-border">
+              <tr key={i.id} onClick={() => onView(i.id)} className="cursor-pointer border-t border-border transition-colors hover:bg-secondary">
                 <td className="px-3 py-2">{i.date}</td>
                 <td className="px-3 py-2">{i.employeeName}</td>
                 {money && <><td className="px-3 py-2 text-right font-semibold">{formatCurrency(grossOf(i))}</td>
                 <td className="px-3 py-2 text-right text-destructive">{formatCurrency(grossOf(i) - netOf(i))}</td>
                 <td className="px-3 py-2 text-right">{formatCurrency(netOf(i))}</td>
                 <td className="px-3 py-2 text-right font-semibold text-primary">{formatCurrency(costOf(i))}</td></>}
-                <td className="px-3 py-2">
+                <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
                   <div className="flex justify-end gap-2">
-                    <button type="button" onClick={() => onView(i.id)} aria-label={t("viewDetail")} className="text-foreground"><Eye className="h-4 w-4" /></button>
                     {onEdit && <button type="button" onClick={() => onEdit(i.id)} aria-label={t("edit")} className="text-primary"><Pencil className="h-4 w-4" /></button>}
                     {onDelete && <button type="button" onClick={() => onDelete(i.id)} aria-label={t("delete")} className="text-destructive"><Trash2 className="h-4 w-4" /></button>}
                   </div>

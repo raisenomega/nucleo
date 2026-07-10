@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Eye, Pencil } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { MobileCard } from "@shared/components/MobileCard";
 import { Pagination } from "@shared/components/Pagination";
@@ -40,13 +40,13 @@ export function RouteTable({ rows, employees, onView, onEdit, onVoid, onDeleteFo
           <tbody>
             {rows.length === 0 && <tr><td colSpan={5} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>}
             {visible.map((r) => (
-              <tr key={r.id} className={`border-t border-border ${r.deletedAt ? "text-muted-foreground line-through opacity-60" : ""}`}>
+              <tr key={r.id} onClick={() => onView(r.id)}
+                className={`cursor-pointer border-t border-border transition-colors hover:bg-secondary ${r.deletedAt ? "text-muted-foreground line-through opacity-60" : ""}`}>
                 <td className="px-3 py-2">{r.routeDate}</td>
                 <td className="px-3 py-2">{nameOf(r.assignedTo)}</td>
                 <td className="px-3 py-2">{r.completedCount}/{r.stopCount}</td>
                 <td className="px-3 py-2"><span className={`rounded px-2 py-0.5 text-xs font-bold ${COLOR[r.status] ?? "bg-secondary"}`}>{r.status}</span></td>
-                <td className="px-3 py-2"><div className="flex justify-end gap-2 no-underline">
-                  {!r.deletedAt && <button type="button" onClick={() => onView(r.id)} aria-label={t("viewDetail")} className="text-foreground"><Eye className="h-4 w-4" /></button>}
+                <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}><div className="flex justify-end gap-2 no-underline">
                   {!r.deletedAt && onEdit && <button type="button" onClick={() => onEdit(r.id)} aria-label={t("edit")} className="text-primary"><Pencil className="h-4 w-4" /></button>}
                   {vc(r)}
                 </div></td>

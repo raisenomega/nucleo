@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Eye, Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { Pagination } from "@shared/components/Pagination";
 import { formatCurrency } from "@shared/lib/format";
@@ -31,15 +31,14 @@ export function MarketingExpenseTable({ rows, onView, onEdit, onDelete }: {
           <tbody>
             {rows.length === 0 && (<tr><td colSpan={6} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>)}
             {visible.map((e) => (
-              <tr key={e.id} className="border-t border-border">
+              <tr key={e.id} onClick={() => onView(e.id)} className="cursor-pointer border-t border-border transition-colors hover:bg-secondary">
                 <td className="px-3 py-2">{e.date}</td>
                 <td className="px-3 py-2">{e.channel}</td>
                 <td className="px-3 py-2">{e.campaignName || "—"}</td>
                 <td className="px-3 py-2">{e.description}</td>
                 <td className="px-3 py-2 text-right font-semibold">{formatCurrency(e.amount)}</td>
-                <td className="px-3 py-2">
+                <td className="px-3 py-2" onClick={(ev) => ev.stopPropagation()}>
                   <div className="flex justify-end gap-2">
-                    <button type="button" onClick={() => onView(e.id)} aria-label={t("viewDetail")} className="text-foreground"><Eye className="h-4 w-4" /></button>
                     {onEdit && <button type="button" onClick={() => onEdit(e.id)} aria-label={t("edit")} className="text-primary"><Pencil className="h-4 w-4" /></button>}
                     {onDelete && <button type="button" onClick={() => onDelete(e.id)} aria-label={t("delete")} className="text-destructive"><Trash2 className="h-4 w-4" /></button>}
                   </div>

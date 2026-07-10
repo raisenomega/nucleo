@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Eye, FileText, MessageCircle, Pencil, Receipt, Trash2 } from "lucide-react";
+import { FileText, MessageCircle, Pencil, Receipt, Trash2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { formatCurrency } from "@shared/lib/format";
@@ -36,23 +36,20 @@ export function LeadTable({ rows, onView, onEdit, onDelete }: {
           <tbody>
             {rows.length === 0 && <tr><td colSpan={9} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>}
             {visible.map((l) => (
-              <tr key={l.id} className="border-t border-border">
+              <tr key={l.id} onClick={() => onView(l.id)} className="cursor-pointer border-t border-border transition-colors hover:bg-secondary">
                 <td className="px-3 py-2">{l.callDate}</td>
-                <td className="px-3 py-2">
-                  <button type="button" onClick={() => onView(l.id)} className="font-medium text-primary hover:underline">{l.contactName}</button>
-                </td>
-                <td className="px-3 py-2"><a href={`tel:${l.phone}`} className="text-primary hover:underline">{l.phone}</a></td>
+                <td className="px-3 py-2 font-medium text-primary">{l.contactName}</td>
+                <td className="px-3 py-2"><a href={`tel:${l.phone}`} onClick={(e) => e.stopPropagation()} className="text-primary hover:underline">{l.phone}</a></td>
                 <td className="px-3 py-2">{l.leadSourceLabel || "—"}</td>
                 <td className="px-3 py-2">{l.serviceTypeLabel || "—"}</td>
                 <td className="px-3 py-2"><TempBadge value={l.temperature} /></td>
                 <td className="px-3 py-2"><StatusBadge value={l.status} /></td>
                 <td className="px-3 py-2 text-right font-semibold">{formatCurrency(l.quotedPrice)}</td>
-                <td className="px-3 py-2">
+                <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
                   <div className="flex justify-end gap-2">
                     {docs && <button type="button" aria-label={t("whatsapp")} className="text-green-600" onClick={() => window.open(leadWaHref(l, t("whatsappMessage", { name: l.contactName, total: formatCurrency(l.quotedPrice) })), "_blank")}><MessageCircle className="h-4 w-4" /></button>}
                     {docs && <button type="button" onClick={() => void leadQuoteId(l.id).then((q) => { if (q) nav({ to: "/quotes" }); })} aria-label={t("quote")} className="text-primary"><FileText className="h-4 w-4" /></button>}
                     {docs && <button type="button" onClick={() => void leadInvoiceId(l.id).then((i) => { if (i) nav({ to: "/billing" }); })} aria-label={t("invoice")} className="text-primary"><Receipt className="h-4 w-4" /></button>}
-                    <button type="button" onClick={() => onView(l.id)} aria-label={t("viewDetail")} className="text-foreground"><Eye className="h-4 w-4" /></button>
                     {onEdit && <button type="button" onClick={() => onEdit(l.id)} aria-label={t("edit")} className="text-primary"><Pencil className="h-4 w-4" /></button>}
                     {onDelete && <button type="button" onClick={() => onDelete(l.id)} aria-label={t("delete")} className="text-destructive"><Trash2 className="h-4 w-4" /></button>}
                   </div>
