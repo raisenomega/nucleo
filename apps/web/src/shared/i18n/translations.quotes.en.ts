@@ -12,4 +12,9 @@ export const enQuotes = {
   personalMessage: "Message for the client (optional)",
   noEmailWarning: "The client has no email on file. It will be sent via WhatsApp only.",
   noChannels: "No channels available to send", sendError: "Could not send the quote", sentOk: "Quote sent",
+  loadingQuote: "Loading quote…", quoteLinkExpired: "The link expired. Contact", quoteAlreadyResponded: "This quote was already answered.",
+  quoteNotFound: "Quote not found.", tooManyRequests: "Too many requests. Try again later.",
+  viewAndRespond: "View and respond to quote", acceptQuote: "Accept", rejectQuote: "Reject", rejectReason: "Reason (optional)",
+  quoteAcceptedThanks: "Quote accepted! Thank you.", quoteRejectedThanks: "Quote rejected. Thanks for your response.",
+  pdfNotAvailable: "PDF temporarily unavailable. Contact", respondError: "Could not record your response. Try again.",
 } satisfies Partial<Record<TranslationKey, string>>;

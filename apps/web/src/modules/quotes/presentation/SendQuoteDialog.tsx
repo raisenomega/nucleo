@@ -31,8 +31,8 @@ export function SendQuoteDialog({ quote: q, tenantId, onClose, onSent }: {
     if (channels.length === 0) { toast.error(t("noChannels")); return; }
     const r = await send(q.id, channels, msg);
     if (!r) { toast.error(t("sendError")); return; }
-    if (wa && r.pdfUrl) {
-      const text = `${msg ? msg + "\n\n" : ""}${t("quote")} ${q.quoteNumber ?? ""} — ${formatCurrency(q.total)}\n📄 ${r.pdfUrl}\n✅ ${r.approvalUrl}`;
+    if (wa) {
+      const text = `${msg ? msg + "\n\n" : ""}${t("quote")} ${q.quoteNumber ?? ""} — ${formatCurrency(q.total)}\n\n${t("viewAndRespond")}:\n${r.approvalUrl}`;
       window.open(waLink(q.clientPhone, text), "_blank", "noopener");
     }
     toast.success(t("sentOk")); onSent();

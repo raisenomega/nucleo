@@ -73,11 +73,17 @@ AUTH=$(grep -rn "TEMP.*auth\|auth.*disabled\|skip.*auth\|bypass.*auth" \
 if [ -n "$AUTH" ]; then fail_block "$AUTH"; else ok_line; fi
 
 # 8. TABLAS SIN tenant_id (multitenant obligatorio) — especifico NUCLEO
+# Excepciones legítimas: tablas globales que no pertenecen a un tenant.
+# - tenants: registro maestro.
+# - categories: catálogo compartido.
+# - settings: configuración plataforma.
+# - tenant_order_counters: correlativos globales.
+# - rate_limit_public: throttle público pre-resolución de token (tenant aún desconocido).
 section "8. Migraciones con tabla sin tenant_id:"
 NO_TENANT=""
 if [ -d "$MIG_DIR" ]; then
   while IFS= read -r f; do
-    if grep -qiE "create table[[:space:]]+(if not exists[[:space:]]+)?(public\.)?(tenants|categories|settings|tenant_order_counters)" "$f"; then
+    if grep -qiE "create table[[:space:]]+(if not exists[[:space:]]+)?(public\.)?(tenants|categories|settings|tenant_order_counters|rate_limit_public)" "$f"; then
       continue
     fi
     if grep -qiE "create table" "$f" && ! grep -qE "tenant_id[[:space:]]+uuid" "$f"; then

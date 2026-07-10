@@ -18,3 +18,8 @@ export async function markQuoteSent(quoteId: string, channels: string[], tokenPl
   });
   return !error;
 }
+
+// Guarda la signed URL del PDF (o NULL si el pdf-api falló) para exponerla en /aprobar.
+export async function savePdfUrl(quoteId: string, url: string | null, expiresAt: string | null): Promise<void> {
+  await supabase.from("quotes").update({ pdf_url: url, pdf_url_expires_at: expiresAt }).eq("id", quoteId);
+}
