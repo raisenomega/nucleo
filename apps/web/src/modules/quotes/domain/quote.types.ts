@@ -12,6 +12,7 @@ export interface Quote {
   readonly items: QuoteItem[]; readonly subtotal: number; readonly taxTotal: number; readonly total: number;
   readonly status: QuoteStatus; readonly validUntil: string | null; readonly notes: string | null; readonly terms: string | null;
   readonly linkedLeadId: string | null; readonly linkedInvoiceId: string | null; readonly createdAt: string;
+  readonly sentAt: string | null; readonly sentChannels: string[]; readonly updatedAt: string | null;
 }
 export interface QuoteInput {
   clientName: string; clientPhone: string; clientEmail: string; clientAddress: string;

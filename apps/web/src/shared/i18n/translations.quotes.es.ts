@@ -7,4 +7,9 @@ export const esQuotes = {
   markAccepted: "Marcar aceptada", markRejected: "Marcar rechazada", sendEmail: "Enviar email", totalQuoted: "Total cotizado",
   qsDraft: "Borrador", qsSent: "Enviada", qsViewed: "Vista", qsAccepted: "Aceptada",
   qsRejected: "Rechazada", qsExpired: "Expirada", qsConverted: "Convertida",
+  sendQuote: "Enviar cotización", resendQuote: "Reenviar cotización", resend: "Reenviar", sending: "Enviando…",
+  lastSentOn: "Última enviada el", editedAfterSent: "Editada después del último envío — el cliente tiene una versión vieja.",
+  personalMessage: "Mensaje para el cliente (opcional)",
+  noEmailWarning: "El cliente no tiene email registrado. Solo se enviará por WhatsApp.",
+  noChannels: "No hay canales disponibles para el envío", sendError: "No se pudo enviar la cotización", sentOk: "Cotización enviada",
 } satisfies Partial<Record<TranslationKey, string>>;

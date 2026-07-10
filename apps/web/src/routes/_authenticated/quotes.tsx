@@ -3,21 +3,23 @@ import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
+import { useSession } from "@shared/providers/SessionProvider";
 import { useQuotes } from "@quotes/application/useQuotes.hook";
 import { supabaseQuoteRepository } from "@quotes/infrastructure/supabase-quote.repository";
 import { QuoteForm } from "@quotes/presentation/QuoteForm";
 import { QuoteTable } from "@quotes/presentation/QuoteTable";
 import { QuoteDetail } from "@quotes/presentation/QuoteDetail";
+import { SendQuoteDialog } from "@quotes/presentation/SendQuoteDialog";
 import { QuoteKpis } from "@quotes/presentation/QuoteKpis";
 import type { Quote, QuoteStatus } from "@quotes/domain/quote.types";
 
 export const Route = createFileRoute("/_authenticated/quotes")({ component: QuotesPage });
 
 function QuotesPage() {
-  const { t } = useI18n(); const { can } = useModuleAccess();
+  const { t } = useI18n(); const { can } = useModuleAccess(); const { session } = useSession();
   const m = useQuotes(supabaseQuoteRepository);
   const [creating, setCreating] = useState(false); const [viewing, setViewing] = useState<Quote | null>(null);
-  const [editing, setEditing] = useState<Quote | null>(null);
+  const [editing, setEditing] = useState<Quote | null>(null); const [sending, setSending] = useState<Quote | null>(null);
   if (!can("quotes", "view")) return <Navigate to="/dashboard" />;
   const onStatus = (s: QuoteStatus) => { if (viewing) { void m.setStatus(viewing.id, s); setViewing(null); } };
   const onConvert = () => { if (viewing) { void m.convert(viewing.id).then((inv) => { if (inv) window.alert(t("invoiceSaved")); }); setViewing(null); } };
@@ -37,7 +39,9 @@ function QuotesPage() {
         onCancel={() => { setCreating(false); setEditing(null); }} />}
       <QuoteTable rows={m.list} onView={setViewing} />
       {viewing && <QuoteDetail quote={viewing} canManage={can("quotes", "edit")} onStatus={onStatus} onConvert={onConvert}
-        onEdit={() => { setEditing(viewing); setViewing(null); }} onClose={() => setViewing(null)} />}
+        onEdit={() => { setEditing(viewing); setViewing(null); }} onSend={() => { setSending(viewing); setViewing(null); }} onClose={() => setViewing(null)} />}
+      {sending && <SendQuoteDialog quote={sending} tenantId={session?.tenantId ?? ""}
+        onClose={() => setSending(null)} onSent={() => { setSending(null); void m.reload(); }} />}
     </div>
   );
 }
