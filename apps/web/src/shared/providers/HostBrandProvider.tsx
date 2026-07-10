@@ -18,14 +18,14 @@ function apply(b: HostBrand): void {
   });
 }
 
-// Resuelve el tenant por window.location.hostname (D5: cliente + localStorage anti-flash). Pre-login.
+// Resuelve el tenant por window.location.hostname. SSR-safe: init null (matchea SSR), todo en useEffect.
 export function HostBrandProvider({ children }: { children: ReactNode }) {
-  const [brand, setBrand] = useState<HostBrand | null>(readHostBrand);
+  const [brand, setBrand] = useState<HostBrand | null>(null);
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (brand) apply(brand); // anti-flash: cache inmediato
+    const cached = readHostBrand(); // localStorage post-hidratación (no en el init → sin mismatch)
+    if (cached) { setBrand(cached); apply(cached); }
     void brandByHostname(window.location.hostname).then((fresh) => { setBrand(fresh); apply(fresh); writeHostBrand(fresh); });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return <HostBrandContext.Provider value={brand}>{children}</HostBrandContext.Provider>;
 }

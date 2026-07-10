@@ -39,12 +39,16 @@ function applyFavicon(color: string, name: string): void {
   setFavicon(c.toDataURL("image/png"));
 }
 
-// Deja UN solo <link rel="icon"> autoritativo: elimina los default hardcodeados (svg+ico) y
-// cualquier type/sizes previo que hacían que el browser ignorara el favicon del tenant.
+// Usa UN link dedicado (data-dynamic-icon), appendeado al final para que el browser lo prefiera.
+// Nunca hace remove() de los <link rel=icon> que gestiona React (HeadContent) → evita "removeChild of
+// null" durante la hidratación (Fix 3, Fase 2). Idempotente: reusa el link en llamadas siguientes.
 function setFavicon(href: string): void {
-  document.querySelectorAll("link[rel~='icon']").forEach((l) => l.remove());
-  const link = document.createElement("link");
-  link.rel = "icon";
+  let link = document.querySelector<HTMLLinkElement>("link[data-dynamic-icon]");
+  if (!link) {
+    link = document.createElement("link");
+    link.rel = "icon";
+    link.setAttribute("data-dynamic-icon", "");
+    document.head.appendChild(link);
+  }
   link.href = href;
-  document.head.appendChild(link);
 }

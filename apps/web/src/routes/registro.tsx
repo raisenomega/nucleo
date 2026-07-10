@@ -4,6 +4,7 @@ import { supabase } from "@shared/lib/supabase";
 import { PasswordInput } from "@shared/components/PasswordInput";
 import { isRaisenHost } from "@shared/lib/brand-host";
 import { useRaisenGuard } from "@shared/hooks/useRaisenGuard";
+import { useMounted } from "@shared/hooks/useMounted";
 
 export const Route = createFileRoute("/registro")({
   component: Registro,
@@ -15,6 +16,8 @@ function Registro() {
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
   useRaisenGuard();
+  const mounted = useMounted();
+  if (!mounted) return <div className="min-h-screen bg-background" />; // SSR/1er render: placeholder neutro
   if (!isRaisenHost()) return null; // D2: producto Raisen solo en dominios operacionales
 
   function set(k: keyof typeof form) {

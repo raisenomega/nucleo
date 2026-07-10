@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useI18n } from "@shared/i18n";
 import { isRaisenHost } from "@shared/lib/brand-host";
 import { useRaisenGuard } from "@shared/hooks/useRaisenGuard";
+import { useMounted } from "@shared/hooks/useMounted";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -10,6 +11,8 @@ export const Route = createFileRoute("/")({
 function Home() {
   const { t } = useI18n();
   useRaisenGuard();
+  const mounted = useMounted();
+  if (!mounted) return <div className="min-h-screen bg-background" />; // SSR/1er render: placeholder neutro
   if (!isRaisenHost()) return null; // D4: en dominios de tenant redirige a /login (sin flash de marca Raisen)
   return (
     <main className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
