@@ -28,13 +28,14 @@ function Guard() {
     );
   }
   if (!session) return <Navigate to="/login" />;
+  // ToastProvider debe envolver a BrandProvider: el guard cross-tenant (D6) usa useToast.
   return (
-    <BrandProvider>
-      <ModuleAccessProvider>
-        <ToastProvider>
+    <ToastProvider>
+      <BrandProvider>
+        <ModuleAccessProvider>
           <AppLayout />
-        </ToastProvider>
-      </ModuleAccessProvider>
-    </BrandProvider>
+        </ModuleAccessProvider>
+      </BrandProvider>
+    </ToastProvider>
   );
 }
