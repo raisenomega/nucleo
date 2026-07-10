@@ -31,6 +31,14 @@ export const supabaseQuoteRepository: IQuoteRepository = {
       valid_until: d.validUntil, notes: d.notes || null, terms: d.terms || null, status: d.status,
     })).error);
   },
+  async update(id, d): Promise<QuoteResult> {
+    // Excluye status a propósito (editar no re-envía; el estado se preserva).
+    return ok((await supabase.from("quotes").update({
+      client_name: d.clientName, client_phone: d.clientPhone || null, client_email: d.clientEmail || null, client_address: d.clientAddress || null,
+      items: d.items.map(fromItem), subtotal: d.subtotal, tax_total: d.taxTotal, total: d.total,
+      valid_until: d.validUntil, notes: d.notes || null, terms: d.terms || null,
+    }).eq("id", id)).error);
+  },
   async setStatus(id, status: QuoteStatus): Promise<QuoteResult> {
     return ok((await supabase.from("quotes").update({ status }).eq("id", id)).error);
   },

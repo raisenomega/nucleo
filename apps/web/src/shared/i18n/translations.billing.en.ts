@@ -5,7 +5,7 @@ export const enBilling = {
   billingSubtitle: "Invoices, recurring plans and web orders — all end in income",
   newInvoice: "New invoice", recurringPlans: "Recurring plans", newPlan: "New plan",
   clientName: "Client", invoiceNumber: "Invoice #", dueDate: "Due", nextBilling: "Next billing",
-  saveDraft: "Save draft", markPaid: "Mark paid", generateInvoices: "Generate month's invoices",
+  saveDraft: "Save draft", saveChanges: "Save changes", markPaid: "Mark paid", generateInvoices: "Generate month's invoices",
   generateInvoice: "Generate invoice", pause: "Pause", resume: "Resume",
   isDraft: "Draft", isSent: "Sent", isPaid: "Paid", isOverdue: "Overdue", isCancelled: "Cancelled",
   psActive: "Active", psPaused: "Paused", psCancelled: "Cancelled",

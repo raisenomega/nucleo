@@ -24,6 +24,8 @@ export interface QuotesSummary {
 export interface IQuoteRepository {
   list(): Promise<Quote[]>;
   save(input: QuoteInput): Promise<QuoteResult>;
+  update(id: string, input: QuoteInput): Promise<QuoteResult>;  // edición: status NO se toca
+
   setStatus(id: string, status: QuoteStatus): Promise<QuoteResult>;
   convertToInvoice(id: string): Promise<string | null>;
   fromLead(leadId: string): Promise<string | null>;

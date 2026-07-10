@@ -12,7 +12,8 @@ export function useQuotes(repo: IQuoteRepository) {
   }, [repo]);
   useEffect(() => { void load(); }, [load]);
   const save = useCallback(async (d: QuoteInput) => { const r = await repo.save(d); if (r.ok) await load(); return r; }, [repo, load]);
+  const update = useCallback(async (id: string, d: QuoteInput) => { const r = await repo.update(id, d); if (r.ok) await load(); return r; }, [repo, load]);
   const setStatus = useCallback(async (id: string, st: QuoteStatus) => { const r = await repo.setStatus(id, st); if (r.ok) await load(); return r; }, [repo, load]);
   const convert = useCallback(async (id: string) => { const inv = await repo.convertToInvoice(id); await load(); return inv; }, [repo, load]);
-  return { list, summary, save, setStatus, convert, reload: load };
+  return { list, summary, save, update, setStatus, convert, reload: load };
 }

@@ -1,19 +1,20 @@
 import { useState } from "react";
 import { useI18n } from "@shared/i18n";
 import { QuoteItemsEditor } from "@quotes/presentation/QuoteItemsEditor";
-import type { QuoteInput, QuoteItem, QuoteStatus, QuoteResult } from "@quotes/domain/quote.types";
+import type { Quote, QuoteInput, QuoteItem, QuoteStatus, QuoteResult } from "@quotes/domain/quote.types";
 
 const NEW: QuoteItem = { description: "", quantity: 1, unitPrice: 0, taxPct: 0, discountPct: 0, lineTotal: 0 };
 
-export function QuoteForm({ onSubmit, onCancel }: {
-  onSubmit: (d: QuoteInput) => Promise<QuoteResult>; onCancel: () => void;
+// initial => modo edición (precarga + un solo botón "Guardar cambios"; el status lo preserva el repo).
+export function QuoteForm({ initial, onSubmit, onCancel }: {
+  initial?: Quote; onSubmit: (d: QuoteInput) => Promise<QuoteResult>; onCancel: () => void;
 }) {
   const { t } = useI18n();
-  const [clientName, setClientName] = useState(""); const [clientPhone, setClientPhone] = useState("");
-  const [clientEmail, setClientEmail] = useState(""); const [clientAddress, setClientAddress] = useState("");
-  const [items, setItems] = useState<QuoteItem[]>([NEW]);
-  const [notes, setNotes] = useState(""); const [terms, setTerms] = useState("");
-  const [validUntil, setValidUntil] = useState(""); const [busy, setBusy] = useState(false);
+  const [clientName, setClientName] = useState(initial?.clientName ?? ""); const [clientPhone, setClientPhone] = useState(initial?.clientPhone ?? "");
+  const [clientEmail, setClientEmail] = useState(initial?.clientEmail ?? ""); const [clientAddress, setClientAddress] = useState(initial?.clientAddress ?? "");
+  const [items, setItems] = useState<QuoteItem[]>(initial ? [...initial.items] : [NEW]);
+  const [notes, setNotes] = useState(initial?.notes ?? ""); const [terms, setTerms] = useState(initial?.terms ?? "");
+  const [validUntil, setValidUntil] = useState(initial?.validUntil ?? ""); const [busy, setBusy] = useState(false);
   const subtotal = items.reduce((s, i) => s + i.quantity * i.unitPrice * (1 - i.discountPct / 100), 0);
   const total = items.reduce((s, i) => s + i.lineTotal, 0);
   async function submit(status: QuoteStatus) {
@@ -37,8 +38,12 @@ export function QuoteForm({ onSubmit, onCancel }: {
       <label className="block space-y-1"><span className="text-xs font-bold text-muted-foreground">{t("validUntil")}</span>
         <input type="date" value={validUntil} onChange={(e) => setValidUntil(e.target.value)} className={fld} /></label>
       <div className="flex gap-2">
-        <button type="button" disabled={busy} onClick={() => void submit("draft")} className="rounded-lg bg-secondary px-4 py-2 text-sm font-bold disabled:opacity-50">{t("saveDraft")}</button>
-        <button type="submit" disabled={busy} className="rounded-lg bg-primary text-primary-foreground px-4 py-2 text-sm font-bold disabled:opacity-50">{t("send")}</button>
+        {initial
+          ? <button type="submit" disabled={busy} className="rounded-lg bg-primary text-primary-foreground px-4 py-2 text-sm font-bold disabled:opacity-50">{t("saveChanges")}</button>
+          : <>
+              <button type="button" disabled={busy} onClick={() => void submit("draft")} className="rounded-lg bg-secondary px-4 py-2 text-sm font-bold disabled:opacity-50">{t("saveDraft")}</button>
+              <button type="submit" disabled={busy} className="rounded-lg bg-primary text-primary-foreground px-4 py-2 text-sm font-bold disabled:opacity-50">{t("send")}</button>
+            </>}
         <button type="button" onClick={onCancel} className="rounded-lg bg-secondary px-4 py-2 text-sm">{t("cancel")}</button>
       </div>
     </form>

@@ -1,4 +1,4 @@
-import { X, MessageCircle, Mail, FileOutput, Check, Ban, FileDown } from "lucide-react";
+import { X, MessageCircle, Mail, FileOutput, Check, Ban, FileDown, Pencil } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { usePdf } from "@shared/hooks/usePdf";
 import { formatCurrency } from "@shared/lib/format";
@@ -9,8 +9,8 @@ import type { Quote, QuoteStatus } from "@quotes/domain/quote.types";
 const wa = (q: Quote, msg: string) => `https://wa.me/${(q.clientPhone ?? "").replace(/\D/g, "")}?text=${encodeURIComponent(msg)}`;
 
 // Detalle cotización (ScreenModal): items + [WhatsApp] [Email] [Convertir] [Aceptar/Rechazar].
-export function QuoteDetail({ quote, canManage, onStatus, onConvert, onClose }: {
-  quote: Quote; canManage: boolean; onStatus: (s: QuoteStatus) => void; onConvert: () => void; onClose: () => void;
+export function QuoteDetail({ quote, canManage, onStatus, onConvert, onEdit, onClose }: {
+  quote: Quote; canManage: boolean; onStatus: (s: QuoteStatus) => void; onConvert: () => void; onEdit: () => void; onClose: () => void;
 }) {
   const { t } = useI18n();
   const pdf = usePdf();
@@ -42,6 +42,7 @@ export function QuoteDetail({ quote, canManage, onStatus, onConvert, onClose }: 
             className={`${btn} bg-secondary disabled:opacity-50`}><FileDown className="h-4 w-4" /> {pdf.generating ? t("generatingPdf") : t("downloadPdf")}</button>
           {q.clientPhone && <a href={wa(q, msg)} target="_blank" rel="noreferrer" className={`${btn} bg-green-600 text-white`}><MessageCircle className="h-4 w-4" /> {t("whatsapp")}</a>}
           {q.clientEmail && <a href={`mailto:${q.clientEmail}?subject=${encodeURIComponent(msg)}`} className={`${btn} bg-secondary`}><Mail className="h-4 w-4" /> {t("sendEmail")}</a>}
+          {canManage && open && <button type="button" onClick={onEdit} className={`${btn} bg-secondary`}><Pencil className="h-4 w-4" /> {t("edit")}</button>}
           {canManage && q.status === "accepted" && <button type="button" onClick={onConvert} className={`${btn} bg-primary text-primary-foreground`}><FileOutput className="h-4 w-4" /> {t("convertToInvoice")}</button>}
           {canManage && open && <button type="button" onClick={() => onStatus("accepted")} className={`${btn} bg-green-600 text-white`}><Check className="h-4 w-4" /> {t("markAccepted")}</button>}
           {canManage && open && <button type="button" onClick={() => onStatus("rejected")} className={`${btn} bg-destructive text-white`}><Ban className="h-4 w-4" /> {t("markRejected")}</button>}

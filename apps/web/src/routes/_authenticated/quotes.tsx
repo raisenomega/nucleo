@@ -17,6 +17,7 @@ function QuotesPage() {
   const { t } = useI18n(); const { can } = useModuleAccess();
   const m = useQuotes(supabaseQuoteRepository);
   const [creating, setCreating] = useState(false); const [viewing, setViewing] = useState<Quote | null>(null);
+  const [editing, setEditing] = useState<Quote | null>(null);
   if (!can("quotes", "view")) return <Navigate to="/dashboard" />;
   const onStatus = (s: QuoteStatus) => { if (viewing) { void m.setStatus(viewing.id, s); setViewing(null); } };
   const onConvert = () => { if (viewing) { void m.convert(viewing.id).then((inv) => { if (inv) window.alert(t("invoiceSaved")); }); setViewing(null); } };
@@ -31,9 +32,12 @@ function QuotesPage() {
         <p className="text-xs text-muted-foreground">{t("quotesSubtitle")}</p>
       </div>
       <QuoteKpis s={m.summary} />
-      {creating && <QuoteForm onSubmit={m.save} onCancel={() => setCreating(false)} />}
+      {(creating || editing) && <QuoteForm initial={editing ?? undefined}
+        onSubmit={editing ? (d) => m.update(editing.id, d) : m.save}
+        onCancel={() => { setCreating(false); setEditing(null); }} />}
       <QuoteTable rows={m.list} onView={setViewing} />
-      {viewing && <QuoteDetail quote={viewing} canManage={can("quotes", "edit")} onStatus={onStatus} onConvert={onConvert} onClose={() => setViewing(null)} />}
+      {viewing && <QuoteDetail quote={viewing} canManage={can("quotes", "edit")} onStatus={onStatus} onConvert={onConvert}
+        onEdit={() => { setEditing(viewing); setViewing(null); }} onClose={() => setViewing(null)} />}
     </div>
   );
 }
