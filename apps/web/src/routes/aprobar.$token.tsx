@@ -17,15 +17,18 @@ function ApprovalPage() {
   if (!data) return <main className={wrap}>{t("loadingQuote")}</main>;
   if (data.status === "valid") return <QuoteApprovalView token={token} data={data} />;
 
-  const msg = data.status === "expired" ? t("quoteLinkExpired")
+  const name = data.tenant_display_name ?? ""; const phone = data.tenant_contact_phone ?? null;
+  const main = data.status === "expired" ? t("quoteLinkExpired")
     : data.status === "used" ? t("quoteAlreadyResponded")
     : data.status === "rate_limited" ? t("tooManyRequests")
     : t("quoteNotFound");
+  const contact = phone && data.status === "expired" ? t("quoteLinkExpiredContact", { name, phone })
+    : phone && data.status === "used" ? t("quoteAlreadyRespondedContact", { name, phone }) : null;
   return (
     <main className={wrap}>
-      <div className="space-y-2">
-        <p className="text-lg font-bold text-primary">{msg} {data.tenant_display_name ?? ""}</p>
-        {data.tenant_contact_phone && <p className="text-muted-foreground">{data.tenant_contact_phone}</p>}
+      <div className="max-w-md space-y-2">
+        <p className="text-lg font-bold text-primary">{main}</p>
+        {contact && <p className="text-muted-foreground">{contact}</p>}
       </div>
     </main>
   );

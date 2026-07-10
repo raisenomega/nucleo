@@ -1,24 +1,15 @@
 import { useState } from "react";
 import { useI18n } from "@shared/i18n";
 import { formatCurrency } from "@shared/lib/format";
-import { respondQuote, type PublicQuoteResp } from "@quotes/infrastructure/supabase-public-quote.repository";
+import type { PublicQuoteResp } from "@quotes/infrastructure/supabase-public-quote.repository";
+import { QuoteDecision } from "@quotes/presentation/QuoteDecision";
 
-// Estado 'valid': branding del tenant + detalle + PDF + aceptar/rechazar + confirmación post-respuesta.
+// Estado 'valid': branding del tenant + detalle + sección decisión + confirmación post-respuesta.
 export function QuoteApprovalView({ token, data }: { token: string; data: PublicQuoteResp }) {
   const { t } = useI18n();
   const q = data.quote!; const tn = data.tenant!;
   const [done, setDone] = useState<"accepted" | "rejected" | null>(null);
-  const [rejecting, setRejecting] = useState(false);
-  const [note, setNote] = useState("");
-  const [busy, setBusy] = useState(false);
   const pdfOk = !!data.pdf_url && !!data.pdf_url_expires_at && data.pdf_url_expires_at > new Date().toISOString();
-
-  async function respond(decision: "accepted" | "rejected") {
-    setBusy(true);
-    const r = await respondQuote(token, decision, note);
-    setBusy(false);
-    if (r.status === "ok") setDone(decision); else window.alert(t("respondError"));
-  }
 
   if (done) return (
     <main className="min-h-screen bg-background flex items-center justify-center p-4 text-center">
@@ -47,17 +38,8 @@ export function QuoteApprovalView({ token, data }: { token: string; data: Public
         </div>
         {q.valid_until && <p className="text-sm"><b>{t("validUntil")}:</b> {q.valid_until}</p>}
         {q.terms && <p className="text-xs text-muted-foreground"><b>{t("terms")}:</b> {q.terms}</p>}
-        {pdfOk
-          ? <a href={data.pdf_url ?? "#"} target="_blank" rel="noreferrer" className="inline-block rounded-lg bg-secondary px-4 py-2 text-sm font-bold">{t("downloadPdf")}</a>
-          : <p className="text-xs text-muted-foreground">{t("pdfNotAvailable")} {tn.display_name} {tn.contact_phone ?? ""}</p>}
-        <div className="flex gap-3 pt-2">
-          <button type="button" disabled={busy} onClick={() => void respond("accepted")} className="flex-1 rounded-lg bg-green-600 px-4 py-3 font-bold text-white disabled:opacity-50">{t("acceptQuote")}</button>
-          <button type="button" disabled={busy} onClick={() => setRejecting(true)} className="flex-1 rounded-lg bg-red-600 px-4 py-3 font-bold text-white disabled:opacity-50">{t("rejectQuote")}</button>
-        </div>
-        {rejecting && <div className="space-y-2">
-          <textarea maxLength={500} value={note} onChange={(e) => setNote(e.target.value)} placeholder={t("rejectReason")} rows={2} className="w-full rounded-lg border border-border bg-background p-2 text-sm" />
-          <button type="button" disabled={busy} onClick={() => void respond("rejected")} className="rounded-lg bg-red-600 px-4 py-2 font-bold text-white disabled:opacity-50">{t("rejectQuote")}</button>
-        </div>}
+        <QuoteDecision token={token} tenantName={tn.display_name ?? ""} contactPhone={tn.contact_phone}
+          pdfUrl={data.pdf_url ?? null} pdfOk={pdfOk} onDone={setDone} />
       </div>
     </main>
   );
