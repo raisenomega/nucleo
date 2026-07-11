@@ -42,7 +42,7 @@ function DocumentsPage() {
         <p className="text-xs text-muted-foreground">{t("documentsSubtitle")}</p>
       </div>
       {m.expiring.length > 0 && (
-        <div className="flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm font-bold text-amber-800">
+        <div className="flex items-center gap-2 rounded-xl border border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/15 p-3 text-sm font-bold text-amber-800 dark:text-amber-300">
           <AlertTriangle className="h-5 w-5" /> {m.expiring.length} {t("expiringSoon")}</div>)}
       {creating && <DocumentUpload tenantId={session?.tenantId ?? ""} onUpload={m.upload} onSubmit={m.save} onCancel={() => setCreating(false)} />}
       <DocumentTable rows={rows} onView={(id) => { const d = m.list.find((x) => x.id === id); if (d) setViewing(d); }} />

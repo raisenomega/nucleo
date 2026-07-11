@@ -41,7 +41,7 @@ export function EvaluationDetail({ ev, onClose }: { ev: ED; onClose: () => void 
           <span className="text-2xl font-bold">{ev.compositeScore.toFixed(2)}</span>
           <span className="font-bold">{ev.classification ? t(CLASS_KEY[ev.classification]) : ev.status}</span></div>
         {ev.requiresLegalValidation && (
-          <div className="flex gap-2 rounded-lg bg-red-50 p-3 text-sm text-red-700">
+          <div className="flex gap-2 rounded-lg bg-red-50 dark:bg-red-500/15 p-3 text-sm text-red-700 dark:text-red-300">
             <AlertTriangle className="h-5 w-5 shrink-0" /><span>{t("legalWarning")}</span></div>)}
         {trPct != null && <p className="text-sm text-muted-foreground">{t("trainingPct")}: <span className="font-bold text-primary">{trPct}%</span></p>}
         {data.length > 0 && (

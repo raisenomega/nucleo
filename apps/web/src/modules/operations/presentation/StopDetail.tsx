@@ -39,8 +39,8 @@ export function StopDetail({ stop, tenantId, onClose, onPay, onNotAttended, onEv
         )}
         <div className="space-y-1"><span className="text-xs font-bold text-muted-foreground">{t("addEvidence")}</span>
           <EvidenceUpload tenantId={tenantId} value={stop.evidenceUrls} onChange={onEvidence} /></div>
-        {done ? <div className="rounded-lg bg-green-50 p-3 text-center font-bold text-green-700">{t("stopCompleted")}: {formatCurrency(stop.actualAmount ?? stop.estimatedAmount)}</div>
-          : debt ? <div className="rounded-lg bg-yellow-50 p-3 text-center font-bold text-yellow-700">{t("pendingDebt")}: {formatCurrency(stop.estimatedAmount)}</div>
+        {done ? <div className="rounded-lg bg-green-50 dark:bg-green-500/15 p-3 text-center font-bold text-green-700 dark:text-green-300">{t("stopCompleted")}: {formatCurrency(stop.actualAmount ?? stop.estimatedAmount)}</div>
+          : debt ? <div className="rounded-lg bg-yellow-50 dark:bg-yellow-500/15 p-3 text-center font-bold text-yellow-700 dark:text-yellow-300">{t("pendingDebt")}: {formatCurrency(stop.estimatedAmount)}</div>
           : <button type="button" onClick={onMarkDone} className="w-full rounded-lg bg-green-600 p-3 text-center font-bold text-white">{t("completeStop")}</button>}
       </div>
     </ScreenModal>

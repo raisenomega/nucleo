@@ -8,5 +8,5 @@ export const DOC_CAT_KEY: Record<DocCategory, TranslationKey> = {
 };
 export const DOC_ST_KEY: Record<DocStatus, TranslationKey> = { draft: "dsDraft", active: "dsActive", expired: "dsExpired", cancelled: "dsCancelled" };
 export const DOC_ST_COLOR: Record<DocStatus, string> = {
-  draft: "bg-secondary", active: "bg-green-100 text-green-800", expired: "bg-red-100 text-red-800", cancelled: "bg-secondary",
+  draft: "bg-secondary", active: "bg-green-100 text-green-800 dark:bg-green-500/20 dark:text-green-300", expired: "bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-300", cancelled: "bg-secondary",
 };

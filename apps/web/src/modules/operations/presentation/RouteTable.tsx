@@ -9,8 +9,8 @@ import type { ServiceRoute, RepoResult } from "@operations/domain/route.types";
 
 type Emp = { id: string; full_name: string };
 const COLOR: Record<string, string> = {
-  "Planificada": "bg-yellow-100 text-yellow-800", "En progreso": "bg-blue-100 text-blue-800",
-  "Completada": "bg-green-100 text-green-800", "Cancelada": "bg-red-100 text-red-800",
+  "Planificada": "bg-yellow-100 text-yellow-800 dark:bg-yellow-500/20 dark:text-yellow-300", "En progreso": "bg-blue-100 text-blue-800 dark:bg-blue-500/20 dark:text-blue-300",
+  "Completada": "bg-green-100 text-green-800 dark:bg-green-500/20 dark:text-green-300", "Cancelada": "bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-300",
 };
 
 // onVoid llama void_route (cascada a stops); onDeleteForever hard-delete (solo CEO, ya anulada).

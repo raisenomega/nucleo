@@ -10,7 +10,7 @@ export function CourseTable({ rows, onDelete }: { rows: readonly Course[]; onDel
   const [page, setPage] = useState(1);
   const paged = rows.slice((page - 1) * 12, page * 12);
   if (rows.length === 0) return <p className="text-sm text-muted-foreground">{t("noRecords")}</p>;
-  const req = (c: Course) => c.required ? <span className="rounded bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800">{t("required")}</span> : null;
+  const req = (c: Course) => c.required ? <span className="rounded bg-amber-100 dark:bg-amber-500/20 px-2 py-0.5 text-xs font-bold text-amber-800 dark:text-amber-300">{t("required")}</span> : null;
   const del = (c: Course) => onDelete ? <button type="button" onClick={() => onDelete(c.id)} aria-label={t("delete")} className="text-destructive"><Trash2 className="h-4 w-4" /></button> : null;
   return (
     <>

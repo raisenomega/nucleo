@@ -8,7 +8,7 @@ export function StopCard({ stop, onOpen }: { stop: RouteStop; onOpen: (s: RouteS
   const { t } = useI18n();
   const done = stop.status === "Completada";
   const debt = stop.status === "No atendido" && stop.pendingCollection;
-  const badge = done ? "bg-green-100 text-green-800" : debt ? "bg-yellow-100 text-yellow-800" : "bg-secondary";
+  const badge = done ? "bg-green-100 text-green-800 dark:bg-green-500/20 dark:text-green-300" : debt ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-500/20 dark:text-yellow-300" : "bg-secondary";
   return (
     <button type="button" onClick={() => onOpen(stop)} className="w-full space-y-1 rounded-xl border border-border bg-card p-3 text-left transition-colors hover:bg-secondary">
       <div className="flex items-center justify-between gap-2">

@@ -5,6 +5,6 @@ export const ENROLL_KEY: Record<EnrollStatus, TranslationKey> = {
   not_started: "stNotStarted", in_progress: "stInProgress", completed: "stCompleted", expired: "stExpired",
 };
 export const ENROLL_COLOR: Record<EnrollStatus, string> = {
-  not_started: "bg-secondary", in_progress: "bg-blue-100 text-blue-800",
-  completed: "bg-green-100 text-green-800", expired: "bg-red-100 text-red-800",
+  not_started: "bg-secondary", in_progress: "bg-blue-100 text-blue-800 dark:bg-blue-500/20 dark:text-blue-300",
+  completed: "bg-green-100 text-green-800 dark:bg-green-500/20 dark:text-green-300", expired: "bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-300",
 };
