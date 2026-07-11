@@ -46,7 +46,7 @@ function MemberPage() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <span className="grid h-14 w-14 place-items-center rounded-full bg-primary text-2xl font-bold text-primary-foreground">{m.fullName.charAt(0)}</span>
-          <div><h1 className="font-display text-2xl font-bold text-primary">{m.fullName}</h1>
+          <div><h1 className="font-display text-2xl font-bold text-foreground">{m.fullName}</h1>
             <p className="text-xs text-muted-foreground">{m.role ?? "—"} · {m.email} · {m.phone || "—"}</p></div>
         </div>
         <Link to="/settings" className="text-sm font-bold text-primary">← {t("backToTeam")}</Link>

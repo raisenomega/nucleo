@@ -40,7 +40,7 @@ function EvaluationsPage() {
     <div className="space-y-6 p-4 md:p-8">
       <div className="space-y-2">
         <div className="flex items-center justify-between gap-4">
-          <h1 className="font-display text-xl font-bold text-primary md:text-3xl">{t("evaluations")}</h1>
+          <h1 className="font-display text-xl font-bold text-foreground md:text-3xl">{t("evaluations")}</h1>
           {can("evaluations", "create") && <button type="button" onClick={() => setCreating((v) => !v)}
             className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-body font-bold">
             <Plus className="h-4 w-4" /> {tab === "evals" ? t("newEvaluation") : t("newFeedback")}</button>}

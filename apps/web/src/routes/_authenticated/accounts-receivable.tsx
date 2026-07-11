@@ -45,7 +45,7 @@ function ARPage() {
     <div className="space-y-6 p-4 md:p-8">
       <div className="space-y-2">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <h1 className="font-display text-xl font-bold text-primary md:text-3xl">{t("accountsReceivable")}</h1>
+          <h1 className="font-display text-xl font-bold text-foreground md:text-3xl">{t("accountsReceivable")}</h1>
           <button type="button" disabled={pdf.generating || !m.snapshot?.count} onClick={exportPdf}
             className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold disabled:opacity-50"><FileText className="h-4 w-4" /> {pdf.generating ? t("generatingPdf") : t("debtsReport")}</button>
         </div>

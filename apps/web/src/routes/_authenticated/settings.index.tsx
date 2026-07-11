@@ -34,7 +34,7 @@ function SettingsPage() {
   ];
   return (
     <div className="space-y-6 p-4 md:p-8">
-      <h1 className="font-display text-xl font-bold text-primary md:text-3xl">{t("settings")}</h1>
+      <h1 className="font-display text-xl font-bold text-foreground md:text-3xl">{t("settings")}</h1>
       <div className="flex flex-wrap gap-2 border-b border-border">
         {tabs.filter((x) => x.show).map((x) => (
           <button key={x.id} type="button" onClick={() => setTab(x.id)}

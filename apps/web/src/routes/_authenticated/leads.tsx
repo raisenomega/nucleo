@@ -50,7 +50,7 @@ function LeadsPage() {
     <div className="space-y-6 p-4 md:p-8">
       <div className="space-y-2">
         <div className="flex items-center justify-between gap-4">
-          <h1 className="font-display text-xl font-bold text-primary md:text-3xl">{t("leads")}</h1>
+          <h1 className="font-display text-xl font-bold text-foreground md:text-3xl">{t("leads")}</h1>
           {can("leads", "create") && <button type="button" onClick={() => setEditing("new")} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-body font-bold"><Plus className="h-4 w-4" /> {t("newLead")}</button>}
         </div>
         <p className="text-xs text-muted-foreground">{t("leadSubtitle")}</p>

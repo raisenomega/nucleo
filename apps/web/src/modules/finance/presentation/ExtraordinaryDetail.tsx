@@ -21,7 +21,7 @@ export function ExtraordinaryDetail({ item, onClose }: { item: ExtraPayment; onC
     <>
       <ScreenModal onClose={onClose}>
         <div className="flex items-center justify-between border-b border-border p-4 md:p-6">
-          <h2 className="font-display text-xl font-bold text-primary">{t("extraordinaryDetail")}</h2>
+          <h2 className="font-display text-xl font-bold text-foreground">{t("extraordinaryDetail")}</h2>
           <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button>
         </div>
         <div className="space-y-3 p-4 md:p-6">

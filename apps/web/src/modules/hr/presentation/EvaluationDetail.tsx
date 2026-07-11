@@ -31,7 +31,7 @@ export function EvaluationDetail({ ev, onClose }: { ev: ED; onClose: () => void 
   return (
     <ScreenModal onClose={onClose}>
       <div className="flex items-center justify-between border-b border-border p-4">
-        <h2 className="font-display text-lg font-bold text-primary">{ev.employeeName} — {ev.period}</h2>
+        <h2 className="font-display text-lg font-bold text-foreground">{ev.employeeName} — {ev.period}</h2>
         <div className="flex items-center gap-3">
           <button type="button" disabled={pdf.generating} onClick={() => void pdf.generatePdf("evaluation", ev.id)} aria-label={t("downloadPdf")} className="text-muted-foreground hover:text-foreground disabled:opacity-50"><FileDown className="h-5 w-5" /></button>
           <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button></div>

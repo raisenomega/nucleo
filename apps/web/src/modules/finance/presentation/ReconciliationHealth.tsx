@@ -14,7 +14,7 @@ export function ReconciliationHealth({ health }: { health: HealthPanel }) {
   return (
     <div className="space-y-3 rounded-lg border border-border bg-card p-5">
       <div className="flex items-center justify-between">
-        <h2 className="font-body font-bold text-primary">{t("breakEven")}</h2>
+        <h2 className="font-body font-bold text-foreground">{t("breakEven")}</h2>
         <span className={`text-xl ${COLOR[health.operatingStatus]}`}>{EMOJI[health.operatingStatus]}</span>
       </div>
       <div className="flex items-center justify-between text-xs text-muted-foreground">

@@ -25,7 +25,7 @@ export function CategoryModal({ initial, onSave, onClose }: {
   return (
     <ScreenModal onClose={onClose}>
       <div className="flex items-center justify-between border-b border-border p-4">
-        <h2 className="font-display text-lg font-bold text-primary">{initial ? t("edit") : t("newCategory")}</h2>
+        <h2 className="font-display text-lg font-bold text-foreground">{initial ? t("edit") : t("newCategory")}</h2>
         <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button>
       </div>
       <div className="space-y-3 p-4">

@@ -19,7 +19,7 @@ function BillingPage() {
   return (
     <div className="space-y-6 p-4 md:p-8">
       <div className="space-y-2">
-        <h1 className="font-display text-xl font-bold text-primary md:text-3xl">{t("billing")}</h1>
+        <h1 className="font-display text-xl font-bold text-foreground md:text-3xl">{t("billing")}</h1>
         <p className="text-xs text-muted-foreground">{t("billingSubtitle")}</p>
       </div>
       <div className="flex flex-wrap gap-2">{tabs.map((x) => (

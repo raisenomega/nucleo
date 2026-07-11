@@ -13,7 +13,7 @@ export function ProfilePersonalSection({ member, form, onChange, canEdit }: {
   );
   return (
     <div className="space-y-3 rounded-lg border border-border bg-card p-5">
-      <h2 className="font-body font-bold text-primary">{t("personalInfo")}</h2>
+      <h2 className="font-body font-bold text-foreground">{t("personalInfo")}</h2>
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
         <label className="space-y-1"><span className={lbl}>{t("contactName")}</span>
           <input value={form.fullName} disabled={!canEdit} onChange={(e) => onChange("fullName", e.target.value)} className={field} /></label>

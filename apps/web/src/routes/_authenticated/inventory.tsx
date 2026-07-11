@@ -42,7 +42,7 @@ function InventoryPage() {
     <div className="space-y-6 p-4 md:p-8">
       <div className="space-y-2">
         <div className="flex items-center justify-between gap-4">
-          <h1 className="font-display text-xl font-bold text-primary md:text-3xl">{t("inventory")}</h1>
+          <h1 className="font-display text-xl font-bold text-foreground md:text-3xl">{t("inventory")}</h1>
           <div className="flex items-center gap-2">
           <button type="button" disabled={pdf.generating || !items.length} onClick={exportPdf}
             className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold disabled:opacity-50"><FileText className="h-4 w-4" /> {pdf.generating ? t("generatingPdf") : t("inventoryReport")}</button>

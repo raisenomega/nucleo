@@ -40,7 +40,7 @@ function ReconciliationPage() {
     <div className="space-y-6 p-4 md:p-8">
       <div className="space-y-2">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <h1 className="font-display text-xl font-bold text-primary md:text-3xl">{t("reconciliation")}</h1>
+          <h1 className="font-display text-xl font-bold text-foreground md:text-3xl">{t("reconciliation")}</h1>
           <div className="flex items-center gap-2">
             {can("reconciliation", "fiscal") && (
               <button type="button" disabled={pdf.generating || !m.snapshot} onClick={() => { if (m.snapshot) void pdf.generatePdf("reconciliation", null, buildFiscalBody(month, m.snapshot)); }}

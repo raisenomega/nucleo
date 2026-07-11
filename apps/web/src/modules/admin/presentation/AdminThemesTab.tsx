@@ -19,7 +19,7 @@ export function AdminThemesTab({ tenantId }: { tenantId: string }) {
   return (
     <div className="max-w-2xl space-y-4">
       <div>
-        <h2 className="font-display text-xl font-bold text-primary">{t("themesTitle")}</h2>
+        <h2 className="font-display text-xl font-bold text-foreground">{t("themesTitle")}</h2>
         <p className="text-xs text-muted-foreground">{t("themesSubtitle")}</p>
       </div>
       <ThemeSection title={t("identityHeader")} open={open === "identity"} onToggle={() => toggle("identity")}>

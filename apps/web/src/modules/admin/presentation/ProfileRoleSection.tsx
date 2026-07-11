@@ -21,7 +21,7 @@ export function ProfileRoleSection({ member, canEdit, onRole, onPin }: {
   const lbl = "text-xs font-bold text-muted-foreground";
   return (
     <div className="space-y-3 rounded-lg border border-border bg-card p-5">
-      <h2 className="font-body font-bold text-primary">{t("roleAccess")}</h2>
+      <h2 className="font-body font-bold text-foreground">{t("roleAccess")}</h2>
       <label className="block space-y-1 md:max-w-xs"><span className={lbl}>{t("role")}</span>
         {canEdit
           ? <select value={member.role ?? ""} onChange={(e) => onRole(e.target.value as AppRole)} className={field}>{ROLES.map((r) => <option key={r.v} value={r.v}>{r.l}</option>)}</select>

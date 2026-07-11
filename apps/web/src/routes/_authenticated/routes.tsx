@@ -43,7 +43,7 @@ function RoutesPage() {
   return (
     <div className="space-y-6 p-4 md:p-8">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="font-display text-xl font-bold text-primary md:text-3xl">{t("routes")}</h1>
+        <h1 className="font-display text-xl font-bold text-foreground md:text-3xl">{t("routes")}</h1>
         <div className="flex items-center gap-2">
           <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="rounded-lg border border-border bg-background p-2 text-sm" />
           {can("routes", "create") && <button type="button" onClick={() => setEditing("new")} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-body font-bold"><Plus className="h-4 w-4" /> {t("newRoute")}</button>}

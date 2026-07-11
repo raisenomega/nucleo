@@ -48,7 +48,7 @@ function IncomePage() {
     <div className="space-y-6 p-4 md:p-8">
       <div className="space-y-2">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <h1 className="font-display text-xl font-bold text-primary md:text-3xl">{t("income")}</h1>
+          <h1 className="font-display text-xl font-bold text-foreground md:text-3xl">{t("income")}</h1>
           <div className="flex items-center gap-2">
             <FinanceReportButton title={t("income")} makeBody={(f, to) => incomeReportBody(incomes, f, to)} />
             {can("income", "create") && (

@@ -20,7 +20,7 @@ export function ReconciliationBankPanel({ bank, accounts, onAddAccount, onDeposi
   return (
     <div className="space-y-3 rounded-lg border border-border bg-card p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="font-body font-bold text-primary">{t("bankAccounts")}</h2>
+        <h2 className="font-body font-bold text-foreground">{t("bankAccounts")}</h2>
         <div className="flex gap-2 text-sm">
           {onAddAccount && <button type="button" onClick={onAddAccount} className="rounded-lg bg-secondary text-foreground px-3 py-1.5 font-bold">+ {t("addAccount")}</button>}
           {onRegisterBalance && <button type="button" onClick={onRegisterBalance} className="rounded-lg bg-secondary text-foreground px-3 py-1.5 font-bold">{t("registerBalance")}</button>}

@@ -50,7 +50,7 @@ function MarketingPage() {
     <div className="space-y-6 p-4 md:p-8">
       <div className="space-y-2">
         <div className="flex items-center justify-between gap-4">
-          <h1 className="font-display text-xl font-bold text-primary md:text-3xl">{t("marketing")}</h1>
+          <h1 className="font-display text-xl font-bold text-foreground md:text-3xl">{t("marketing")}</h1>
           <div className="flex items-center gap-2">
             <input type="month" value={month} onChange={(e) => setMonth(e.target.value)} className="rounded-lg border border-border bg-background p-2 text-sm" />
             {can("marketing", "create") && <button type="button" onClick={() => setEditE("new")} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-body font-bold"><Plus className="h-4 w-4" /> {t("registerExpense")}</button>}
@@ -62,7 +62,7 @@ function MarketingPage() {
       <MarketingChart budgets={budgets} expenses={expenses} channels={channels} />
       <MarketingBudgetTable channels={channels} budgets={budgets} month={month} canEdit={can("marketing", "edit")}
         onSave={(channel, amount) => { void m.upsertBudget({ month: `${month}-01`, channel, budgetedAmount: amount, notes: "" }); }} />
-      <h2 className="font-body font-bold text-primary">{t("mExpenseList")}</h2>
+      <h2 className="font-body font-bold text-foreground">{t("mExpenseList")}</h2>
       {editE !== null && editExpense && <MarketingExpenseForm channels={channels} initial={editExpense} onSubmit={submitE} onCancel={() => setEditE(null)} />}
       <MarketingExpenseTable rows={expenses} onView={setViewE} onEdit={can("marketing", "edit") ? setEditE : undefined}
         onDelete={can("marketing", "delete") ? (id) => { if (window.confirm(`${t("delete")}?`)) void m.removeExpense(id); } : undefined} />

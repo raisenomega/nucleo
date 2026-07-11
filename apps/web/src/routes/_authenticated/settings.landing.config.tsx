@@ -37,7 +37,7 @@ function Page() {
   ];
   return (
     <div className="space-y-4 p-4 md:p-8">
-      <h1 className="font-display text-xl font-bold text-primary md:text-3xl">{t("landing")} · {t("landingConfig")}</h1>
+      <h1 className="font-display text-xl font-bold text-foreground md:text-3xl">{t("landing")} · {t("landingConfig")}</h1>
       {secs.map((s) => (
         <div key={s.id} className="rounded-lg border border-border">
           <button type="button" onClick={() => setOpen(open === s.id ? "" : s.id)} className="flex w-full items-center justify-between p-3 font-bold">

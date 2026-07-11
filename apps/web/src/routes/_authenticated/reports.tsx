@@ -39,7 +39,7 @@ function ReportsPage() {
     <div className="space-y-6 p-4 md:p-8">
       <div className="space-y-2">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <h1 className="font-display text-xl font-bold text-primary md:text-3xl">{t("reports")}</h1>
+          <h1 className="font-display text-xl font-bold text-foreground md:text-3xl">{t("reports")}</h1>
           <div className="flex gap-1 overflow-x-auto">{PERIODS.map((p) => (
             <button key={p.id} type="button" onClick={() => m.setPeriod(p.id)}
               className={`shrink-0 rounded-lg px-3 py-1.5 text-sm font-bold ${m.period === p.id ? "bg-primary text-primary-foreground" : "bg-secondary"}`}>{t(p.k)}</button>))}</div>

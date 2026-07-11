@@ -19,7 +19,7 @@ export function MarketingExpenseForm({ channels, initial, onSubmit, onCancel }: 
   return (
     <ScreenModal onClose={onCancel}>
       <div className="flex items-center justify-between border-b border-border p-4 md:p-6">
-        <h2 className="font-display text-xl font-bold text-primary">{t("registerExpense")}</h2>
+        <h2 className="font-display text-xl font-bold text-foreground">{t("registerExpense")}</h2>
         <button type="button" onClick={onCancel} aria-label={t("cancel")}><X className="h-6 w-6" /></button>
       </div>
     <form onSubmit={(e) => { e.preventDefault(); onSubmit(f); }} className="flex flex-1 flex-col gap-4 p-4 md:p-6">

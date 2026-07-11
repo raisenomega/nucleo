@@ -24,7 +24,7 @@ export function LeadDetail({ lead, onClose, onEdit, onDuplicate, onArchive }: {
       <ScreenModal onClose={onClose}>
         <div className="flex items-center justify-between gap-2 border-b border-border p-4 md:p-6">
           <div className="flex flex-wrap items-center gap-2">
-            <h2 className="font-display text-xl font-bold text-primary">{lead.contactName}</h2>
+            <h2 className="font-display text-xl font-bold text-foreground">{lead.contactName}</h2>
             <TempBadge value={lead.temperature} /><StatusBadge value={lead.status} />
           </div>
           <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button>
