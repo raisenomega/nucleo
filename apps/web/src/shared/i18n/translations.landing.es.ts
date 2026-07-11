@@ -6,6 +6,7 @@ export const esLanding = {
   uploadError: "No se pudo subir la imagen", saved: "Guardado", selectIcon: "Elegir icono",
   monday: "Lunes", tuesday: "Martes", wednesday: "Miércoles", thursday: "Jueves", friday: "Viernes", saturday: "Sábado", sunday: "Domingo",
   landing: "Landing", landingConfig: "Configuración", landingCategories: "Categorías",
+  landingSiteSettings: "Ajustes del sitio", systemSettings: "Configuración",
   hero: "Hero", heroTitle: "Título", heroSubtitle: "Subtítulo", heroCtaLabel: "Texto del botón",
   heroCtaType: "Acción del botón", heroCtaHref: "Enlace personalizado", heroImage: "Imagen hero",
   ctaQuote: "Solicitar cotización", ctaOrder: "Comprar", ctaContact: "Contacto", ctaCustom: "Personalizado",

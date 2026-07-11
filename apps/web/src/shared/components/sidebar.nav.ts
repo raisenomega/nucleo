@@ -38,14 +38,13 @@ export const SECTIONS: NavSection[] = [
     { key: "observations", icon: NotebookPen, to: "/observations", mod: "observations" },
     { key: "training", icon: GraduationCap, to: "/training", mod: "training" },
     { key: "support", icon: LifeBuoy, to: "/support", mod: "support" }, { key: "notifications", icon: Bell },
-    { key: "settings", icon: Settings, to: "/settings", mod: "settings" },
   ] },
 ];
 
 // Sección Landing — inyectada por Sidebar solo si landingEnabled && CEO. mod:"settings" pasa el filtro CEO.
 export const LANDING_SECTION: NavSection = {
   title: "landing", icon: Palette, items: [
-    { key: "landingConfig", icon: SlidersHorizontal, to: "/settings/landing/config", mod: "settings" },
+    { key: "landingSiteSettings", icon: SlidersHorizontal, to: "/settings/landing/config", mod: "settings" },
     { key: "landingCategories", icon: Tags, to: "/settings/landing/categories", mod: "settings" },
   ],
 };

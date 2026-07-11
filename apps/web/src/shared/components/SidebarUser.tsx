@@ -1,5 +1,5 @@
-import { LogOut } from "lucide-react";
-import { useNavigate } from "@tanstack/react-router";
+import { LogOut, Settings } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { ThemeToggle } from "@shared/components/ThemeToggle";
 import { useI18n } from "@shared/i18n";
 import { useSession } from "@shared/providers/SessionProvider";
@@ -24,6 +24,8 @@ export function SidebarUser() {
           aria-label={t("switchLang")} className="rounded-lg bg-secondary text-foreground p-2 font-body">
           {locale === "es" ? "EN" : "ES"}
         </button>
+        <Link to="/settings" aria-label={t("systemSettings")} title={t("systemSettings")}
+          className="rounded-lg bg-secondary p-2 text-foreground"><Settings className="h-5 w-5" /></Link>
       </div>
       <button type="button" onClick={onLogout}
         className="flex w-full items-center justify-center gap-2 rounded-lg bg-secondary text-foreground px-3 py-2 text-sm font-body font-bold hover:bg-primary hover:text-primary-foreground">

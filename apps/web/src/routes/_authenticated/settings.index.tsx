@@ -11,7 +11,7 @@ import { AdminBrandTab } from "@admin/presentation/AdminBrandTab";
 import { AdminThemesTab } from "@admin/presentation/AdminThemesTab";
 import { useSession } from "@shared/providers/SessionProvider";
 
-export const Route = createFileRoute("/_authenticated/settings")({ component: SettingsPage });
+export const Route = createFileRoute("/_authenticated/settings/")({ component: SettingsPage });
 
 type Tab = "team" | "categories" | "general" | "brand" | "themes";
 
