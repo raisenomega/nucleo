@@ -16,7 +16,7 @@ export function HomeSections({ home }: { home: LandingHome | null }) {
   return (
     <>
       {home && home.categories.length > 0 && <CategoriesStrip categories={home.categories} onCategoryClick={() => scrollTo("products")} />}
-      {home && home.featured_products.length > 0 && <FeaturedProducts products={home.featured_products} onCardClick={() => scrollTo("contact")} />}
+      {home && home.featured_products.length > 0 && <FeaturedProducts products={home.featured_products} />}
       {home && home.featured_services.length > 0 && <FeaturedServices services={home.featured_services} onCardClick={() => scrollTo("contact")} />}
       {home && home.featured_packages.length > 0 && <FeaturedPackages packages={home.featured_packages} onCardClick={() => scrollTo("contact")} />}
       {home && home.testimonials.length > 0 && <TestimonialsCarousel testimonials={home.testimonials} />}

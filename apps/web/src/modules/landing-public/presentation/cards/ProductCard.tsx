@@ -1,10 +1,13 @@
+import { useNavigate } from "@tanstack/react-router";
 import { GlassCard } from "@landing-public/primitives/GlassCard";
 import { formatPrice } from "@landing-public/utils/format-price";
 import type { HomeProduct } from "@landing-public/domain/landing-home.types";
 
-export function ProductCard({ product: p, onClick }: { product: HomeProduct; onClick: () => void }) {
+// La card navega al detail /product/$slug (SPA). Antes scrolleaba a #contact (comportamiento retirado en 3.E.3.detail).
+export function ProductCard({ product: p }: { product: HomeProduct }) {
+  const nav = useNavigate();
   return (
-    <button type="button" onClick={onClick} className="block w-full text-left">
+    <button type="button" onClick={() => void nav({ to: "/product/$slug", params: { slug: p.slug } })} className="block w-full text-left">
       <GlassCard elevation="md" padding="sm">
         {p.primary_image_url && <img src={p.primary_image_url} alt={p.name} loading="lazy" width={640} height={360} className="mb-3 aspect-video w-full rounded-lg object-cover" />}
         <h3 className="font-bold">{p.name}</h3>
