@@ -5,7 +5,7 @@ import type { Toast, ToastKind } from "@shared/providers/toast-context";
 const STYLE: Record<ToastKind, { icon: typeof Info; cls: string }> = {
   success: { icon: CheckCircle2, cls: "border-green-600 text-green-700" },
   error: { icon: AlertCircle, cls: "border-destructive text-destructive" },
-  info: { icon: Info, cls: "border-primary text-primary" },
+  info: { icon: Info, cls: "border-foreground text-foreground" },
 };
 
 export function ToastStack({ toasts, onDismiss }: { toasts: readonly Toast[]; onDismiss: (id: number) => void }) {

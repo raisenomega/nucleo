@@ -17,7 +17,7 @@ export function ReportDatePicker({ title, onGenerate, onClose }: {
   return (
     <ScreenModal onClose={onClose}>
       <div className="flex items-center justify-between border-b border-border p-4">
-        <h2 className="font-display text-lg font-bold text-primary">{title}</h2>
+        <h2 className="font-display text-lg font-bold text-foreground">{title}</h2>
       </div>
       <div className="space-y-3 p-4">
         <label className="block space-y-1"><span className={lbl}>{t("from")}</span>

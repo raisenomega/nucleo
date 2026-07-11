@@ -33,7 +33,7 @@ export function Sidebar({ expanded, onClose, onToggle }: { expanded: boolean; on
           {brand.logoUrl
             ? <img src={brand.logoUrl} alt="" className="h-9 w-9 shrink-0 rounded-full object-cover" />
             : <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-primary font-display font-bold text-primary-foreground">{((brand.displayName || brand.legalName).trim()[0] || "M").toUpperCase()}</span>}
-          {expanded && <span className="font-display text-lg font-bold text-primary">{brand.displayName || brand.legalName || "Mi Negocio"}</span>}
+          {expanded && <span className="font-display text-lg font-bold text-foreground">{brand.displayName || brand.legalName || "Mi Negocio"}</span>}
         </button>
         <nav className="no-scrollbar flex-1 space-y-1 overflow-y-auto p-2">
           <Link to="/dashboard" onClick={onNavigate}

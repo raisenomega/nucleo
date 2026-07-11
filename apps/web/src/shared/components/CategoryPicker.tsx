@@ -61,7 +61,7 @@ export function CategoryPicker({ kind, value, onChange, label, byLabel }: {
           <select value={value} onChange={(e) => onChange(e.target.value)} className={field}>
             <option value="">—</option>{cats.map((c) => <option key={c.id} value={byLabel ? c.label : c.id}>{c.label}</option>)}
           </select>
-          {can("settings", "categories") && <button type="button" onClick={() => setCreating(true)} className="shrink-0 rounded-lg border border-border p-2 text-primary" aria-label={t("newCategory")}><Plus className="h-4 w-4" /></button>}
+          {can("settings", "categories") && <button type="button" onClick={() => setCreating(true)} className="shrink-0 rounded-lg border border-border p-2 text-foreground" aria-label={t("newCategory")}><Plus className="h-4 w-4" /></button>}
         </div>
       )}
     </label>

@@ -13,14 +13,14 @@ export function MobileCard({ title, amount, lines, extra, onView, onEdit, onDele
       className={`space-y-1 rounded-lg border border-border bg-card p-3 ${onView ? "cursor-pointer transition-colors hover:bg-secondary" : ""}`}>
       <div className="flex items-start justify-between gap-2">
         <span className="text-base font-semibold">{title}</span>
-        {amount != null && <span className="shrink-0 text-base font-bold text-primary">{amount}</span>}
+        {amount != null && <span className="shrink-0 text-base font-bold text-foreground">{amount}</span>}
       </div>
       {lines?.map((l, i) => l ? <p key={i} className="text-sm text-muted-foreground">{l}</p> : null)}
       {extra}
       {(onView || onEdit || onDelete) && (
         <div className="flex justify-end gap-4 pt-1" onClick={(e) => e.stopPropagation()}>
           {onView && <button type="button" onClick={onView} aria-label={t("viewDetail")} className="text-foreground"><Eye className="h-5 w-5" /></button>}
-          {onEdit && <button type="button" onClick={onEdit} aria-label={t("edit")} className="text-primary"><Pencil className="h-5 w-5" /></button>}
+          {onEdit && <button type="button" onClick={onEdit} aria-label={t("edit")} className="text-foreground"><Pencil className="h-5 w-5" /></button>}
           {onDelete && <button type="button" onClick={onDelete} aria-label={t("delete")} className="text-destructive"><Trash2 className="h-5 w-5" /></button>}
         </div>
       )}

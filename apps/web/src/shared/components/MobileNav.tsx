@@ -41,7 +41,7 @@ export function MobileNav() {
         {NAV.filter((n) => can(n.mod, "view")).map((n) => {
           const on = pathname.startsWith(n.to);
           return (
-            <Link key={n.to} to={n.to} className={`${cell} ${on ? "nav-current text-primary" : "text-muted-foreground"}`}>
+            <Link key={n.to} to={n.to} className={`${cell} ${on ? "nav-current text-foreground" : "text-muted-foreground"}`}>
               {on && <span className="absolute top-0 h-0.5 w-8 rounded-full bg-primary" />}
               <n.icon className="h-6 w-6" /><span className="text-[10px] font-bold">{t(n.key)}</span>
             </Link>

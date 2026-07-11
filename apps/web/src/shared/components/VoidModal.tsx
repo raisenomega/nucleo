@@ -9,7 +9,7 @@ export function VoidModal({ onConfirm, onClose }: { onConfirm: (reason: string) 
   return (
     <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
       <div className="w-full max-w-md space-y-3 rounded-lg border border-border bg-card p-5" onClick={(e) => e.stopPropagation()}>
-        <h3 className="font-display text-lg font-bold text-primary">{t("voidTitle")}</h3>
+        <h3 className="font-display text-lg font-bold text-foreground">{t("voidTitle")}</h3>
         <label className="block space-y-1">
           <span className="text-xs font-bold text-muted-foreground">{t("voidReasonLabel")}</span>
           <textarea value={reason} onChange={(e) => setReason(e.target.value.slice(0, 500))} rows={3}

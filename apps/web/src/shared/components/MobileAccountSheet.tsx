@@ -11,7 +11,7 @@ export function MobileAccountSheet({ onClose }: { onClose: () => void }) {
     <div className="fixed inset-0 z-50 flex items-end bg-black/50 md:hidden" onClick={onClose}>
       <div className="animate-slide-up w-full rounded-t-2xl border-t border-border bg-card" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between px-4 pt-3">
-          <span className="font-body font-bold text-primary">{t("account")}</span>
+          <span className="font-body font-bold text-foreground">{t("account")}</span>
           <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-5 w-5" /></button>
         </div>
         <SidebarUser />

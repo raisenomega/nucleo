@@ -30,7 +30,7 @@ export function TrialBanner() {
     return (
       <div className="fixed inset-0 z-50 bg-background/95 flex items-center justify-center p-4">
         <div className="max-w-md text-center space-y-4">
-          <h2 className="font-display text-2xl font-bold text-primary">{t("trialEnded")}</h2>
+          <h2 className="font-display text-2xl font-bold text-foreground">{t("trialEnded")}</h2>
           <p className="font-body text-muted-foreground">{t("trialEndedDesc")}</p>
           <button
             type="button"
