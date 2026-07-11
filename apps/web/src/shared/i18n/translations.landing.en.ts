@@ -27,4 +27,10 @@ export const enLanding = {
   ptFixed: "Fixed price", ptStartingFrom: "Starting from", ptQuoteRequired: "Quote", ptHourly: "Hourly",
   puHour: "Per hour", puDay: "Per day", puJob: "Per job", puVisit: "Per visit", puSession: "Per session", puCustom: "Custom",
   durationMinutes: "Duration (minutes)", durationHelp: "E.g. 60 = 1 hour, 120 = 2 hours.", requiresScheduling: "Requires scheduling",
+  packages: "Packages", newPackage: "New package", pkgSimple: "Simple package", pkgBundle: "Bundle package",
+  pkgSwitchWarning: "Switching to simple will drop the included items.", pkgSwitchConfirm: "Continue",
+  badgeLabel: "Badge label", features: "Features", featuresHelp: "One per line.",
+  includedProducts: "Included products", includedServices: "Included services",
+  pkgUnitsHelp: "Included units", pkgSessionsHelp: "Included sessions/occasions",
+  pkgEmptyProducts: "No products included yet.", pkgEmptyServices: "No services included yet.",
 } satisfies Partial<Record<TranslationKey, string>>;
