@@ -2,6 +2,7 @@
 export interface PublicBrand {
   tenantId: string; slug: string; displayName: string;
   landingEnabled: boolean; stripeEnabled: boolean; defaultLanguage: string;
+  themeVariant: "light" | "dark" | "auto";
   primaryColor: string; accentColor: string; logoUrl: string | null; faviconUrl: string | null;
   contactPhone: string | null; contactEmail: string | null;
   socialLinks: { facebook: string | null; instagram: string | null; youtube: string | null; tiktok: string | null };

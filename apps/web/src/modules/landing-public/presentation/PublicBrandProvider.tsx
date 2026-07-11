@@ -2,11 +2,18 @@ import { createContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { applyBranding } from "@shared/lib/apply-branding";
 import { resolvePublicBrand } from "@landing-public/infrastructure/public-brand.resolver";
+import { hexToHsl } from "@landing-public/utils/hex-to-hsl";
 import type { PublicBrand, PublicBrandState } from "@landing-public/domain/public-brand.types";
+import "@landing-public/styles/landing.css";
 
 export const PublicBrandContext = createContext<PublicBrandState>({ status: "loading" });
 
 function apply(b: PublicBrand): void {
+  const root = document.documentElement;
+  root.style.setProperty("--tenant-primary-hsl", hexToHsl(b.primaryColor));
+  root.style.setProperty("--tenant-accent-hsl", hexToHsl(b.accentColor));
+  if (b.themeVariant === "light" || b.themeVariant === "dark") root.setAttribute("data-theme", b.themeVariant);
+  else root.removeAttribute("data-theme"); // auto → media query prefers-color-scheme
   applyBranding({
     tenantId: b.tenantId, displayName: b.displayName, legalName: b.displayName,
     theme: { primaryColor: b.primaryColor, secondaryColor: null, accentColor: b.accentColor, sidebarBg: null,
