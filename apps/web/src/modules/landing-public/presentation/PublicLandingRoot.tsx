@@ -24,7 +24,7 @@ export function PublicLandingRoot() {
   return (
     <MotionProvider>
       <div className="lp-root min-h-screen">
-        <PublicNav displayName={s.brand.displayName} />
+        <PublicNav displayName={s.brand.displayName} logoUrl={s.brand.logoUrl} />
         <HeroContainer mediaSlot={<HeroGradientMedia />}>
           <HeroPlaceholder displayName={s.brand.displayName} />
         </HeroContainer>
