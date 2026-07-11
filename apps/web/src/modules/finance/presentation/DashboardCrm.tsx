@@ -15,8 +15,8 @@ export function DashboardCrm({ c }: { c: CrmSnapshot }) {
         <div className={`${amount} text-blue-600`}>{c.totalLeads}</div>
       </div>
       <div className={card}>
-        <div className={lbl}><FileText className="h-4 w-4 text-primary" /> {t("totalQuoted")}</div>
-        <div className={`${amount} text-primary`}>{formatCurrency(c.totalQuoted)}</div>
+        <div className={lbl}><FileText className="h-4 w-4 text-foreground" /> {t("totalQuoted")}</div>
+        <div className={`${amount} text-foreground`}>{formatCurrency(c.totalQuoted)}</div>
       </div>
       <div className={card}>
         <div className={lbl}><TrendingUp className="h-4 w-4 text-green-600" /> {t("conversionRate")}</div>

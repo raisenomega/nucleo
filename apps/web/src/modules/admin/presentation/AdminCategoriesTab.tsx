@@ -42,7 +42,7 @@ export function AdminCategoriesTab({ categories, onSave, onToggle }: {
                 <td className="px-3 py-2">{c.expenseClass ?? "—"}</td>
                 <td className="px-3 py-2">
                   <div className="flex justify-end gap-2 text-xs font-bold">
-                    <button type="button" onClick={() => { const l = window.prompt(t("categoryName"), c.label); if (l) void onSave(c.id, c.kind, l, c.expenseClass).then((r) => window.alert(r.ok ? "Guardado exitoso" : r.error)); }} className="text-primary"><Pencil className="h-4 w-4" /></button>
+                    <button type="button" onClick={() => { const l = window.prompt(t("categoryName"), c.label); if (l) void onSave(c.id, c.kind, l, c.expenseClass).then((r) => window.alert(r.ok ? "Guardado exitoso" : r.error)); }} className="text-foreground"><Pencil className="h-4 w-4" /></button>
                     <button type="button" onClick={() => void onToggle(c.id, !c.active).then((r) => window.alert(r.ok ? "Guardado exitoso" : r.error))}>{c.active ? t("deactivate") : t("approve")}</button>
                   </div>
                 </td>

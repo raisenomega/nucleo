@@ -33,7 +33,7 @@ export function ReconciliationBankPanel({ bank, accounts, onAddAccount, onDeposi
           return (
             <div key={a.id} className="rounded-lg border border-border p-3">
               <div className="flex items-center justify-between">
-                <span className="flex items-center gap-1 font-semibold"><Landmark className="h-4 w-4 text-primary" />{a.bankName}{a.isPrimary ? " ★" : ""}</span>
+                <span className="flex items-center gap-1 font-semibold"><Landmark className="h-4 w-4 text-foreground" />{a.bankName}{a.isPrimary ? " ★" : ""}</span>
                 {onRemoveAccount && <button type="button" onClick={() => onRemoveAccount(a.id)} className="text-muted-foreground hover:text-red-600"><Trash2 className="h-4 w-4" /></button>}
               </div>
               {canBank && d ? (

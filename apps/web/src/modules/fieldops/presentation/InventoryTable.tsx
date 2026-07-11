@@ -46,7 +46,7 @@ export function InventoryTable({ rows, onView, onEdit, onDelete }: {
                 <td className="px-3 py-2 text-right">{i.minStock}</td>
                 <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
                   <div className="flex justify-end gap-2">
-                    {can("inventory", "edit") && <button type="button" onClick={() => onEdit(i.id)} aria-label={t("edit")} className="text-primary"><Pencil className="h-4 w-4" /></button>}
+                    {can("inventory", "edit") && <button type="button" onClick={() => onEdit(i.id)} aria-label={t("edit")} className="text-foreground"><Pencil className="h-4 w-4" /></button>}
                     {can("inventory", "delete") && <button type="button" onClick={() => onDelete(i.id)} aria-label={t("delete")} className="text-destructive"><Trash2 className="h-4 w-4" /></button>}
                   </div>
                 </td>

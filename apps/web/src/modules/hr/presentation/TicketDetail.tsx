@@ -45,7 +45,7 @@ export function TicketDetail({ ticket, employees, names, tenantId, canManage, cu
             <div key={c.id} className="rounded-lg border border-border p-2 text-sm">
               <div className="flex justify-between text-xs text-muted-foreground"><span>{names[c.authorId] ?? "—"}</span><span>{c.createdAt.slice(0, 10)}</span></div>
               <p className="mt-1">{c.content}</p>
-              {c.evidenceUrls.map((u, i) => <a key={i} href={u} target="_blank" rel="noreferrer" className="mr-2 text-xs text-primary underline">{t("attachment")} {i + 1}</a>)}
+              {c.evidenceUrls.map((u, i) => <a key={i} href={u} target="_blank" rel="noreferrer" className="mr-2 text-xs text-foreground underline">{t("attachment")} {i + 1}</a>)}
             </div>))}
         </div>
         <div className="space-y-2">

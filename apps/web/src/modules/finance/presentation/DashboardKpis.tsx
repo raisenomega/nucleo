@@ -12,8 +12,8 @@ export function DashboardKpis({ s, bankBalance }: { s: Snapshot; bankBalance?: n
     <div className={`grid grid-cols-1 gap-4 ${bankBalance === undefined ? "sm:grid-cols-3" : "sm:grid-cols-2 lg:grid-cols-4"}`}>
       {bankBalance !== undefined && (
         <div className={card}>
-          <div className={lbl}><Landmark className="h-4 w-4 text-primary" /> {t("bankBalance")}</div>
-          <div className={`${amount} text-primary`}>{formatCurrency(bankBalance)}</div>
+          <div className={lbl}><Landmark className="h-4 w-4 text-foreground" /> {t("bankBalance")}</div>
+          <div className={`${amount} text-foreground`}>{formatCurrency(bankBalance)}</div>
           <div className="text-xs text-muted-foreground">{t("calculatedBalance")}</div>
         </div>
       )}
@@ -28,8 +28,8 @@ export function DashboardKpis({ s, bankBalance }: { s: Snapshot; bankBalance?: n
         <div className="text-xs text-muted-foreground">{s.expenseCount} · {s.topExpenseCategory ?? "—"}</div>
       </div>
       <div className={card}>
-        <div className={lbl}><Scale className="h-4 w-4 text-primary" /> {t("balance")}</div>
-        <div className={`${amount} ${s.balance >= 0 ? "text-primary" : "text-destructive"}`}>{formatCurrency(s.balance)}</div>
+        <div className={lbl}><Scale className="h-4 w-4 text-foreground" /> {t("balance")}</div>
+        <div className={`${amount} ${s.balance >= 0 ? "text-foreground" : "text-destructive"}`}>{formatCurrency(s.balance)}</div>
         <div className="text-xs text-muted-foreground">{t("monthSummary")}</div>
       </div>
     </div>

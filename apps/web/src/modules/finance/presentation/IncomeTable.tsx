@@ -49,7 +49,7 @@ export function IncomeTable({ rows, onView, onEdit, onVoid, onDeleteForever }: {
                 <td className="px-3 py-2">{i.clientReference}</td><td className="px-3 py-2">{i.orderNumber}</td>
                 <td className="px-3 py-2 text-right font-semibold">{formatCurrency(i.amount)}</td><td className="px-3 py-2">{i.paymentMethodLabel}</td>
                 <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}><div className="flex justify-end gap-2 no-underline">
-                  {!i.deletedAt && onEdit && <button type="button" onClick={() => onEdit(i.id)} aria-label={t("edit")} className="text-primary"><Pencil className="h-4 w-4" /></button>}
+                  {!i.deletedAt && onEdit && <button type="button" onClick={() => onEdit(i.id)} aria-label={t("edit")} className="text-foreground"><Pencil className="h-4 w-4" /></button>}
                   {vc(i)}
                 </div></td>
               </tr>

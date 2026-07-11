@@ -32,7 +32,7 @@ export function ReconciliationTaxPanel({ tax }: { tax: TaxPanel }) {
               </tbody>
               <tfoot><tr className="border-t border-border font-bold">
                 <td className="py-2">{t("total")}</td><td></td>
-                <td className="text-right text-primary">{formatCurrency(tax.totalEstimated)}</td>
+                <td className="text-right text-foreground">{formatCurrency(tax.totalEstimated)}</td>
               </tr></tfoot>
             </table>
           </div>

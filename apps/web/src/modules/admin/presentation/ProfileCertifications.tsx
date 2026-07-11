@@ -33,7 +33,7 @@ export function ProfileCertifications({ certs, onAdd, onUpdate, onRemove }: {
             <td className="py-1">{c.certificationName}</td><td>{c.certificationNumber || "—"}</td>
             <td className={soon(c.expirationDate) ? "text-red-600" : ""}>{c.expirationDate ?? "—"}</td>
             <td><div className="flex justify-end gap-2">
-              <button type="button" onClick={() => { const n = window.prompt(t("certName"), c.certificationName); if (n) onUpdate(c.id, { ...cf(c), certificationName: n }); }} className="text-primary"><Pencil className="h-4 w-4" /></button>
+              <button type="button" onClick={() => { const n = window.prompt(t("certName"), c.certificationName); if (n) onUpdate(c.id, { ...cf(c), certificationName: n }); }} className="text-foreground"><Pencil className="h-4 w-4" /></button>
               <button type="button" onClick={() => onRemove(c.id)} className="text-destructive"><Trash2 className="h-4 w-4" /></button>
             </div></td>
           </tr>))}</tbody>

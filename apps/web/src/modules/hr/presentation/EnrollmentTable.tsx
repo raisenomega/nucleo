@@ -21,7 +21,7 @@ export function EnrollmentTable({ rows, onComplete, onDelete }: {
   const acts = (e: Enrollment) => (
     <div className="flex justify-end gap-2">
       {onComplete && e.status !== "completed" && <button type="button" onClick={() => onComplete(e.id)} aria-label={t("markComplete")} className="text-green-600"><Check className="h-4 w-4" /></button>}
-      {e.status === "completed" && <button type="button" disabled={pdf.generating} onClick={() => void pdf.generatePdf("training", e.id)} aria-label={t("certificatePdf")} title={t("certificatePdf")} className="text-primary disabled:opacity-50"><FileDown className="h-4 w-4" /></button>}
+      {e.status === "completed" && <button type="button" disabled={pdf.generating} onClick={() => void pdf.generatePdf("training", e.id)} aria-label={t("certificatePdf")} title={t("certificatePdf")} className="text-foreground disabled:opacity-50"><FileDown className="h-4 w-4" /></button>}
       {onDelete && <button type="button" onClick={() => onDelete(e.id)} aria-label={t("delete")} className="text-destructive"><Trash2 className="h-4 w-4" /></button>}
     </div>);
   return (

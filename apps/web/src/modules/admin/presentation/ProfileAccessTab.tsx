@@ -32,7 +32,7 @@ export function ProfileAccessTab({ role, onRole, onPin, form, set }: {
           <select value={role ?? ""} onChange={(e) => { onRole(e.target.value as AppRole); set("module_access", null); }} className={`block ${fld}`}>
             {ROLES.map((r) => <option key={r.v} value={r.v}>{r.l}</option>)}</select></label>
         <button type="button" onClick={() => set("module_access", null)} className="rounded-lg border border-border px-3 py-2 text-xs font-bold text-foreground">{t("resetDefaults")}</button>
-        <span className={`text-xs font-bold ${custom ? "text-primary" : "text-muted-foreground"}`}>{custom ? t("customAccess") : t("roleDefaults")}</span>
+        <span className={`text-xs font-bold ${custom ? "text-foreground" : "text-muted-foreground"}`}>{custom ? t("customAccess") : t("roleDefaults")}</span>
       </div>
       <div className="overflow-x-auto rounded-lg border border-border bg-card">
         <table className="w-full text-sm">

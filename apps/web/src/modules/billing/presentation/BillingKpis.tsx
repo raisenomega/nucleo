@@ -9,7 +9,7 @@ export function BillingKpis({ s }: { s: BillingSummary }) {
       <p className="text-xs text-muted-foreground">{label}</p><p className={`text-lg font-bold ${tone}`}>{val}</p></div>);
   return (
     <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-      {card(t("kpiPending"), String(s.invoices_pending), "text-primary")}
+      {card(t("kpiPending"), String(s.invoices_pending), "text-foreground")}
       {card(t("kpiOverdue"), String(s.invoices_overdue), "text-red-600")}
       {card(t("orders"), String(s.orders_pending), "text-amber-600")}
       {card(t("kpiMrr"), formatCurrency(s.mrr), "text-green-600")}

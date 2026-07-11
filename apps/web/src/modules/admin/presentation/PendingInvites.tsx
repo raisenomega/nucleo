@@ -34,7 +34,7 @@ export function PendingInvites({ refreshKey }: { refreshKey: number }) {
       <ul className="space-y-1">
         {rows.map((r) => (
           <li key={r.email} className="flex items-center justify-between gap-2 text-sm">
-            <span>{r.full_name} · {r.email} · <span className="text-primary">{r.role}</span> · <span className="text-muted-foreground">{t("invited")}</span></span>
+            <span>{r.full_name} · {r.email} · <span className="text-foreground">{r.role}</span> · <span className="text-muted-foreground">{t("invited")}</span></span>
             <button type="button" onClick={() => void cancel(r.email)} aria-label={t("cancelInvite")} className="text-destructive"><Trash2 className="h-4 w-4" /></button>
           </li>
         ))}

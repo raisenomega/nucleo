@@ -48,7 +48,7 @@ export function RecurringExpenseTable({ items, paid, onPay, onEdit, onDelete }: 
                   <td className="px-3 py-2">
                     <div className="flex justify-end gap-2">
                       {p === 0 && onPay && <button type="button" onClick={() => onPay(i.categoryId)} className="rounded bg-primary text-primary-foreground px-2 py-1 text-xs font-bold">{t("registerPayment")}</button>}
-                      {onEdit && <button type="button" onClick={() => onEdit(i.id)} aria-label={t("edit")} className="text-primary"><Pencil className="h-4 w-4" /></button>}
+                      {onEdit && <button type="button" onClick={() => onEdit(i.id)} aria-label={t("edit")} className="text-foreground"><Pencil className="h-4 w-4" /></button>}
                       {onDelete && <button type="button" onClick={() => onDelete(i.id)} aria-label={t("delete")} className="text-destructive"><Trash2 className="h-4 w-4" /></button>}
                     </div>
                   </td>

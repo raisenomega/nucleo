@@ -47,7 +47,7 @@ export function RouteTable({ rows, employees, onView, onEdit, onVoid, onDeleteFo
                 <td className="px-3 py-2">{r.completedCount}/{r.stopCount}</td>
                 <td className="px-3 py-2"><span className={`rounded px-2 py-0.5 text-xs font-bold ${COLOR[r.status] ?? "bg-secondary"}`}>{r.status}</span></td>
                 <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}><div className="flex justify-end gap-2 no-underline">
-                  {!r.deletedAt && onEdit && <button type="button" onClick={() => onEdit(r.id)} aria-label={t("edit")} className="text-primary"><Pencil className="h-4 w-4" /></button>}
+                  {!r.deletedAt && onEdit && <button type="button" onClick={() => onEdit(r.id)} aria-label={t("edit")} className="text-foreground"><Pencil className="h-4 w-4" /></button>}
                   {vc(r)}
                 </div></td>
               </tr>

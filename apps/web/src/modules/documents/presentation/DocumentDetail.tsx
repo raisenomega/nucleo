@@ -29,7 +29,7 @@ export function DocumentDetail({ doc, getUrl, canManage, onStatus, onClose }: {
         </div>
         {url && (isPdf ? <iframe src={url} title={doc.title} className="h-96 w-full rounded-lg border border-border" />
           : isImg ? <img src={url} alt={doc.title} className="max-h-96 w-full rounded-lg object-contain" />
-          : <a href={url} target="_blank" rel="noreferrer" className="text-primary underline">{doc.fileName}</a>)}
+          : <a href={url} target="_blank" rel="noreferrer" className="text-foreground underline">{doc.fileName}</a>)}
         {doc.parties.length > 0 && <p className="text-sm"><span className="font-bold">{t("parties")}: </span>{doc.parties.join(", ")}</p>}
         {doc.expirationDate && <p className="text-sm"><span className="font-bold">{t("expirationDate")}: </span>{doc.expirationDate}</p>}
         {doc.tags.length > 0 && <p className="text-xs text-muted-foreground">{doc.tags.join(" · ")}</p>}

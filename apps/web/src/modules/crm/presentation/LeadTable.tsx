@@ -48,9 +48,9 @@ export function LeadTable({ rows, onView, onEdit, onDelete }: {
                 <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
                   <div className="flex justify-end gap-2">
                     {docs && <button type="button" aria-label={t("whatsapp")} className="text-green-600" onClick={() => window.open(leadWaHref(l, t("whatsappMessage", { name: l.contactName, total: formatCurrency(l.quotedPrice) })), "_blank")}><MessageCircle className="h-4 w-4" /></button>}
-                    {docs && <button type="button" onClick={() => void leadQuoteId(l.id).then((q) => { if (q) nav({ to: "/quotes" }); })} aria-label={t("quote")} className="text-primary"><FileText className="h-4 w-4" /></button>}
-                    {docs && <button type="button" onClick={() => void leadInvoiceId(l.id).then((i) => { if (i) nav({ to: "/billing" }); })} aria-label={t("invoice")} className="text-primary"><Receipt className="h-4 w-4" /></button>}
-                    {onEdit && <button type="button" onClick={() => onEdit(l.id)} aria-label={t("edit")} className="text-primary"><Pencil className="h-4 w-4" /></button>}
+                    {docs && <button type="button" onClick={() => void leadQuoteId(l.id).then((q) => { if (q) nav({ to: "/quotes" }); })} aria-label={t("quote")} className="text-foreground"><FileText className="h-4 w-4" /></button>}
+                    {docs && <button type="button" onClick={() => void leadInvoiceId(l.id).then((i) => { if (i) nav({ to: "/billing" }); })} aria-label={t("invoice")} className="text-foreground"><Receipt className="h-4 w-4" /></button>}
+                    {onEdit && <button type="button" onClick={() => onEdit(l.id)} aria-label={t("edit")} className="text-foreground"><Pencil className="h-4 w-4" /></button>}
                     {onDelete && <button type="button" onClick={() => onDelete(l.id)} aria-label={t("delete")} className="text-destructive"><Trash2 className="h-4 w-4" /></button>}
                   </div>
                 </td>

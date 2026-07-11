@@ -39,7 +39,7 @@ export function MarketingExpenseTable({ rows, onView, onEdit, onDelete }: {
                 <td className="px-3 py-2 text-right font-semibold">{formatCurrency(e.amount)}</td>
                 <td className="px-3 py-2" onClick={(ev) => ev.stopPropagation()}>
                   <div className="flex justify-end gap-2">
-                    {onEdit && <button type="button" onClick={() => onEdit(e.id)} aria-label={t("edit")} className="text-primary"><Pencil className="h-4 w-4" /></button>}
+                    {onEdit && <button type="button" onClick={() => onEdit(e.id)} aria-label={t("edit")} className="text-foreground"><Pencil className="h-4 w-4" /></button>}
                     {onDelete && <button type="button" onClick={() => onDelete(e.id)} aria-label={t("delete")} className="text-destructive"><Trash2 className="h-4 w-4" /></button>}
                   </div>
                 </td>

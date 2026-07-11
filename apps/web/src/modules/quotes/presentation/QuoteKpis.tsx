@@ -12,7 +12,7 @@ export function QuoteKpis({ s }: { s: QuotesSummary }) {
       {card(t("qsSent"), String(s.sent), "text-blue-600")}
       {card(t("qsAccepted"), String(s.accepted), "text-green-600")}
       {card(t("qsRejected"), String(s.rejected), "text-red-600")}
-      {card(t("totalQuoted"), formatCurrency(s.total_quoted), "text-primary")}
+      {card(t("totalQuoted"), formatCurrency(s.total_quoted), "text-foreground")}
     </div>
   );
 }

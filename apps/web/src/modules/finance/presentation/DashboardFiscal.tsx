@@ -16,12 +16,12 @@ export function DashboardFiscal({ f }: { f: FiscalSnapshot }) {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <div className={card}>
-        <div className={lbl}><Wallet className="h-4 w-4 text-primary" /> {t("availableBalance")}</div>
+        <div className={lbl}><Wallet className="h-4 w-4 text-foreground" /> {t("availableBalance")}</div>
         <div className={`text-2xl font-black md:text-3xl ${color}`}>{formatCurrency(f.availableBalance)}</div>
         <div className={`text-xl ${color}`}>{EMOJI[f.operatingStatus]}</div>
       </div>
       <div className={card}>
-        <div className={lbl}><Scale className="h-4 w-4 text-primary" /> {t("breakEven")}</div>
+        <div className={lbl}><Scale className="h-4 w-4 text-foreground" /> {t("breakEven")}</div>
         <div className="flex items-baseline gap-2"><span className="text-2xl font-black md:text-3xl">{f.breakEvenPct}%</span>
           <span className="text-xs text-muted-foreground">{t("breakEvenProgress")}</span></div>
         <div className="h-2 w-full overflow-hidden rounded-full bg-secondary"><div className="h-full bg-primary" style={{ width: `${Math.min(100, f.breakEvenPct)}%` }} /></div>
@@ -31,12 +31,12 @@ export function DashboardFiscal({ f }: { f: FiscalSnapshot }) {
         </div>
       </div>
       <div className={card}>
-        <div className={lbl}><Users className="h-4 w-4 text-primary" /> {t("payrollCost")}</div>
+        <div className={lbl}><Users className="h-4 w-4 text-foreground" /> {t("payrollCost")}</div>
         <div className="text-2xl font-black md:text-3xl">{formatCurrency(f.payrollCost)}</div>
         <div className="text-xs text-muted-foreground">{t("employerCost")}</div>
       </div>
       <div className={card}>
-        <div className={lbl}><Home className="h-4 w-4 text-primary" /> {t("fixedCosts")}</div>
+        <div className={lbl}><Home className="h-4 w-4 text-foreground" /> {t("fixedCosts")}</div>
         <div className={`text-2xl font-black md:text-3xl ${fixColor}`}>{formatCurrency(f.recurringBudgeted)}</div>
         <div className="text-xs text-muted-foreground">{t("paid")}: {formatCurrency(f.recurringPaid)} ({paidPct}%)</div>
       </div>

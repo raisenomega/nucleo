@@ -18,7 +18,7 @@ export function FeedbackTable({ rows, names, canAck, onAck }: {
   const tgt = (f: Feedback) => f.targetId ? (names[f.targetId] ?? "—") : t("fbGeneral");
   const badge = (f: Feedback) => <span className={`rounded px-2 py-0.5 text-xs font-bold ${FB_COLOR[f.feedbackType]}`}>{t(FB_KEY[f.feedbackType])}</span>;
   const ack = (f: Feedback) => f.acknowledgedAt ? <Check className="h-4 w-4 text-green-600" />
-    : (canAck ? <button type="button" onClick={() => onAck(f.id)} aria-label={t("acknowledge")} className="text-primary"><Check className="h-5 w-5" /></button> : null);
+    : (canAck ? <button type="button" onClick={() => onAck(f.id)} aria-label={t("acknowledge")} className="text-foreground"><Check className="h-5 w-5" /></button> : null);
   return (
     <>
       <table className="hidden w-full text-sm md:table">
