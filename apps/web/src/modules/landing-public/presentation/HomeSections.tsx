@@ -3,6 +3,8 @@ import { CategoriesStrip } from "@landing-public/presentation/sections/Categorie
 import { FeaturedProducts } from "@landing-public/presentation/sections/FeaturedProducts";
 import { FeaturedServices } from "@landing-public/presentation/sections/FeaturedServices";
 import { FeaturedPackages } from "@landing-public/presentation/sections/FeaturedPackages";
+import { TestimonialsCarousel } from "@landing-public/presentation/sections/TestimonialsCarousel";
+import { FaqsPreview } from "@landing-public/presentation/sections/FaqsPreview";
 import { FinalCta } from "@landing-public/presentation/sections/FinalCta";
 import type { LandingHome } from "@landing-public/domain/landing-home.types";
 
@@ -17,6 +19,8 @@ export function HomeSections({ home }: { home: LandingHome | null }) {
       {home && home.featured_products.length > 0 && <FeaturedProducts products={home.featured_products} onCardClick={() => scrollTo("contact")} />}
       {home && home.featured_services.length > 0 && <FeaturedServices services={home.featured_services} onCardClick={() => scrollTo("contact")} />}
       {home && home.featured_packages.length > 0 && <FeaturedPackages packages={home.featured_packages} onCardClick={() => scrollTo("contact")} />}
+      {home && home.testimonials.length > 0 && <TestimonialsCarousel testimonials={home.testimonials} />}
+      {home && home.faqs_preview.length > 0 && <FaqsPreview faqs={home.faqs_preview} />}
       <FinalCta title={t("lpFinalCtaTitle")} subtitle={t("lpFinalCtaSubtitle")} ctaLabel={t("lpFinalCtaLabel")} ctaHref="#contact" />
     </>
   );

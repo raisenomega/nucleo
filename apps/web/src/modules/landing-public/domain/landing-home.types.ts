@@ -3,8 +3,10 @@ export interface HomeCategory { id: string; slug: string; name: string; icon_nam
 export interface HomeProduct { id: string; slug: string; name: string; short_description: string | null; price: number; compare_at_price: number | null; currency: string; primary_image_url: string | null; }
 export interface HomeService { id: string; slug: string; name: string; short_description: string | null; pricing_type: string; price: number | null; price_unit: string | null; primary_image_url: string | null; }
 export interface HomePackage { id: string; slug: string; name: string; short_description: string | null; price: number; compare_at_price: number | null; currency: string; primary_image_url: string | null; badge_label: string | null; }
+export interface HomeTestimonial { client_name: string; client_title: string | null; client_avatar_url: string | null; content: string; rating: number | null; }
+export interface HomeFaq { question: string; answer: string; category: string | null; }
 export interface LandingHome {
   hero: Record<string, unknown> | null;
   categories: HomeCategory[]; featured_products: HomeProduct[]; featured_services: HomeService[];
-  featured_packages: HomePackage[]; testimonials: unknown[]; faqs_preview: unknown[];
+  featured_packages: HomePackage[]; testimonials: HomeTestimonial[]; faqs_preview: HomeFaq[];
 }
