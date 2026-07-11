@@ -32,7 +32,7 @@ export function ExpenseTable({ rows, employees, classOf, onView, onEdit, onVoid,
     <div className="hidden overflow-hidden rounded-lg border border-border bg-card md:block">
       <div className="flex items-center justify-between border-b border-border p-4">
         <h2 className="font-body font-bold">{t("expenseList")} ({rows.length})</h2>
-        <span className="font-body font-bold text-primary">{t("total")}: {formatCurrency(total)}</span>
+        <span className="font-body font-bold text-foreground">{t("total")}: {formatCurrency(total)}</span>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full font-body text-sm">

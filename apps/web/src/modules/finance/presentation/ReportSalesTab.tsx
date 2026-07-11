@@ -26,7 +26,7 @@ export function ReportSalesTab({ s }: { s: ReportSeries }) {
       <ReportChart title={t("rTopClients")}>
         <div className="overflow-x-auto"><table className="w-full text-sm"><tbody>{s.top_clients.slice(0, 5).map((c, i) => (
           <tr key={i} className="border-b border-border"><td className="p-2">{c.name}</td>
-            <td className="p-2 text-right font-bold text-primary">{formatCurrency(c.total)}</td>
+            <td className="p-2 text-right font-bold text-foreground">{formatCurrency(c.total)}</td>
             <td className="p-2 text-right text-muted-foreground">{c.count}</td></tr>))}</tbody></table></div>
       </ReportChart>
       <ReportChart title={t("rLeadsBySource")} legend={legend}>

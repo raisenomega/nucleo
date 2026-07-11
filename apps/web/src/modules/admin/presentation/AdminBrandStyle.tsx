@@ -26,7 +26,7 @@ export function AdminBrandStyle({ theme, logoUrl, companyName, onSave }: {
   const lbl = "text-xs font-bold text-muted-foreground";
   return (
     <div className="space-y-4 rounded-lg border border-border bg-card p-5">
-      <h3 className="font-body font-bold text-primary">{t("colorsSection")}</h3>
+      <h3 className="font-body font-bold text-foreground">{t("colorsSection")}</h3>
       <div className="flex flex-wrap gap-6">
         <label className="space-y-1"><span className={lbl}>{t("primaryColor")}</span>
           <input type="color" value={primary} onChange={(e) => setPrimary(e.target.value)} className="block h-10 w-20 cursor-pointer rounded border border-border" /></label>

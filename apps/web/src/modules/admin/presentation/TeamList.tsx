@@ -27,7 +27,7 @@ export function TeamList({ team, onStatus, onRole }: {
     setDocMap(map);
   }); }, []);
   const docs = (id: string) => `${REQUIRED.filter((r) => docMap[id]?.has(r)).length}/${REQUIRED.length}`;
-  const name = (m: TeamMember) => <button type="button" onClick={() => void navigate({ to: "/settings-team/$userId", params: { userId: m.id } })} className="font-semibold text-primary hover:underline">{m.fullName}</button>;
+  const name = (m: TeamMember) => <button type="button" onClick={() => void navigate({ to: "/settings-team/$userId", params: { userId: m.id } })} className="font-semibold text-foreground hover:underline">{m.fullName}</button>;
   const roleSel = (m: TeamMember) => <select value={m.role ?? ""} onChange={(e) => void onRole(m.id, e.target.value as AppRole)} className={fld}>{ROLES.map((r) => <option key={r.v} value={r.v}>{r.l}</option>)}</select>;
   const acts = (m: TeamMember) => <div className="flex gap-4 text-xs font-bold">
     {m.status !== "approved" && <button type="button" onClick={() => notify(onStatus(m.id, "approved"))} className="text-green-600">{t("approve")}</button>}

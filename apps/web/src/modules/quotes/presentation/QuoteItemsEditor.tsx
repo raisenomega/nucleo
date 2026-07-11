@@ -37,7 +37,7 @@ export function QuoteItemsEditor({ items, onChange }: {
           <button type="button" onClick={() => onChange(items.filter((_, i) => i !== idx))} className="col-span-1 text-destructive"><Trash2 className="h-4 w-4" /></button>
         </div>
       ))}
-      <div className="text-right font-body text-sm font-bold text-primary">{t("grandTotal")}: {formatCurrency(total)}</div>
+      <div className="text-right font-body text-sm font-bold text-foreground">{t("grandTotal")}: {formatCurrency(total)}</div>
     </div>
   );
 }

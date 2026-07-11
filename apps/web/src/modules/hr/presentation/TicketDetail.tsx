@@ -37,7 +37,7 @@ export function TicketDetail({ ticket, employees, names, tenantId, canManage, cu
               {STATUSES.map((s) => <option key={s} value={s}>{t(TST_KEY[s])}</option>)}</select>
             <select value={ticket.assignedTo ?? ""} onChange={(e) => onAssign(e.target.value || null)} className={fld}>
               <option value="">{t("unassigned")}</option>{employees.map((x) => <option key={x.id} value={x.id}>{x.full_name}</option>)}</select>
-            <button type="button" onClick={() => onAssign(currentUserId)} className="rounded-lg border border-border px-3 py-2 text-sm font-bold text-primary md:col-span-2">{t("takeTicket")}</button>
+            <button type="button" onClick={() => onAssign(currentUserId)} className="rounded-lg border border-border px-3 py-2 text-sm font-bold text-foreground md:col-span-2">{t("takeTicket")}</button>
           </div>)}
         <div className="space-y-2">
           <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("comments")}</p>

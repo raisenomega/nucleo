@@ -20,7 +20,7 @@ export function ReconciliationSummary({ summary }: { summary: SummaryPanel }) {
   );
   return (
     <div className="space-y-2 rounded-lg border border-border bg-card p-5">
-      <button type="button" onClick={() => setOpen(!open)} className="flex w-full items-center justify-between font-body font-bold text-primary">
+      <button type="button" onClick={() => setOpen(!open)} className="flex w-full items-center justify-between font-body font-bold text-foreground">
         <span>{t("executiveSummary")}</span>
         <span className={`flex items-center gap-2 text-sm ${st.color}`}>{formatCurrency(summary.availableBalance)}
           {open ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}</span>

@@ -47,7 +47,7 @@ function SupportPage() {
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">{KPIS.map((k) => (
         <div key={k} className="rounded-xl border border-border bg-card p-3">
           <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{t(TST_KEY[k])}</span>
-          <p className="text-2xl font-bold text-primary">{m.summary[k]}</p></div>))}</div>
+          <p className="text-2xl font-bold text-foreground">{m.summary[k]}</p></div>))}</div>
       {creating && <TicketForm onSubmit={m.create} onCancel={() => setCreating(false)} />}
       <TicketTable rows={m.list} onView={view} />
       {viewing && <TicketDetail ticket={viewing} employees={emps} names={names} tenantId={session?.tenantId ?? ""}

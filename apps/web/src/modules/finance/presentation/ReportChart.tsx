@@ -5,7 +5,7 @@ import { ReportLegend } from "@finance/presentation/ReportLegend";
 export function ReportChart({ title, legend, children }: { title: string; legend?: string; children: ReactNode }) {
   return (
     <div className="space-y-3 rounded-xl border border-border bg-card p-4">
-      <h3 className="font-body font-bold text-primary">{title}</h3>
+      <h3 className="font-body font-bold text-foreground">{title}</h3>
       {children}
       {legend && <ReportLegend text={legend} />}
     </div>

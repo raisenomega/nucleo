@@ -15,7 +15,7 @@ export function EvalPeriodBanner({ count }: { count: number }) {
   }, []);
   return (
     <div className="rounded-xl border border-border bg-card p-3 text-sm">
-      <span className="font-bold text-primary">{t("currentPeriod")}:</span> {t(FREQ_KEY[freq] ?? "freqMonthly")} · {count} {t("evaluations")}
+      <span className="font-bold text-foreground">{t("currentPeriod")}:</span> {t(FREQ_KEY[freq] ?? "freqMonthly")} · {count} {t("evaluations")}
     </div>
   );
 }

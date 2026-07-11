@@ -16,7 +16,7 @@ export function ProfileBenefitsTab({ form, set }: { form: EmployeeDetailUpdate; 
     <label className="space-y-1"><span className={lbl}>{t(label)}</span>
       <input type="number" value={(form[k] as number | null) ?? ""} onChange={(e) => set(k, Number(e.target.value) as never)} className={fld} /></label>
   );
-  const info = (label: string, v: string) => (<div><div className={lbl}>{label}</div><div className="text-sm font-bold text-primary">{v}</div></div>);
+  const info = (label: string, v: string) => (<div><div className={lbl}>{label}</div><div className="text-sm font-bold text-foreground">{v}</div></div>);
   const months = form.hire_date ? Math.max(0, Math.round((Date.now() - new Date(form.hire_date).getTime()) / 2.628e9)) : 0;
   const vacAcc = months * N(form.vacation_rate), sickAcc = months * N(form.sick_rate);
   const annual = N(form.gross_salary) * (PERIODS[form.pay_frequency ?? ""] ?? 0);

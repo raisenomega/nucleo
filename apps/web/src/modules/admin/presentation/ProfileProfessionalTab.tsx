@@ -25,7 +25,7 @@ export function ProfileProfessionalTab({ form, set }: { form: EmployeeDetailUpda
   );
   return (
     <div className="rounded-lg border border-border bg-card p-5">
-      <h3 className="mb-3 font-body font-bold text-primary">{t("professionalInfo")}</h3>
+      <h3 className="mb-3 font-body font-bold text-foreground">{t("professionalInfo")}</h3>
       <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
         {sel("department", "department", DEPT)}{inp("employee_number", "employeeNumber")}
         {inp("hire_date", "hireDate", "date")}{inp("termination_date", "terminationDate", "date")}{inp("probation_end_date", "probationEnd", "date")}

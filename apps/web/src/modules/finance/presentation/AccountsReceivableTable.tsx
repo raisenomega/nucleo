@@ -41,7 +41,7 @@ export function AccountsReceivableTable({ rows, onCollect, onForgive, onNote }: 
         <tbody>{visible.map((r) => (
           <tr key={r.stopId} className="border-b border-border align-top">
             <td className="p-2 font-semibold">{r.clientName}</td>
-            <td className="p-2 font-bold text-primary">{formatCurrency(r.amount)}</td>
+            <td className="p-2 font-bold text-foreground">{formatCurrency(r.amount)}</td>
             <td className="p-2">{r.routeDate}</td><td className="p-2">{r.assignedTo}</td>
             <td className="max-w-xs whitespace-pre-line p-2 text-muted-foreground">{r.reason ?? "—"}</td>
             <td className="p-2">{acts(r)}</td></tr>))}</tbody>

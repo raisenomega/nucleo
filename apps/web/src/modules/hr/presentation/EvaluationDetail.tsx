@@ -43,7 +43,7 @@ export function EvaluationDetail({ ev, onClose }: { ev: ED; onClose: () => void 
         {ev.requiresLegalValidation && (
           <div className="flex gap-2 rounded-lg bg-red-50 dark:bg-red-500/15 p-3 text-sm text-red-700 dark:text-red-300">
             <AlertTriangle className="h-5 w-5 shrink-0" /><span>{t("legalWarning")}</span></div>)}
-        {trPct != null && <p className="text-sm text-muted-foreground">{t("trainingPct")}: <span className="font-bold text-primary">{trPct}%</span></p>}
+        {trPct != null && <p className="text-sm text-muted-foreground">{t("trainingPct")}: <span className="font-bold text-foreground">{trPct}%</span></p>}
         {data.length > 0 && (
           <ResponsiveContainer width="100%" height={260}>
             <RadarChart data={data}><PolarGrid /><PolarAngleAxis dataKey="criterion" tick={{ fontSize: 11 }} />

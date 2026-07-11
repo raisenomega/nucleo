@@ -24,7 +24,7 @@ export function ProfilePersonalTab({ form, set }: { form: EmployeeDetailUpdate; 
   return (
     <div className="space-y-4">
       <div className="rounded-lg border border-border bg-card p-5">
-        <h3 className="mb-3 font-body font-bold text-primary">{t("personalInfo")}</h3>
+        <h3 className="mb-3 font-body font-bold text-foreground">{t("personalInfo")}</h3>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
           {inp("middle_name", "middleName")}{inp("last_name", "lastName")}{inp("ssn", "ssn")}
           {inp("date_of_birth", "dateOfBirth", "date")}{sel("gender", "gender", GENDER)}{sel("marital_status", "maritalStatus", MARITAL)}
@@ -34,7 +34,7 @@ export function ProfilePersonalTab({ form, set }: { form: EmployeeDetailUpdate; 
         </div>
       </div>
       <div className="rounded-lg border border-border bg-card p-5">
-        <h3 className="mb-3 font-body font-bold text-primary">{t("emergencyContact")}</h3>
+        <h3 className="mb-3 font-body font-bold text-foreground">{t("emergencyContact")}</h3>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
           {inp("emergency_name", "contactName")}{sel("emergency_relationship", "relationship", RELATION)}{inp("emergency_phone", "phone")}
           {inp("emergency_phone_alt", "alternatePhone")}{inp("emergency_address", "address")}

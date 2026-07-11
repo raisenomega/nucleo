@@ -38,11 +38,11 @@ export function PayrollDetail({ item, onClose }: { item: Payroll; onClose: () =>
               {item.deductionsEmployee.map((d) => (
                 <div key={d.label} className="flex justify-between"><span className="text-muted-foreground">{d.label} {d.rate}%</span><span>−{formatCurrency(d.amount)}</span></div>
               ))}
-              <div className="flex justify-between font-bold text-primary"><span>{t("netSalary")}</span><span>{formatCurrency(item.netSalary)}</span></div>
+              <div className="flex justify-between font-bold text-foreground"><span>{t("netSalary")}</span><span>{formatCurrency(item.netSalary)}</span></div>
               {item.contributionsEmployer.map((d) => (
                 <div key={d.label} className="flex justify-between text-muted-foreground"><span>{d.label} {d.rate}%</span><span>{formatCurrency(d.amount)}</span></div>
               ))}
-              <div className="flex justify-between font-bold text-primary"><span>{t("totalEmployerCost")}</span><span>{formatCurrency(item.totalEmployerCost)}</span></div>
+              <div className="flex justify-between font-bold text-foreground"><span>{t("totalEmployerCost")}</span><span>{formatCurrency(item.totalEmployerCost)}</span></div>
             </div>
           )}
           {urls.length > 0 && (

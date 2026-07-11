@@ -25,7 +25,7 @@ export function EvaluationTable({ rows, onView }: { rows: readonly Evaluation[];
         <tbody>{visible.map((e) => (
           <tr key={e.id} onClick={() => onView(e.id)} className="cursor-pointer border-b border-border hover:bg-secondary">
             <td className="p-2 font-semibold">{e.employeeName}</td><td className="p-2">{e.period}</td>
-            <td className="p-2 font-bold text-primary">{e.compositeScore.toFixed(2)}</td>
+            <td className="p-2 font-bold text-foreground">{e.compositeScore.toFixed(2)}</td>
             <td className="p-2">{badge(e)} {warn(e)}</td>
             <td className="p-2 text-right text-muted-foreground">{t("viewDetail")}</td></tr>))}</tbody>
       </table>

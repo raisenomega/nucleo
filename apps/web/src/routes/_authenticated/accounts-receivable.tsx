@@ -54,7 +54,7 @@ function ARPage() {
       {m.snapshot && (
         <div className="rounded-xl border border-border bg-card p-4">
           <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("totalPending")}</span>
-          <p className="text-2xl font-bold text-primary">{formatCurrency(m.snapshot.totalPending)}
+          <p className="text-2xl font-bold text-foreground">{formatCurrency(m.snapshot.totalPending)}
             <span className="ml-2 text-sm font-normal text-muted-foreground">({m.snapshot.count})</span></p>
         </div>
       )}

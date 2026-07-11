@@ -28,7 +28,7 @@ export function AdminBrandIdentity({ identity, logoUrl, get, onUploadLogo, onSav
   const lbl = "text-xs font-bold text-muted-foreground";
   return (
     <div className="space-y-4 rounded-lg border border-border bg-card p-5">
-      <h3 className="font-body font-bold text-primary">{t("identitySection")}</h3>
+      <h3 className="font-body font-bold text-foreground">{t("identitySection")}</h3>
       <div className="flex items-center gap-4">
         {logoUrl ? <img src={logoUrl} alt="logo" className="h-16 w-16 rounded-lg border border-border object-contain" />
           : <div className="flex h-16 w-16 items-center justify-center rounded-lg border border-dashed border-border text-xs text-muted-foreground">{t("logoLbl")}</div>}

@@ -38,8 +38,8 @@ export function LeadTable({ rows, onView, onEdit, onDelete }: {
             {visible.map((l) => (
               <tr key={l.id} onClick={() => onView(l.id)} className="cursor-pointer border-t border-border transition-colors hover:bg-secondary">
                 <td className="px-3 py-2">{l.callDate}</td>
-                <td className="px-3 py-2 font-medium text-primary">{l.contactName}</td>
-                <td className="px-3 py-2"><a href={`tel:${l.phone}`} onClick={(e) => e.stopPropagation()} className="text-primary hover:underline">{l.phone}</a></td>
+                <td className="px-3 py-2 font-medium text-foreground">{l.contactName}</td>
+                <td className="px-3 py-2"><a href={`tel:${l.phone}`} onClick={(e) => e.stopPropagation()} className="text-foreground hover:underline">{l.phone}</a></td>
                 <td className="px-3 py-2">{l.leadSourceLabel || "—"}</td>
                 <td className="px-3 py-2">{l.serviceTypeLabel || "—"}</td>
                 <td className="px-3 py-2"><TempBadge value={l.temperature} /></td>

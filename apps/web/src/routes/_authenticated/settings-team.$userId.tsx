@@ -49,7 +49,7 @@ function MemberPage() {
           <div><h1 className="font-display text-2xl font-bold text-foreground">{m.fullName}</h1>
             <p className="text-xs text-muted-foreground">{m.role ?? "—"} · {m.email} · {m.phone || "—"}</p></div>
         </div>
-        <Link to="/settings" className="text-sm font-bold text-primary">← {t("backToTeam")}</Link>
+        <Link to="/settings" className="text-sm font-bold text-foreground">← {t("backToTeam")}</Link>
       </div>
       <div className="flex flex-wrap gap-2 border-b border-border">
         {TABS.map((x) => <button key={x.id} type="button" onClick={() => setTab(x.id)} className={`px-3 py-2 text-sm font-bold ${tab === x.id ? "border-b-2 border-primary text-primary" : "text-muted-foreground"}`}>{t(x.k)}</button>)}

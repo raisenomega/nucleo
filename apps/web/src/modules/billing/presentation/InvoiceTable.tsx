@@ -21,7 +21,7 @@ export function InvoiceTable({ rows, onView }: { rows: readonly Invoice[]; onVie
         <tbody>{visible.map((i) => (
           <tr key={i.id} onClick={() => onView(i)} className="cursor-pointer border-b border-border hover:bg-secondary">
             <td className="p-2 font-mono text-xs">{i.invoiceNumber ?? "—"}</td><td className="p-2 font-semibold">{i.clientName}</td>
-            <td className="p-2">{st(i)}</td><td className="p-2 font-bold text-primary">{formatCurrency(i.total)}</td>
+            <td className="p-2">{st(i)}</td><td className="p-2 font-bold text-foreground">{formatCurrency(i.total)}</td>
             <td className="p-2">{i.dueDate ?? "—"}</td></tr>))}</tbody>
       </table>
       <div className="space-y-2 md:hidden">{visible.map((i) => (

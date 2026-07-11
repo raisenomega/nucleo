@@ -41,7 +41,7 @@ function TrainingPage() {
       </div>
       <div className="rounded-xl border border-border bg-card p-4">
         <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("completion")}</span>
-        <p className="text-2xl font-bold text-primary">{pct}%</p></div>
+        <p className="text-2xl font-bold text-foreground">{pct}%</p></div>
       <div className="flex gap-2 border-b border-border">
         <button type="button" onClick={() => { setTab("courses"); setCreating(false); }} className={tabCls("courses")}>{t("courses")}</button>
         <button type="button" onClick={() => { setTab("assign"); setCreating(false); }} className={tabCls("assign")}>{t("assignments")}</button>

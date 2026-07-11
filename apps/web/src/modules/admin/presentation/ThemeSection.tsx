@@ -8,7 +8,7 @@ export function ThemeSection({ title, open, onToggle, children }: {
   return (
     <div className="rounded-lg border border-border bg-card">
       <button type="button" onClick={onToggle}
-        className="flex w-full items-center justify-between p-4 text-left font-body font-bold text-primary">
+        className="flex w-full items-center justify-between p-4 text-left font-body font-bold text-foreground">
         {title} <ChevronDown className={`h-5 w-5 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
       {open && <div className="space-y-4 border-t border-border p-4">{children}</div>}

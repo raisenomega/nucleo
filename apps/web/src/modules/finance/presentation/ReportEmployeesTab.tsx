@@ -23,7 +23,7 @@ export function ReportEmployeesTab({ emp }: { emp: EmployeePerformance[] }) {
           <th className="p-2 text-right">{t("collect")}</th><th className="p-2 text-right">{t("collectionRate")}</th></tr></thead>
           <tbody>{emp.map((e) => (<tr key={e.employeeId} className="border-b border-border">
             <td className="p-2">{e.name}</td><td className="p-2 text-right">{formatCurrency(e.laborCost)}</td>
-            <td className="p-2 text-right font-bold text-primary">{formatCurrency(e.incomeCollected)}</td>
+            <td className="p-2 text-right font-bold text-foreground">{formatCurrency(e.incomeCollected)}</td>
             <td className="p-2 text-right">{e.collectionRate}%</td></tr>))}</tbody></table></div>
       </ReportChart>
     </div>

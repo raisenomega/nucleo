@@ -42,7 +42,7 @@ export function LeadDetail({ lead, onClose, onEdit, onDuplicate, onArchive }: {
                   <span>{it.description} ×{it.quantity}</span><span className="font-semibold">{formatCurrency(it.lineTotal)}</span>
                 </div>
               ))}
-              <div className="flex justify-between px-3 py-1 text-sm font-bold text-primary">
+              <div className="flex justify-between px-3 py-1 text-sm font-bold text-foreground">
                 <span>{t("grandTotal")}</span><span>{formatCurrency(lead.quotedPrice)}</span>
               </div>
             </div>

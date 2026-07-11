@@ -21,7 +21,7 @@ export function QuoteTable({ rows, onView }: { rows: readonly Quote[]; onView: (
         <tbody>{visible.map((q) => (
           <tr key={q.id} onClick={() => onView(q)} className="cursor-pointer border-b border-border hover:bg-secondary">
             <td className="p-2 font-mono text-xs">{q.quoteNumber ?? "—"}</td><td className="p-2 font-semibold">{q.clientName}</td>
-            <td className="p-2">{st(q)}</td><td className="p-2 font-bold text-primary">{formatCurrency(q.total)}</td>
+            <td className="p-2">{st(q)}</td><td className="p-2 font-bold text-foreground">{formatCurrency(q.total)}</td>
             <td className="p-2">{q.validUntil ?? "—"}</td></tr>))}</tbody>
       </table>
       <div className="space-y-2 md:hidden">{visible.map((q) => (

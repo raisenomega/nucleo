@@ -31,7 +31,7 @@ export function InvoiceDetail({ inv, canManage, onPay, onCancel, onClose }: {
           {inv.items.map((it, idx) => (
             <div key={idx} className="flex justify-between border-b border-border px-3 py-1 text-sm last:border-0">
               <span>{it.description} ×{it.quantity}</span><span className="font-semibold">{formatCurrency(it.lineTotal)}</span></div>))}
-          <div className="flex justify-between px-3 py-1 text-sm font-bold text-primary"><span>{t("grandTotal")}</span><span>{formatCurrency(inv.total)}</span></div>
+          <div className="flex justify-between px-3 py-1 text-sm font-bold text-foreground"><span>{t("grandTotal")}</span><span>{formatCurrency(inv.total)}</span></div>
         </div>
         {inv.dueDate && <p className="text-sm"><span className="font-bold">{t("dueDate")}: </span>{inv.dueDate}</p>}
         <div className="flex flex-wrap gap-2">

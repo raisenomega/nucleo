@@ -29,7 +29,7 @@ export function PayrollTable({ rows, onView, onEdit, onDelete }: {
     <div className="hidden overflow-hidden rounded-lg border border-border bg-card md:block">
       <div className="flex items-center justify-between border-b border-border p-4">
         <h2 className="font-body font-bold">{t("payrollList")} ({visible.length})</h2>
-        {money && <span className="font-body font-bold text-primary">{t("totalEmployerCost")}: {formatCurrency(total)}</span>}
+        {money && <span className="font-body font-bold text-foreground">{t("totalEmployerCost")}: {formatCurrency(total)}</span>}
       </div>
       <div className="overflow-x-auto">
         <table className="w-full font-body text-sm">
@@ -50,7 +50,7 @@ export function PayrollTable({ rows, onView, onEdit, onDelete }: {
                 {money && <><td className="px-3 py-2 text-right font-semibold">{formatCurrency(grossOf(i))}</td>
                 <td className="px-3 py-2 text-right text-destructive">{formatCurrency(grossOf(i) - netOf(i))}</td>
                 <td className="px-3 py-2 text-right">{formatCurrency(netOf(i))}</td>
-                <td className="px-3 py-2 text-right font-semibold text-primary">{formatCurrency(costOf(i))}</td></>}
+                <td className="px-3 py-2 text-right font-semibold text-foreground">{formatCurrency(costOf(i))}</td></>}
                 <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
                   <div className="flex justify-end gap-2">
                     {onEdit && <button type="button" onClick={() => onEdit(i.id)} aria-label={t("edit")} className="text-primary"><Pencil className="h-4 w-4" /></button>}

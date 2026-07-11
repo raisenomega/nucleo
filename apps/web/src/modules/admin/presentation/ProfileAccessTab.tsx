@@ -31,7 +31,7 @@ export function ProfileAccessTab({ role, onRole, onPin, form, set }: {
         <label className="space-y-1"><span className="block text-xs font-bold text-muted-foreground">{t("role")}</span>
           <select value={role ?? ""} onChange={(e) => { onRole(e.target.value as AppRole); set("module_access", null); }} className={`block ${fld}`}>
             {ROLES.map((r) => <option key={r.v} value={r.v}>{r.l}</option>)}</select></label>
-        <button type="button" onClick={() => set("module_access", null)} className="rounded-lg border border-border px-3 py-2 text-xs font-bold text-primary">{t("resetDefaults")}</button>
+        <button type="button" onClick={() => set("module_access", null)} className="rounded-lg border border-border px-3 py-2 text-xs font-bold text-foreground">{t("resetDefaults")}</button>
         <span className={`text-xs font-bold ${custom ? "text-primary" : "text-muted-foreground"}`}>{custom ? t("customAccess") : t("roleDefaults")}</span>
       </div>
       <div className="overflow-x-auto rounded-lg border border-border bg-card">
@@ -56,7 +56,7 @@ export function ProfileAccessTab({ role, onRole, onPin, form, set }: {
       </div>
       <div className="flex flex-wrap items-center gap-3 rounded-lg border border-border bg-card p-4">
         <button type="button" onClick={() => { const p = window.prompt(t("assignPin")); if (p) onPin(p); }}
-          className="rounded-lg border border-border px-3 py-1.5 text-sm font-bold text-primary">{t("assignPin")}</button>
+          className="rounded-lg border border-border px-3 py-1.5 text-sm font-bold text-foreground">{t("assignPin")}</button>
         <span className="text-xs text-muted-foreground">{t("lastAccess")}: {t("comingSoon")}</span>
       </div>
     </div>

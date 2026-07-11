@@ -36,7 +36,7 @@ export function StopPaymentForm({ stop, onClose, onSubmit }: { stop: RouteStop; 
           <div className="grid grid-cols-2 gap-3">
             <label className="block space-y-1"><span className={lbl}>{t("amountReceived")}</span>
               <input type="number" step="0.01" min="0" value={received || ""} onChange={(e) => setReceived(Number(e.target.value))} className={fld} /></label>
-            <div><span className={lbl}>{t("changeAmount")}</span><p className="p-3 text-lg font-bold text-primary">{formatCurrency(change)}</p></div>
+            <div><span className={lbl}>{t("changeAmount")}</span><p className="p-3 text-lg font-bold text-foreground">{formatCurrency(change)}</p></div>
           </div>
         )}
         <button type="submit" disabled={!methodId} className="mt-auto h-14 w-full rounded-lg bg-primary text-lg font-bold text-primary-foreground disabled:opacity-50">{t("save")}</button>

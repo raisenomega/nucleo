@@ -14,7 +14,7 @@ export function QuoteApprovalView({ token, data }: { token: string; data: Public
   if (done) return (
     <main className="min-h-screen bg-background flex items-center justify-center p-4 text-center">
       <div className="space-y-2">
-        <p className="text-2xl font-bold text-primary">{done === "accepted" ? t("quoteAcceptedThanks") : t("quoteRejectedThanks")}</p>
+        <p className="text-2xl font-bold text-foreground">{done === "accepted" ? t("quoteAcceptedThanks") : t("quoteRejectedThanks")}</p>
         <p className="font-bold">{tn.display_name}</p>
         {tn.contact_phone && <p className="text-muted-foreground">{tn.contact_phone}</p>}
       </div>

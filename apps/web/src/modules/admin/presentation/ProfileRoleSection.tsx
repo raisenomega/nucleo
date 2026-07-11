@@ -30,7 +30,7 @@ export function ProfileRoleSection({ member, canEdit, onRole, onPin }: {
       <div className="text-sm"><span className={lbl}>{t("modulesVisible")}</span>
         <p className="text-muted-foreground">{MODULES[member.role ?? ""] ?? "—"}</p></div>
       <div className="flex flex-wrap items-center gap-3">
-        <button type="button" onClick={() => { const p = window.prompt(t("assignPin")); if (p) onPin(p); }} className="rounded-lg border border-border px-3 py-1.5 text-sm font-bold text-primary">{t("assignPin")}</button>
+        <button type="button" onClick={() => { const p = window.prompt(t("assignPin")); if (p) onPin(p); }} className="rounded-lg border border-border px-3 py-1.5 text-sm font-bold text-foreground">{t("assignPin")}</button>
         <span className="text-xs text-muted-foreground">{t("lastAccess")}: {t("comingSoon")}</span>
       </div>
     </div>

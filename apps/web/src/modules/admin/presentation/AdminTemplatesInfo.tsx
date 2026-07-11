@@ -16,7 +16,7 @@ export function AdminTemplatesInfo() {
   const { t } = useI18n();
   return (
     <div className="space-y-3 rounded-lg border border-border bg-card p-5">
-      <h3 className="font-body font-bold text-primary">{t("templatesSection")}</h3>
+      <h3 className="font-body font-bold text-foreground">{t("templatesSection")}</h3>
       <ul className="space-y-2">
         {TEMPLATES.map((x) => (
           <li key={x.key} className="flex items-start gap-2 text-sm">

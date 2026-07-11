@@ -31,7 +31,7 @@ export function QuoteDetail({ quote, canManage, onStatus, onConvert, onEdit, onS
           {q.items.map((it, idx) => (
             <div key={idx} className="flex justify-between border-b border-border px-3 py-1 text-sm last:border-0">
               <span>{it.description} ×{it.quantity}</span><span className="font-semibold">{formatCurrency(it.lineTotal)}</span></div>))}
-          <div className="flex justify-between px-3 py-1 text-sm font-bold text-primary"><span>{t("grandTotal")}</span><span>{formatCurrency(q.total)}</span></div>
+          <div className="flex justify-between px-3 py-1 text-sm font-bold text-foreground"><span>{t("grandTotal")}</span><span>{formatCurrency(q.total)}</span></div>
         </div>
         {q.validUntil && <p className="text-sm"><span className="font-bold">{t("validUntil")}: </span>{q.validUntil}</p>}
         {q.terms && <p className="text-xs text-muted-foreground"><span className="font-bold">{t("terms")}: </span>{q.terms}</p>}

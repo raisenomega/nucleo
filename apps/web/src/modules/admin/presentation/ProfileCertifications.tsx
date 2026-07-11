@@ -16,7 +16,7 @@ export function ProfileCertifications({ certs, onAdd, onUpdate, onRemove }: {
   const cf = (c: EmployeeCertification): CertFormData => ({ certificationName: c.certificationName, certificationNumber: c.certificationNumber, issuedDate: c.issuedDate ?? "", expirationDate: c.expirationDate ?? "", status: c.status });
   return (
     <div className="space-y-3 rounded-lg border border-border bg-card p-5">
-      <h3 className="font-body font-bold text-primary">{t("certifications")}</h3>
+      <h3 className="font-body font-bold text-foreground">{t("certifications")}</h3>
       <div className="flex flex-wrap items-end gap-2">
         <input value={f.certificationName} onChange={(e) => setF({ ...f, certificationName: e.target.value })} placeholder={t("certName")} className={fld} />
         <input value={f.certificationNumber} onChange={(e) => setF({ ...f, certificationNumber: e.target.value })} placeholder={t("certNumber")} className={fld} />

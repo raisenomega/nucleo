@@ -14,12 +14,12 @@ export function PayrollDeductionPreview({ calc, workerType }: { calc: PayrollCal
       <div className="text-xs font-bold text-muted-foreground">{t("employeeDeductions")}</div>
       {calc.employeeDeductions.map((d) => row(`${d.label} ${d.rate}%`, d.amount, true))}
       {row(t("totalWithheld"), calc.totalEmployeeDeductions, true, "border-t border-border pt-1 font-bold")}
-      {row(emp ? t("netSalary") : t("contractorReceives"), calc.netSalary, false, "font-bold text-primary")}
+      {row(emp ? t("netSalary") : t("contractorReceives"), calc.netSalary, false, "font-bold text-foreground")}
       {emp ? (
         <>
           <div className="pt-2 text-xs font-bold text-muted-foreground">{t("employerContributions")}</div>
           {calc.employerContributions.map((d) => row(`${d.label} ${d.rate}%`, d.amount))}
-          {row(t("totalEmployerCost"), calc.totalEmployerCost, false, "border-t border-border pt-1 font-bold text-primary")}
+          {row(t("totalEmployerCost"), calc.totalEmployerCost, false, "border-t border-border pt-1 font-bold text-foreground")}
         </>
       ) : row(t("remitToTreasury"), calc.totalEmployeeDeductions, false, "font-bold")}
       <p className="pt-2 text-xs text-muted-foreground">{t("payrollDisclaimer")}</p>

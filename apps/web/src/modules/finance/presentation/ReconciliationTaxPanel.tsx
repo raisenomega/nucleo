@@ -9,7 +9,7 @@ export function ReconciliationTaxPanel({ tax }: { tax: TaxPanel }) {
   const [open, setOpen] = useState(false);
   return (
     <div className="space-y-3 rounded-lg border border-border bg-card p-5">
-      <button type="button" onClick={() => setOpen(!open)} className="flex w-full items-center justify-between font-body font-bold text-primary">
+      <button type="button" onClick={() => setOpen(!open)} className="flex w-full items-center justify-between font-body font-bold text-foreground">
         <span>{t("taxObligations")}</span>
         <span className="flex items-center gap-2 text-sm text-muted-foreground">{formatCurrency(tax.totalEstimated)}
           {open ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}</span>

@@ -15,7 +15,7 @@ export function RouteStopsEditor({ stops, onChange }: { stops: EditableStop[]; o
     <div className="space-y-2">
       {stops.map((s, i) => (
         <div key={i} className="space-y-2 rounded-lg border border-border bg-card p-3">
-          <div className="flex items-center justify-between text-xs"><span className="font-bold text-primary">#{i + 1}</span>
+          <div className="flex items-center justify-between text-xs"><span className="font-bold text-foreground">#{i + 1}</span>
             <button type="button" onClick={() => onChange(stops.filter((_, x) => x !== i))} className="text-destructive"><Trash2 className="h-4 w-4" /></button></div>
           <div className="grid grid-cols-2 gap-2">
             <input value={s.clientName} onChange={(e) => set(i, "clientName", e.target.value)} placeholder={t("contactName")} className={fld} />

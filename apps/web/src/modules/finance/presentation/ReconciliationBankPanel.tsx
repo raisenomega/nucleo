@@ -40,7 +40,7 @@ export function ReconciliationBankPanel({ bank, accounts, onAddAccount, onDeposi
                 <div className="mt-2 space-y-0.5 text-xs">
                   <div className="flex justify-between text-muted-foreground"><span>{t("openingBalance")}</span><span>{formatCurrency(d.openingBalance)}</span></div>
                   <div className="flex justify-between text-muted-foreground"><span>+ {t("deposits")}</span><span>{formatCurrency(d.deposits)}</span></div>
-                  <div className="flex justify-between border-t border-border pt-0.5 text-sm font-bold text-primary"><span>= {t("calculatedBalance")}</span><span>{formatCurrency(d.calculatedBalance)}</span></div>
+                  <div className="flex justify-between border-t border-border pt-0.5 text-sm font-bold text-foreground"><span>= {t("calculatedBalance")}</span><span>{formatCurrency(d.calculatedBalance)}</span></div>
                   <div className="flex justify-between text-muted-foreground"><span>{t("realBalance")}</span><span>{formatCurrency(d.realBalance)}</span></div>
                   <div className="flex justify-between"><span className="text-muted-foreground">{t("difference")}</span><span className={d.difference < 0 ? "text-red-600" : "text-green-600"}>{formatCurrency(d.difference)}</span></div>
                 </div>

@@ -52,11 +52,11 @@ export function EvaluationForm({ employees, criteria, canFormal, onSuggest, onSu
         {anonAllowed && <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={anon} onChange={(e) => setAnon(e.target.checked)} /> {t("anonymous")}</label>}
       </div>
       <button type="button" onClick={() => void suggest()} disabled={!emp}
-        className="rounded-lg border border-border px-3 py-2 text-sm font-bold text-primary disabled:opacity-50">{t("autoSuggest")}</button>
+        className="rounded-lg border border-border px-3 py-2 text-sm font-bold text-foreground disabled:opacity-50">{t("autoSuggest")}</button>
       <div className="space-y-3">{criteria.map((c) => (
         <div key={c.id} className="space-y-1">
           <div className="flex justify-between text-sm"><span className="font-bold">{c.label} <span className="text-xs text-muted-foreground">({Math.round(c.weight * 100)}%)</span></span>
-            <span className="font-bold text-primary">{scores[c.id] ?? 0}</span></div>
+            <span className="font-bold text-foreground">{scores[c.id] ?? 0}</span></div>
           <input type="range" min={0} max={10} step={0.5} value={scores[c.id] ?? 0}
             onChange={(e) => setScores((v) => ({ ...v, [c.id]: Number(e.target.value) }))} className="w-full" /></div>))}</div>
       <div className={`flex items-center justify-between rounded-lg p-3 ${CLASS_COLOR[cls]}`}>
