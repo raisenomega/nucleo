@@ -3,6 +3,8 @@ import appCss from "../styles/index.css?url";
 import { I18nProvider, useI18n } from "@shared/i18n";
 import { ThemeToggle } from "@shared/components/ThemeToggle";
 import { HostBrandProvider } from "@shared/providers/HostBrandProvider";
+import { useMounted } from "@shared/hooks/useMounted";
+import { isRaisenHost } from "@shared/lib/brand-host";
 
 const THEME_SCRIPT = `(function(){try{var c=JSON.parse(localStorage.getItem("nucleo:theme-cache:v1")||"null"),s=localStorage.getItem("theme"),m=window.matchMedia,dm=c&&c.defaultMode,d;if(s==="dark"||s==="light"){d=s==="dark";}else if(dm==="dark"||dm==="light"){d=dm==="dark";}else if(m&&m("(prefers-color-scheme: light)").matches){d=false;}else{d=true;}document.documentElement.classList.toggle("dark",d);if(c&&c.vars){for(var k in c.vars){document.documentElement.style.setProperty(k,c.vars[k]);}}}catch(e){}})();`;
 
@@ -20,8 +22,7 @@ export const Route = createRootRoute({
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
-      { rel: "icon", href: "/favicon.ico", sizes: "any" },
+      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" }, { rel: "icon", href: "/favicon.ico", sizes: "any" },
       { rel: "manifest", href: "/manifest.json" },
     ],
     scripts: [{ children: THEME_SCRIPT }, { children: SW_SCRIPT }],
@@ -45,7 +46,9 @@ const PUBLIC = new Set(["/", "/login", "/registro", "/pin", "/agendar-consulta"]
 function GlobalControls() {
   const { t, locale, setLocale } = useI18n();
   const { pathname } = useLocation();
+  const mounted = useMounted();
   if (!PUBLIC.has(pathname)) return null;
+  if (mounted && pathname === "/" && !isRaisenHost() && !window.location.hostname.startsWith("app.")) return null; // landing: toggles en el nav
   return (
     <div className="fixed top-4 right-4 z-50 flex gap-2">
       <ThemeToggle />

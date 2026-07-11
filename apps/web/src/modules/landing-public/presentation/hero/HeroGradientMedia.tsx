@@ -3,8 +3,8 @@
 export function HeroGradientMedia() {
   return (
     <div className="h-full w-full"
-      style={{ background: "linear-gradient(135deg, hsl(var(--tenant-primary-hsl) / 0.92), hsl(var(--tenant-accent-hsl) / 0.82))" }}>
-      <div className="h-full w-full bg-black/20" />
+      style={{ background: "linear-gradient(135deg, hsl(var(--tenant-accent-hsl)), hsl(var(--tenant-primary-hsl)))" }}>
+      <div className="h-full w-full bg-black/25" />
     </div>
   );
 }
