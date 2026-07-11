@@ -4,6 +4,8 @@ import "react-image-crop/dist/ReactCrop.css";
 import { useI18n } from "@shared/i18n";
 import { useSession } from "@shared/providers/SessionProvider";
 import { cropToWebpAndUpload } from "@shared/lib/crop-upload";
+import { FileUploadButton } from "@shared/components/FileUploadButton";
+import { FilePreviewActions } from "@shared/components/FilePreviewActions";
 
 // Sube imagen con recorte (react-image-crop) → WebP → landing-assets/{tenant}/{entityType}/.
 export function ImageUploadWithCrop({ entityType, aspectRatio, maxWidthPx, value, onUploaded }: {
@@ -16,10 +18,7 @@ export function ImageUploadWithCrop({ entityType, aspectRatio, maxWidthPx, value
   const [crop, setCrop] = useState<Crop>({ unit: "%", x: 5, y: 5, width: 90, height: 90 });
   const [busy, setBusy] = useState(false);
 
-  function pick(e: React.ChangeEvent<HTMLInputElement>) {
-    const f = e.target.files?.[0];
-    if (f) setSrc(URL.createObjectURL(f));
-  }
+  const onFile = (f: File) => setSrc(URL.createObjectURL(f));
   async function save() {
     if (!imgRef.current || !session?.tenantId) return;
     setBusy(true);
@@ -31,7 +30,11 @@ export function ImageUploadWithCrop({ entityType, aspectRatio, maxWidthPx, value
   return (
     <div className="space-y-2">
       {value && !src && <img src={value} alt="" className="max-h-32 rounded-lg border border-border" />}
-      <input type="file" accept="image/*" onChange={pick} className="text-xs" />
+      {!src && (value
+        ? <FilePreviewActions onRemove={() => onUploaded(null)}>
+            <FileUploadButton accept="image/*" label={t("uploadReplace")} onFileSelect={onFile} />
+          </FilePreviewActions>
+        : <FileUploadButton accept="image/*" onFileSelect={onFile} />)}
       {src && <>
         <ReactCrop crop={crop} onChange={(_c, pc) => setCrop(pc)} aspect={aspectRatio}>
           <img ref={imgRef} src={src} alt="" className="max-h-72" />

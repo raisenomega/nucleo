@@ -37,4 +37,5 @@ export const esLanding = {
   lpFallbackTitle: "Sitio no disponible", lpFallbackMsg: "Este portal no tiene una página pública activa todavía.", lpGoToPanel: "Ir al panel",
   lpHeroSubtitle: "Bienvenido a nuestro sitio", lpHeroCta: "Contáctanos", lpNavMenu: "Navegación",
   heroVideoLabel: "Video del hero (opcional, máx 50MB)", heroVideoHelper: "Si hay video se muestra en autoplay muted loop; la imagen se usa como poster.", heroVideoTooSize: "El video excede 50MB.", heroVideoUploading: "Subiendo video…", heroVideoRemove: "Quitar video",
+  uploadSelectImage: "Seleccionar imagen", uploadSelectVideo: "Seleccionar video", uploadSelectFile: "Seleccionar archivo", uploadReplace: "Cambiar", uploadRemove: "Eliminar", uploadUploading: "Subiendo…",
 } satisfies Partial<Record<TranslationKey, string>>;

@@ -37,4 +37,5 @@ export const enLanding = {
   lpFallbackTitle: "Site unavailable", lpFallbackMsg: "This portal has no public page enabled yet.", lpGoToPanel: "Go to panel",
   lpHeroSubtitle: "Welcome to our site", lpHeroCta: "Contact us", lpNavMenu: "Navigation",
   heroVideoLabel: "Hero video (optional, max 50MB)", heroVideoHelper: "If a video is set it plays autoplay muted loop; the image is used as poster.", heroVideoTooSize: "Video exceeds 50MB.", heroVideoUploading: "Uploading video…", heroVideoRemove: "Remove video",
+  uploadSelectImage: "Select image", uploadSelectVideo: "Select video", uploadSelectFile: "Select file", uploadReplace: "Replace", uploadRemove: "Remove", uploadUploading: "Uploading…",
 } satisfies Partial<Record<TranslationKey, string>>;
