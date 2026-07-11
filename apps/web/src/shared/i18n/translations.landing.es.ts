@@ -22,4 +22,9 @@ export const esLanding = {
   trackInventory: "Controlar inventario", stockQuantity: "Stock", lowStockThreshold: "Umbral stock bajo",
   primaryImage: "Imagen principal", galleryImages: "Galería", videoUrl: "URL de video", featured: "Destacado",
   needCategoryFirst: "Crea una categoría primero para poder agregar productos.",
+  services: "Servicios", newService: "Nuevo servicio", pricingType: "Tipo de precio",
+  priceUnit: "Unidad de precio", priceUnitCustom: "Unidad personalizada",
+  ptFixed: "Precio fijo", ptStartingFrom: "Desde", ptQuoteRequired: "Cotización", ptHourly: "Por hora",
+  puHour: "Por hora", puDay: "Por día", puJob: "Por trabajo", puVisit: "Por visita", puSession: "Por sesión", puCustom: "Personalizada",
+  durationMinutes: "Duración (minutos)", durationHelp: "Ej: 60 = 1 hora, 120 = 2 horas.", requiresScheduling: "Requiere agendar",
 } satisfies Partial<Record<TranslationKey, string>>;

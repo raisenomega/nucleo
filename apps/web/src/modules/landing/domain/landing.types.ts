@@ -49,3 +49,22 @@ export interface ILandingProductsRepository {
   update(id: string, input: ProductInput): Promise<Result>;
   remove(id: string): Promise<Result>;
 }
+
+export type PricingType = "fixed" | "starting_from" | "quote_required" | "hourly";
+export interface LandingService {
+  id: string; categoryId: string | null; slug: string; name: string;
+  shortDescription: string; longDescription: string;
+  pricingType: PricingType; price: number | null; priceUnit: string | null;
+  durationEstimateMinutes: number | null; requiresScheduling: boolean;
+  primaryImageUrl: string | null; isActive: boolean; isFeatured: boolean; displayOrder: number;
+  metaTitle: string; metaDescription: string; isPublished: boolean;
+}
+export type ServiceInput = Omit<LandingService, "id">;
+export type ServiceWithCategory = LandingService & { categoryName: string | null };
+export interface ILandingServicesRepository {
+  list(): Promise<ServiceWithCategory[]>;
+  get(id: string): Promise<ServiceWithCategory | null>;
+  create(tenantId: string, input: ServiceInput): Promise<Result>;
+  update(id: string, input: ServiceInput): Promise<Result>;
+  remove(id: string): Promise<Result>;
+}

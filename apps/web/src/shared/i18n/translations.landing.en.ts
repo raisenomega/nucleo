@@ -22,4 +22,9 @@ export const enLanding = {
   trackInventory: "Track inventory", stockQuantity: "Stock", lowStockThreshold: "Low-stock threshold",
   primaryImage: "Primary image", galleryImages: "Gallery", videoUrl: "Video URL", featured: "Featured",
   needCategoryFirst: "Create a category first to add products.",
+  services: "Services", newService: "New service", pricingType: "Pricing type",
+  priceUnit: "Price unit", priceUnitCustom: "Custom unit",
+  ptFixed: "Fixed price", ptStartingFrom: "Starting from", ptQuoteRequired: "Quote", ptHourly: "Hourly",
+  puHour: "Per hour", puDay: "Per day", puJob: "Per job", puVisit: "Per visit", puSession: "Per session", puCustom: "Custom",
+  durationMinutes: "Duration (minutes)", durationHelp: "E.g. 60 = 1 hour, 120 = 2 hours.", requiresScheduling: "Requires scheduling",
 } satisfies Partial<Record<TranslationKey, string>>;
