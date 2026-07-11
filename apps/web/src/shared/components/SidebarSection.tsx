@@ -26,9 +26,9 @@ export function SidebarSection({ section, expanded, isOpen, activePath, onToggle
   return (
     <div>
       <button type="button" onClick={onToggleSection}
-        className="flex w-full items-center gap-2 px-3 py-1 text-xs font-bold uppercase tracking-wide text-muted-foreground hover:text-foreground">
+        className="flex w-full cursor-pointer items-center gap-2 px-3 py-3 text-xs font-medium uppercase tracking-wider text-gray-400 transition-colors hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-400">
         <Icon className="h-4 w-4" /><span className="flex-1 text-left">{t(section.title)}</span>
-        {isOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+        {isOpen ? <ChevronDown className="ml-auto h-4 w-4 text-gray-400" /> : <ChevronRight className="ml-auto h-4 w-4 text-gray-400" />}
       </button>
       {isOpen && items.map((n) => n.to ? (
         <Link key={n.key} to={n.to} onClick={onNavigate}
