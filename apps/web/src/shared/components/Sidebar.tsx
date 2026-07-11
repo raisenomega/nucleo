@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "@tanstack/react-router";
-import { LayoutDashboard } from "lucide-react";
+import { LayoutDashboard, Check } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useBrand } from "@shared/providers/BrandProvider";
 import { useSession } from "@shared/providers/SessionProvider";
@@ -37,8 +37,9 @@ export function Sidebar({ expanded, onClose, onToggle }: { expanded: boolean; on
         </button>
         <nav className="no-scrollbar flex-1 space-y-1 overflow-y-auto p-2">
           <Link to="/dashboard" onClick={onNavigate}
-            className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-body ${panelActive ? "bg-primary text-primary-foreground" : "hover:bg-secondary"} ${expanded ? "" : "justify-center"}`}>
+            className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-body ${panelActive ? "font-medium" : "hover:bg-secondary"} ${expanded ? "" : "justify-center"}`}>
             <LayoutDashboard className="h-5 w-5" />{expanded && <span>{t("panel")}</span>}
+            {expanded && panelActive && <Check className="ml-auto h-4 w-4 text-accent" />}
           </Link>
           <div className="my-1 border-b border-border" />
           {sections.map((s) => (
