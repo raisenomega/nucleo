@@ -1,39 +1,39 @@
 import { useI18n } from "@shared/i18n";
 import { usePublicBrand } from "@landing-public/presentation/usePublicBrand.hook";
-import { useLandingProduct } from "@landing-public/presentation/useLandingProduct.hook";
+import { useLandingService } from "@landing-public/presentation/useLandingService.hook";
 import { useDetailSeo } from "@landing-public/presentation/detail/useDetailSeo.hook";
 import { DetailShell } from "@landing-public/presentation/detail/DetailShell";
 import { DetailHeader } from "@landing-public/presentation/detail/DetailHeader";
 import { PublicImageGallery } from "@landing-public/presentation/detail/PublicImageGallery";
-import { ProductInfo } from "@landing-public/presentation/detail/ProductInfo";
-import { RelatedProducts } from "@landing-public/presentation/detail/RelatedProducts";
+import { ServiceInfo } from "@landing-public/presentation/detail/ServiceInfo";
+import { RelatedServices } from "@landing-public/presentation/detail/RelatedServices";
 import { DetailNotFound } from "@landing-public/presentation/detail/DetailNotFound";
 import { DetailSkeleton } from "@landing-public/presentation/detail/DetailSkeleton";
 import { ContactSection } from "@landing-public/presentation/sections/ContactSection";
 import { PublicFooter } from "@landing-public/presentation/footer/PublicFooter";
 
-export function ProductDetailPage({ slug }: { slug: string }) {
+export function ServiceDetailPage({ slug }: { slug: string }) {
   const { t } = useI18n();
   const s = usePublicBrand();
-  const { data, status } = useLandingProduct(slug);
-  const pd = data?.product;
-  useDetailSeo(pd && (pd.meta_title || pd.name), pd && (pd.meta_description || pd.short_description || ""), pd?.primary_image_url);
+  const { data, status } = useLandingService(slug);
+  const sd = data?.service;
+  useDetailSeo(sd && (sd.meta_title || sd.name), sd && (sd.meta_description || sd.short_description || ""), sd?.primary_image_url);
   if (s.status === "loading") return <div className="min-h-screen bg-background" />;
-  if (s.status === "fallback") return <DetailNotFound />;
+  if (s.status === "fallback") return <DetailNotFound titleKey="lpDetailNotFoundService" />;
   if (status === "loading") return <DetailShell brand={s.brand}><DetailSkeleton /></DetailShell>;
-  if (status !== "ready" || !data) return <DetailShell brand={s.brand}><DetailNotFound /></DetailShell>;
-  const p = data.product;
+  if (status !== "ready" || !data) return <DetailShell brand={s.brand}><DetailNotFound titleKey="lpDetailNotFoundService" /></DetailShell>;
+  const sv = data.service;
   const onQuote = () => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
   return (
     <DetailShell brand={s.brand}>
-      <DetailHeader name={p.name} sectionLabel={t("lpDetailBreadcrumbProducts")} sectionHash="products" />
+      <DetailHeader name={sv.name} sectionLabel={t("lpDetailBreadcrumbServices")} sectionHash="services" />
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-6 md:grid-cols-2">
-        <PublicImageGallery primaryUrl={p.primary_image_url} gallery={p.gallery_images ?? []} alt={p.name} />
-        <ProductInfo product={p} onQuote={onQuote} />
+        <PublicImageGallery primaryUrl={sv.primary_image_url} gallery={[]} alt={sv.name} />
+        <ServiceInfo service={sv} onQuote={onQuote} />
       </div>
-      {data.related.length > 0 && <RelatedProducts products={data.related} />}
-      <ContactSection preselectedItem={{ kind: "product", id: p.id, name: p.name, slug: p.slug }} />
-      <PublicFooter brand={s.brand} tagline={p.meta_description ?? ""} />
+      {data.related.length > 0 && <RelatedServices services={data.related} />}
+      <ContactSection preselectedItem={{ kind: "service", id: sv.id, name: sv.name, slug: sv.slug }} />
+      <PublicFooter brand={s.brand} tagline={sv.meta_description ?? ""} />
     </DetailShell>
   );
 }

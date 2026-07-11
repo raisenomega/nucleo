@@ -21,6 +21,7 @@ export function useLandingCatalogItems() {
   return {
     products: (items ?? []).filter((i) => i.kind === "product"),
     services: (items ?? []).filter((i) => i.kind === "service"),
+    packages: (items ?? []).filter((i) => i.kind === "package"),
     loading: items === null && !error, error,
   };
 }

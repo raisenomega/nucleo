@@ -13,10 +13,13 @@ export function useCreateLead() {
   const [state, setState] = useState<State>({ status: "idle" });
   async function submit(input: ContactInput, interested?: InterestedItem | null) {
     setState({ status: "submitting" });
-    const kindLabel = t(interested?.kind === "service" ? "lpLeadKindService" : "lpLeadKindProduct");
-    const message = interested ? `${t("lpLeadInterestedIn")}: ${kindLabel} — ${interested.name}\n\n${input.message}` : input.message;
+    const KIND: Record<InterestedItem["kind"], "lpLeadKindProduct" | "lpLeadKindService" | "lpLeadKindPackage"> =
+      { product: "lpLeadKindProduct", service: "lpLeadKindService", package: "lpLeadKindPackage" };
+    const message = interested ? `${t("lpLeadInterestedIn")}: ${t(KIND[interested.kind])} — ${interested.name}\n\n${input.message}` : input.message;
+    // La RPC solo acepta product_id/service_id y rechaza quote sin id → package viaja como 'contact' (id en notes). Follow-up: package_id.
+    const isQuote = !!interested && interested.kind !== "package";
     const payload: Record<string, unknown> = {
-      form_type: interested ? "quote" : "contact", customer_name: input.name, customer_email: input.email,
+      form_type: isQuote ? "quote" : "contact", customer_name: input.name, customer_email: input.email,
       customer_phone: input.phone || undefined, message,
       utm: { source: (typeof document !== "undefined" && document.referrer) || undefined },
     };

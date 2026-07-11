@@ -15,7 +15,7 @@ export function ContactForm({ onSubmit, submitting, errorCode, preselectedItem }
   onSubmit: (v: ContactInput, interested: InterestedItem | null) => void; submitting: boolean; errorCode?: string; preselectedItem?: InterestedItem;
 }) {
   const { t } = useI18n();
-  const { products, services } = useLandingCatalogItems();
+  const { products, services, packages } = useLandingCatalogItems();
   const [item, setItem] = useState<InterestedItem | null>(preselectedItem ?? null);
   const [f, setF] = useState({ name: "", email: "", phone: "", message: "" });
   const [errs, setErrs] = useState<Record<string, TranslationKey>>({});
@@ -30,7 +30,7 @@ export function ContactForm({ onSubmit, submitting, errorCode, preselectedItem }
   return (
     <form onSubmit={go} className="space-y-3">
       {errorCode && <div className="rounded-lg bg-destructive/15 p-3 text-sm text-destructive">{t(EMSG[errorCode] ?? "lpContactErrorNetwork")}</div>}
-      <InterestedItemDropdown value={item} onChange={setItem} products={products} services={services} disabled={submitting} />
+      <InterestedItemDropdown value={item} onChange={setItem} products={products} services={services} packages={packages} disabled={submitting} />
       {FIELDS.map(([k, lbl]) => (
         <label key={k} className="block text-sm font-medium">{t(lbl)}
           <input value={f[k]} disabled={submitting} onChange={(e) => set(k, e.target.value)} className={fld} />
