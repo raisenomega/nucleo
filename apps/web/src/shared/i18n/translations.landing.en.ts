@@ -16,4 +16,10 @@ export const enLanding = {
   geoLat: "Latitude", geoLng: "Longitude", priceRange: "Price range",
   newCategory: "New category", categoryType: "Type", iconLabel: "Icon", imageLabel: "Image", displayOrder: "Order",
   catProduct: "Product", catService: "Service", catBoth: "Both", confirmDelete: "Delete? This cannot be undone.",
+  products: "Products", newProduct: "New product", sku: "SKU",
+  shortDescription: "Short description", longDescription: "Long description",
+  price: "Price", compareAtPrice: "Compare-at price", currency: "Currency", taxRate: "Tax %",
+  trackInventory: "Track inventory", stockQuantity: "Stock", lowStockThreshold: "Low-stock threshold",
+  primaryImage: "Primary image", galleryImages: "Gallery", videoUrl: "Video URL", featured: "Featured",
+  needCategoryFirst: "Create a category first to add products.",
 } satisfies Partial<Record<TranslationKey, string>>;

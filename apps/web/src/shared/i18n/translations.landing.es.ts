@@ -16,4 +16,10 @@ export const esLanding = {
   geoLat: "Latitud", geoLng: "Longitud", priceRange: "Rango de precio",
   newCategory: "Nueva categoría", categoryType: "Tipo", iconLabel: "Icono", imageLabel: "Imagen", displayOrder: "Orden",
   catProduct: "Producto", catService: "Servicio", catBoth: "Ambos", confirmDelete: "¿Eliminar? Esta acción no se puede deshacer.",
+  products: "Productos", newProduct: "Nuevo producto", sku: "SKU",
+  shortDescription: "Descripción corta", longDescription: "Descripción larga",
+  price: "Precio", compareAtPrice: "Precio comparación", currency: "Moneda", taxRate: "Impuesto %",
+  trackInventory: "Controlar inventario", stockQuantity: "Stock", lowStockThreshold: "Umbral stock bajo",
+  primaryImage: "Imagen principal", galleryImages: "Galería", videoUrl: "URL de video", featured: "Destacado",
+  needCategoryFirst: "Crea una categoría primero para poder agregar productos.",
 } satisfies Partial<Record<TranslationKey, string>>;

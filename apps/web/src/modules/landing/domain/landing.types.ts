@@ -30,3 +30,22 @@ export interface ILandingCategoriesRepository {
   update(id: string, input: CategoryInput): Promise<Result>;
   remove(id: string): Promise<Result>;
 }
+
+export interface LandingProduct {
+  id: string; categoryId: string | null; slug: string; sku: string; name: string;
+  shortDescription: string; longDescription: string;
+  price: number; compareAtPrice: number | null; currency: string; taxRate: number | null; stripePriceId: string | null;
+  trackInventory: boolean; stockQuantity: number | null; lowStockThreshold: number | null;
+  primaryImageUrl: string | null; galleryImages: string[]; videoUrl: string | null;
+  isActive: boolean; isFeatured: boolean; displayOrder: number;
+  attributes: Record<string, unknown>; metaTitle: string; metaDescription: string; isPublished: boolean;
+}
+export type ProductInput = Omit<LandingProduct, "id">;
+export type ProductWithCategory = LandingProduct & { categoryName: string | null };
+export interface ILandingProductsRepository {
+  list(): Promise<ProductWithCategory[]>;
+  get(id: string): Promise<ProductWithCategory | null>;
+  create(tenantId: string, input: ProductInput): Promise<Result>;
+  update(id: string, input: ProductInput): Promise<Result>;
+  remove(id: string): Promise<Result>;
+}

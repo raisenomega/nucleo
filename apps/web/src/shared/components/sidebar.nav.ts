@@ -11,7 +11,7 @@ import type { TranslationKey } from "@shared/i18n";
 // Solo rutas con archivo real (TanStack <Link to> valida contra rutas generadas). Las rutas landing
 // futuras (products/services/packages/faqs/…) se agregan acá cuando exista su archivo (Sesión 3.b+).
 type EnabledPath = "/dashboard" | "/routes" | "/income" | "/expenses" | "/extraordinary" | "/payroll" | "/inventory" | "/leads" | "/marketing" | "/reconciliation" | "/recurring" | "/accounts-receivable" | "/billing" | "/quotes" | "/reports" | "/evaluations" | "/observations" | "/training" | "/support" | "/documents" | "/settings"
-  | "/settings/landing/config" | "/settings/landing/categories";
+  | "/settings/landing/config" | "/settings/landing/categories" | "/settings/landing/products";
 // mod = clave de módulo para el gate (can(mod,"view")). Items sin mod = "próximamente" (solo roadmap coo/ceo).
 export type NavItem = { key: TranslationKey; icon: LucideIcon; to?: EnabledPath; mod?: string };
 export type NavSection = { title: TranslationKey; icon: LucideIcon; items: NavItem[] };
@@ -46,5 +46,6 @@ export const LANDING_SECTION: NavSection = {
   title: "landing", icon: Palette, items: [
     { key: "landingSiteSettings", icon: SlidersHorizontal, to: "/settings/landing/config", mod: "settings" },
     { key: "landingCategories", icon: Tags, to: "/settings/landing/categories", mod: "settings" },
+    { key: "products", icon: Package, to: "/settings/landing/products", mod: "settings" },
   ],
 };
