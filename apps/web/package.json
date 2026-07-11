@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "@fontsource/inter": "^5.2.8"
+    "@fontsource/inter": "^5.2.8",
+    "framer-motion": "^12.42.2"
   }
 }
