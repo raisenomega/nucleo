@@ -32,7 +32,7 @@ function Login() {
   return (
     <main className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
       <form onSubmit={onSubmit} className="w-full max-w-sm space-y-4">
-        <h1 className="font-display text-3xl font-bold text-primary text-center">{hostBrand?.display_name ?? ""}</h1>
+        <h1 className="font-display text-3xl font-bold text-foreground text-center">{hostBrand?.display_name ?? ""}</h1>
         <input
           type="email"
           value={email}
@@ -58,10 +58,10 @@ function Login() {
         </button>
         <p className="text-sm text-muted-foreground text-center">
           ¿No tienes cuenta?{" "}
-          <Link to="/registro" className="text-primary">Prueba gratis por 7 días</Link>
+          <Link to="/registro" className="text-foreground">Prueba gratis por 7 días</Link>
         </p>
         <p className="text-sm text-muted-foreground text-center">
-          ¿Te invitaron? <Link to="/invite" className="text-primary">Crea tu cuenta</Link>
+          ¿Te invitaron? <Link to="/invite" className="text-foreground">Crea tu cuenta</Link>
         </p>
       </form>
     </main>

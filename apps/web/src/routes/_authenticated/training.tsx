@@ -27,7 +27,7 @@ function TrainingPage() {
   const assigned = m.summary.reduce((s, r) => s + r.assigned, 0);
   const pct = assigned > 0 ? Math.round(100 * m.summary.reduce((s, r) => s + r.completed, 0) / assigned) : 0;
   const complete = (id: string) => { const s = window.prompt(`${t("markComplete")} — score 0-100?`); void m.setStatus(id, "completed", s ? Number(s) : null); };
-  const tabCls = (x: string) => `px-3 py-2 text-sm font-bold ${tab === x ? "border-b-2 border-primary text-primary" : "text-muted-foreground"}`;
+  const tabCls = (x: string) => `px-3 py-2 text-sm font-bold ${tab === x ? "border-b-2 border-foreground text-foreground" : "text-muted-foreground"}`;
   return (
     <div className="space-y-6 p-4 md:p-8">
       <div className="space-y-2">

@@ -25,7 +25,7 @@ function Pin() {
   return (
     <main className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
       <form onSubmit={onSubmit} className="w-full max-w-xs space-y-4 text-center">
-        <h1 className="font-display text-2xl font-bold text-primary">PIN de acceso</h1>
+        <h1 className="font-display text-2xl font-bold text-foreground">PIN de acceso</h1>
         <input
           type="password"
           inputMode="numeric"

@@ -38,7 +38,7 @@ function SettingsPage() {
       <div className="flex flex-wrap gap-2 border-b border-border">
         {tabs.filter((x) => x.show).map((x) => (
           <button key={x.id} type="button" onClick={() => setTab(x.id)}
-            className={`px-4 py-2 text-sm font-bold ${tab === x.id ? "border-b-2 border-primary text-primary" : "text-muted-foreground"}`}>{x.label}</button>
+            className={`px-4 py-2 text-sm font-bold ${tab === x.id ? "border-b-2 border-foreground text-foreground" : "text-muted-foreground"}`}>{x.label}</button>
         ))}
       </div>
       {tab === "team" && isCeo && <AdminTeamTab team={m.team} onInvite={m.invite} onStatus={m.setStatus} onRole={m.changeRole} />}

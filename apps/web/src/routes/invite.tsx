@@ -30,8 +30,8 @@ function Invite() {
     return (
       <main className="flex min-h-screen items-center justify-center bg-background p-4 text-foreground">
         <div className="max-w-sm space-y-4 text-center">
-          <h1 className="font-display text-2xl font-bold text-primary">{done === "ok" ? t("accountCreated") : t("alreadyRegistered")}</h1>
-          <Link to="/login" className="inline-block font-body font-bold text-primary">{t("goToLogin")}</Link>
+          <h1 className="font-display text-2xl font-bold text-foreground">{done === "ok" ? t("accountCreated") : t("alreadyRegistered")}</h1>
+          <Link to="/login" className="inline-block font-body font-bold text-foreground">{t("goToLogin")}</Link>
         </div>
       </main>
     );
@@ -39,7 +39,7 @@ function Invite() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-background p-4 text-foreground">
       <form onSubmit={onSubmit} className="w-full max-w-sm space-y-3">
-        <h1 className="text-center font-display text-3xl font-bold text-primary">{t("joinTeam")}</h1>
+        <h1 className="text-center font-display text-3xl font-bold text-foreground">{t("joinTeam")}</h1>
         <p className="text-center text-sm text-muted-foreground">{t("invitedSubtitle")}</p>
         <input type="email" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} placeholder={t("email")} autoComplete="email" className={field} />
         <input type="password" value={f.password} onChange={(e) => setF({ ...f, password: e.target.value })} placeholder={t("createPassword")} autoComplete="new-password" className={field} />
@@ -49,7 +49,7 @@ function Invite() {
           {busy ? "…" : t("createPassword")}
         </button>
         <p className="text-center text-sm text-muted-foreground">
-          {t("businessOwner")} <Link to="/registro" className="text-primary">{t("trialFree")}</Link>
+          {t("businessOwner")} <Link to="/registro" className="text-foreground">{t("trialFree")}</Link>
         </p>
       </form>
     </main>

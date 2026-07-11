@@ -35,7 +35,7 @@ function EvaluationsPage() {
   if (!can("evaluations", "view")) return <Navigate to="/dashboard" />;
   const canCoo = canEdit("coo");
   const view = (id: string) => void ev.detail(id).then((d) => { if (d) setViewing(d); });
-  const tabCls = (x: string) => `px-3 py-2 text-sm font-bold ${tab === x ? "border-b-2 border-primary text-primary" : "text-muted-foreground"}`;
+  const tabCls = (x: string) => `px-3 py-2 text-sm font-bold ${tab === x ? "border-b-2 border-foreground text-foreground" : "text-muted-foreground"}`;
   return (
     <div className="space-y-6 p-4 md:p-8">
       <div className="space-y-2">

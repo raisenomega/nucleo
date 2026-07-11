@@ -44,11 +44,11 @@ function Registro() {
     return (
       <main className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
         <div className="max-w-sm text-center space-y-4">
-          <h1 className="font-display text-2xl font-bold text-primary">¡Cuenta creada!</h1>
+          <h1 className="font-display text-2xl font-bold text-foreground">¡Cuenta creada!</h1>
           <p className="font-body text-muted-foreground">
             Revisa tu correo para confirmar tu email. Después podrás iniciar sesión.
           </p>
-          <Link to="/login" className="inline-block text-primary font-body font-bold">Ir a iniciar sesión</Link>
+          <Link to="/login" className="inline-block text-foreground font-body font-bold">Ir a iniciar sesión</Link>
         </div>
       </main>
     );
@@ -56,7 +56,7 @@ function Registro() {
   return (
     <main className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
       <form onSubmit={onSubmit} className="w-full max-w-sm space-y-3">
-        <h1 className="font-display text-3xl font-bold text-primary text-center">Prueba NÚCLEO gratis</h1>
+        <h1 className="font-display text-3xl font-bold text-foreground text-center">Prueba NÚCLEO gratis</h1>
         <input value={form.name} onChange={set("name")} placeholder="tu nombre" autoComplete="name" className={field} />
         <input type="email" value={form.email} onChange={set("email")} placeholder="correo" autoComplete="email" className={field} />
         <PasswordInput value={form.password} onChange={set("password")} placeholder="contraseña" autoComplete="new-password" className={field} />
@@ -67,7 +67,7 @@ function Registro() {
           {busy ? "Creando tu prueba…" : "Empezar 7 días gratis"}
         </button>
         <p className="text-sm text-muted-foreground text-center">
-          ¿Ya tienes cuenta? <Link to="/login" className="text-primary">Inicia sesión</Link>
+          ¿Ya tienes cuenta? <Link to="/login" className="text-foreground">Inicia sesión</Link>
         </p>
       </form>
     </main>

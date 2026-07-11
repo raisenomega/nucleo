@@ -48,7 +48,7 @@ function ReportsPage() {
       </div>
       <div className="flex flex-wrap items-center gap-2 border-b border-border">{tabs.map((x) => (
         <button key={x.id} type="button" onClick={() => setTab(x.id)}
-          className={`px-3 py-2 text-sm font-bold ${active === x.id ? "border-b-2 border-primary text-primary" : "text-muted-foreground"}`}>{t(x.k)}</button>))}
+          className={`px-3 py-2 text-sm font-bold ${active === x.id ? "border-b-2 border-foreground text-foreground" : "text-muted-foreground"}`}>{t(x.k)}</button>))}
         <button type="button" onClick={exportPdf} disabled={pdf.generating || !s}
           className="ml-auto flex items-center gap-1 rounded-lg bg-secondary px-3 py-1.5 text-xs font-bold disabled:opacity-50">
           <FileText className="h-4 w-4" /> {pdf.generating ? t("generatingPdf") : t("exportPdf")}</button></div>
