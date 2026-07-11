@@ -8,8 +8,8 @@ import { isRaisenHost } from "@shared/lib/brand-host";
 
 const THEME_SCRIPT = `(function(){try{var c=JSON.parse(localStorage.getItem("nucleo:theme-cache:v1")||"null"),s=localStorage.getItem("theme"),m=window.matchMedia,dm=c&&c.defaultMode,d;if(s==="dark"||s==="light"){d=s==="dark";}else if(dm==="dark"||dm==="light"){d=dm==="dark";}else if(m&&m("(prefers-color-scheme: light)").matches){d=false;}else{d=true;}document.documentElement.classList.toggle("dark",d);if(c&&c.vars){for(var k in c.vars){document.documentElement.style.setProperty(k,c.vars[k]);}}}catch(e){}})();`;
 
-// Registra el service worker solo en producción (no en localhost).
-const SW_SCRIPT = `if("serviceWorker" in navigator&&location.hostname!=="localhost"){window.addEventListener("load",function(){navigator.serviceWorker.register("/service-worker.js").catch(function(){});});}`;
+// SW del panel: solo en hosts panel (app.*) + Raisen. La landing del tenant usa service-worker-public.js (sin colisión).
+const SW_SCRIPT = `(function(){var h=location.hostname,r=["nucleoraisen.com","www.nucleoraisen.com","nucleo-blush.vercel.app"].indexOf(h)>=0;if((r||h.indexOf("app.")===0)&&"serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("/service-worker.js").catch(function(){});});}})();`;
 
 export const Route = createRootRoute({
   head: () => ({
@@ -22,7 +22,7 @@ export const Route = createRootRoute({
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" }, { rel: "icon", href: "/favicon.ico", sizes: "any" },
+      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" }, { rel: "icon", href: "/favicon.ico", sizes: "any" }, { rel: "apple-touch-icon", href: "/icons/icon-192.png" },
       { rel: "manifest", href: "/manifest.json" },
     ],
     scripts: [{ children: THEME_SCRIPT }, { children: SW_SCRIPT }],

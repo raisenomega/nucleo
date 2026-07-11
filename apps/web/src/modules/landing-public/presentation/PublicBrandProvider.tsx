@@ -2,6 +2,8 @@ import { createContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { applyBranding } from "@shared/lib/apply-branding";
 import { resolvePublicBrand } from "@landing-public/infrastructure/public-brand.resolver";
+import { injectPwaTags } from "@landing-public/pwa/injectPwaTags";
+import { registerPublicSw } from "@landing-public/pwa/registerPublicSw";
 import { hexToHsl } from "@landing-public/utils/hex-to-hsl";
 import type { PublicBrand, PublicBrandState } from "@landing-public/domain/public-brand.types";
 import "@landing-public/styles/landing.css";
@@ -28,7 +30,7 @@ export function PublicBrandProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (typeof window === "undefined") return;
     void resolvePublicBrand(window.location.hostname).then((b) => {
-      if (b) { apply(b); setState({ status: "ready", brand: b }); } else setState({ status: "fallback" });
+      if (b) { apply(b); injectPwaTags(b); registerPublicSw(); setState({ status: "ready", brand: b }); } else setState({ status: "fallback" });
     });
   }, []);
   return <PublicBrandContext.Provider value={state}>{children}</PublicBrandContext.Provider>;
