@@ -9,7 +9,8 @@ const r = (p: string) => resolve(import.meta.dirname, p);
 
 // En Vercel: redirige el Build Output API (.vercel/output) a la RAÍZ del repo,
 // donde vive package.json. Local (node-server) mantiene apps/web/.output.
-const nitroConfig = process.env.VERCEL ? { output: { dir: r(".vercel/output") } } : {};
+const baseNitro = process.env.VERCEL ? { output: { dir: r(".vercel/output") } } : {};
+const nitroConfig = { ...baseNitro, handlers: [{ route: "/api/manifest.webmanifest", handler: r("apps/web/server/manifest-handler.ts") }] };
 
 export default defineConfig({
   root: "apps/web",
