@@ -44,4 +44,5 @@ export const esLanding = {
   lpTestimonialsTitle: "Lo que dicen nuestros clientes", lpTestimonialsPrev: "Anterior", lpTestimonialsNext: "Siguiente", lpFaqsTitle: "Preguntas frecuentes",
   lpDetailBreadcrumbHome: "Inicio", lpDetailBreadcrumbProducts: "Productos", lpDetailCtaQuote: "Cotizar este producto", lpDetailRelatedTitle: "Productos relacionados", lpDetailNotFoundTitle: "Producto no encontrado", lpDetailNotFoundBack: "Volver al inicio",
   lpContactInterestedLabel: "¿Sobre qué te interesa consultar?", lpContactInterestedGeneral: "-- Consulta general --", lpContactInterestedProducts: "Productos", lpContactInterestedServices: "Servicios", lpContactMessagePlaceholder: "Contame más sobre lo que necesitás con {item}...",
+  lpLeadInterestedIn: "Interesado en", lpLeadKindProduct: "Producto", lpLeadKindService: "Servicio",
 } satisfies Partial<Record<TranslationKey, string>>;

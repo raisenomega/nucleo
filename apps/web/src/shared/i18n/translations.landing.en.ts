@@ -44,4 +44,5 @@ export const enLanding = {
   lpTestimonialsTitle: "What our clients say", lpTestimonialsPrev: "Previous", lpTestimonialsNext: "Next", lpFaqsTitle: "Frequently asked questions",
   lpDetailBreadcrumbHome: "Home", lpDetailBreadcrumbProducts: "Products", lpDetailCtaQuote: "Quote this product", lpDetailRelatedTitle: "Related products", lpDetailNotFoundTitle: "Product not found", lpDetailNotFoundBack: "Back to home",
   lpContactInterestedLabel: "What are you interested in?", lpContactInterestedGeneral: "-- General inquiry --", lpContactInterestedProducts: "Products", lpContactInterestedServices: "Services", lpContactMessagePlaceholder: "Tell us more about what you need with {item}...",
+  lpLeadInterestedIn: "Interested in", lpLeadKindProduct: "Product", lpLeadKindService: "Service",
 } satisfies Partial<Record<TranslationKey, string>>;

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useI18n } from "@shared/i18n";
 import { supabase } from "@shared/lib/supabase";
 import type { ContactInput } from "@landing-public/presentation/contact/contact-form.schema";
 import type { InterestedItem } from "@landing-public/domain/interested-item.types";
@@ -6,13 +7,17 @@ import type { InterestedItem } from "@landing-public/domain/interested-item.type
 type State = { status: "idle" | "submitting" | "success" | "error"; confirmationMessage?: string; errorCode?: string };
 
 // Crea lead web vía _public_create_lead (RPC anon de 3.D). Con interested → form_type='quote' + product/service_id.
+// La RPC guarda message en notes (UTM concatenado después) → enriquecer message = notes legible en el CRM.
 export function useCreateLead() {
+  const { t } = useI18n();
   const [state, setState] = useState<State>({ status: "idle" });
   async function submit(input: ContactInput, interested?: InterestedItem | null) {
     setState({ status: "submitting" });
+    const kindLabel = t(interested?.kind === "service" ? "lpLeadKindService" : "lpLeadKindProduct");
+    const message = interested ? `${t("lpLeadInterestedIn")}: ${kindLabel} — ${interested.name}\n\n${input.message}` : input.message;
     const payload: Record<string, unknown> = {
       form_type: interested ? "quote" : "contact", customer_name: input.name, customer_email: input.email,
-      customer_phone: input.phone || undefined, message: input.message,
+      customer_phone: input.phone || undefined, message,
       utm: { source: (typeof document !== "undefined" && document.referrer) || undefined },
     };
     if (interested?.kind === "product") payload.product_id = interested.id;
