@@ -33,4 +33,5 @@ export const enLanding = {
   includedProducts: "Included products", includedServices: "Included services",
   pkgUnitsHelp: "Included units", pkgSessionsHelp: "Included sessions/occasions",
   pkgEmptyProducts: "No products included yet.", pkgEmptyServices: "No services included yet.",
+  webLead: "Web",
 } satisfies Partial<Record<TranslationKey, string>>;

@@ -4,8 +4,8 @@ import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import type { NavSection } from "@shared/components/sidebar.nav";
 
-export function SidebarSection({ section, expanded, isOpen, activePath, onToggleSection, onExpandAndOpen, onNavigate }: {
-  section: NavSection; expanded: boolean; isOpen: boolean; activePath: string;
+export function SidebarSection({ section, expanded, isOpen, activePath, badges, onToggleSection, onExpandAndOpen, onNavigate }: {
+  section: NavSection; expanded: boolean; isOpen: boolean; activePath: string; badges?: Partial<Record<string, number>>;
   onToggleSection: () => void; onExpandAndOpen: () => void; onNavigate: () => void;
 }) {
   const { t } = useI18n();
@@ -42,7 +42,8 @@ export function SidebarSection({ section, expanded, isOpen, activePath, onToggle
             <Link key={n.key} to={n.to} onClick={onNavigate}
               className={`${item} ${isActive(n.to) ? "font-medium" : "hover:bg-secondary"}`}>
               <n.icon className="h-4 w-4" /> {t(n.key)}
-              {isActive(n.to) && <Check className="ml-auto h-4 w-4 text-accent" />}
+              {isActive(n.to) ? <Check className="ml-auto h-4 w-4 text-accent" />
+                : badges?.[n.key] ? <span className="ml-auto rounded-full bg-destructive px-1.5 text-xs font-bold text-white">{badges[n.key]}</span> : null}
             </Link>
           ) : (
             <span key={n.key} title={t("comingSoon")} className={`${item} cursor-not-allowed text-muted-foreground opacity-50`}>

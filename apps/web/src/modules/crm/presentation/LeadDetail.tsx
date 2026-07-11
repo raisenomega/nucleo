@@ -5,6 +5,7 @@ import { useI18n } from "@shared/i18n";
 import { formatCurrency } from "@shared/lib/format";
 import { ScreenModal } from "@shared/components/ScreenModal";
 import { signEvidence } from "@finance/infrastructure/supabase-evidence.storage";
+import { useMarkLeadViewed } from "@shared/hooks/useMarkLeadViewed.hook";
 import { StatusBadge, TempBadge } from "@crm/presentation/LeadBadges";
 import { LeadDetailActions } from "@crm/presentation/LeadDetailActions";
 import type { Lead } from "@crm/domain/lead.types";
@@ -15,6 +16,7 @@ export function LeadDetail({ lead, onClose, onEdit, onDuplicate, onArchive }: {
   const { t } = useI18n();
   const [urls, setUrls] = useState<string[]>([]);
   const [photo, setPhoto] = useState<string | null>(null);
+  useMarkLeadViewed(lead.id, lead.leadSource);
   useEffect(() => { void signEvidence(lead.evidenceUrls).then(setUrls); }, [lead]);
   const row = (k: "phone" | "email" | "leadSource" | "serviceRequested", v: string) => (
     <div><dt className="inline text-muted-foreground">{t(k)}: </dt><dd className="inline">{v || "—"}</dd></div>
@@ -26,6 +28,7 @@ export function LeadDetail({ lead, onClose, onEdit, onDuplicate, onArchive }: {
           <div className="flex flex-wrap items-center gap-2">
             <h2 className="font-display text-xl font-bold text-foreground">{lead.contactName}</h2>
             <TempBadge value={lead.temperature} /><StatusBadge value={lead.status} />
+            {lead.leadSource === "web-landing" && <span className="rounded bg-accent/20 px-2 py-0.5 text-xs font-bold text-foreground">{t("webLead")}</span>}
           </div>
           <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button>
         </div>

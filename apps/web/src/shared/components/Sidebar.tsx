@@ -7,6 +7,7 @@ import { useSession } from "@shared/providers/SessionProvider";
 import { SECTIONS, LANDING_SECTION } from "@shared/components/sidebar.nav";
 import { SidebarSection } from "@shared/components/SidebarSection";
 import { SidebarUser } from "@shared/components/SidebarUser";
+import { useUnseenWebLeads } from "@shared/hooks/useUnseenWebLeads.hook";
 
 function activeSection(pathname: string): string {
   const s = SECTIONS.find((sec) => sec.items.some((i) => i.to && pathname.startsWith(i.to)));
@@ -23,6 +24,8 @@ export function Sidebar({ expanded, onClose, onToggle }: { expanded: boolean; on
   const sections = brand.landingEnabled && isCeo ? [...SECTIONS, LANDING_SECTION] : SECTIONS;
   const [openSection, setOpenSection] = useState<string>(() => activeSection(pathname));
   useEffect(() => { const s = activeSection(pathname); if (s) setOpenSection(s); }, [pathname]);
+  const { count: unseenWeb } = useUnseenWebLeads(pathname);
+  const badges = { leads: unseenWeb };
   const onNavigate = () => onClose(); // solo un link de página cierra el sidebar
   const panelActive = pathname.startsWith("/dashboard");
   return (
@@ -43,7 +46,7 @@ export function Sidebar({ expanded, onClose, onToggle }: { expanded: boolean; on
           </Link>
           <div className="my-1 border-b border-border" />
           {sections.map((s) => (
-            <SidebarSection key={s.title} section={s} expanded={expanded}
+            <SidebarSection key={s.title} section={s} expanded={expanded} badges={badges}
               isOpen={openSection === s.title} activePath={pathname}
               onToggleSection={() => setOpenSection(openSection === s.title ? "" : s.title)}
               onExpandAndOpen={() => { if (!expanded) onToggle(); setOpenSection(s.title); }}
