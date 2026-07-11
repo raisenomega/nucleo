@@ -16,6 +16,9 @@ export function SidebarSection({ section, expanded, isOpen, activePath, onToggle
   // Ruteado -> can(mod,"view"); "próximamente" (sin to) -> solo roadmap (can settings.view = coo/ceo).
   const items = section.items.filter((n) => n.to ? (n.mod ? can(n.mod, "view") : true) : can("settings", "view"));
   const hasActiveChild = items.some((n) => n.to && isActive(n.to));
+  // Expandida -> título negro/fuerte; colapsada -> gris tenue. (isOpen, no hasActiveChild.)
+  const titleTone = isOpen ? "font-semibold text-foreground" : "font-medium text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-400";
+  const chevronTone = isOpen ? "text-foreground" : "text-gray-400";
   if (items.length === 0) return null;
   if (!expanded) {
     // Colapsado: click en el icono abre el sidebar + su sección. No navega, no cierra.
@@ -28,21 +31,26 @@ export function SidebarSection({ section, expanded, isOpen, activePath, onToggle
   return (
     <div>
       <button type="button" onClick={onToggleSection}
-        className={`flex w-full cursor-pointer items-center gap-2 border-l-2 border-solid px-3 py-3 text-xs font-medium uppercase tracking-wider text-gray-400 transition-colors hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-400 ${hasActiveChild ? "border-accent" : "border-transparent"}`}>
+        style={{ borderLeftColor: hasActiveChild ? "hsl(var(--accent))" : "transparent" }}
+        className={`flex w-full cursor-pointer items-center gap-2 border-l-2 border-solid px-3 py-3 text-xs uppercase tracking-wider transition-colors ${titleTone}`}>
         <Icon className="h-4 w-4" /><span className="flex-1 text-left">{t(section.title)}</span>
-        {isOpen ? <ChevronDown className="ml-auto h-4 w-4 fill-current text-gray-400" /> : <ChevronRight className="ml-auto h-4 w-4 fill-current text-gray-400" />}
+        {isOpen ? <ChevronDown className={`ml-auto h-4 w-4 fill-current ${chevronTone}`} /> : <ChevronRight className={`ml-auto h-4 w-4 fill-current ${chevronTone}`} />}
       </button>
-      {isOpen && items.map((n) => n.to ? (
-        <Link key={n.key} to={n.to} onClick={onNavigate}
-          className={`${item} ${isActive(n.to) ? "font-medium" : "hover:bg-secondary"}`}>
-          <n.icon className="h-4 w-4" /> {t(n.key)}
-          {isActive(n.to) && <Check className="ml-auto h-4 w-4 text-accent" />}
-        </Link>
-      ) : (
-        <span key={n.key} title={t("comingSoon")} className={`${item} cursor-not-allowed text-muted-foreground opacity-50`}>
-          <n.icon className="h-4 w-4" /> {t(n.key)}
-        </span>
-      ))}
+      {isOpen && (
+        <div className="mt-1 rounded-lg bg-card p-1">
+          {items.map((n) => n.to ? (
+            <Link key={n.key} to={n.to} onClick={onNavigate}
+              className={`${item} ${isActive(n.to) ? "font-medium" : "hover:bg-secondary"}`}>
+              <n.icon className="h-4 w-4" /> {t(n.key)}
+              {isActive(n.to) && <Check className="ml-auto h-4 w-4 text-accent" />}
+            </Link>
+          ) : (
+            <span key={n.key} title={t("comingSoon")} className={`${item} cursor-not-allowed text-muted-foreground opacity-50`}>
+              <n.icon className="h-4 w-4" /> {t(n.key)}
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
