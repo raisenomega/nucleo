@@ -24,10 +24,10 @@ export function ReportSalesTab({ s }: { s: ReportSeries }) {
       </ReportChart>
       <ReportChart title={t("rIncomeByCategory")}><ReportPieChart data={pie} /></ReportChart>
       <ReportChart title={t("rTopClients")}>
-        <table className="w-full text-sm"><tbody>{s.top_clients.slice(0, 5).map((c, i) => (
+        <div className="overflow-x-auto"><table className="w-full text-sm"><tbody>{s.top_clients.slice(0, 5).map((c, i) => (
           <tr key={i} className="border-b border-border"><td className="p-2">{c.name}</td>
             <td className="p-2 text-right font-bold text-primary">{formatCurrency(c.total)}</td>
-            <td className="p-2 text-right text-muted-foreground">{c.count}</td></tr>))}</tbody></table>
+            <td className="p-2 text-right text-muted-foreground">{c.count}</td></tr>))}</tbody></table></div>
       </ReportChart>
       <ReportChart title={t("rLeadsBySource")} legend={legend}>
         <ReportBars data={src.map((c) => ({ channel: c.channel, cac: c.converted > 0 ? Math.round(c.spent / c.converted) : 0 }))} xKey="channel" bars={[{ key: "cac", name: "CAC", color: "hsl(217 91% 60%)" }]} />

@@ -25,7 +25,7 @@ export function MarketingBudgetTable({ channels, budgets, month, canEdit, onSave
         <h2 className="font-body font-bold">{t("budgetList")} · {month}</h2>
         <span className="font-body font-bold text-primary">{t("total")}: {formatCurrency(total)}</span>
       </div>
-      <table className="w-full font-body text-sm">
+      <div className="overflow-x-auto"><table className="w-full font-body text-sm">
         <thead className="bg-secondary text-xs uppercase text-muted-foreground"><tr>
           <th className={th}>{t("channel")}</th><th className={th}>{t("budgetedAmount")}</th>{canEdit && <th className={th} />}
         </tr></thead>
@@ -47,7 +47,7 @@ export function MarketingBudgetTable({ channels, budgets, month, canEdit, onSave
             </tr>
           ))}
         </tbody>
-      </table>
+      </table></div>
       <Pagination total={channels.length} page={page} onPageChange={setPage} />
     </div>
   );

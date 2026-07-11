@@ -18,13 +18,13 @@ export function ReportEmployeesTab({ emp }: { emp: EmployeePerformance[] }) {
         <ReportBars data={prod} xKey="name" bars={[{ key: "collected", name: t("collect"), color: "hsl(38 85% 55%)" }]} />
       </ReportChart>
       <ReportChart title={t("rLaborCost")}>
-        <table className="w-full text-sm"><thead><tr className="border-b border-border text-left text-xs text-muted-foreground">
+        <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="border-b border-border text-left text-xs text-muted-foreground">
           <th className="p-2">{t("employee")}</th><th className="p-2 text-right">{t("rLaborCost")}</th>
           <th className="p-2 text-right">{t("collect")}</th><th className="p-2 text-right">{t("collectionRate")}</th></tr></thead>
           <tbody>{emp.map((e) => (<tr key={e.employeeId} className="border-b border-border">
             <td className="p-2">{e.name}</td><td className="p-2 text-right">{formatCurrency(e.laborCost)}</td>
             <td className="p-2 text-right font-bold text-primary">{formatCurrency(e.incomeCollected)}</td>
-            <td className="p-2 text-right">{e.collectionRate}%</td></tr>))}</tbody></table>
+            <td className="p-2 text-right">{e.collectionRate}%</td></tr>))}</tbody></table></div>
       </ReportChart>
     </div>
   );
