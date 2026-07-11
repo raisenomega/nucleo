@@ -1,5 +1,6 @@
 import { useI18n } from "@shared/i18n";
 import { ImageUploadWithCrop } from "@shared/components/ImageUploadWithCrop";
+import { VideoUpload } from "@landing/presentation/VideoUpload";
 import type { LandingConfig, CtaType } from "@landing/domain/landing.types";
 
 export function LandingConfigHeroSection({ c, set }: { c: LandingConfig; set: (p: Partial<LandingConfig>) => void }) {
@@ -17,6 +18,9 @@ export function LandingConfigHeroSection({ c, set }: { c: LandingConfig; set: (p
       {c.heroCtaType === "custom" && <input value={c.heroCtaHref} onChange={(e) => set({ heroCtaHref: e.target.value })} placeholder={t("heroCtaHref")} className={f} />}
       <label className="text-xs font-bold text-muted-foreground">{t("heroImage")}</label>
       <ImageUploadWithCrop entityType="hero" aspectRatio={16 / 9} value={c.heroImageUrl} onUploaded={(u) => set({ heroImageUrl: u })} />
+      <label className="text-xs font-bold text-muted-foreground">{t("heroVideoLabel")}</label>
+      <VideoUpload value={c.heroVideoUrl} onChange={(u) => set({ heroVideoUrl: u })} />
+      <p className="text-xs text-muted-foreground">{t("heroVideoHelper")}</p>
     </div>
   );
 }

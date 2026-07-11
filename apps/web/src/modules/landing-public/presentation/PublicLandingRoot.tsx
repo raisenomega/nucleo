@@ -2,14 +2,16 @@ import { useI18n } from "@shared/i18n";
 import { usePublicBrand } from "@landing-public/presentation/usePublicBrand.hook";
 import { MotionProvider } from "@landing-public/motion/motion-loader";
 import { HeroContainer } from "@landing-public/primitives/HeroContainer";
-import { HeroGradientMedia } from "@landing-public/presentation/hero/HeroGradientMedia";
-import { HeroPlaceholder } from "@landing-public/presentation/hero/HeroPlaceholder";
+import { HeroMedia } from "@landing-public/presentation/hero/HeroMedia";
+import { HeroFlat } from "@landing-public/presentation/hero/HeroFlat";
 import { PublicNav } from "@landing-public/presentation/nav/PublicNav";
+import { useLandingHome } from "@landing-public/presentation/useLandingHome.hook";
 
-// Home pública (3.E.2.d): hero placeholder end-to-end con primitives Glass Liquid + motion.
+// Home pública (3.E.3): hero data-driven full-screen (config real vía _public_get_landing_home).
 export function PublicLandingRoot() {
   const { t } = useI18n();
   const s = usePublicBrand();
+  const home = useLandingHome();
   if (s.status === "loading") return <div className="min-h-screen bg-background" />;
   if (s.status === "fallback") {
     const bare = typeof window !== "undefined" ? window.location.hostname.replace(/^www\./, "") : "";
@@ -21,12 +23,13 @@ export function PublicLandingRoot() {
       </main>
     );
   }
+  const hero = (home?.hero as Record<string, unknown> | null) ?? null;
   return (
     <MotionProvider>
       <div className="lp-root min-h-screen">
         <PublicNav displayName={s.brand.displayName} logoUrl={s.brand.logoUrl} />
-        <HeroContainer mediaSlot={<HeroGradientMedia />}>
-          <HeroPlaceholder displayName={s.brand.displayName} />
+        <HeroContainer mediaSlot={<HeroMedia videoUrl={(hero?.hero_video_url as string) ?? null} imageUrl={(hero?.hero_image_url as string) ?? null} />}>
+          <HeroFlat hero={hero} displayName={s.brand.displayName} />
         </HeroContainer>
       </div>
     </MotionProvider>
