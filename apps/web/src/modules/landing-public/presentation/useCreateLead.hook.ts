@@ -16,15 +16,15 @@ export function useCreateLead() {
     const KIND: Record<InterestedItem["kind"], "lpLeadKindProduct" | "lpLeadKindService" | "lpLeadKindPackage"> =
       { product: "lpLeadKindProduct", service: "lpLeadKindService", package: "lpLeadKindPackage" };
     const message = interested ? `${t("lpLeadInterestedIn")}: ${t(KIND[interested.kind])} — ${interested.name}\n\n${input.message}` : input.message;
-    // La RPC solo acepta product_id/service_id y rechaza quote sin id → package viaja como 'contact' (id en notes). Follow-up: package_id.
-    const isQuote = !!interested && interested.kind !== "package";
+    // Cualquier item seleccionado → quote real (la RPC acepta product/service/package_id desde migr 135).
     const payload: Record<string, unknown> = {
-      form_type: isQuote ? "quote" : "contact", customer_name: input.name, customer_email: input.email,
+      form_type: interested ? "quote" : "contact", customer_name: input.name, customer_email: input.email,
       customer_phone: input.phone || undefined, message,
       utm: { source: (typeof document !== "undefined" && document.referrer) || undefined },
     };
     if (interested?.kind === "product") payload.product_id = interested.id;
     if (interested?.kind === "service") payload.service_id = interested.id;
+    if (interested?.kind === "package") payload.package_id = interested.id;
     const { data, error } = await supabase.rpc("_public_create_lead", { _hostname: window.location.hostname, _payload: payload, _client_ip: null });
     const d = data as { status?: string; code?: string; confirmation_message?: string } | null;
     if (error || !d) return setState({ status: "error", errorCode: "network" });
