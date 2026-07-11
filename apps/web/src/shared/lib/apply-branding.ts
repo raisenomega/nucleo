@@ -18,7 +18,7 @@ export function applyBranding(b: { tenantId: string; displayName: string; legalN
   const root = document.documentElement.style;
   for (const k in vars) root.setProperty(k, vars[k]!);
   document.title = b.displayName || b.legalName || "NÚCLEO by raisen";
-  if (b.faviconUrl) setFavicon(b.faviconUrl);
+  if (b.faviconUrl) { clearStaticIcons(); setFavicon(b.faviconUrl); }
   else if (b.theme.primaryColor) applyFavicon(b.theme.primaryColor, b.displayName || b.legalName);
   if (!localStorage.getItem("theme")) document.documentElement.classList.toggle("dark", resolveMode(b.theme.defaultMode));
   try {
@@ -37,6 +37,12 @@ function applyFavicon(color: string, name: string): void {
   g.font = "bold 20px system-ui, sans-serif"; g.textAlign = "center"; g.textBaseline = "middle";
   g.fillText((name.trim()[0] || "N").toUpperCase(), 16, 17);
   setFavicon(c.toDataURL("image/png"));
+}
+
+// Neutraliza los <link rel=icon> estáticos (SVG/ICO de NÚCLEO) quitándoles rel (sin removeChild →
+// no rompe hidratación) para que el browser no los prefiera sobre el favicon propio del tenant.
+function clearStaticIcons(): void {
+  document.querySelectorAll("link[rel~='icon']:not([data-dynamic-icon])").forEach((l) => l.removeAttribute("rel"));
 }
 
 // Usa UN link dedicado (data-dynamic-icon), appendeado al final para que el browser lo prefiera.
