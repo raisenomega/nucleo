@@ -1,0 +1,18 @@
+import type { TranslationKey } from "./translations.keys";
+
+// Diccionario suplementario (Landing panel). Se fusiona en translations.ts.
+export const esLanding = {
+  search: "Buscar", preview: "Vista previa", name: "Nombre", active: "Activo", order: "Orden",
+  uploadError: "No se pudo subir la imagen", saved: "Guardado", selectIcon: "Elegir icono",
+  monday: "Lunes", tuesday: "Martes", wednesday: "Miércoles", thursday: "Jueves", friday: "Viernes", saturday: "Sábado", sunday: "Domingo",
+  landing: "Landing", landingConfig: "Configuración", landingCategories: "Categorías",
+  hero: "Hero", heroTitle: "Título", heroSubtitle: "Subtítulo", heroCtaLabel: "Texto del botón",
+  heroCtaType: "Acción del botón", heroCtaHref: "Enlace personalizado", heroImage: "Imagen hero",
+  ctaQuote: "Solicitar cotización", ctaOrder: "Comprar", ctaContact: "Contacto", ctaCustom: "Personalizado",
+  metaSeo: "Meta / SEO", metaTitle: "Meta título", metaDescription: "Meta descripción", metaKeywords: "Palabras clave", metaOgImage: "Imagen OG",
+  contactSection: "Contacto", publicPhone: "Teléfono", publicWhatsapp: "WhatsApp", publicEmail: "Email", publicAddress: "Dirección", businessHoursLabel: "Horario",
+  socialSection: "Redes sociales", schemaSection: "Schema / Negocio local", businessType: "Tipo de negocio",
+  geoLat: "Latitud", geoLng: "Longitud", priceRange: "Rango de precio",
+  newCategory: "Nueva categoría", categoryType: "Tipo", iconLabel: "Icono", imageLabel: "Imagen", displayOrder: "Orden",
+  catProduct: "Producto", catService: "Servicio", catBoth: "Ambos", confirmDelete: "¿Eliminar? Esta acción no se puede deshacer.",
+} satisfies Partial<Record<TranslationKey, string>>;

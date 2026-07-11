@@ -28,6 +28,7 @@ export default defineConfig({
       "@documents": r("apps/web/src/modules/documents"),
       "@billing": r("apps/web/src/modules/billing"),
       "@quotes": r("apps/web/src/modules/quotes"),
+      "@landing": r("apps/web/src/modules/landing"),
       "@admin": r("apps/web/src/modules/admin"),
       "@shared": r("apps/web/src/shared"),
       "@brand": r("brand"),

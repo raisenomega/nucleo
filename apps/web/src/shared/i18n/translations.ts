@@ -24,8 +24,10 @@ import { esPdf } from "./translations.pdf.es";
 import { enPdf } from "./translations.pdf.en";
 import { esBrand } from "./translations.brand.es";
 import { enBrand } from "./translations.brand.en";
+import { esLanding } from "./translations.landing.es";
+import { enLanding } from "./translations.landing.en";
 
 export const translations: Record<Locale, Record<TranslationKey, string>> = {
-  es: { ...es, ...esRecon, ...esPayroll, ...esEmployee, ...esRoutes, ...esReports, ...esHr, ...esDocs, ...esBilling, ...esQuotes, ...esPdf, ...esBrand },
-  en: { ...en, ...enRecon, ...enPayroll, ...enEmployee, ...enRoutes, ...enReports, ...enHr, ...enDocs, ...enBilling, ...enQuotes, ...enPdf, ...enBrand },
+  es: { ...es, ...esRecon, ...esPayroll, ...esEmployee, ...esRoutes, ...esReports, ...esHr, ...esDocs, ...esBilling, ...esQuotes, ...esPdf, ...esBrand, ...esLanding },
+  en: { ...en, ...enRecon, ...enPayroll, ...enEmployee, ...enRoutes, ...enReports, ...enHr, ...enDocs, ...enBilling, ...enQuotes, ...enPdf, ...enBrand, ...enLanding },
 };

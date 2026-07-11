@@ -3,7 +3,8 @@ import { Link, useLocation } from "@tanstack/react-router";
 import { LayoutDashboard } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useBrand } from "@shared/providers/BrandProvider";
-import { SECTIONS } from "@shared/components/sidebar.nav";
+import { useSession } from "@shared/providers/SessionProvider";
+import { SECTIONS, LANDING_SECTION } from "@shared/components/sidebar.nav";
 import { SidebarSection } from "@shared/components/SidebarSection";
 import { SidebarUser } from "@shared/components/SidebarUser";
 
@@ -15,7 +16,11 @@ function activeSection(pathname: string): string {
 export function Sidebar({ expanded, onClose, onToggle }: { expanded: boolean; onClose: () => void; onToggle: () => void }) {
   const { t } = useI18n();
   const brand = useBrand();
+  const { session } = useSession();
   const { pathname } = useLocation();
+  // Landing solo si el tenant lo tiene activo Y el usuario es CEO/superadmin (coherente con RLS).
+  const isCeo = session?.role === "ceo" || session?.role === "superadmin";
+  const sections = brand.landingEnabled && isCeo ? [...SECTIONS, LANDING_SECTION] : SECTIONS;
   const [openSection, setOpenSection] = useState<string>(() => activeSection(pathname));
   useEffect(() => { const s = activeSection(pathname); if (s) setOpenSection(s); }, [pathname]);
   const onNavigate = () => onClose(); // solo un link de página cierra el sidebar
@@ -36,7 +41,7 @@ export function Sidebar({ expanded, onClose, onToggle }: { expanded: boolean; on
             <LayoutDashboard className="h-5 w-5" />{expanded && <span>{t("panel")}</span>}
           </Link>
           <div className="my-1 border-b border-border" />
-          {SECTIONS.map((s) => (
+          {sections.map((s) => (
             <SidebarSection key={s.title} section={s} expanded={expanded}
               isOpen={openSection === s.title} activePath={pathname}
               onToggleSection={() => setOpenSection(openSection === s.title ? "" : s.title)}

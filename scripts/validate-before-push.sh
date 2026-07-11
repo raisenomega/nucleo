@@ -79,11 +79,14 @@ if [ -n "$AUTH" ]; then fail_block "$AUTH"; else ok_line; fi
 # - settings: configuración plataforma.
 # - tenant_order_counters: correlativos globales.
 # - rate_limit_public: throttle público pre-resolución de token (tenant aún desconocido).
+# Exenciones legítimas a la regla tenant_id obligatorio:
+# 1. Tablas globales-por-diseño: tenants, categories, settings, tenant_order_counters, rate_limit_public.
+# 2. Sub-estructuras que heredan tenant_id del parent (partition of).
 section "8. Migraciones con tabla sin tenant_id:"
 NO_TENANT=""
 if [ -d "$MIG_DIR" ]; then
   while IFS= read -r f; do
-    if grep -qiE "create table[[:space:]]+(if not exists[[:space:]]+)?(public\.)?(tenants|categories|settings|tenant_order_counters|rate_limit_public)" "$f"; then
+    if grep -qiE "create table[[:space:]]+(if not exists[[:space:]]+)?(public\.)?(tenants|categories|settings|tenant_order_counters|rate_limit_public)" "$f" || grep -qiE "partition of" "$f"; then
       continue
     fi
     if grep -qiE "create table" "$f" && ! grep -qE "tenant_id[[:space:]]+uuid" "$f"; then
