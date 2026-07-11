@@ -12,9 +12,11 @@
     "validate": "bash scripts/validate-before-push.sh"
   },
   "dependencies": {
+    "@fontsource/inter": "^5.2.8",
     "@supabase/supabase-js": "^2.45.0",
     "@tanstack/react-router": "^1.87.0",
     "@tanstack/react-start": "^1.87.0",
+    "framer-motion": "^12.42.2",
     "lucide-react": "^1.23.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
