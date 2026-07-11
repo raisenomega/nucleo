@@ -6,6 +6,7 @@ import { HeroMedia } from "@landing-public/presentation/hero/HeroMedia";
 import { HeroFlat } from "@landing-public/presentation/hero/HeroFlat";
 import { PublicNav } from "@landing-public/presentation/nav/PublicNav";
 import { useLandingHome } from "@landing-public/presentation/useLandingHome.hook";
+import { HomeSections } from "@landing-public/presentation/HomeSections";
 
 // Home pública (3.E.3): hero data-driven full-screen (config real vía _public_get_landing_home).
 export function PublicLandingRoot() {
@@ -23,7 +24,7 @@ export function PublicLandingRoot() {
       </main>
     );
   }
-  const hero = (home?.hero as Record<string, unknown> | null) ?? null;
+  const hero = home?.hero ?? null;
   return (
     <MotionProvider>
       <div className="lp-root min-h-screen">
@@ -31,6 +32,7 @@ export function PublicLandingRoot() {
         <HeroContainer mediaSlot={<HeroMedia videoUrl={(hero?.hero_video_url as string) ?? null} imageUrl={(hero?.hero_image_url as string) ?? null} />}>
           <HeroFlat hero={hero} displayName={s.brand.displayName} />
         </HeroContainer>
+        <HomeSections home={home} />
       </div>
     </MotionProvider>
   );

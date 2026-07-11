@@ -38,4 +38,5 @@ export const esLanding = {
   lpHeroSubtitle: "Bienvenido a nuestro sitio", lpHeroCta: "Contáctanos", lpNavMenu: "Navegación",
   heroVideoLabel: "Video del hero (opcional, máx 50MB)", heroVideoHelper: "Si hay video se muestra en autoplay muted loop; la imagen se usa como poster.", heroVideoTooSize: "El video excede 50MB.", heroVideoUploading: "Subiendo video…", heroVideoRemove: "Quitar video",
   uploadSelectImage: "Seleccionar imagen", uploadSelectVideo: "Seleccionar video", uploadSelectFile: "Seleccionar archivo", uploadReplace: "Cambiar", uploadRemove: "Eliminar", uploadUploading: "Subiendo…",
+  lpSectionCategories: "Categorías", lpSectionProducts: "Productos destacados", lpSectionServices: "Servicios destacados", lpSectionPackages: "Paquetes", lpFromPrice: "Desde {price}", lpPerHour: "{price} por hora", lpRequestQuote: "Solicitar cotización", lpFinalCtaTitle: "¿Listo para empezar?", lpFinalCtaSubtitle: "Contáctanos hoy y recibí una respuesta rápida.", lpFinalCtaLabel: "Contáctanos", lpComingSoon: "Próximamente…",
 } satisfies Partial<Record<TranslationKey, string>>;

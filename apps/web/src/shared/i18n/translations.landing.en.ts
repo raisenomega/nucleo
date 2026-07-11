@@ -38,4 +38,5 @@ export const enLanding = {
   lpHeroSubtitle: "Welcome to our site", lpHeroCta: "Contact us", lpNavMenu: "Navigation",
   heroVideoLabel: "Hero video (optional, max 50MB)", heroVideoHelper: "If a video is set it plays autoplay muted loop; the image is used as poster.", heroVideoTooSize: "Video exceeds 50MB.", heroVideoUploading: "Uploading video…", heroVideoRemove: "Remove video",
   uploadSelectImage: "Select image", uploadSelectVideo: "Select video", uploadSelectFile: "Select file", uploadReplace: "Replace", uploadRemove: "Remove", uploadUploading: "Uploading…",
+  lpSectionCategories: "Categories", lpSectionProducts: "Featured products", lpSectionServices: "Featured services", lpSectionPackages: "Packages", lpFromPrice: "From {price}", lpPerHour: "{price} per hour", lpRequestQuote: "Request quote", lpFinalCtaTitle: "Ready to start?", lpFinalCtaSubtitle: "Contact us today for a quick response.", lpFinalCtaLabel: "Contact us", lpComingSoon: "Coming soon…",
 } satisfies Partial<Record<TranslationKey, string>>;

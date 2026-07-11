@@ -1,0 +1,17 @@
+import { GlassCard } from "@landing-public/primitives/GlassCard";
+import { formatPrice } from "@landing-public/utils/format-price";
+import type { HomePackage } from "@landing-public/domain/landing-home.types";
+
+export function PackageCard({ pkg: p, onClick }: { pkg: HomePackage; onClick: () => void }) {
+  return (
+    <button type="button" onClick={onClick} className="block w-full text-left">
+      <GlassCard elevation="md" padding="sm" className="relative">
+        {p.badge_label && <span className="absolute right-3 top-3 z-10 rounded-full px-2 py-0.5 text-xs font-bold text-white" style={{ background: "hsl(var(--tenant-accent-hsl))" }}>{p.badge_label}</span>}
+        {p.primary_image_url && <img src={p.primary_image_url} alt={p.name} loading="lazy" width={640} height={360} className="mb-3 aspect-video w-full rounded-lg object-cover" />}
+        <h3 className="font-bold">{p.name}</h3>
+        {p.short_description && <p className="mt-1 line-clamp-2 text-sm text-[color:hsl(var(--lp-muted))]">{p.short_description}</p>}
+        <span className="mt-2 block font-bold">{formatPrice(p.price, p.currency)}</span>
+      </GlassCard>
+    </button>
+  );
+}
