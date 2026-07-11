@@ -55,4 +55,6 @@ export const enLanding = {
   lpServiceDuration: "Duration", lpServiceRequiresScheduling: "Requires booking",
   lpPackageIncludesTitle: "This package includes", lpPackageFeaturesTitle: "Benefits", lpPackageIncludedProductsTitle: "Included products", lpPackageIncludedServicesTitle: "Included services",
   lpPackageQtyUnits: "×{qty} units", lpPackageQtySessions: "×{qty} sessions",
+  lpInstallButton: "Install app", lpIosModalTitle: "Install {name} on your iPhone",
+  lpIosModalStep1: "Tap the share icon 📤 in Safari", lpIosModalStep2: "Scroll and tap 'Add to Home Screen' ➕", lpIosModalStep3: "Tap 'Add' and {name} appears as an app 🎉", lpIosModalClose: "Got it",
 } satisfies Partial<Record<TranslationKey, string>>;

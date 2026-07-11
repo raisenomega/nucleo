@@ -1,5 +1,6 @@
 import { Phone, Mail, MessageCircle } from "lucide-react";
 import { useI18n } from "@shared/i18n";
+import { InstallButton } from "@landing-public/presentation/pwa/InstallButton";
 import type { PublicBrand } from "@landing-public/domain/public-brand.types";
 
 const SOCIALS = [["facebook", "f"], ["instagram", "IG"], ["youtube", "YT"], ["tiktok", "TT"]] as const;
@@ -33,7 +34,7 @@ export function PublicFooter({ brand, tagline }: { brand: PublicBrand; tagline: 
       </div>
       <div className="mx-auto mt-10 flex max-w-7xl flex-wrap items-center justify-between gap-4 border-t border-[color:var(--glass-border)] pt-6 text-xs text-[color:hsl(var(--lp-muted))]">
         <span>© {year} {brand.displayName}. {t("lpFooterRights")}.</span>
-        <div className="flex gap-4"><a href="https://blog.zramos.com">{t("lpFooterBlog")}</a><a href="#">{t("lpFooterPrivacy")}</a><a href="#">{t("lpFooterTerms")}</a></div>
+        <div className="flex flex-wrap items-center gap-4"><InstallButton displayName={brand.displayName} variant="link" /><a href="https://blog.zramos.com">{t("lpFooterBlog")}</a><a href="#">{t("lpFooterPrivacy")}</a><a href="#">{t("lpFooterTerms")}</a></div>
       </div>
     </footer>
   );

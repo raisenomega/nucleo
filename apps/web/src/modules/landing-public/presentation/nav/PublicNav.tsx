@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { Moon, Sun } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { NavGlass } from "@landing-public/primitives/NavGlass";
+import { InstallButton } from "@landing-public/presentation/pwa/InstallButton";
 
 // Nav público: display_name a la izquierda + toggles (dark/lang) a la derecha. El dark toggle controla
 // data-theme del <html> (sistema de tema de la landing, no el .dark del panel). Menú de items → 3.E.3.
@@ -23,6 +24,7 @@ export function PublicNav({ displayName, logoUrl }: { displayName: string; logoU
       <div className="flex items-center gap-1">
         <button type="button" onClick={toggleTheme} aria-label={t("darkMode")} className={btn}>{dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}</button>
         <button type="button" onClick={() => setLocale(locale === "es" ? "en" : "es")} aria-label={t("switchLang")} className={`${btn} text-sm font-bold`}>{locale === "es" ? "EN" : "ES"}</button>
+        <InstallButton displayName={displayName} />
       </div>
     </NavGlass>
   );

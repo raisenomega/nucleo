@@ -55,4 +55,6 @@ export const esLanding = {
   lpServiceDuration: "Duración", lpServiceRequiresScheduling: "Requiere agenda",
   lpPackageIncludesTitle: "Este paquete incluye", lpPackageFeaturesTitle: "Beneficios", lpPackageIncludedProductsTitle: "Productos incluidos", lpPackageIncludedServicesTitle: "Servicios incluidos",
   lpPackageQtyUnits: "×{qty} unidades", lpPackageQtySessions: "×{qty} sesiones",
+  lpInstallButton: "Instalar app", lpIosModalTitle: "Instalá {name} en tu iPhone",
+  lpIosModalStep1: "Tocá el ícono compartir 📤 en Safari", lpIosModalStep2: "Deslizá y elegí 'Añadir a pantalla de inicio' ➕", lpIosModalStep3: "Tocá 'Añadir' y {name} aparece como app 🎉", lpIosModalClose: "Entendido",
 } satisfies Partial<Record<TranslationKey, string>>;
