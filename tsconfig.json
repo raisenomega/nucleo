@@ -36,6 +36,7 @@
       "@billing/*":   ["./apps/web/src/modules/billing/*"],
       "@quotes/*":    ["./apps/web/src/modules/quotes/*"],
       "@landing/*":   ["./apps/web/src/modules/landing/*"],
+      "@landing-public/*": ["./apps/web/src/modules/landing-public/*"],
       "@admin/*":     ["./apps/web/src/modules/admin/*"],
       "@shared/*":    ["./apps/web/src/shared/*"],
       "@brand/*":     ["./brand/*"]

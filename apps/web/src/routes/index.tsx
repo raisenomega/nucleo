@@ -1,8 +1,10 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useI18n } from "@shared/i18n";
 import { isRaisenHost } from "@shared/lib/brand-host";
-import { useRaisenGuard } from "@shared/hooks/useRaisenGuard";
 import { useMounted } from "@shared/hooks/useMounted";
+import { PublicBrandProvider } from "@landing-public/presentation/PublicBrandProvider";
+import { PublicLandingRoot } from "@landing-public/presentation/PublicLandingRoot";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -10,10 +12,16 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const { t } = useI18n();
-  useRaisenGuard();
+  const nav = useNavigate();
   const mounted = useMounted();
+  const host = mounted ? window.location.hostname : "";
+  const isLanding = mounted && !isRaisenHost() && !host.startsWith("app."); // dominio raíz del tenant → landing pública
+  useEffect(() => { // app.{tenant}.com → panel; el resto no-Raisen no-app → landing (no redirige)
+    if (mounted && !isRaisenHost() && host.startsWith("app.")) void nav({ to: "/login" });
+  }, [mounted, host, nav]);
   if (!mounted) return <div className="min-h-screen bg-background" />; // SSR/1er render: placeholder neutro
-  if (!isRaisenHost()) return null; // D4: en dominios de tenant redirige a /login (sin flash de marca Raisen)
+  if (isLanding) return <PublicBrandProvider><PublicLandingRoot /></PublicBrandProvider>;
+  if (!isRaisenHost()) return null; // app.* → redirigiendo a /login
   return (
     <main className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
       <div className="text-center">
