@@ -1,17 +1,18 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { getPlatform, isStandalone } from "@landing-public/pwa/detectPlatform";
 
 type BIPEvent = Event & { prompt: () => Promise<void>; userChoice: Promise<{ outcome: string }> };
 
-// Captura beforeinstallprompt (Chromium), detecta iOS y "ya instalada". Cleanup de listeners en unmount.
+// Captura beforeinstallprompt (Chromium) en un ref (siempre vivo, sin stale-closure), detecta iOS y "ya instalada".
 export function useInstallPrompt() {
-  const [deferred, setDeferred] = useState<BIPEvent | null>(null);
+  const deferred = useRef<BIPEvent | null>(null);
+  const [ready, setReady] = useState(false);
   const [installed, setInstalled] = useState(false);
   const isIOS = getPlatform() === "ios-safari";
   useEffect(() => {
     if (isStandalone()) setInstalled(true);
-    const onBIP = (e: Event) => { e.preventDefault(); setDeferred(e as BIPEvent); };
-    const onInstalled = () => { setInstalled(true); setDeferred(null); };
+    const onBIP = (e: Event) => { e.preventDefault(); deferred.current = e as BIPEvent; setReady(true); };
+    const onInstalled = () => { setInstalled(true); deferred.current = null; setReady(false); };
     window.addEventListener("beforeinstallprompt", onBIP);
     window.addEventListener("appinstalled", onInstalled);
     return () => {
@@ -19,11 +20,12 @@ export function useInstallPrompt() {
       window.removeEventListener("appinstalled", onInstalled);
     };
   }, []);
-  async function promptInstall() {
-    if (!deferred) return;
-    await deferred.prompt();
-    await deferred.userChoice;
-    setDeferred(null);
-  }
-  return { canInstall: !installed && (isIOS || deferred !== null), isIOS, isInstalled: installed, promptInstall, dismissPrompt: () => setDeferred(null) };
+  const promptInstall = useCallback(async () => {
+    const e = deferred.current;
+    if (!e) return;
+    await e.prompt(); // invocado dentro del gesto del usuario (antes de cualquier await asíncrono previo)
+    await e.userChoice;
+    deferred.current = null; setReady(false);
+  }, []);
+  return { canInstall: !installed && (isIOS || ready), isIOS, isInstalled: installed, promptInstall, dismissPrompt: () => { deferred.current = null; setReady(false); } };
 }
