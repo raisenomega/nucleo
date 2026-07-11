@@ -28,7 +28,7 @@ export function Sidebar({ expanded, onClose, onToggle }: { expanded: boolean; on
   return (
     <>
       {expanded && <div className="fixed inset-0 z-30 bg-black/50 md:hidden" onClick={onClose} />}
-      <aside className={`fixed z-40 flex h-full flex-col border-r border-border bg-card transition-all duration-300 md:translate-x-0 ${expanded ? "w-60 translate-x-0" : "w-60 -translate-x-full md:w-16"}`}>
+      <aside className={`fixed z-40 flex h-full flex-col border-r border-border bg-sidebar-background transition-all duration-300 md:translate-x-0 ${expanded ? "w-60 translate-x-0" : "w-60 -translate-x-full md:w-16"}`}>
         <button type="button" onClick={onToggle} aria-label={t("menu")} className="flex items-center gap-2 border-b border-border px-4 py-5 text-left">
           {brand.logoUrl
             ? <img src={brand.logoUrl} alt="" className="h-9 w-9 shrink-0 rounded-full object-cover" />

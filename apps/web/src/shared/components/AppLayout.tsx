@@ -19,7 +19,7 @@ export function AppLayout() {
             <MessageCircle className="h-4 w-4" /> <span className="hidden sm:inline">{t("aiChat")}</span>
           </button>
         </header>
-        <main className="min-w-0 flex-1 pb-20 md:pb-0"><Outlet /></main>
+        <main className="min-w-0 flex-1 bg-card pb-20 md:pb-0"><Outlet /></main>
       </div>
       <MobileNav />
     </div>
