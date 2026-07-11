@@ -35,4 +35,5 @@ export const enLanding = {
   pkgEmptyProducts: "No products included yet.", pkgEmptyServices: "No services included yet.",
   webLead: "Web",
   lpFallbackTitle: "Site unavailable", lpFallbackMsg: "This portal has no public page enabled yet.", lpGoToPanel: "Go to panel",
+  lpHeroSubtitle: "Welcome to our site", lpHeroCta: "Contact us", lpNavMenu: "Navigation",
 } satisfies Partial<Record<TranslationKey, string>>;

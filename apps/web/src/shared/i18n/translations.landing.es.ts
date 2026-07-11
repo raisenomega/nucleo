@@ -35,4 +35,5 @@ export const esLanding = {
   pkgEmptyProducts: "Sin productos incluidos aún.", pkgEmptyServices: "Sin servicios incluidos aún.",
   webLead: "Web",
   lpFallbackTitle: "Sitio no disponible", lpFallbackMsg: "Este portal no tiene una página pública activa todavía.", lpGoToPanel: "Ir al panel",
+  lpHeroSubtitle: "Bienvenido a nuestro sitio", lpHeroCta: "Contáctanos", lpNavMenu: "Navegación",
 } satisfies Partial<Record<TranslationKey, string>>;

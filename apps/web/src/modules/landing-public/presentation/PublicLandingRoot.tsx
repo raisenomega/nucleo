@@ -1,7 +1,12 @@
 import { useI18n } from "@shared/i18n";
 import { usePublicBrand } from "@landing-public/presentation/usePublicBrand.hook";
+import { MotionProvider } from "@landing-public/motion/motion-loader";
+import { HeroContainer } from "@landing-public/primitives/HeroContainer";
+import { HeroGradientMedia } from "@landing-public/presentation/hero/HeroGradientMedia";
+import { HeroPlaceholder } from "@landing-public/presentation/hero/HeroPlaceholder";
+import { PublicNav } from "@landing-public/presentation/nav/PublicNav";
 
-// Home pública mínima (3.E.2.a): prueba que el provider resuelve. Diseño real en 3.E.2.b-d.
+// Home pública (3.E.2.d): hero placeholder end-to-end con primitives Glass Liquid + motion.
 export function PublicLandingRoot() {
   const { t } = useI18n();
   const s = usePublicBrand();
@@ -17,8 +22,13 @@ export function PublicLandingRoot() {
     );
   }
   return (
-    <main className="flex min-h-screen items-center justify-center bg-background p-4 text-foreground">
-      <h1 className="font-display text-5xl font-bold text-primary">{s.brand.displayName}</h1>
-    </main>
+    <MotionProvider>
+      <div className="lp-root min-h-screen">
+        <PublicNav displayName={s.brand.displayName} />
+        <HeroContainer mediaSlot={<HeroGradientMedia />}>
+          <HeroPlaceholder displayName={s.brand.displayName} />
+        </HeroContainer>
+      </div>
+    </MotionProvider>
   );
 }
