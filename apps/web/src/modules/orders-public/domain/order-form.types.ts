@@ -7,7 +7,10 @@ export interface OrderFormField {
   conditionalOn: { field: string; value: string } | null;
 }
 export interface OrderForm { id: string; name: string; fields: OrderFormField[]; }
-export interface PaymentOption { methodKey: string; nameEs: string; nameEn: string; }
+export interface PaymentOption {
+  methodKey: string; nameEs: string; nameEn: string;
+  instructionsEs: string; instructionsEn: string; athNumber: string | null;
+}
 
 export interface OrderItemInput { kind: "product" | "service" | "package"; id: string; qty: number; name: string; }
 export interface CreateOrderInput {
@@ -15,7 +18,7 @@ export interface CreateOrderInput {
   paymentMethodKey: string; couponCode: string | null; clientTotal: number;
 }
 export type OrderResult =
-  | { ok: true; orderNumber: string }
+  | { ok: true; orderNumber: string; orderId: string }
   | { ok: false; code: string; errors?: { field: string; error: string }[] };
 
 // Reglas de pricing crudas (para preview client-side espejo del server).

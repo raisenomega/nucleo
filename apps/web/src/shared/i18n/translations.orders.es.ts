@@ -17,4 +17,9 @@ export const esOrders = {
   ordActionConfirm: "Marcar como cobrada", ordActionChangeStatus: "Cambiar estado", ordActionView: "Ver",
   ordLinkedInvoice: "Factura", ordLinkedLead: "Lead", ordBack: "Volver a órdenes",
   ordErrAlreadyConfirmed: "La orden ya está cobrada", ordErrForbidden: "No autorizado",
+  ordStatusAwaitingConfirm: "Esperando verificación",
+  ordAwaitingBanner: "El cliente confirmó que envió el pago. Verificá en tu ATH Móvil y marcá cobrada, o reportá si no llegó.",
+  ordConfirmReceivedTitle: "Confirmar pago recibido", ordConfirmReceivedCheck: "Verifiqué el pago en mi cuenta ATH Móvil",
+  ordActionConfirmReceived: "Confirmar pago recibido", ordActionReport: "Reportar no recibido",
+  ordReportTitle: "Reportar pago no recibido", ordReportReason: "Motivo", ordReportBtn: "Reportar", ordReportSuccess: "Reportado · orden vuelve a pendiente",
 } satisfies Partial<Record<TranslationKey, string>>;

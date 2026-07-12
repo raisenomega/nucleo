@@ -22,16 +22,16 @@ export function OrderModal({ item, onClose }: { item: OrderItem; onClose: () => 
   const { busy, submit } = useCreateOrder();
   const [values, setValues] = useState<Record<string, unknown>>({});
   const [pm, setPm] = useState(""); const [coupon, setCoupon] = useState<string | null>(null);
-  const [done, setDone] = useState<string | null>(null);
+  const [done, setDone] = useState<{ orderNumber: string; orderId: string } | null>(null);
   useEffect(() => { if (methods[0] && !pm) setPm(methods[0].methodKey); }, [methods, pm]);
   const items = [{ kind: item.kind, id: item.id, qty: 1, name: item.name }];
   const totals = rules ? computeTotal(items, values, rules, () => item.basePrice) : { subtotal: item.basePrice, tax: 0, shipping: 0, total: item.basePrice };
   async function onSubmit() {
     if (!form) return;
     const r = await submit({ formId: form.id, items, customFields: values, paymentMethodKey: pm, couponCode: coupon, clientTotal: totals.total });
-    if (r.ok) setDone(r.orderNumber); else toast.error(t((ERR[r.code] ?? "opErrNetwork") as Parameters<typeof t>[0]));
+    if (r.ok) setDone({ orderNumber: r.orderNumber, orderId: r.orderId }); else toast.error(t((ERR[r.code] ?? "opErrNetwork") as Parameters<typeof t>[0]));
   }
-  if (done) return <OrderSuccessDialog orderNumber={done} onClose={onClose} />;
+  if (done) return <OrderSuccessDialog orderNumber={done.orderNumber} orderId={done.orderId} method={methods.find((m) => m.methodKey === pm) ?? null} total={totals.total} itemName={item.name} onClose={onClose} />;
   return (
     <ScreenModal onClose={onClose}>
       <div className="flex items-center justify-between border-b border-border p-4">

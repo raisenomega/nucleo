@@ -7,4 +7,6 @@ export const esOrdersPublic = {
   opErrForm: "Revisá los campos del formulario.", opErrTotal: "El total no coincide. Recargá e intentá de nuevo.",
   opErrRate: "Demasiados intentos. Esperá un momento.", opErrCoupon: "Cupón inválido.", opErrPayment: "Método de pago no disponible.",
   opErrNetwork: "No se pudo enviar la orden.", opOrderBtn: "Ordenar", opSubscribeBtn: "Suscribirme",
+  opCopyDetails: "Copiar detalles", opAthSent: "Ya envié el pago", opUnderstood: "Entendido",
+  opAthThanks: "¡Gracias! Verificaremos tu pago y confirmaremos por email en menos de 24 horas.",
 } satisfies Partial<Record<TranslationKey, string>>;

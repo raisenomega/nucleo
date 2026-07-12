@@ -7,6 +7,7 @@ export interface OrderRow {
   total: number; currency: string | null; status: OrderStatus; source_hostname: string | null;
   utm_source: string | null; utm_medium: string | null; utm_campaign: string | null;
   linked_lead_id: string | null; linked_invoice_id: string | null; created_at: string; paid_at: string | null;
+  payment_method_key: string | null; client_confirmed_at: string | null;
 }
 const num = (v: unknown) => (typeof v === "number" ? v : Number(v) || 0);
 const toItems = (v: unknown): OrderItem[] => (Array.isArray(v) ? v.map((i) => ({
@@ -19,7 +20,7 @@ export const toOrder = (r: OrderRow): Order => ({
   shipping: num(r.shipping), discount: num(r.discount), total: num(r.total), currency: r.currency ?? "USD",
   status: r.status, sourceHostname: r.source_hostname, utmSource: r.utm_source, utmMedium: r.utm_medium,
   utmCampaign: r.utm_campaign, linkedLeadId: r.linked_lead_id, linkedInvoiceId: r.linked_invoice_id,
-  createdAt: r.created_at, paidAt: r.paid_at,
+  createdAt: r.created_at, paidAt: r.paid_at, paymentMethodKey: r.payment_method_key, clientConfirmedAt: r.client_confirmed_at,
 });
 
 export interface HistoryRow {

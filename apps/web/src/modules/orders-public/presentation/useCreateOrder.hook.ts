@@ -10,7 +10,7 @@ export function useCreateOrder() {
     try {
       const d = await ordersPublicRepository.create(input);
       if (!d) return { ok: false, code: "network" };
-      if (d.status === "ok" && d.order_number) return { ok: true, orderNumber: d.order_number };
+      if (d.status === "ok" && d.order_number && d.order_id) return { ok: true, orderNumber: d.order_number, orderId: d.order_id };
       return { ok: false, code: d.code ?? "network", errors: d.errors };
     } finally { setBusy(false); }
   }

@@ -17,4 +17,9 @@ export const enOrders = {
   ordActionConfirm: "Mark as paid", ordActionChangeStatus: "Change status", ordActionView: "View",
   ordLinkedInvoice: "Invoice", ordLinkedLead: "Lead", ordBack: "Back to orders",
   ordErrAlreadyConfirmed: "Order is already paid", ordErrForbidden: "Not authorized",
+  ordStatusAwaitingConfirm: "Awaiting verification",
+  ordAwaitingBanner: "The client confirmed they sent the payment. Verify in your ATH Móvil and mark as paid, or report if it didn't arrive.",
+  ordConfirmReceivedTitle: "Confirm payment received", ordConfirmReceivedCheck: "I verified the payment in my ATH Móvil account",
+  ordActionConfirmReceived: "Confirm payment received", ordActionReport: "Report not received",
+  ordReportTitle: "Report payment not received", ordReportReason: "Reason", ordReportBtn: "Report", ordReportSuccess: "Reported · order back to pending",
 } satisfies Partial<Record<TranslationKey, string>>;

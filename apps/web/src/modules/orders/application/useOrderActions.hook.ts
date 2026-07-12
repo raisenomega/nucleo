@@ -7,8 +7,11 @@ export function useOrderActions(repo: IOrdersRepository) {
   async function changeStatus(id: string, status: OrderStatus, note: string): Promise<Result> {
     setBusy(true); const r = await repo.changeStatus(id, status, note); setBusy(false); return r;
   }
-  async function confirm(id: string, paymentMethodId: string | null, createInvoice: boolean): Promise<Result> {
-    setBusy(true); const r = await repo.confirm(id, paymentMethodId, createInvoice); setBusy(false); return r;
+  async function confirm(id: string, paymentMethodId: string | null, createInvoice: boolean, note = ""): Promise<Result> {
+    setBusy(true); const r = await repo.confirm(id, paymentMethodId, createInvoice, note); setBusy(false); return r;
   }
-  return { busy, changeStatus, confirm };
+  async function reportNotReceived(id: string, reason: string): Promise<Result> {
+    setBusy(true); const r = await repo.reportNotReceived(id, reason); setBusy(false); return r;
+  }
+  return { busy, changeStatus, confirm, reportNotReceived };
 }
