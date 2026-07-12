@@ -1,4 +1,5 @@
 import { useI18n } from "@shared/i18n";
+import { isReady, isLoading } from "@shared/types/fetch-state.types";
 import { usePublicBrand } from "@landing-public/presentation/usePublicBrand.hook";
 import { useLandingProduct } from "@landing-public/presentation/useLandingProduct.hook";
 import { useDetailSeo } from "@landing-public/presentation/detail/useDetailSeo.hook";
@@ -15,14 +16,14 @@ import { PublicFooter } from "@landing-public/presentation/footer/PublicFooter";
 export function ProductDetailPage({ slug }: { slug: string }) {
   const { t } = useI18n();
   const s = usePublicBrand();
-  const { data, status } = useLandingProduct(slug);
-  const pd = data?.product;
+  const state = useLandingProduct(slug);
+  const pd = isReady(state) ? state.data.product : undefined;
   useDetailSeo(pd && (pd.meta_title || pd.name), pd && (pd.meta_description || pd.short_description || ""), pd?.primary_image_url);
   if (s.status === "loading") return <div className="min-h-screen bg-background" />;
   if (s.status === "fallback") return <DetailNotFound />;
-  if (status === "loading") return <DetailShell brand={s.brand}><DetailSkeleton /></DetailShell>;
-  if (status !== "ready" || !data) return <DetailShell brand={s.brand}><DetailNotFound /></DetailShell>;
-  const p = data.product;
+  if (isLoading(state)) return <DetailShell brand={s.brand}><DetailSkeleton /></DetailShell>;
+  if (!isReady(state)) return <DetailShell brand={s.brand}><DetailNotFound /></DetailShell>;
+  const p = state.data.product;
   const onQuote = () => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
   return (
     <DetailShell brand={s.brand}>
@@ -31,7 +32,7 @@ export function ProductDetailPage({ slug }: { slug: string }) {
         <PublicImageGallery primaryUrl={p.primary_image_url} gallery={p.gallery_images ?? []} alt={p.name} />
         <ProductInfo product={p} onQuote={onQuote} />
       </div>
-      {data.related.length > 0 && <RelatedProducts products={data.related} />}
+      {state.data.related.length > 0 && <RelatedProducts products={state.data.related} />}
       <ContactSection preselectedItem={{ kind: "product", id: p.id, name: p.name, slug: p.slug }} />
       <PublicFooter brand={s.brand} tagline={p.meta_description ?? ""} />
     </DetailShell>

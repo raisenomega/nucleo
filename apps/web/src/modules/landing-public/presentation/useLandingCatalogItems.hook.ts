@@ -1,27 +1,28 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@shared/lib/supabase";
+import { type FetchState, initFetchState, readyState, errorState } from "@shared/types/fetch-state.types";
 import type { CatalogItem } from "@landing-public/domain/landing-catalog.types";
 
+export type CatalogItems = { products: CatalogItem[]; services: CatalogItem[]; packages: CatalogItem[] };
 const cache = new Map<string, CatalogItem[]>();
+const split = (list: CatalogItem[]): CatalogItems => ({
+  products: list.filter((i) => i.kind === "product"),
+  services: list.filter((i) => i.kind === "service"),
+  packages: list.filter((i) => i.kind === "package"),
+});
 
-// Trae todos los items activos+publicados del tenant (products+services+packages) para el dropdown de quote.
-export function useLandingCatalogItems() {
-  const [items, setItems] = useState<CatalogItem[] | null>(null);
-  const [error, setError] = useState(false);
+// Trae todos los items activos+publicados del tenant (products+services+packages) para el dropdown. FetchState unificado.
+export function useLandingCatalogItems(): FetchState<CatalogItems> {
+  const [state, setState] = useState<FetchState<CatalogItems>>(initFetchState<CatalogItems>());
   useEffect(() => {
     if (typeof window === "undefined") return;
     const host = window.location.hostname;
-    if (cache.has(host)) { setItems(cache.get(host) ?? []); return; }
+    if (cache.has(host)) { setState(readyState(split(cache.get(host) ?? []))); return; }
     void supabase.rpc("_public_get_landing_catalog", { _hostname: host, _type: "all", _page_size: 100 }).then(({ data, error: e }) => {
       const d = data as { items?: CatalogItem[]; status?: string } | null;
-      if (e || !d || d.status === "error") { setError(true); return; }
-      const list = d.items ?? []; cache.set(host, list); setItems(list);
+      if (e || !d || d.status === "error") return setState(errorState());
+      const list = d.items ?? []; cache.set(host, list); setState(readyState(split(list)));
     });
   }, []);
-  return {
-    products: (items ?? []).filter((i) => i.kind === "product"),
-    services: (items ?? []).filter((i) => i.kind === "service"),
-    packages: (items ?? []).filter((i) => i.kind === "package"),
-    loading: items === null && !error, error,
-  };
+  return state;
 }

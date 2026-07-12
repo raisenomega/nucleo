@@ -1,4 +1,5 @@
 import { useI18n } from "@shared/i18n";
+import { isReady } from "@shared/types/fetch-state.types";
 import { usePublicBrand } from "@landing-public/presentation/usePublicBrand.hook";
 import { MotionProvider } from "@landing-public/motion/motion-loader";
 import { HeroContainer } from "@landing-public/primitives/HeroContainer";
@@ -14,7 +15,8 @@ import { PublicFooter } from "@landing-public/presentation/footer/PublicFooter";
 export function PublicLandingRoot() {
   const { t } = useI18n();
   const s = usePublicBrand();
-  const home = useLandingHome();
+  const homeState = useLandingHome();
+  const home = isReady(homeState) ? homeState.data : null;
   if (s.status === "loading") return <div className="min-h-screen bg-background" />;
   if (s.status === "fallback") {
     const bare = typeof window !== "undefined" ? window.location.hostname.replace(/^www\./, "") : "";

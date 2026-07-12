@@ -1,4 +1,5 @@
 import { useI18n } from "@shared/i18n";
+import { isReady, isLoading } from "@shared/types/fetch-state.types";
 import { usePublicBrand } from "@landing-public/presentation/usePublicBrand.hook";
 import { useLandingPackage } from "@landing-public/presentation/useLandingPackage.hook";
 import { useDetailSeo } from "@landing-public/presentation/detail/useDetailSeo.hook";
@@ -17,14 +18,14 @@ import { PublicFooter } from "@landing-public/presentation/footer/PublicFooter";
 export function PackageDetailPage({ slug }: { slug: string }) {
   const { t } = useI18n();
   const s = usePublicBrand();
-  const { data, status } = useLandingPackage(slug);
-  const pk = data?.pkg;
+  const state = useLandingPackage(slug);
+  const pk = isReady(state) ? state.data.pkg : undefined;
   useDetailSeo(pk && (pk.meta_title || pk.name), pk && (pk.meta_description || pk.short_description || ""), pk?.primary_image_url);
   if (s.status === "loading") return <div className="min-h-screen bg-background" />;
   if (s.status === "fallback") return <DetailNotFound titleKey="lpDetailNotFoundPackage" />;
-  if (status === "loading") return <DetailShell brand={s.brand}><DetailSkeleton /></DetailShell>;
-  if (status !== "ready" || !data) return <DetailShell brand={s.brand}><DetailNotFound titleKey="lpDetailNotFoundPackage" /></DetailShell>;
-  const p = data.pkg;
+  if (isLoading(state)) return <DetailShell brand={s.brand}><DetailSkeleton /></DetailShell>;
+  if (!isReady(state)) return <DetailShell brand={s.brand}><DetailNotFound titleKey="lpDetailNotFoundPackage" /></DetailShell>;
+  const p = state.data.pkg;
   const onQuote = () => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
   return (
     <DetailShell brand={s.brand}>
@@ -34,7 +35,7 @@ export function PackageDetailPage({ slug }: { slug: string }) {
         <PackageInfo pkg={p} onQuote={onQuote} />
       </div>
       <PackageIncludes pkg={p} />
-      {data.related.length > 0 && <RelatedPackages packages={data.related} />}
+      {state.data.related.length > 0 && <RelatedPackages packages={state.data.related} />}
       <ContactSection preselectedItem={{ kind: "package", id: p.id, name: p.name, slug: p.slug }} />
       <PublicFooter brand={s.brand} tagline={p.meta_description ?? ""} />
     </DetailShell>

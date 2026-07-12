@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useI18n } from "@shared/i18n";
 import type { TranslationKey } from "@shared/i18n";
+import { Spinner } from "@shared/components/loading";
+import { isReady } from "@shared/types/fetch-state.types";
 import { FloatingButton } from "@landing-public/primitives/FloatingButton";
 import { InterestedItemDropdown } from "@landing-public/presentation/contact/InterestedItemDropdown";
 import { useLandingCatalogItems } from "@landing-public/presentation/useLandingCatalogItems.hook";
@@ -15,7 +17,8 @@ export function ContactForm({ onSubmit, submitting, errorCode, preselectedItem }
   onSubmit: (v: ContactInput, interested: InterestedItem | null) => void; submitting: boolean; errorCode?: string; preselectedItem?: InterestedItem;
 }) {
   const { t } = useI18n();
-  const { products, services, packages } = useLandingCatalogItems();
+  const catalog = useLandingCatalogItems();
+  const { products, services, packages } = isReady(catalog) ? catalog.data : { products: [], services: [], packages: [] };
   const [item, setItem] = useState<InterestedItem | null>(preselectedItem ?? null);
   const [f, setF] = useState({ name: "", email: "", phone: "", message: "" });
   const [errs, setErrs] = useState<Record<string, TranslationKey>>({});
@@ -40,7 +43,7 @@ export function ContactForm({ onSubmit, submitting, errorCode, preselectedItem }
         <textarea value={f.message} disabled={submitting} onChange={(e) => set("message", e.target.value)} rows={4} className={fld}
           placeholder={item ? t("lpContactMessagePlaceholder", { item: item.name }) : undefined} />
         {errs.message && <span className="text-xs text-destructive">{t(errs.message)}</span>}</label>
-      <FloatingButton type="submit" variant="primary" size="lg" disabled={submitting}>{submitting ? t("lpContactSubmitting") : t("lpContactSubmit")}</FloatingButton>
+      <FloatingButton type="submit" variant="primary" size="lg" disabled={submitting}>{submitting ? <span className="inline-flex items-center gap-2"><Spinner size="sm" label={t("lpContactSubmitting")} />{t("lpContactSubmitting")}</span> : t("lpContactSubmit")}</FloatingButton>
     </form>
   );
 }
