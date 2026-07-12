@@ -22,6 +22,7 @@ export function PublicNav({ displayName, logoUrl }: { displayName: string; logoU
         <span className="font-display text-lg font-bold">{displayName}</span>
       </Link>
       <div className="flex items-center gap-1">
+        <Link to="/catalog" className="hidden rounded-lg px-3 py-2 text-sm font-bold text-[color:hsl(var(--lp-fg))] transition-colors hover:bg-black/5 sm:inline-flex">{t("lpCatalogTitle")}</Link>
         <button type="button" onClick={toggleTheme} aria-label={t("darkMode")} className={btn}>{dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}</button>
         <button type="button" onClick={() => setLocale(locale === "es" ? "en" : "es")} aria-label={t("switchLang")} className={`${btn} text-sm font-bold`}>{locale === "es" ? "EN" : "ES"}</button>
         <InstallButton displayName={displayName} />

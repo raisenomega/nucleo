@@ -55,6 +55,10 @@ export const esLanding = {
   lpServiceDuration: "Duración", lpServiceRequiresScheduling: "Requiere agenda",
   lpPackageIncludesTitle: "Este paquete incluye", lpPackageFeaturesTitle: "Beneficios", lpPackageIncludedProductsTitle: "Productos incluidos", lpPackageIncludedServicesTitle: "Servicios incluidos",
   lpPackageQtyUnits: "×{qty} unidades", lpPackageQtySessions: "×{qty} sesiones",
+  lpCatalogTitle: "Catálogo", lpCatalogTypeAll: "Todos", lpCatalogTypeProducts: "Productos", lpCatalogTypeServices: "Servicios", lpCatalogTypePackages: "Paquetes",
+  lpCatalogCategoryAll: "Todas las categorías", lpCatalogLoadMore: "Cargar más", lpCatalogLoading: "Cargando…",
+  lpCatalogEmptyTitle: "No hay resultados", lpCatalogEmptyDescription: "Probá con otros filtros o mirá todo el catálogo", lpCatalogClearFilters: "Limpiar filtros",
+  lpCatalogErrorTitle: "No pudimos cargar el catálogo", lpCatalogErrorRetry: "Reintentar",
   lpInstallButton: "Instalar app", lpIosModalTitle: "Instalá {name} en tu iPhone",
   lpIosModalStep1: "Tocá el ícono compartir 📤 en Safari", lpIosModalStep2: "Deslizá y elegí 'Añadir a pantalla de inicio' ➕", lpIosModalStep3: "Tocá 'Añadir' y {name} aparece como app 🎉", lpIosModalClose: "Entendido",
 } satisfies Partial<Record<TranslationKey, string>>;

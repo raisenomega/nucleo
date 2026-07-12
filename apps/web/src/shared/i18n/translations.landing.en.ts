@@ -55,6 +55,10 @@ export const enLanding = {
   lpServiceDuration: "Duration", lpServiceRequiresScheduling: "Requires booking",
   lpPackageIncludesTitle: "This package includes", lpPackageFeaturesTitle: "Benefits", lpPackageIncludedProductsTitle: "Included products", lpPackageIncludedServicesTitle: "Included services",
   lpPackageQtyUnits: "×{qty} units", lpPackageQtySessions: "×{qty} sessions",
+  lpCatalogTitle: "Catalog", lpCatalogTypeAll: "All", lpCatalogTypeProducts: "Products", lpCatalogTypeServices: "Services", lpCatalogTypePackages: "Packages",
+  lpCatalogCategoryAll: "All categories", lpCatalogLoadMore: "Load more", lpCatalogLoading: "Loading…",
+  lpCatalogEmptyTitle: "No results", lpCatalogEmptyDescription: "Try other filters or view the full catalog", lpCatalogClearFilters: "Clear filters",
+  lpCatalogErrorTitle: "Couldn't load the catalog", lpCatalogErrorRetry: "Retry",
   lpInstallButton: "Install app", lpIosModalTitle: "Install {name} on your iPhone",
   lpIosModalStep1: "Tap the share icon 📤 in Safari", lpIosModalStep2: "Scroll and tap 'Add to Home Screen' ➕", lpIosModalStep3: "Tap 'Add' and {name} appears as an app 🎉", lpIosModalClose: "Got it",
 } satisfies Partial<Record<TranslationKey, string>>;

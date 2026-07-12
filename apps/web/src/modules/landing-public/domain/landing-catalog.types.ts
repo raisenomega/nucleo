@@ -5,3 +5,6 @@ export interface CatalogItem {
   primary_image_url: string | null; is_featured: boolean;
   kind: "product" | "service" | "package"; category_id: string | null;
 }
+
+// Página del catálogo (respuesta paginada de _public_get_landing_catalog).
+export interface CatalogPage { items: CatalogItem[]; total: number; page: number; page_size: number; }
