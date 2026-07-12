@@ -10,7 +10,7 @@ import type { TranslationKey } from "@shared/i18n";
 // Solo las rutas ya construidas llevan `to`; el resto se renderiza deshabilitado.
 // Solo rutas con archivo real (TanStack <Link to> valida contra rutas generadas). Las rutas landing
 // futuras (products/services/packages/faqs/…) se agregan acá cuando exista su archivo (Sesión 3.b+).
-type EnabledPath = "/dashboard" | "/routes" | "/income" | "/expenses" | "/extraordinary" | "/payroll" | "/inventory" | "/leads" | "/marketing" | "/reconciliation" | "/recurring" | "/accounts-receivable" | "/billing" | "/quotes" | "/reports" | "/evaluations" | "/observations" | "/training" | "/support" | "/documents" | "/settings" | "/settings/agenda"
+type EnabledPath = "/dashboard" | "/routes" | "/income" | "/expenses" | "/extraordinary" | "/payroll" | "/inventory" | "/leads" | "/marketing" | "/reconciliation" | "/recurring" | "/accounts-receivable" | "/billing" | "/quotes" | "/reports" | "/evaluations" | "/observations" | "/training" | "/support" | "/documents" | "/settings" | "/settings/agenda" | "/agenda"
   | "/settings/landing/config" | "/settings/landing/categories" | "/settings/landing/products" | "/settings/landing/services" | "/settings/landing/packages" | "/settings/landing/testimonials" | "/settings/landing/faqs";
 // mod = clave de módulo para el gate (can(mod,"view")). Items sin mod = "próximamente" (solo roadmap coo/ceo).
 export type NavItem = { key: TranslationKey; icon: LucideIcon; to?: EnabledPath; mod?: string };
@@ -19,7 +19,7 @@ export type NavSection = { title: TranslationKey; icon: LucideIcon; items: NavIt
 export const SECTIONS: NavSection[] = [
   { title: "operations", icon: Cog, items: [
     { key: "routes", icon: RouteIcon, to: "/routes", mod: "routes" }, { key: "inventory", icon: Package, to: "/inventory", mod: "inventory" },
-    { key: "agenda", icon: Calendar, to: "/settings/agenda", mod: "settings" }, { key: "assets", icon: Truck },
+    { key: "agenda", icon: Calendar, to: "/agenda", mod: "settings" }, { key: "assets", icon: Truck },
   ] },
   { title: "finance", icon: Wallet, items: [
     { key: "income", icon: DollarSign, to: "/income", mod: "income" },

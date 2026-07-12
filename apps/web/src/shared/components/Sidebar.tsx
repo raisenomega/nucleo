@@ -8,6 +8,7 @@ import { SECTIONS, LANDING_SECTION } from "@shared/components/sidebar.nav";
 import { SidebarSection } from "@shared/components/SidebarSection";
 import { SidebarUser } from "@shared/components/SidebarUser";
 import { useUnseenWebLeads } from "@shared/hooks/useUnseenWebLeads.hook";
+import { useUpcomingAppointments } from "@shared/hooks/useUpcomingAppointments.hook";
 
 function activeSection(pathname: string): string {
   const s = SECTIONS.find((sec) => sec.items.some((i) => i.to && pathname.startsWith(i.to)));
@@ -25,7 +26,8 @@ export function Sidebar({ expanded, onClose, onToggle }: { expanded: boolean; on
   const [openSection, setOpenSection] = useState<string>(() => activeSection(pathname));
   useEffect(() => { const s = activeSection(pathname); if (s) setOpenSection(s); }, [pathname]);
   const { count: unseenWeb } = useUnseenWebLeads(pathname);
-  const badges = { leads: unseenWeb };
+  const { count: upcomingApts } = useUpcomingAppointments(pathname);
+  const badges = { leads: unseenWeb, agenda: upcomingApts };
   const onNavigate = () => onClose(); // solo un link de página cierra el sidebar
   const panelActive = pathname.startsWith("/dashboard");
   return (
