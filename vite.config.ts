@@ -33,6 +33,7 @@ export default defineConfig({
       "@admin": r("apps/web/src/modules/admin"),
       "@agenda": r("apps/web/src/modules/agenda"),
       "@orders": r("apps/web/src/modules/orders"),
+      "@orders-public": r("apps/web/src/modules/orders-public"),
       "@shared": r("apps/web/src/shared"),
       "@brand": r("brand"),
     },
