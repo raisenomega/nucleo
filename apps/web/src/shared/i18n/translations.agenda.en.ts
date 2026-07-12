@@ -16,4 +16,6 @@ export const enAgenda = {
   agendaPrevWeek: "Previous week", agendaNextWeek: "Next week", agendaToday: "Today", agendaPrevMonth: "Previous month", agendaNextMonth: "Next month",
   agendaRescheduled: "Appointment rescheduled", agendaUndo: "Undo", agendaApptTitle: "Title", agendaNewService: "Create service",
   agendaServiceModalTitle: "New service", agendaServiceModalName: "Service name", agendaServiceModalDuration: "Duration (minutes)", agendaServiceModalPrice: "Price (optional)", agendaServiceModalRequiresSched: "Requires scheduling",
+  agendaMeetingLink: "Meeting link", agendaMeetingLinkPlaceholder: "https://meet.google.com/… or https://zoom.us/…", agendaMeetingLinkInvalid: "Must start with http:// or https://",
+  agendaNotifyClient: "Notify client by email", agendaNotifyClientHint: "The client will receive a confirmation email and a 24h reminder", agendaNotifyNoEmail: "The client has no email on file",
 } satisfies Partial<Record<TranslationKey, string>>;

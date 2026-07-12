@@ -16,4 +16,6 @@ export const esAgenda = {
   agendaPrevWeek: "Semana anterior", agendaNextWeek: "Semana siguiente", agendaToday: "Hoy", agendaPrevMonth: "Mes anterior", agendaNextMonth: "Mes siguiente",
   agendaRescheduled: "Cita reagendada", agendaUndo: "Deshacer", agendaApptTitle: "Título", agendaNewService: "Crear servicio",
   agendaServiceModalTitle: "Nuevo servicio", agendaServiceModalName: "Nombre del servicio", agendaServiceModalDuration: "Duración (minutos)", agendaServiceModalPrice: "Precio (opcional)", agendaServiceModalRequiresSched: "Requiere agendar",
+  agendaMeetingLink: "Link de reunión", agendaMeetingLinkPlaceholder: "https://meet.google.com/… o https://zoom.us/…", agendaMeetingLinkInvalid: "Debe empezar con http:// o https://",
+  agendaNotifyClient: "Notificar al cliente por email", agendaNotifyClientHint: "El cliente recibirá email de confirmación y recordatorio 24h antes", agendaNotifyNoEmail: "El cliente no tiene email registrado",
 } satisfies Partial<Record<TranslationKey, string>>;

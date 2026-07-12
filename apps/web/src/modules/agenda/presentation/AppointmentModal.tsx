@@ -7,6 +7,8 @@ import { useAppointmentForm } from "@agenda/presentation/appointment-modal.hooks
 import { LeadPickerSection } from "@agenda/presentation/LeadPickerSection";
 import { LeadSelectedPreview } from "@agenda/presentation/AppointmentModalSections/LeadSelectedPreview";
 import { ServicePickerSection } from "@agenda/presentation/AppointmentModalSections/ServicePickerSection";
+import { MeetingLinkSection } from "@agenda/presentation/AppointmentModalSections/MeetingLinkSection";
+import { NotifyClientToggle } from "@agenda/presentation/AppointmentModalSections/NotifyClientToggle";
 import { useReservableServices } from "@agenda/application/useReservableServices.hook";
 import { supabaseReservableServicesRepository } from "@agenda/infrastructure/supabase-reservable-services.repository";
 import { findMatchingService } from "@agenda/utils/extract-service-from-lead";
@@ -19,10 +21,11 @@ import type { LeadLite } from "@agenda/domain/leads-lite.types";
 export function AppointmentModal({ initial, defaultStart, onSave, onClose }: { initial?: Appointment; defaultStart?: string; onSave: (i: AppointmentInput) => Promise<void>; onClose: () => void }) {
   const { t } = useI18n();
   const { session } = useSession();
-  const { form, set, canSave, toInput } = useAppointmentForm(initial, defaultStart);
+  const { form, set, canSave, linkOk, toInput } = useAppointmentForm(initial, defaultStart);
   const { list: services, create: createSvc } = useReservableServices(supabaseReservableServicesRepository, session?.tenantId);
   const [lead, setLead] = useState<LeadLite | null>(null);
   const [busy, setBusy] = useState(false);
+  const hasEmail = ((lead?.email ?? initial?.leadEmail) ?? "").trim().length > 0;
   const fld = "w-full rounded-lg border border-border bg-background p-2 text-sm"; const cap = "mb-1 block text-sm font-medium";
   function pickService(id: string) { const s = services.find((x) => x.id === id); set("serviceId", id || null); if (s?.durationMinutes) set("duration", s.durationMinutes); }
   async function onCreateSvc(i: ServiceInput) { const s = await createSvc(i); if (s) { set("serviceId", s.id); if (s.durationMinutes) set("duration", s.durationMinutes); } }
@@ -49,7 +52,9 @@ export function AppointmentModal({ initial, defaultStart, onSave, onClose }: { i
         </div>
         <label className="block"><span className={cap}>{t("agendaStatus")}</span>
           <select value={form.status} onChange={(e) => set("status", e.target.value as AppointmentStatus)} className={fld}>{STATUSES.map((s) => <option key={s} value={s}>{t(STATUS_LABEL[s])}</option>)}</select></label>
+        <NotifyClientToggle checked={form.notifyClient} hasEmail={hasEmail} onChange={(v) => set("notifyClient", v)} />
         <label className="block"><span className={cap}>{t("agendaNotes")}</span><textarea value={form.notes} onChange={(e) => set("notes", e.target.value)} rows={2} className={fld} /></label>
+        <MeetingLinkSection value={form.meetingLink} invalid={!linkOk} onChange={(v) => set("meetingLink", v)} />
         <button type="button" disabled={busy || !canSave} onClick={() => void submit()} className="rounded-lg bg-primary px-4 py-2 font-bold text-primary-foreground disabled:opacity-50">{busy ? t("sending") : t("save")}</button>
       </div>
     </ScreenModal>
