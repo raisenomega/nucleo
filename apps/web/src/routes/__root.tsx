@@ -6,6 +6,7 @@ import { HostBrandProvider } from "@shared/providers/HostBrandProvider";
 import { useMounted } from "@shared/hooks/useMounted";
 import { isRaisenHost } from "@shared/lib/brand-host";
 import { ErrorBoundary } from "@shared/components/loading";
+import { ToastProvider } from "@shared/providers/ToastProvider";
 
 const THEME_SCRIPT = `(function(){try{var c=JSON.parse(localStorage.getItem("nucleo:theme-cache:v1")||"null"),s=localStorage.getItem("theme"),m=window.matchMedia,dm=c&&c.defaultMode,d;if(s==="dark"||s==="light"){d=s==="dark";}else if(dm==="dark"||dm==="light"){d=dm==="dark";}else if(m&&m("(prefers-color-scheme: light)").matches){d=false;}else{d=true;}document.documentElement.classList.toggle("dark",d);if(c&&c.vars){for(var k in c.vars){document.documentElement.style.setProperty(k,c.vars[k]);}}}catch(e){}})();`;
 
@@ -66,7 +67,7 @@ function Document() {
       </head>
       <body>
         <GlobalControls />
-        <ErrorBoundary><Outlet /></ErrorBoundary>
+        <ErrorBoundary><ToastProvider><Outlet /></ToastProvider></ErrorBoundary>
         <Scripts />
       </body>
     </html>
