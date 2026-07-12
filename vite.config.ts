@@ -31,6 +31,7 @@ export default defineConfig({
       "@quotes": r("apps/web/src/modules/quotes"),
       "@landing": r("apps/web/src/modules/landing"),
       "@admin": r("apps/web/src/modules/admin"),
+      "@agenda": r("apps/web/src/modules/agenda"),
       "@shared": r("apps/web/src/shared"),
       "@brand": r("brand"),
     },
