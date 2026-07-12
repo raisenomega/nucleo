@@ -39,6 +39,7 @@
       "@landing-public/*": ["./apps/web/src/modules/landing-public/*"],
       "@admin/*":     ["./apps/web/src/modules/admin/*"],
       "@agenda/*":    ["./apps/web/src/modules/agenda/*"],
+      "@orders/*":    ["./apps/web/src/modules/orders/*"],
       "@shared/*":    ["./apps/web/src/shared/*"],
       "@brand/*":     ["./brand/*"]
     }

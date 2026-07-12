@@ -1,0 +1,20 @@
+import type { TranslationKey } from "./translations.keys";
+
+export const esOrders = {
+  ordSearchPlaceholder: "Buscar por número, cliente, email o teléfono…",
+  ordFilterAll: "Todas", ordDateToday: "Hoy", ordDate7: "7 días", ordDate30: "30 días", ordDateMonth: "Este mes", ordDateAll: "Todo",
+  ordStatusPending: "Pendiente", ordStatusAwaiting: "Esperando pago", ordStatusPaid: "Cobrada", ordStatusProcessing: "En proceso",
+  ordStatusShipped: "Enviada", ordStatusDelivered: "Entregada", ordStatusCanceled: "Cancelada", ordStatusRefunded: "Reembolsada",
+  ordColOrder: "Nº orden", ordColCustomer: "Cliente", ordColItems: "Ítems", ordColDate: "Fecha", ordItemsCount: "{n} ítems",
+  ordEmptyTitle: "No hay órdenes web todavía", ordEmptyDesc: "Cuando entren órdenes desde tu landing aparecerán aquí.",
+  ordLoadMore: "Cargar más", ordErrGeneric: "No se pudo completar la acción",
+  ordCustomerTitle: "Cliente", ordSource: "Origen", ordItemsTitle: "Ítems",
+  ordTotSubtotal: "Subtotal", ordTotTax: "Impuesto", ordTotShipping: "Envío", ordTotDiscount: "Descuento", ordTotTotal: "Total",
+  ordTimelineTitle: "Historial", ordTimelineCreated: "Orden creada", ordTimelineChanged: "Estado cambiado a {status}",
+  ordChangeTitle: "Cambiar estado", ordChangeNewStatus: "Nuevo estado", ordChangeNote: "Nota (opcional)", ordChangeBtn: "Guardar", ordChangeSuccess: "Estado actualizado",
+  ordConfirmTitle: "Marcar como cobrada", ordConfirmMethod: "Método de pago", ordConfirmMethodAuto: "Efectivo (default)", ordConfirmCreateInvoice: "Generar factura automáticamente",
+  ordConfirmBtn: "Confirmar cobro", ordConfirmSuccess: "Cobrada · ingreso registrado",
+  ordActionConfirm: "Marcar como cobrada", ordActionChangeStatus: "Cambiar estado", ordActionView: "Ver",
+  ordLinkedInvoice: "Factura", ordLinkedLead: "Lead", ordBack: "Volver a órdenes",
+  ordErrAlreadyConfirmed: "La orden ya está cobrada", ordErrForbidden: "No autorizado",
+} satisfies Partial<Record<TranslationKey, string>>;

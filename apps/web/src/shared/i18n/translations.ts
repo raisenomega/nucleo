@@ -28,8 +28,10 @@ import { esLanding } from "./translations.landing.es";
 import { enLanding } from "./translations.landing.en";
 import { esAgenda } from "./translations.agenda.es";
 import { enAgenda } from "./translations.agenda.en";
+import { esOrders } from "./translations.orders.es";
+import { enOrders } from "./translations.orders.en";
 
 export const translations: Record<Locale, Record<TranslationKey, string>> = {
-  es: { ...es, ...esRecon, ...esPayroll, ...esEmployee, ...esRoutes, ...esReports, ...esHr, ...esDocs, ...esBilling, ...esQuotes, ...esPdf, ...esBrand, ...esLanding, ...esAgenda },
-  en: { ...en, ...enRecon, ...enPayroll, ...enEmployee, ...enRoutes, ...enReports, ...enHr, ...enDocs, ...enBilling, ...enQuotes, ...enPdf, ...enBrand, ...enLanding, ...enAgenda },
+  es: { ...es, ...esRecon, ...esPayroll, ...esEmployee, ...esRoutes, ...esReports, ...esHr, ...esDocs, ...esBilling, ...esQuotes, ...esPdf, ...esBrand, ...esLanding, ...esAgenda, ...esOrders },
+  en: { ...en, ...enRecon, ...enPayroll, ...enEmployee, ...enRoutes, ...enReports, ...enHr, ...enDocs, ...enBilling, ...enQuotes, ...enPdf, ...enBrand, ...enLanding, ...enAgenda, ...enOrders },
 };
