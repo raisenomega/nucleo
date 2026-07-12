@@ -39,6 +39,7 @@ export interface LandingProduct {
   primaryImageUrl: string | null; galleryImages: string[]; videoUrl: string | null;
   isActive: boolean; isFeatured: boolean; displayOrder: number;
   attributes: Record<string, unknown>; metaTitle: string; metaDescription: string; isPublished: boolean;
+  formId: string | null;
 }
 export type ProductInput = Omit<LandingProduct, "id">;
 export type ProductWithCategory = LandingProduct & { categoryName: string | null };

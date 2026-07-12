@@ -12,4 +12,7 @@ export const esOrderForms = {
   ofCondToggle: "Mostrar solo si otro campo tiene un valor", ofCondValue: "Valor",
   ofKindText: "Texto corto", ofKindEmail: "Email", ofKindTel: "Teléfono", ofKindTextarea: "Texto largo", ofKindNumber: "Número", ofKindSelect: "Selección", ofKindRadio: "Opciones", ofKindCheckbox: "Casilla",
   ofKindDate: "Fecha", ofKindAddress: "Dirección completa", ofKindMatrix: "Matriz de precios", ofKindAddons: "Complementos", ofKindRepeatable: "Grupo repetible", ofKindFile: "Subir archivo",
+  ofItemFormLabel: "Formulario de pedido", ofItemFormDefault: "— Usar formulario default —",
+  ofItemFormHint: "El formulario que verá el cliente al ordenar este item. Default = el formulario del tenant marcado como default.",
+  ofDepsTitle: "No podés eliminar este formulario", ofDepsBody: "{n} items del catálogo lo están usando. Reasignalos antes de eliminar.", ofClose: "Cerrar",
 } satisfies Partial<Record<TranslationKey, string>>;

@@ -9,6 +9,7 @@ import { ProductPricingSection } from "@landing/presentation/ProductPricingSecti
 import { ProductInventorySection } from "@landing/presentation/ProductInventorySection";
 import { ProductImagesSection } from "@landing/presentation/ProductImagesSection";
 import { ProductMetaSection } from "@landing/presentation/ProductMetaSection";
+import { OrderFormPicker } from "@order-forms/presentation/OrderFormPicker";
 import type { LandingCategory, ProductInput, ProductWithCategory } from "@landing/domain/landing.types";
 
 export function ProductModal({ initial, categories, onSave, onClose }: {
@@ -38,6 +39,7 @@ export function ProductModal({ initial, categories, onSave, onClose }: {
         <ProductInventorySection form={form} set={set} />
         <ProductImagesSection form={form} set={set} />
         <ProductMetaSection form={form} set={set} />
+        <OrderFormPicker value={form.formId} onChange={(v) => set("formId", v)} />
         <button type="button" disabled={busy || !canSave} onClick={() => void submit()}
           className="rounded-lg bg-primary px-4 py-2 font-bold text-primary-foreground disabled:opacity-50">{busy ? t("sending") : t("save")}</button>
       </div>

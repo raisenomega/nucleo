@@ -11,9 +11,14 @@ export interface OrderFormFull {
   appliesToKind: string | null; fields: EditorField[];
 }
 
+export interface DepItem { id: string; name: string; }
+export interface FormDeps { products: DepItem[]; services: DepItem[]; packages: DepItem[]; }
+export const depCount = (d: FormDeps) => d.products.length + d.services.length + d.packages.length;
+
 export interface IOrderFormsRepository {
   list(): Promise<OrderFormSummary[]>;
   get(id: string): Promise<OrderFormFull | null>;
+  dependencies(id: string): Promise<FormDeps>;
   create(tenantId: string, name: string, description: string): Promise<string | null>;
   saveForm(id: string, name: string, description: string): Promise<Result>;
   saveFields(tenantId: string, formId: string, fields: EditorField[], deletedIds: string[]): Promise<Result>;

@@ -12,4 +12,7 @@ export const enOrderForms = {
   ofCondToggle: "Show only if another field has a value", ofCondValue: "Value",
   ofKindText: "Short text", ofKindEmail: "Email", ofKindTel: "Phone", ofKindTextarea: "Long text", ofKindNumber: "Number", ofKindSelect: "Dropdown", ofKindRadio: "Radio", ofKindCheckbox: "Checkbox",
   ofKindDate: "Date", ofKindAddress: "Full address", ofKindMatrix: "Price matrix", ofKindAddons: "Add-ons", ofKindRepeatable: "Repeatable group", ofKindFile: "File upload",
+  ofItemFormLabel: "Order form", ofItemFormDefault: "— Use default form —",
+  ofItemFormHint: "The form the customer sees when ordering this item. Default = the tenant's form marked as default.",
+  ofDepsTitle: "You can't delete this form", ofDepsBody: "{n} catalog items are using it. Reassign them before deleting.", ofClose: "Close",
 } satisfies Partial<Record<TranslationKey, string>>;

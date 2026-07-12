@@ -15,6 +15,11 @@ export const supabaseOrderFormsRepository: IOrderFormsRepository = {
       fieldCount: f.tenant_order_form_fields?.[0]?.count ?? 0, createdAt: f.created_at,
     }));
   },
+  async dependencies(id) {
+    const { data } = await supabase.rpc("_get_form_dependencies", { _form_id: id });
+    const d = (data ?? {}) as Partial<import("@order-forms/domain/order-form.types").FormDeps>;
+    return { products: d.products ?? [], services: d.services ?? [], packages: d.packages ?? [] };
+  },
   async get(id) {
     const { data: f } = await supabase.from("tenant_order_forms").select("id,name,description,is_default,applies_to_kind").eq("id", id).maybeSingle();
     if (!f) return null;

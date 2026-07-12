@@ -14,5 +14,6 @@ export function useOrderFormActions(repo: IOrderFormsRepository) {
     duplicate: (tid: string, id: string) => wrap(() => repo.duplicate(tid, id)),
     remove: (id: string) => wrap(() => repo.remove(id)),
     setDefault: (id: string) => wrap(() => repo.setDefault(id)),
+    dependencies: (id: string) => repo.dependencies(id),
   };
 }

@@ -10,6 +10,7 @@ export interface ProductRow {
   primary_image_url: string | null; gallery_images: string[] | null; video_url: string | null;
   is_active: boolean; is_featured: boolean; display_order: number;
   attributes: Record<string, unknown> | null; meta_title: string | null; meta_description: string | null; is_published: boolean;
+  form_id?: string | null;
   tenant_landing_categories?: { name: string }[] | { name: string } | null;
 }
 const catName = (c: ProductRow["tenant_landing_categories"]): string | null =>
@@ -25,7 +26,7 @@ export const toLandingProduct = (r: ProductRow): ProductWithCategory => ({
   primaryImageUrl: r.primary_image_url, galleryImages: r.gallery_images ?? [], videoUrl: r.video_url,
   isActive: r.is_active, isFeatured: r.is_featured, displayOrder: r.display_order,
   attributes: r.attributes ?? {}, metaTitle: r.meta_title ?? "", metaDescription: r.meta_description ?? "",
-  isPublished: r.is_published, categoryName: catName(r.tenant_landing_categories),
+  isPublished: r.is_published, formId: r.form_id ?? null, categoryName: catName(r.tenant_landing_categories),
 });
 
 export const toProductInput = (p: LandingProduct): ProductInput => ({
@@ -34,7 +35,7 @@ export const toProductInput = (p: LandingProduct): ProductInput => ({
   taxRate: p.taxRate, stripePriceId: p.stripePriceId, trackInventory: p.trackInventory, stockQuantity: p.stockQuantity,
   lowStockThreshold: p.lowStockThreshold, primaryImageUrl: p.primaryImageUrl, galleryImages: p.galleryImages,
   videoUrl: p.videoUrl, isActive: p.isActive, isFeatured: p.isFeatured, displayOrder: p.displayOrder,
-  attributes: p.attributes, metaTitle: p.metaTitle, metaDescription: p.metaDescription, isPublished: p.isPublished,
+  attributes: p.attributes, metaTitle: p.metaTitle, metaDescription: p.metaDescription, isPublished: p.isPublished, formId: p.formId,
 });
 
 export const fromLandingProductInput = (i: ProductInput) => ({
@@ -44,5 +45,5 @@ export const fromLandingProductInput = (i: ProductInput) => ({
   stripe_price_id: i.stripePriceId, track_inventory: i.trackInventory, stock_quantity: i.stockQuantity,
   low_stock_threshold: i.lowStockThreshold, primary_image_url: i.primaryImageUrl, gallery_images: i.galleryImages,
   video_url: i.videoUrl, is_active: i.isActive, is_featured: i.isFeatured, display_order: i.displayOrder,
-  attributes: i.attributes, meta_title: i.metaTitle || null, meta_description: i.metaDescription || null, is_published: i.isPublished,
+  attributes: i.attributes, meta_title: i.metaTitle || null, meta_description: i.metaDescription || null, is_published: i.isPublished, form_id: i.formId,
 });

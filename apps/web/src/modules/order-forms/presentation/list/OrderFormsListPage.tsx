@@ -13,19 +13,24 @@ import { useOrderFormActions } from "@order-forms/application/useOrderFormAction
 import { supabaseOrderFormsRepository } from "@order-forms/infrastructure/supabase-order-forms.repository";
 import { OrderFormRow } from "@order-forms/presentation/list/OrderFormRow";
 import { OrderFormCreateModal } from "@order-forms/presentation/list/OrderFormCreateModal";
+import { DependencyWarningModal } from "@order-forms/presentation/DependencyWarningModal";
+import { depCount, type FormDeps } from "@order-forms/domain/order-form.types";
 
 export function OrderFormsListPage() {
   const { t } = useI18n(); const { can } = useModuleAccess(); const toast = useToast(); const nav = useNavigate();
   const { session } = useSession();
   const { state, reload } = useOrderForms(supabaseOrderFormsRepository);
   const a = useOrderFormActions(supabaseOrderFormsRepository);
-  const [creating, setCreating] = useState(false); const [q, setQ] = useState("");
+  const [creating, setCreating] = useState(false); const [q, setQ] = useState(""); const [deps, setDeps] = useState<FormDeps | null>(null);
   if (!can("settings", "edit")) return <Navigate to="/dashboard" />;
   const open = (id: string) => void nav({ to: "/settings/landing/order-forms/$formId", params: { formId: id } });
   const tid = session?.tenantId ?? "";
   async function doCreate(name: string, desc: string) { const id = await a.create(tid, name, desc); if (id) open(id); else toast.error(t("ofErr")); }
   async function doDup(id: string) { const nid = await a.duplicate(tid, id); if (nid) { toast.success(t("saved")); open(nid); } }
-  async function doDel(id: string) { if (window.confirm(t("ofDeleteConfirm"))) { const r = await a.remove(id); r.ok ? (toast.success(t("saved")), reload()) : toast.error(r.error); } }
+  async function doDel(id: string) {
+    const d = await a.dependencies(id); if (depCount(d) > 0) { setDeps(d); return; }
+    if (window.confirm(t("ofDeleteConfirm"))) { const r = await a.remove(id); r.ok ? (toast.success(t("saved")), reload()) : toast.error(r.error); }
+  }
   async function doDef(id: string) { const r = await a.setDefault(id); r.ok ? (toast.success(t("saved")), reload()) : toast.error(r.error); }
   const forms = isReady(state) ? state.data.filter((f) => f.name.toLowerCase().includes(q.toLowerCase())) : [];
   return (
@@ -44,6 +49,7 @@ export function OrderFormsListPage() {
         </table></div>
       ) : <EmptyState icon={FileInput} title={t("ofEmptyTitle")} description={t("ofEmptyDesc")} />)}
       {creating && <OrderFormCreateModal busy={a.busy} onCreate={(n, d) => void doCreate(n, d)} onClose={() => setCreating(false)} />}
+      {deps && <DependencyWarningModal deps={deps} onClose={() => setDeps(null)} />}
     </div>
   );
 }

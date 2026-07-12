@@ -12,13 +12,21 @@ const toField = (r: FieldRow): OrderFormField => ({
 });
 
 export const ordersPublicRepository = {
+  // Prioridad: item.form_id (asignado en el editor del catálogo) > form default del tenant > match por applies_to.
   async resolveForm(kind: string, itemId: string): Promise<OrderForm | null> {
-    const { data } = await supabase.from("tenant_order_forms").select("id,name,applies_to_kind,applies_to_id").eq("is_active", true);
-    const rows = (data ?? []) as FormRow[];
-    const match = rows.find((f) => f.applies_to_id === itemId) ?? rows.find((f) => f.applies_to_kind === kind) ?? null;
-    if (!match) return null;
-    const { data: fd } = await supabase.from("tenant_order_form_fields").select("id,order_index,kind,field_key,label_es,label_en,required,validation_rules,options,conditional_on").eq("form_id", match.id).order("order_index");
-    return { id: match.id, name: match.name, fields: ((fd ?? []) as FieldRow[]).map(toField) };
+    const table = kind === "product" ? "tenant_landing_products" : kind === "service" ? "tenant_landing_services" : "tenant_landing_packages";
+    const { data: item } = await supabase.from(table).select("form_id").eq("id", itemId).maybeSingle();
+    let formId = (item as { form_id: string | null } | null)?.form_id ?? null;
+    if (!formId) {
+      const { data } = await supabase.from("tenant_order_forms").select("id,name,applies_to_kind,applies_to_id,is_default").eq("is_active", true);
+      const rows = (data ?? []) as (FormRow & { is_default: boolean })[];
+      formId = (rows.find((f) => f.is_default) ?? rows.find((f) => f.applies_to_kind === kind))?.id ?? null;
+    }
+    if (!formId) return null;
+    const { data: f } = await supabase.from("tenant_order_forms").select("id,name").eq("id", formId).maybeSingle();
+    if (!f) return null;
+    const { data: fd } = await supabase.from("tenant_order_form_fields").select("id,order_index,kind,field_key,label_es,label_en,required,validation_rules,options,conditional_on").eq("form_id", formId).order("order_index");
+    return { id: (f as FormRow).id, name: (f as FormRow).name, fields: ((fd ?? []) as FieldRow[]).map(toField) };
   },
   async paymentMethods(): Promise<PaymentOption[]> {
     const { data } = await supabase.from("tenant_payment_methods").select("method_key,display_name,config").eq("is_active", true).order("display_order");
