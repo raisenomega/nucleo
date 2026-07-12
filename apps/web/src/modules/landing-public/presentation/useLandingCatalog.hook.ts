@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { supabase } from "@shared/lib/supabase";
 import { type FetchState, initFetchState, readyState, errorState } from "@shared/types/fetch-state.types";
+import { createTtlCache } from "@shared/lib/ttl-cache";
+import { TTL_SHORT_60S } from "@shared/lib/ttl-cache.constants";
 import type { CatalogItem, CatalogPage } from "@landing-public/domain/landing-catalog.types";
 
-const cache = new Map<string, CatalogPage>();
+const cache = createTtlCache<CatalogPage>(TTL_SHORT_60S);
 
-// Catálogo paginado con load-more. FetchState de la página en curso + items acumulados. Cache por host|cat|type|page.
+// Catálogo paginado con load-more. Cache TTL 60s por host|cat|type|page. FetchState de la página en curso.
 export function useLandingCatalog(category: string | null, type: string) {
   const [state, setState] = useState<FetchState<CatalogPage>>(initFetchState<CatalogPage>());
   const [items, setItems] = useState<CatalogItem[]>([]);
@@ -19,7 +21,8 @@ export function useLandingCatalog(category: string | null, type: string) {
       setItems((prev) => (page === 1 ? d.items : [...prev, ...d.items]));
       setTotal(d.total); pageRef.current = page; setState(readyState(d));
     };
-    if (cache.has(key)) return apply(cache.get(key) as CatalogPage);
+    const cached = cache.get(key);
+    if (cached) return apply(cached);
     void supabase.rpc("_public_get_landing_catalog", { _hostname: host, _category_slug: category, _type: type, _page: page, _page_size: 24 }).then(({ data, error }) => {
       const d = data as (CatalogPage & { status?: string }) | null;
       if (error || !d || d.status === "error") return setState(errorState());
