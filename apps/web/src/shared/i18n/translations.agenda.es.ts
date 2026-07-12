@@ -11,4 +11,8 @@ export const esAgenda = {
   agendaDuration: "Duración (min)", agendaStatus: "Estado", agendaNotes: "Notas", agendaConfig: "Configuración", agendaFilterAll: "Todas",
   agendaStatusAgendada: "Agendada", agendaStatusConfirmada: "Confirmada", agendaStatusCompletada: "Completada", agendaStatusCancelada: "Cancelada", agendaStatusNoShow: "No asistió",
   agendaErrConflict: "Ya hay una cita en ese horario", agendaErrBlocked: "Ese horario está bloqueado", agendaErrSave: "No se pudo guardar la cita",
+  agendaViewList: "Lista", agendaViewWeek: "Semana", agendaViewMonth: "Mes",
+  agendaDowMon: "Lun", agendaDowTue: "Mar", agendaDowWed: "Mié", agendaDowThu: "Jue", agendaDowFri: "Vie", agendaDowSat: "Sáb", agendaDowSun: "Dom",
+  agendaPrevWeek: "Semana anterior", agendaNextWeek: "Semana siguiente", agendaToday: "Hoy", agendaPrevMonth: "Mes anterior", agendaNextMonth: "Mes siguiente",
+  agendaRescheduled: "Cita reagendada", agendaUndo: "Deshacer",
 } satisfies Partial<Record<TranslationKey, string>>;

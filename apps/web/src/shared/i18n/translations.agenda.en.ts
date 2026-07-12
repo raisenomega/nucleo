@@ -11,4 +11,8 @@ export const enAgenda = {
   agendaDuration: "Duration (min)", agendaStatus: "Status", agendaNotes: "Notes", agendaConfig: "Settings", agendaFilterAll: "All",
   agendaStatusAgendada: "Scheduled", agendaStatusConfirmada: "Confirmed", agendaStatusCompletada: "Completed", agendaStatusCancelada: "Cancelled", agendaStatusNoShow: "No-show",
   agendaErrConflict: "There's already an appointment at that time", agendaErrBlocked: "That time is blocked", agendaErrSave: "Couldn't save the appointment",
+  agendaViewList: "List", agendaViewWeek: "Week", agendaViewMonth: "Month",
+  agendaDowMon: "Mon", agendaDowTue: "Tue", agendaDowWed: "Wed", agendaDowThu: "Thu", agendaDowFri: "Fri", agendaDowSat: "Sat", agendaDowSun: "Sun",
+  agendaPrevWeek: "Previous week", agendaNextWeek: "Next week", agendaToday: "Today", agendaPrevMonth: "Previous month", agendaNextMonth: "Next month",
+  agendaRescheduled: "Appointment rescheduled", agendaUndo: "Undo",
 } satisfies Partial<Record<TranslationKey, string>>;

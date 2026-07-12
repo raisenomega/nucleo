@@ -10,9 +10,9 @@ import type { Appointment, AppointmentInput, AppointmentStatus } from "@agenda/d
 
 import { STATUS_LABEL, STATUSES } from "@agenda/presentation/appointment-status.const";
 
-export function AppointmentModal({ initial, onSave, onClose }: { initial?: Appointment; onSave: (i: AppointmentInput) => Promise<void>; onClose: () => void }) {
+export function AppointmentModal({ initial, defaultStart, onSave, onClose }: { initial?: Appointment; defaultStart?: string; onSave: (i: AppointmentInput) => Promise<void>; onClose: () => void }) {
   const { t } = useI18n();
-  const { form, set, canSave, toInput } = useAppointmentForm(initial);
+  const { form, set, canSave, toInput } = useAppointmentForm(initial, defaultStart);
   const { list: services } = useReservableServices(supabaseReservableServicesRepository);
   const [busy, setBusy] = useState(false);
   const fld = "w-full rounded-lg border border-border bg-background p-2 text-sm"; const cap = "mb-1 block text-sm font-medium";

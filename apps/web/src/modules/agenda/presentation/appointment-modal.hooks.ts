@@ -11,8 +11,8 @@ const fromApt = (a: Appointment): AptForm => ({
   duration: Math.round((new Date(a.endsAt).getTime() - new Date(a.startsAt).getTime()) / 60000), status: a.status, notes: a.notes,
 });
 
-export function useAppointmentForm(initial?: Appointment) {
-  const [form, setForm] = useState<AptForm>(initial ? fromApt(initial) : DEF);
+export function useAppointmentForm(initial?: Appointment, defaultStart?: string) {
+  const [form, setForm] = useState<AptForm>(initial ? fromApt(initial) : { ...DEF, startsAt: defaultStart ?? "" });
   const set: SetApt = (k, v) => setForm((p) => ({ ...p, [k]: v }));
   const canSave = form.title.trim().length >= 3 && !!form.startsAt && form.duration > 0;
   function toInput(): AppointmentInput {

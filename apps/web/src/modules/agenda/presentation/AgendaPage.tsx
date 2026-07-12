@@ -1,49 +1,35 @@
 import { useState } from "react";
-import { Navigate, Link } from "@tanstack/react-router";
-import { Plus, Settings } from "lucide-react";
+import { Navigate } from "@tanstack/react-router";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
-import { useToast } from "@shared/providers/toast-context";
-import { useAppointments } from "@agenda/application/useAppointments.hook";
-import { useSaveAppointment } from "@agenda/application/useSaveAppointment.hook";
-import { supabaseAppointmentsRepository } from "@agenda/infrastructure/supabase-appointments.repository";
-import { AppointmentListView } from "@agenda/presentation/AppointmentListView";
+import { useAgendaController } from "@agenda/presentation/useAgendaController.hook";
+import { AgendaToolbar } from "@agenda/presentation/AgendaToolbar";
+import { AgendaViews } from "@agenda/presentation/AgendaViews";
 import { AppointmentModal } from "@agenda/presentation/AppointmentModal";
-import { STATUSES, STATUS_LABEL } from "@agenda/presentation/appointment-status.const";
+import { getMondayOf, localDate, pad } from "@agenda/utils/week-navigation";
 import type { Appointment, AppointmentInput } from "@agenda/domain/appointment.types";
 
-const ERR: Record<string, "agendaErrConflict" | "agendaErrBlocked" | "agendaErrSave"> = { conflict: "agendaErrConflict", blocked: "agendaErrBlocked" };
+type Search = { view?: string; week?: string; month?: string };
+const mondayFrom = (s?: string) => { if (!s) return getMondayOf(new Date()); const [y, m, d] = s.split("-"); return getMondayOf(new Date(Number(y), Number(m) - 1, Number(d))); };
+const monthFrom = (s?: string) => { const n = new Date(); if (!s) return new Date(n.getFullYear(), n.getMonth(), 1); const [y, m] = s.split("-"); return new Date(Number(y), Number(m) - 1, 1); };
 
-export function AgendaPage() {
-  const { t } = useI18n(); const { can } = useModuleAccess(); const toast = useToast();
-  const [status, setStatus] = useState("all");
-  const { list, reload, remove } = useAppointments(supabaseAppointmentsRepository, status);
-  const { save } = useSaveAppointment(supabaseAppointmentsRepository);
+export function AgendaPage({ search, onSearch }: { search: Search; onSearch: (p: Search) => void }) {
+  const { t } = useI18n(); const { can } = useModuleAccess();
+  const c = useAgendaController();
   const [editing, setEditing] = useState<Appointment | null>(null);
-  const [creating, setCreating] = useState(false);
+  const [creating, setCreating] = useState<string | null>(null);
   if (!can("settings", "edit")) return <Navigate to="/dashboard" />;
-  async function onSave(input: AppointmentInput) {
-    const r = await save(editing?.id ?? null, input);
-    if (r.ok) { toast.success(t("saved")); setCreating(false); setEditing(null); await reload(); }
-    else toast.error(t(ERR[r.code ?? ""] ?? "agendaErrSave"));
-  }
-  async function onDelete(id: string) { if (window.confirm(t("confirmDelete"))) { const r = await remove(id); if (!r.ok) toast.error(r.error); } }
-  const chip = (v: string) => `rounded-full px-3 py-1 text-xs font-medium ${status === v ? "bg-primary text-primary-foreground" : "bg-secondary text-foreground"}`;
+  const view = search.view ?? "list";
+  async function onSave(input: AppointmentInput) { if (await c.saveApt(editing?.id ?? null, input)) { setEditing(null); setCreating(null); } }
   return (
     <div className="space-y-4 p-4 md:p-8">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <h1 className="font-display text-xl font-bold text-foreground md:text-3xl">{t("agenda")}</h1>
-        <div className="flex items-center gap-2">
-          <Link to="/settings/agenda" aria-label={t("agendaConfig")} className="rounded-lg border border-border p-2"><Settings className="h-4 w-4" /></Link>
-          <button type="button" onClick={() => setCreating(true)} className="flex items-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-bold text-primary-foreground"><Plus className="h-4 w-4" />{t("agendaNewAppointment")}</button>
-        </div>
-      </div>
-      <div className="flex flex-wrap gap-2">
-        <button type="button" onClick={() => setStatus("all")} className={chip("all")}>{t("agendaFilterAll")}</button>
-        {STATUSES.map((s) => <button key={s} type="button" onClick={() => setStatus(s)} className={chip(s)}>{t(STATUS_LABEL[s])}</button>)}
-      </div>
-      <AppointmentListView list={list} onEdit={setEditing} onDelete={onDelete} />
-      {(creating || editing) && <AppointmentModal initial={editing ?? undefined} onSave={onSave} onClose={() => { setCreating(false); setEditing(null); }} />}
+      <h1 className="font-display text-xl font-bold text-foreground md:text-3xl">{t("agenda")}</h1>
+      <AgendaToolbar view={view} onView={(v) => onSearch({ view: v })} onNew={() => setCreating("")} />
+      {c.undoFn && <div className="flex items-center gap-3 rounded-lg bg-secondary p-2 text-sm"><span>{t("agendaRescheduled")}</span><button type="button" onClick={() => void c.undoFn?.()} className="font-bold text-primary">{t("agendaUndo")}</button></div>}
+      <AgendaViews view={view} monday={mondayFrom(search.week)} month={monthFrom(search.month)} hourRange={c.hourRange} appts={c.appts} blocked={c.blocked}
+        onEdit={setEditing} onDelete={c.removeApt} onCreate={(day, mm) => setCreating(`${localDate(day)}T${pad(Math.floor(mm / 60))}:${pad(mm % 60)}`)} onReschedule={c.reschedule}
+        onWeek={(d) => onSearch({ week: localDate(getMondayOf(d)) })} onMonth={(d) => onSearch({ month: `${d.getFullYear()}-${pad(d.getMonth() + 1)}` })} onDay={(d) => onSearch({ view: "week", week: localDate(getMondayOf(d)) })} />
+      {(creating !== null || editing) && <AppointmentModal initial={editing ?? undefined} defaultStart={creating ?? undefined} onSave={onSave} onClose={() => { setCreating(null); setEditing(null); }} />}
     </div>
   );
 }
