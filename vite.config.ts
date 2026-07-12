@@ -34,6 +34,7 @@ export default defineConfig({
       "@agenda": r("apps/web/src/modules/agenda"),
       "@orders": r("apps/web/src/modules/orders"),
       "@orders-public": r("apps/web/src/modules/orders-public"),
+      "@order-forms": r("apps/web/src/modules/order-forms"),
       "@shared": r("apps/web/src/shared"),
       "@brand": r("brand"),
     },

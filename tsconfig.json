@@ -41,6 +41,7 @@
       "@agenda/*":    ["./apps/web/src/modules/agenda/*"],
       "@orders/*":    ["./apps/web/src/modules/orders/*"],
       "@orders-public/*": ["./apps/web/src/modules/orders-public/*"],
+      "@order-forms/*": ["./apps/web/src/modules/order-forms/*"],
       "@shared/*":    ["./apps/web/src/shared/*"],
       "@brand/*":     ["./brand/*"]
     }
