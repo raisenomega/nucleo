@@ -10,7 +10,7 @@ export function PackageInfo({ pkg: p, onQuote }: { pkg: PackageDetail; onQuote: 
     <div>
       {p.short_description && <p className="text-[color:hsl(var(--lp-muted))]">{p.short_description}</p>}
       <div className="mt-4 flex items-baseline gap-3">
-        <span style={{ fontSize: "var(--text-h2)" }} className="font-bold">{formatPrice(p.price, p.currency)}</span>
+        {p.price != null && <span style={{ fontSize: "var(--text-h2)" }} className="font-bold">{formatPrice(p.price, p.currency)}</span>}
         {p.compare_at_price != null && <span className="text-[color:hsl(var(--lp-muted))] line-through">{formatPrice(p.compare_at_price, p.currency)}</span>}
       </div>
       <FloatingButton onClick={onQuote} variant="primary" size="lg" className="mt-6">{t("lpDetailCtaQuotePackage")}</FloatingButton>
