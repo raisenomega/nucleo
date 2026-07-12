@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { X } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { useI18n } from "@shared/i18n";
 import { ScreenModal } from "@shared/components/ScreenModal";
 import { useAppointmentForm } from "@agenda/presentation/appointment-modal.hooks";
@@ -25,10 +26,13 @@ export function AppointmentModal({ initial, defaultStart, onSave, onClose }: { i
         <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button>
       </div>
       <div className="space-y-3 p-4 text-foreground">
-        <label className="block"><span className={cap}>{t("title")}</span><input value={form.title} onChange={(e) => set("title", e.target.value)} className={fld} /></label>
+        <label className="block"><span className={cap}>{t("agendaApptTitle")}</span><input value={form.title} onChange={(e) => set("title", e.target.value)} className={fld} /></label>
         <div><span className={cap}>{t("leads")}</span><LeadPickerSection leadId={form.leadId} leadName={form.leadName} onPick={(id, name) => { set("leadId", id); set("leadName", name); }} /></div>
-        <label className="block"><span className={cap}>{t("agendaService")}</span>
-          <select value={form.serviceId ?? ""} onChange={(e) => pickService(e.target.value)} className={fld}><option value="">—</option>{services.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</select></label>
+        <div><span className={cap}>{t("agendaService")}</span>
+          <div className="flex items-center gap-2">
+            <select value={form.serviceId ?? ""} onChange={(e) => pickService(e.target.value)} className={`flex-1 ${fld}`}><option value="">—</option>{services.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</select>
+            <Link to="/settings/landing/services" className="shrink-0 whitespace-nowrap text-sm text-primary">+ {t("agendaNewService")}</Link>
+          </div></div>
         <div className="flex flex-wrap gap-3">
           <label className="block"><span className={cap}>{t("agendaStartsAt")}</span><input type="datetime-local" value={form.startsAt} onChange={(e) => set("startsAt", e.target.value)} className={fld} /></label>
           <label className="block"><span className={cap}>{t("agendaDuration")}</span><input type="number" min={15} step={15} value={form.duration} onChange={(e) => set("duration", Number(e.target.value))} className={`w-28 ${fld}`} /></label>
