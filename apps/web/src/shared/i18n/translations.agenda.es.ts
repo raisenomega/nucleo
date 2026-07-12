@@ -15,4 +15,5 @@ export const esAgenda = {
   agendaDowMon: "Lun", agendaDowTue: "Mar", agendaDowWed: "Mié", agendaDowThu: "Jue", agendaDowFri: "Vie", agendaDowSat: "Sáb", agendaDowSun: "Dom",
   agendaPrevWeek: "Semana anterior", agendaNextWeek: "Semana siguiente", agendaToday: "Hoy", agendaPrevMonth: "Mes anterior", agendaNextMonth: "Mes siguiente",
   agendaRescheduled: "Cita reagendada", agendaUndo: "Deshacer", agendaApptTitle: "Título", agendaNewService: "Crear servicio",
+  agendaServiceModalTitle: "Nuevo servicio", agendaServiceModalName: "Nombre del servicio", agendaServiceModalDuration: "Duración (minutos)", agendaServiceModalPrice: "Precio (opcional)", agendaServiceModalRequiresSched: "Requiere agendar",
 } satisfies Partial<Record<TranslationKey, string>>;

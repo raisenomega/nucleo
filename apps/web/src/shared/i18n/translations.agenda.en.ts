@@ -15,4 +15,5 @@ export const enAgenda = {
   agendaDowMon: "Mon", agendaDowTue: "Tue", agendaDowWed: "Wed", agendaDowThu: "Thu", agendaDowFri: "Fri", agendaDowSat: "Sat", agendaDowSun: "Sun",
   agendaPrevWeek: "Previous week", agendaNextWeek: "Next week", agendaToday: "Today", agendaPrevMonth: "Previous month", agendaNextMonth: "Next month",
   agendaRescheduled: "Appointment rescheduled", agendaUndo: "Undo", agendaApptTitle: "Title", agendaNewService: "Create service",
+  agendaServiceModalTitle: "New service", agendaServiceModalName: "Service name", agendaServiceModalDuration: "Duration (minutes)", agendaServiceModalPrice: "Price (optional)", agendaServiceModalRequiresSched: "Requires scheduling",
 } satisfies Partial<Record<TranslationKey, string>>;
