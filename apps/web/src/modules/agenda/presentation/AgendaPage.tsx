@@ -25,7 +25,7 @@ export function AgendaPage({ search, onSearch }: { search: Search; onSearch: (p:
     <div className="space-y-4 p-4 md:p-8">
       <h1 className="font-display text-xl font-bold text-foreground md:text-3xl">{t("agenda")}</h1>
       <AgendaToolbar view={view} onView={(v) => onSearch({ view: v })} onNew={() => setCreating("")} />
-      {c.undoFn && <div className="flex items-center gap-3 rounded-lg bg-secondary p-2 text-sm"><span>{t("agendaRescheduled")}</span><button type="button" onClick={() => void c.undoFn?.()} className="font-bold text-primary">{t("agendaUndo")}</button></div>}
+      {c.undoFn && <div className="flex items-center gap-3 rounded-lg bg-secondary p-2 text-sm"><span>{t("agendaRescheduled")}</span><button type="button" onClick={() => void c.undoFn?.()} className="font-bold text-foreground underline">{t("agendaUndo")}</button></div>}
       <AgendaViews view={view} monday={mondayFrom(search.week)} month={monthFrom(search.month)} hourRange={c.hourRange} appts={c.appts} blocked={c.blocked}
         onEdit={setEditing} onDelete={c.removeApt} onCreate={(day, mm) => setCreating(`${localDate(day)}T${pad(Math.floor(mm / 60))}:${pad(mm % 60)}`)} onReschedule={c.reschedule}
         onWeek={(d) => onSearch({ week: localDate(getMondayOf(d)) })} onMonth={(d) => onSearch({ month: `${d.getFullYear()}-${pad(d.getMonth() + 1)}` })} onDay={(d) => onSearch({ view: "week", week: localDate(getMondayOf(d)) })} />

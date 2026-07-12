@@ -19,7 +19,7 @@ export function ServicePickerSection({ services, value, onChange, onCreate }: {
       <span className="mb-1 block text-sm font-medium text-foreground">{t("agendaService")}</span>
       <div className="flex items-center gap-2">
         <select value={value ?? ""} onChange={(e) => onChange(e.target.value)} className={fld}><option value="">—</option>{services.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</select>
-        {isCeo && <button type="button" onClick={() => setOpen(true)} aria-label={t("agendaServiceModalTitle")} className="shrink-0 rounded-lg border border-border p-2 text-primary"><Plus className="h-4 w-4" /></button>}
+        {isCeo && <button type="button" onClick={() => setOpen(true)} aria-label={t("agendaServiceModalTitle")} className="shrink-0 rounded-lg bg-primary p-2 text-primary-foreground"><Plus className="h-4 w-4" /></button>}
       </div>
       {open && <NestedCreateServiceModal onSave={save} onClose={() => setOpen(false)} />}
     </div>

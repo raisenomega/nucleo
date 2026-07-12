@@ -18,7 +18,7 @@ export function LeadPickerSection({ leadId, leadName, onPick }: { leadId: string
     <div className="space-y-2">
       <input value={q} onChange={(e) => { setQ(e.target.value); void search(e.target.value); }} placeholder={t("agendaLeadSearch")} className={fld} />
       {results.length > 0 && <ul className="rounded-lg border border-border">{results.map((r) => <li key={r.id}><button type="button" onClick={() => onPick(r)} className="w-full p-2 text-left text-sm hover:bg-secondary">{r.name}</button></li>)}</ul>}
-      {!creating ? <button type="button" onClick={() => setCreating(true)} className="text-sm text-primary">+ {t("agendaNewLead")}</button>
+      {!creating ? <button type="button" onClick={() => setCreating(true)} className="text-sm text-foreground underline">+ {t("agendaNewLead")}</button>
         : <div className="space-y-2 rounded-lg border border-border p-2">
             <input value={nn} onChange={(e) => setNn(e.target.value)} placeholder={t("agendaLeadName")} className={fld} />
             <input value={np} onChange={(e) => setNp(e.target.value)} placeholder={t("agendaLeadPhone")} className={fld} />

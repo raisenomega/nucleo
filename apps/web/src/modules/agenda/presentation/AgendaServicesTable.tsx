@@ -9,7 +9,7 @@ export function AgendaServicesTable({ list, onUpdate }: { list: ReservableServic
   if (list.length === 0)
     return (
       <EmptyState title={t("agendaNoReservable")} description={t("agendaNoReservableHint")}>
-        <Link to="/settings/landing/services" className="text-primary underline">{t("services")}</Link>
+        <Link to="/settings/landing/services" className="text-foreground underline">{t("services")}</Link>
       </EmptyState>
     );
   return <div className="rounded-lg border border-border p-3">{list.map((s) => <AgendaServiceRow key={s.id} svc={s} onChange={(rt, rp) => onUpdate(s.id, rt, rp)} />)}</div>;

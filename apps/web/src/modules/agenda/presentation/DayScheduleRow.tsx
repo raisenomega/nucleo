@@ -16,7 +16,7 @@ export function DayScheduleRow({ day, ranges, onChange }: { day: DayKey; ranges:
       {ranges.map((r, i) => (
         <TimeRangeInput key={i} range={r} onChange={(v) => onChange(ranges.map((x, j) => (j === i ? v : x)))} onRemove={() => onChange(ranges.filter((_, j) => j !== i))} />
       ))}
-      {enabled && <button type="button" onClick={() => onChange([...ranges, DEF])} className="inline-flex items-center gap-1 text-sm text-primary"><Plus className="h-3 w-3" />{t("agendaAddWindow")}</button>}
+      {enabled && <button type="button" onClick={() => onChange([...ranges, DEF])} className="inline-flex items-center gap-1 text-sm text-foreground"><Plus className="h-3 w-3" />{t("agendaAddWindow")}</button>}
     </div>
   );
 }
