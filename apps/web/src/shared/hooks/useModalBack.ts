@@ -23,7 +23,13 @@ export function useModalBack(onClose: () => void) {
     stack.push(onClose);
     return () => {
       const i = stack.lastIndexOf(onClose);
-      if (i >= 0) { stack.splice(i, 1); ignoreNext = true; window.history.back(); }
+      if (i < 0) return; // ya consumido por el botón "atrás" del navegador → no revertir.
+      stack.splice(i, 1);
+      // Solo revertir el pushState si SEGUIMOS en la entrada del modal (cierre por UI). Si no lo está
+      // (history desincronizado, poca profundidad en landing), un back() escaparía del sitio → se omite.
+      if (typeof window !== "undefined" && (window.history.state as { modal?: boolean } | null)?.modal === true) {
+        ignoreNext = true; window.history.back();
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
