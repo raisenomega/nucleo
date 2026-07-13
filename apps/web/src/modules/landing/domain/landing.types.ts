@@ -1,4 +1,5 @@
 // BC landing — panel de edición. Puro (sin infra). Tipos + interfaces de repositorio.
+import type { ItemHighlight } from "@shared/types/item-highlight.types";
 export type Result = { ok: true } | { ok: false; error: string };
 export type BusinessHours = Record<string, { open: string; close: string } | null>;
 export type CtaType = "quote" | "order" | "contact" | "custom";
@@ -36,7 +37,7 @@ export interface LandingProduct {
   shortDescription: string; longDescription: string;
   price: number; compareAtPrice: number | null; currency: string; taxRate: number | null; stripePriceId: string | null;
   trackInventory: boolean; stockQuantity: number | null; lowStockThreshold: number | null;
-  primaryImageUrl: string | null; galleryImages: string[]; videoUrl: string | null;
+  primaryImageUrl: string | null; galleryImages: string[]; videoUrl: string | null; highlights: ItemHighlight[];
   isActive: boolean; isFeatured: boolean; displayOrder: number;
   attributes: Record<string, unknown>; metaTitle: string; metaDescription: string; isPublished: boolean;
   formId: string | null;
@@ -57,7 +58,8 @@ export interface LandingService {
   shortDescription: string; longDescription: string;
   pricingType: PricingType; price: number | null; priceUnit: string | null;
   durationEstimateMinutes: number | null; requiresScheduling: boolean;
-  primaryImageUrl: string | null; isActive: boolean; isFeatured: boolean; displayOrder: number;
+  primaryImageUrl: string | null; galleryImages: string[]; highlights: ItemHighlight[];
+  isActive: boolean; isFeatured: boolean; displayOrder: number;
   metaTitle: string; metaDescription: string; isPublished: boolean;
 }
 export type ServiceInput = Omit<LandingService, "id">;

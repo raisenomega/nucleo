@@ -8,6 +8,8 @@ import { ServiceBasicInfoSection } from "@landing/presentation/ServiceBasicInfoS
 import { ServicePricingSection } from "@landing/presentation/ServicePricingSection";
 import { ServiceDurationSection } from "@landing/presentation/ServiceDurationSection";
 import { ServiceImageSection } from "@landing/presentation/ServiceImageSection";
+import { GalleryImagesEditor } from "@landing/presentation/GalleryImagesEditor";
+import { HighlightsEditor } from "@landing/presentation/HighlightsEditor";
 import { ServiceMetaSection } from "@landing/presentation/ServiceMetaSection";
 import type { LandingCategory, ServiceInput, ServiceWithCategory } from "@landing/domain/landing.types";
 
@@ -37,6 +39,8 @@ export function ServiceModal({ initial, categories, onSave, onClose }: {
         <ServicePricingSection form={form} set={set} />
         <ServiceDurationSection form={form} set={set} />
         <ServiceImageSection form={form} set={set} />
+        <GalleryImagesEditor value={form.galleryImages} onChange={(v) => set("galleryImages", v)} />
+        <HighlightsEditor value={form.highlights} onChange={(v) => set("highlights", v)} />
         <ServiceMetaSection form={form} set={set} />
         <button type="button" disabled={busy || !canSave} onClick={() => void submit()}
           className="rounded-lg bg-primary px-4 py-2 font-bold text-primary-foreground disabled:opacity-50">{busy ? t("sending") : t("save")}</button>

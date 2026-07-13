@@ -9,7 +9,7 @@ const DEFAULTS: PackageInput = {
   slug: "", name: "", shortDescription: "", longDescription: "",
   price: 0, compareAtPrice: null, currency: "USD",
   includedProducts: [], includedServices: [], featuresList: [],
-  primaryImageUrl: null, isActive: true, isFeatured: false, displayOrder: 0,
+  primaryImageUrl: null, galleryImages: [], highlights: [], isActive: true, isFeatured: false, displayOrder: 0,
   badgeLabel: "", metaTitle: "", metaDescription: "", isPublished: false,
 };
 

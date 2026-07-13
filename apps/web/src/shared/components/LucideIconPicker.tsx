@@ -12,6 +12,7 @@ const CURATED = [
   "Paintbrush","Leaf","Sun","Zap","Shield","Star","Heart","Gift","Tag","Box",
   "Building2","Store","Factory","Warehouse","Container","Boxes","Wind","Flame","Waves","TreePine",
   "Bug","SprayCan","Bath","Brush","Trash","Construction","Drill","Pipette","Fan","Snowflake",
+  "CheckCircle2","BadgeCheck","Clock","Award","DollarSign","ThumbsUp",
 ];
 
 export function LucideIconPicker({ value, onChange }: { value: string | null; onChange: (name: string) => void }) {

@@ -3,7 +3,7 @@ import type { ILandingServicesRepository, ServiceWithCategory, Result } from "@l
 import { toLandingService, fromLandingServiceInput, type ServiceRow } from "@landing/infrastructure/landing-service.mapper";
 
 const ok = (e: { message: string } | null): Result => (e ? { ok: false, error: e.message } : { ok: true });
-const SEL = "id,category_id,slug,name,short_description,long_description,pricing_type,price,price_unit,duration_estimate_minutes,requires_scheduling,primary_image_url,is_active,is_featured,display_order,meta_title,meta_description,is_published,tenant_landing_categories(name)";
+const SEL = "id,category_id,slug,name,short_description,long_description,pricing_type,price,price_unit,duration_estimate_minutes,requires_scheduling,primary_image_url,gallery_images,highlights,is_active,is_featured,display_order,meta_title,meta_description,is_published,tenant_landing_categories(name)";
 
 export const supabaseLandingServicesRepository: ILandingServicesRepository = {
   async list(): Promise<ServiceWithCategory[]> {

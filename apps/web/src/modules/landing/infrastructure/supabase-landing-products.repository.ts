@@ -3,7 +3,7 @@ import type { ILandingProductsRepository, ProductWithCategory, Result } from "@l
 import { toLandingProduct, fromLandingProductInput, type ProductRow } from "@landing/infrastructure/landing-product.mapper";
 
 const ok = (e: { message: string } | null): Result => (e ? { ok: false, error: e.message } : { ok: true });
-const SEL = "id,category_id,slug,sku,name,short_description,long_description,price,compare_at_price,currency,tax_rate,stripe_price_id,track_inventory,stock_quantity,low_stock_threshold,primary_image_url,gallery_images,video_url,is_active,is_featured,display_order,attributes,meta_title,meta_description,is_published,form_id,tenant_landing_categories(name)";
+const SEL = "id,category_id,slug,sku,name,short_description,long_description,price,compare_at_price,currency,tax_rate,stripe_price_id,track_inventory,stock_quantity,low_stock_threshold,primary_image_url,gallery_images,video_url,highlights,is_active,is_featured,display_order,attributes,meta_title,meta_description,is_published,form_id,tenant_landing_categories(name)";
 
 export const supabaseLandingProductsRepository: ILandingProductsRepository = {
   async list(): Promise<ProductWithCategory[]> {

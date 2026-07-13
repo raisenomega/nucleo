@@ -9,7 +9,7 @@ const DEFAULTS: ProductInput = {
   categoryId: null, slug: "", sku: "", name: "", shortDescription: "", longDescription: "",
   price: 0, compareAtPrice: null, currency: "USD", taxRate: 11.5, stripePriceId: null,
   trackInventory: false, stockQuantity: null, lowStockThreshold: 5,
-  primaryImageUrl: null, galleryImages: [], videoUrl: null,
+  primaryImageUrl: null, galleryImages: [], videoUrl: null, highlights: [],
   isActive: true, isFeatured: false, displayOrder: 0,
   attributes: {}, metaTitle: "", metaDescription: "", isPublished: false, formId: null,
 };
