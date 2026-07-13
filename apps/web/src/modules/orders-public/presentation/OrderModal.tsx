@@ -6,7 +6,7 @@ import { ScreenModal } from "@shared/components/ScreenModal";
 import { Spinner } from "@shared/components/loading/Spinner";
 import { useOrderForm } from "@orders-public/presentation/useOrderForm.hook";
 import { useCreateOrder } from "@orders-public/presentation/useCreateOrder.hook";
-import { computeTotal } from "@orders-public/application/order-pricing";
+import { useOrderPricing } from "@orders-public/presentation/useOrderPricing.hook";
 import { OrderFormRenderer } from "@orders-public/presentation/OrderFormRenderer";
 import { OrderTotalPreview } from "@orders-public/presentation/OrderTotalPreview";
 import { PaymentMethodPicker } from "@orders-public/presentation/PaymentMethodPicker";
@@ -18,14 +18,14 @@ const ERR: Record<string, string> = { total_mismatch: "opErrTotal", rate_limited
 
 export function OrderModal({ item, onClose }: { item: OrderItem; onClose: () => void }) {
   const { t } = useI18n(); const toast = useToast();
-  const { form, methods, rules, status } = useOrderForm(item.kind, item.id);
+  const { form, methods, status } = useOrderForm(item.kind, item.id);
   const { busy, submit } = useCreateOrder();
   const [values, setValues] = useState<Record<string, unknown>>({});
   const [pm, setPm] = useState(""); const [coupon, setCoupon] = useState<string | null>(null);
   const [done, setDone] = useState<{ orderNumber: string; orderId: string } | null>(null);
   useEffect(() => { if (methods[0] && !pm) setPm(methods[0].methodKey); }, [methods, pm]);
   const items = [{ kind: item.kind, id: item.id, qty: 1, name: item.name }];
-  const totals = rules ? computeTotal(items, values, rules, () => item.basePrice) : { subtotal: item.basePrice, tax: 0, shipping: 0, total: item.basePrice };
+  const totals = useOrderPricing(item, values, coupon);
   async function onSubmit() {
     if (!form) return;
     const r = await submit({ formId: form.id, items, customFields: values, paymentMethodKey: pm, couponCode: coupon, clientTotal: totals.total });
