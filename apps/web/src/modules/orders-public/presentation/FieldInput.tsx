@@ -7,14 +7,23 @@ const wrap = (label: string, input: ReactNode) => (
 );
 
 export function FieldInput({ field, value, onChange }: { field: OrderFormField; value: unknown; onChange: (v: unknown) => void }) {
-  const { locale } = useI18n();
+  const { t, locale } = useI18n();
   const label = (locale === "en" ? field.labelEn : field.labelEs) + (field.required ? " *" : "");
   const optLabel = (o: FieldOption) => (locale === "en" ? o.label_en : o.label_es);
   const cls = "w-full rounded-lg border border-border bg-background p-2 text-sm";
   const v = value ?? "";
-  if (field.kind === "checkbox") return (
-    <label className="flex items-start gap-2 text-sm text-foreground"><input type="checkbox" checked={value === true} onChange={(e) => onChange(e.target.checked)} className="mt-1 h-4 w-4" /><span>{label}</span></label>
-  );
+  if (field.kind === "checkbox") {
+    const price = field.validation.price_display as string | undefined;
+    const link = field.validation.terms_link as string | undefined;
+    const linkLabel = (locale === "en" ? field.validation.terms_link_label_en : field.validation.terms_link_label_es) as string | undefined;
+    return (
+      <label className="flex items-start gap-2 text-sm text-foreground">
+        <input type="checkbox" checked={value === true} onChange={(e) => onChange(e.target.checked)} className="mt-1 h-4 w-4" />
+        <span className="flex-1">{label}{link && <a href={link} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className="ml-1 text-primary underline">{linkLabel || t("viewTermsLink")}</a>}</span>
+        {price && <span className="ml-auto shrink-0 rounded-md bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">{price}</span>}
+      </label>
+    );
+  }
   if (field.kind === "textarea") return wrap(label, <textarea value={v as string} onChange={(e) => onChange(e.target.value)} rows={3} className={cls} />);
   if (field.kind === "select") return wrap(label,
     <select value={v as string} onChange={(e) => onChange(e.target.value)} className={cls}><option value="">—</option>{field.options.map((o) => <option key={o.value} value={o.value}>{optLabel(o)}</option>)}</select>);

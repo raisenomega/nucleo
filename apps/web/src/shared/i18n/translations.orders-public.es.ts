@@ -9,4 +9,5 @@ export const esOrdersPublic = {
   opErrNetwork: "No se pudo enviar la orden.", opOrderBtn: "Ordenar", opSubscribeBtn: "Suscribirme",
   opCopyDetails: "Copiar detalles", opAthSent: "Ya envié el pago", opUnderstood: "Entendido",
   opAthThanks: "¡Gracias! Verificaremos tu pago y confirmaremos por email en menos de 24 horas.",
+  checkoutRequiredField: "Completá los campos obligatorios para continuar.", viewTermsLink: "Ver",
 } satisfies Partial<Record<TranslationKey, string>>;

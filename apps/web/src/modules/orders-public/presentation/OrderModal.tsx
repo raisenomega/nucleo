@@ -12,12 +12,14 @@ import { OrderTotalPreview } from "@orders-public/presentation/OrderTotalPreview
 import { PaymentMethodPicker } from "@orders-public/presentation/PaymentMethodPicker";
 import { CouponInput } from "@orders-public/presentation/CouponInput";
 import { OrderSuccessDialog } from "@orders-public/presentation/OrderSuccessDialog";
+import { firstInvalidField } from "@orders-public/domain/validate-order";
 
 export interface OrderItem { kind: "product" | "service" | "package"; id: string; name: string; basePrice: number }
 const ERR: Record<string, string> = { total_mismatch: "opErrTotal", rate_limited: "opErrRate", coupon_invalid: "opErrCoupon", payment_method_invalid: "opErrPayment", form_invalid: "opErrForm" };
+const bar = "sticky z-10 border-border bg-card/85 p-4 backdrop-blur supports-[backdrop-filter]:bg-card/70";
 
 export function OrderModal({ item, onClose }: { item: OrderItem; onClose: () => void }) {
-  const { t } = useI18n(); const toast = useToast();
+  const { t, locale } = useI18n(); const toast = useToast();
   const { form, methods, status } = useOrderForm(item.kind, item.id);
   const { busy, submit } = useCreateOrder();
   const [values, setValues] = useState<Record<string, unknown>>({});
@@ -28,13 +30,15 @@ export function OrderModal({ item, onClose }: { item: OrderItem; onClose: () => 
   const totals = useOrderPricing(item, values, coupon);
   async function onSubmit() {
     if (!form) return;
+    const bad = firstInvalidField(form.fields, values); // bloqueante: toast educativo, no se envía la orden.
+    if (bad) { const msg = (locale === "en" ? bad.validation.error_en : bad.validation.error_es) as string | undefined; return toast.error(msg || t("checkoutRequiredField")); }
     const r = await submit({ formId: form.id, items, customFields: values, paymentMethodKey: pm, couponCode: coupon, clientTotal: totals.total });
     if (r.ok) setDone({ orderNumber: r.orderNumber, orderId: r.orderId }); else toast.error(t((ERR[r.code] ?? "opErrNetwork") as Parameters<typeof t>[0]));
   }
   if (done) return <OrderSuccessDialog orderNumber={done.orderNumber} orderId={done.orderId} method={methods.find((m) => m.methodKey === pm) ?? null} total={totals.total} itemName={item.name} onClose={onClose} />;
   return (
     <ScreenModal onClose={onClose}>
-      <div className="flex items-center justify-between border-b border-border p-4">
+      <div className={`${bar} top-0 flex items-center justify-between border-b`}>
         <h2 className="font-display text-lg font-bold text-foreground">{t("opTitle")}: {item.name}</h2>
         <button type="button" onClick={onClose} aria-label={t("opClose")}><X className="h-6 w-6" /></button>
       </div>
@@ -46,13 +50,17 @@ export function OrderModal({ item, onClose }: { item: OrderItem; onClose: () => 
             <OrderFormRenderer fields={form.fields} values={values} onChange={(k, v) => setValues((p) => ({ ...p, [k]: v }))} />
             <CouponInput onApply={setCoupon} />
             <PaymentMethodPicker methods={methods} value={pm} onChange={setPm} />
-            <OrderTotalPreview totals={totals} />
-            <button type="button" disabled={busy || !pm} onClick={() => void onSubmit()} className="w-full rounded-lg bg-primary px-4 py-3 font-bold text-primary-foreground disabled:opacity-50">
-              {busy ? t("opSubmitting") : t("opSubmit")}
-            </button>
           </>
         )}
       </div>
+      {status === "ready" && form && (
+        <div className={`${bar} bottom-0 space-y-3 border-t`}>
+          <OrderTotalPreview totals={totals} />
+          <button type="button" disabled={busy || !pm} onClick={() => void onSubmit()} className="w-full rounded-lg bg-primary px-4 py-3 font-bold text-primary-foreground disabled:opacity-50">
+            {busy ? t("opSubmitting") : t("opSubmit")}
+          </button>
+        </div>
+      )}
     </ScreenModal>
   );
 }
