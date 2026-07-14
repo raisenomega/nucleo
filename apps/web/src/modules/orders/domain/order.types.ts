@@ -9,7 +9,8 @@ export interface OrderItem { kind?: string; name: string; qty: number; price: nu
 
 export interface Order {
   id: string; orderNumber: string | null; customerName: string; customerEmail: string; customerPhone: string;
-  items: OrderItem[]; subtotal: number; tax: number; shipping: number; discount: number; total: number;
+  items: OrderItem[]; customFields: Record<string, unknown>; formId: string | null;
+  subtotal: number; tax: number; shipping: number; discount: number; total: number;
   currency: string; status: OrderStatus; sourceHostname: string | null;
   utmSource: string | null; utmMedium: string | null; utmCampaign: string | null;
   linkedLeadId: string | null; linkedInvoiceId: string | null; createdAt: string; paidAt: string | null;

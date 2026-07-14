@@ -27,6 +27,9 @@ export function OrderModal({ item, onClose }: { item: OrderItem; onClose: () => 
   const [pm, setPm] = useState(""); const [coupon, setCoupon] = useState<string | null>(null);
   const [done, setDone] = useState<{ orderNumber: string; orderId: string } | null>(null);
   useEffect(() => { if (methods[0] && !pm) setPm(methods[0].methodKey); }, [methods, pm]);
+  // Semilla de valores desde validation_rules.default (frequency='4w', extraBuriedBins='2'…) → el preview de la
+  // matriz calcula desde que abre y responde al cambiar frecuencia (antes arrancaba vacío → matriz devolvía $0).
+  useEffect(() => { if (form) setValues(Object.fromEntries(form.fields.filter((f) => f.validation.default !== undefined).map((f) => [f.fieldKey, f.validation.default]))); }, [form]);
   const items = [{ kind: item.kind, id: item.id, qty: 1, name: item.name }];
   const totals = useOrderPricing(item, values, coupon);
   async function onSubmit() {

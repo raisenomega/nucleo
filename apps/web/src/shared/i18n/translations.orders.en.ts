@@ -22,4 +22,5 @@ export const enOrders = {
   ordConfirmReceivedTitle: "Confirm payment received", ordConfirmReceivedCheck: "I verified the payment in my ATH Móvil account",
   ordActionConfirmReceived: "Confirm payment received", ordActionReport: "Report not received",
   ordReportTitle: "Report payment not received", ordReportReason: "Reason", ordReportBtn: "Report", ordReportSuccess: "Reported · order back to pending",
+  ordCustomFieldsTitle: "Order details", ordFieldYes: "Yes", ordFieldNo: "No",
 } satisfies Partial<Record<TranslationKey, string>>;

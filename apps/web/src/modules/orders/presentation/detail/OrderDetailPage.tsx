@@ -13,6 +13,7 @@ import { usePaymentMethods } from "@orders/application/usePaymentMethods.hook";
 import { supabaseOrdersRepository } from "@orders/infrastructure/supabase-orders.repository";
 import { supabaseOrderHistoryRepository } from "@orders/infrastructure/supabase-order-history.repository";
 import { OrderCustomerInfo } from "@orders/presentation/detail/OrderCustomerInfo";
+import { OrderCustomFieldsBlock } from "@orders/presentation/detail/OrderCustomFieldsBlock";
 import { OrderItemsList } from "@orders/presentation/detail/OrderItemsList";
 import { OrderTotalsBreakdown } from "@orders/presentation/detail/OrderTotalsBreakdown";
 import { OrderTimeline } from "@orders/presentation/detail/OrderTimeline";
@@ -48,7 +49,7 @@ export function OrderDetailPage({ orderId }: { orderId: string }) {
       {order.status === "awaiting_confirmation" && <AwaitingConfirmationBanner clientConfirmedAt={order.clientConfirmedAt} />}
       <div className="grid gap-4 md:grid-cols-3">
         <div className="space-y-4 md:col-span-2">
-          <OrderCustomerInfo order={order} /><OrderItemsList order={order} /><OrderTotalsBreakdown order={order} />
+          <OrderCustomerInfo order={order} /><OrderCustomFieldsBlock formId={order.formId} customFields={order.customFields} /><OrderItemsList order={order} /><OrderTotalsBreakdown order={order} />
           {isReady(hist) && <OrderTimeline events={hist.data} />}
         </div>
         <OrderActions order={order} onChangeStatus={() => setModal("status")} onConfirm={() => setModal("pay")}
