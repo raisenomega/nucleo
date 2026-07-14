@@ -10,4 +10,5 @@ export const enOrdersPublic = {
   opCopyDetails: "Copy details", opAthSent: "I already sent the payment", opUnderstood: "Got it",
   opAthThanks: "Thanks! We'll verify your payment and confirm by email within 24 hours.",
   checkoutRequiredField: "Please complete the required fields to continue.", viewTermsLink: "View",
+  opSummaryTitle: "Order Summary", opCancel: "Cancel",
 } satisfies Partial<Record<TranslationKey, string>>;

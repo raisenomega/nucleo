@@ -9,6 +9,7 @@ import { useCreateOrder } from "@orders-public/presentation/useCreateOrder.hook"
 import { useOrderPricing } from "@orders-public/presentation/useOrderPricing.hook";
 import { OrderFormRenderer } from "@orders-public/presentation/OrderFormRenderer";
 import { OrderTotalPreview } from "@orders-public/presentation/OrderTotalPreview";
+import { OrderDynamicSummary } from "@orders-public/presentation/OrderDynamicSummary";
 import { PaymentMethodPicker } from "@orders-public/presentation/PaymentMethodPicker";
 import { CouponInput } from "@orders-public/presentation/CouponInput";
 import { OrderSuccessDialog } from "@orders-public/presentation/OrderSuccessDialog";
@@ -55,10 +56,15 @@ export function OrderModal({ item, onClose }: { item: OrderItem; onClose: () => 
       </div>
       {status === "ready" && form && (
         <div className={`${bar} bottom-0 space-y-3 border-t`}>
-          <OrderTotalPreview totals={totals} />
-          <button type="button" disabled={busy || !pm} onClick={() => void onSubmit()} className="w-full rounded-lg bg-primary px-4 py-3 font-bold text-primary-foreground disabled:opacity-50">
-            {busy ? t("opSubmitting") : t("opSubmit")}
-          </button>
+          {form.showSummary
+            ? <OrderDynamicSummary totals={totals} title={t("opSummaryTitle")} footer={locale === "en" ? form.summaryFooterEn : form.summaryFooterEs} />
+            : <OrderTotalPreview totals={totals} />}
+          <div className="flex gap-2">
+            <button type="button" onClick={onClose} className="rounded-lg border border-border px-4 py-3 font-bold text-foreground">{(locale === "en" ? form.cancelLabelEn : form.cancelLabelEs) || t("opCancel")}</button>
+            <button type="button" disabled={busy || !pm} onClick={() => void onSubmit()} className="flex-1 rounded-lg bg-primary px-4 py-3 font-bold text-primary-foreground disabled:opacity-50">
+              {busy ? t("opSubmitting") : (locale === "en" ? form.submitLabelEn : form.submitLabelEs) || t("opSubmit")}
+            </button>
+          </div>
         </div>
       )}
     </ScreenModal>

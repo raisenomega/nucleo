@@ -1,14 +1,15 @@
 import { supabase } from "@shared/lib/supabase";
 import type { CreateOrderInput, OrderForm, OrderFormField, PaymentOption, PricingRules } from "@orders-public/domain/order-form.types";
 
-type FormRow = { id: string; name: string; applies_to_kind: string | null; applies_to_id: string | null };
-type FieldRow = { id: string; order_index: number; kind: string; field_key: string; label_es: string; label_en: string | null; required: boolean; validation_rules: Record<string, unknown>; options: unknown; conditional_on: unknown };
+type FormRow = { id: string; name: string; submit_button_label_es: string | null; submit_button_label_en: string | null; cancel_button_label_es: string | null; cancel_button_label_en: string | null; show_summary: boolean | null; summary_footer_es: string | null; summary_footer_en: string | null };
+type FieldRow = { id: string; order_index: number; kind: string; field_key: string; label_es: string; label_en: string | null; placeholder_es: string | null; placeholder_en: string | null; required: boolean; validation_rules: Record<string, unknown>; options: unknown; conditional_on: unknown; group_name: string | null; group_description_es: string | null; group_description_en: string | null };
 
 const toField = (r: FieldRow): OrderFormField => ({
   id: r.id, orderIndex: r.order_index, kind: r.kind as OrderFormField["kind"], fieldKey: r.field_key,
-  labelEs: r.label_es, labelEn: r.label_en ?? r.label_es, required: r.required,
+  labelEs: r.label_es, labelEn: r.label_en ?? r.label_es, placeholderEs: r.placeholder_es, placeholderEn: r.placeholder_en, required: r.required,
   validation: r.validation_rules ?? {}, options: (Array.isArray(r.options) ? r.options : []) as OrderFormField["options"],
   conditionalOn: (r.conditional_on ?? null) as OrderFormField["conditionalOn"],
+  groupName: r.group_name, groupDescriptionEs: r.group_description_es, groupDescriptionEn: r.group_description_en,
 });
 
 export const ordersPublicRepository = {
@@ -18,11 +19,14 @@ export const ordersPublicRepository = {
     const { data: fid } = await supabase.rpc("_public_resolve_form_id", { _hostname: window.location.hostname, _kind: kind, _item_id: itemId });
     const formId = fid as string | null;
     if (!formId) return null;
-    const { data: f } = await supabase.from("tenant_order_forms").select("id,name").eq("id", formId).maybeSingle();
-    const form = f as { id: string; name: string } | null;
+    const { data: f } = await supabase.from("tenant_order_forms").select("id,name,submit_button_label_es,submit_button_label_en,cancel_button_label_es,cancel_button_label_en,show_summary,summary_footer_es,summary_footer_en").eq("id", formId).maybeSingle();
+    const form = f as FormRow | null;
     if (!form) return null;
-    const { data: fd } = await supabase.from("tenant_order_form_fields").select("id,order_index,kind,field_key,label_es,label_en,required,validation_rules,options,conditional_on").eq("form_id", formId).order("order_index");
-    return { id: form.id, name: form.name, fields: ((fd ?? []) as FieldRow[]).map(toField) };
+    const { data: fd } = await supabase.from("tenant_order_form_fields").select("id,order_index,kind,field_key,label_es,label_en,placeholder_es,placeholder_en,required,validation_rules,options,conditional_on,group_name,group_description_es,group_description_en").eq("form_id", formId).order("order_index");
+    return { id: form.id, name: form.name, fields: ((fd ?? []) as FieldRow[]).map(toField),
+      submitLabelEs: form.submit_button_label_es, submitLabelEn: form.submit_button_label_en,
+      cancelLabelEs: form.cancel_button_label_es, cancelLabelEn: form.cancel_button_label_en,
+      showSummary: form.show_summary ?? true, summaryFooterEs: form.summary_footer_es, summaryFooterEn: form.summary_footer_en };
   },
   async paymentMethods(): Promise<PaymentOption[]> {
     const { data } = await supabase.from("tenant_payment_methods").select("method_key,display_name,config").eq("is_active", true).order("display_order");
