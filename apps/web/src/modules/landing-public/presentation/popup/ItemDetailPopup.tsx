@@ -18,7 +18,7 @@ export function ItemDetailPopup({ onOrder, onClose, ...p }: CardItemProps & { on
   return (
     <ScreenModal onClose={onClose}>
       <div className={`${bar} top-0 flex items-center justify-between border-b`}>
-        <h2 className="font-display text-lg font-bold text-foreground">{p.name}</h2>
+        <h2 className="hidden font-display text-lg font-bold text-foreground md:block">{p.name}</h2>
         <button type="button" onClick={onClose} aria-label={t("opClose")}><X className="h-6 w-6" /></button>
       </div>
       <div className="grid gap-4 p-4 md:grid-cols-2">

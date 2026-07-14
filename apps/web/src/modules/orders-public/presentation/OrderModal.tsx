@@ -39,7 +39,7 @@ export function OrderModal({ item, onClose }: { item: OrderItem; onClose: () => 
   return (
     <ScreenModal onClose={onClose}>
       <div className={`${bar} top-0 flex items-center justify-between border-b`}>
-        <h2 className="font-display text-lg font-bold text-foreground">{t("opTitle")}: {item.name}</h2>
+        <h2 className="hidden font-display text-lg font-bold text-foreground md:block">{t("opTitle")}: {item.name}</h2>
         <button type="button" onClick={onClose} aria-label={t("opClose")}><X className="h-6 w-6" /></button>
       </div>
       <div className="space-y-4 p-4">
