@@ -65,5 +65,5 @@ export const esLanding = {
   lpIosModalStep1: "Tocá el ícono compartir 📤 en Safari", lpIosModalStep2: "Deslizá y elegí 'Añadir a pantalla de inicio' ➕", lpIosModalStep3: "Tocá 'Añadir' y {name} aparece como app 🎉", lpIosModalClose: "Entendido",
   lpViewDetails: "Ver detalles", lpCarouselPrev: "Imagen anterior", lpCarouselNext: "Imagen siguiente",
   highlightsTitle: "Puntos destacados", highlightTextEs: "Texto (español)", highlightTextEn: "Texto (inglés)", addHighlight: "Agregar punto",
-  moveUp: "Subir", moveDown: "Bajar",
+  moveUp: "Subir", moveDown: "Bajar", heroSectionTitle: "Sección landing (hero destacado)",
 } satisfies Partial<Record<TranslationKey, string>>;

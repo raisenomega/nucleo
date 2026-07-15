@@ -19,7 +19,7 @@ export interface OrderItem { kind: "product" | "service" | "package"; id: string
 const ERR: Record<string, string> = { total_mismatch: "opErrTotal", rate_limited: "opErrRate", coupon_invalid: "opErrCoupon", payment_method_invalid: "opErrPayment", form_invalid: "opErrForm" };
 const bar = "sticky z-10 border-border bg-card/85 p-4 backdrop-blur supports-[backdrop-filter]:bg-card/70";
 
-export function OrderModal({ item, onClose }: { item: OrderItem; onClose: () => void }) {
+export function OrderModal({ item, onClose, defaultValues }: { item: OrderItem; onClose: () => void; defaultValues?: Record<string, unknown> }) {
   const { t, locale } = useI18n(); const toast = useToast();
   const { form, methods, status } = useOrderForm(item.kind, item.id);
   const { busy, submit } = useCreateOrder();
@@ -29,7 +29,7 @@ export function OrderModal({ item, onClose }: { item: OrderItem; onClose: () => 
   useEffect(() => { if (methods[0] && !pm) setPm(methods[0].methodKey); }, [methods, pm]);
   // Semilla de valores desde validation_rules.default (frequency='4w', extraBuriedBins='2'…) → el preview de la
   // matriz calcula desde que abre y responde al cambiar frecuencia (antes arrancaba vacío → matriz devolvía $0).
-  useEffect(() => { if (form) setValues(Object.fromEntries(form.fields.filter((f) => f.validation.default !== undefined).map((f) => [f.fieldKey, f.validation.default]))); }, [form]);
+  useEffect(() => { if (form) setValues({ ...Object.fromEntries(form.fields.filter((f) => f.validation.default !== undefined).map((f) => [f.fieldKey, f.validation.default])), ...defaultValues }); }, [form]);
   const items = [{ kind: item.kind, id: item.id, qty: 1, name: item.name }];
   const totals = useOrderPricing(item, values, coupon);
   async function onSubmit() {

@@ -59,6 +59,7 @@ export interface LandingService {
   pricingType: PricingType; price: number | null; priceUnit: string | null;
   durationEstimateMinutes: number | null; requiresScheduling: boolean;
   primaryImageUrl: string | null; galleryImages: string[]; highlights: ItemHighlight[];
+  landingHero: Record<string, unknown> | null;
   isActive: boolean; isFeatured: boolean; displayOrder: number;
   metaTitle: string; metaDescription: string; isPublished: boolean;
 }

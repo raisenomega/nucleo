@@ -8,6 +8,7 @@ import { HeroFlat } from "@landing-public/presentation/hero/HeroFlat";
 import { PublicNav } from "@landing-public/presentation/nav/PublicNav";
 import { useLandingHome } from "@landing-public/presentation/useLandingHome.hook";
 import { HomeSections } from "@landing-public/presentation/HomeSections";
+import { LandingHeroSections } from "@landing-public/presentation/hero-sections/LandingHeroSections";
 import { ContactSection } from "@landing-public/presentation/sections/ContactSection";
 import { PublicFooter } from "@landing-public/presentation/footer/PublicFooter";
 
@@ -36,6 +37,7 @@ export function PublicLandingRoot() {
         <HeroContainer mediaSlot={<HeroMedia videoUrl={(hero?.hero_video_url as string) ?? null} imageUrl={(hero?.hero_image_url as string) ?? null} />}>
           <HeroFlat hero={hero} displayName={s.brand.displayName} />
         </HeroContainer>
+        <LandingHeroSections />
         <HomeSections home={home} />
         <ContactSection />
         <PublicFooter brand={s.brand} tagline={(hero?.meta_description as string) ?? ""} />

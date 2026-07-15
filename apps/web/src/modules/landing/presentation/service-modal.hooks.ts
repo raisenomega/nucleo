@@ -9,7 +9,7 @@ const DEFAULTS: ServiceInput = {
   categoryId: null, slug: "", name: "", shortDescription: "", longDescription: "",
   pricingType: "quote_required", price: null, priceUnit: null,
   durationEstimateMinutes: null, requiresScheduling: true,
-  primaryImageUrl: null, galleryImages: [], highlights: [], isActive: true, isFeatured: false, displayOrder: 0,
+  primaryImageUrl: null, galleryImages: [], highlights: [], landingHero: null, isActive: true, isFeatured: false, displayOrder: 0,
   metaTitle: "", metaDescription: "", isPublished: false,
 };
 

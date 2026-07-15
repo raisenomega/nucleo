@@ -65,5 +65,5 @@ export const enLanding = {
   lpIosModalStep1: "Tap the share icon 📤 in Safari", lpIosModalStep2: "Scroll and tap 'Add to Home Screen' ➕", lpIosModalStep3: "Tap 'Add' and {name} appears as an app 🎉", lpIosModalClose: "Got it",
   lpViewDetails: "View details", lpCarouselPrev: "Previous image", lpCarouselNext: "Next image",
   highlightsTitle: "Highlights", highlightTextEs: "Text (Spanish)", highlightTextEn: "Text (English)", addHighlight: "Add highlight",
-  moveUp: "Move up", moveDown: "Move down",
+  moveUp: "Move up", moveDown: "Move down", heroSectionTitle: "Landing hero section",
 } satisfies Partial<Record<TranslationKey, string>>;
