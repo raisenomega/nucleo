@@ -30,7 +30,7 @@ export function ServicePageEditorPage({ id }: { id: string }) {
       <div className="sticky top-0 z-10 flex items-center justify-between gap-2 bg-background/80 py-2 backdrop-blur">
         <button type="button" onClick={() => void nav({ to: "/settings/landing/service-pages" })} className="inline-flex items-center gap-1 text-sm text-muted-foreground"><ArrowLeft className="h-4 w-4" />{t("landingServicePages")}</button>
         <div className="flex gap-2">
-          <a href={`/servicios/${page.slug}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-2 text-sm font-bold text-foreground"><ExternalLink className="h-4 w-4" />{t("spPreview")}</a>
+          <a href={`/servicios/${page.slug}?preview=true&pid=${id}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-2 text-sm font-bold text-foreground"><ExternalLink className="h-4 w-4" />{t("spPreview")}</a>
           <button type="button" disabled={a.busy} onClick={() => void onSave()} className="rounded-lg bg-primary px-4 py-2 font-bold text-primary-foreground disabled:opacity-50">{t("save")}</button>
         </div>
       </div>

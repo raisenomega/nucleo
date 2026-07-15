@@ -8,8 +8,8 @@ import { FileUploadButton } from "@shared/components/FileUploadButton";
 import { FilePreviewActions } from "@shared/components/FilePreviewActions";
 
 // Sube imagen con recorte (react-image-crop) → WebP → landing-assets/{tenant}/{entityType}/.
-export function ImageUploadWithCrop({ entityType, aspectRatio, maxWidthPx, value, onUploaded }: {
-  entityType: string; aspectRatio?: number; maxWidthPx?: number; value: string | null; onUploaded: (url: string | null) => void;
+export function ImageUploadWithCrop({ entityType, aspectRatio, maxWidthPx, maxSizeMb = 15, value, onUploaded }: {
+  entityType: string; aspectRatio?: number; maxWidthPx?: number; maxSizeMb?: number; value: string | null; onUploaded: (url: string | null) => void;
 }) {
   const { t } = useI18n();
   const { session } = useSession();
@@ -18,7 +18,7 @@ export function ImageUploadWithCrop({ entityType, aspectRatio, maxWidthPx, value
   const [crop, setCrop] = useState<Crop>({ unit: "%", x: 5, y: 5, width: 90, height: 90 });
   const [busy, setBusy] = useState(false);
 
-  const onFile = (f: File) => setSrc(URL.createObjectURL(f));
+  const onFile = (f: File) => { if (f.size > maxSizeMb * 1024 * 1024) { window.alert(t("uploadTooLarge", { mb: maxSizeMb })); return; } setSrc(URL.createObjectURL(f)); };
   async function save() {
     if (!imgRef.current || !session?.tenantId) return;
     setBusy(true);
