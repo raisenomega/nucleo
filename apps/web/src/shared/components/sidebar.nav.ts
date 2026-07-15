@@ -45,6 +45,7 @@ export const SECTIONS: NavSection[] = [
 export const LANDING_SECTION: NavSection = {
   title: "landing", icon: Palette, items: [
     { key: "landingSiteSettings", icon: SlidersHorizontal, to: "/settings/landing/config", mod: "settings" },
+    { key: "landingServicePages", icon: Layers, to: "/settings/landing/service-pages", mod: "settings" },
     { key: "landingCategories", icon: Tags, to: "/settings/landing/categories", mod: "settings" },
     { key: "products", icon: Package, to: "/settings/landing/products", mod: "settings" },
     { key: "services", icon: Wrench, to: "/settings/landing/services", mod: "settings" },
@@ -52,6 +53,5 @@ export const LANDING_SECTION: NavSection = {
     { key: "testimonials", icon: Quote, to: "/settings/landing/testimonials", mod: "settings" },
     { key: "faqs", icon: HelpCircle, to: "/settings/landing/faqs", mod: "settings" },
     { key: "landingOrderForms", icon: FileInput, to: "/settings/landing/order-forms", mod: "settings" },
-    { key: "landingServicePages", icon: Layers, to: "/settings/landing/service-pages", mod: "settings" },
   ],
 };

@@ -11,7 +11,7 @@ export function HeroEditor({ hero, onChange }: { hero: Json; onChange: (h: Json)
       {pair("badge_es", "badge_en", "Badge ES", "Badge EN")}
       {pair("title_es", "title_en", "Título ES", "Title EN")}
       {pair("subtitle_es", "subtitle_en", "Subtítulo ES", "Subtitle EN")}
-      <ImageUploadWithCrop entityType="service-pages" aspectRatio={4 / 3} value={(hero.image_url as string) ?? null} onUploaded={(u) => set("image_url", u)} />
+      <ImageUploadWithCrop entityType="service-pages" aspectRatio={4 / 3} enableVideo value={(hero.image_url as string) ?? null} onUploaded={(u) => set("image_url", u)} />
       {pair("image_alt_es", "image_alt_en", "Alt ES", "Alt EN")}
     </>
   );

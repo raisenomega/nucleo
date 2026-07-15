@@ -21,3 +21,12 @@ export async function cropToWebpAndUpload(
   if (up.error) return null;
   return supabase.storage.from("landing-assets").getPublicUrl(path).data.publicUrl;
 }
+
+// Sube un archivo tal cual (video u otro) sin recorte → landing-assets/{tenant}/{entityType}/{uuid}.{ext}.
+export async function uploadRawMedia(file: File, tenantId: string, entityType: string): Promise<string | null> {
+  const ext = (file.name.split(".").pop() || "bin").toLowerCase();
+  const path = `${tenantId}/${entityType}/${crypto.randomUUID()}.${ext}`;
+  const up = await supabase.storage.from("landing-assets").upload(path, file, { contentType: file.type, upsert: true });
+  if (up.error) return null;
+  return supabase.storage.from("landing-assets").getPublicUrl(path).data.publicUrl;
+}
