@@ -36,7 +36,7 @@ export function ServicePageEditorPage({ id }: { id: string }) {
       </div>
       <h1 className="font-display text-xl font-bold text-foreground">{(page.hero.title_es as string) || page.slug}</h1>
       <div className="space-y-3">
-        <Section title={t("spSecHero")}><HeroEditor hero={page.hero} onChange={(hero) => set({ hero })} /></Section>
+        <Section title={t("spSecHero")}><HeroEditor hero={page.hero} slug={page.slug} onChange={(hero) => set({ hero })} /></Section>
         <Section title={t("spSecUses")} count={page.uses.length}><UsesEditor uses={page.uses} onChange={(uses) => set({ uses })} /></Section>
         <Section title={t("spSecSpecs")} count={page.specs.length}><SpecsEditor specs={page.specs} onChange={(specs) => set({ specs })} /></Section>
         <Section title={t("spSecFaq")} count={page.faq.length}><FaqEditor faq={page.faq} onChange={(faq) => set({ faq })} /></Section>

@@ -70,4 +70,6 @@ export const esLanding = {
   spNotFoundTitle: "Página no disponible", spNotFoundDesc: "Esta página no existe o está desactivada.", spPreviewMode: "Modo preview", uploadTooLarge: "El archivo excede {mb} MB.",
   mediaExceedsVideoSize: "El video excede {mb} MB.",
   heroImageOrVideo: "Imagen o video del hero (imagen ≤15 MB · video ≤50 MB, autoplay muted loop)",
+  spHeroMediaDedicated: "Imagen/video de la página dedicada (/servicios/...)", spHeroMediaHome: "Imagen/video del hero en la página principal",
+  spHeroMediaHomeHelp: "Se muestra en la sección hero secundaria del home",
 } satisfies Partial<Record<TranslationKey, string>>;

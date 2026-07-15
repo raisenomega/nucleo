@@ -70,4 +70,6 @@ export const enLanding = {
   spNotFoundTitle: "Page unavailable", spNotFoundDesc: "This page doesn't exist or is disabled.", spPreviewMode: "Preview mode", uploadTooLarge: "File exceeds {mb} MB.",
   mediaExceedsVideoSize: "Video exceeds {mb} MB.",
   heroImageOrVideo: "Hero image or video (image ≤15 MB · video ≤50 MB, autoplay muted loop)",
+  spHeroMediaDedicated: "Dedicated page image/video (/servicios/...)", spHeroMediaHome: "Hero image/video on the home page",
+  spHeroMediaHomeHelp: "Shown in the secondary hero section of the home",
 } satisfies Partial<Record<TranslationKey, string>>;
