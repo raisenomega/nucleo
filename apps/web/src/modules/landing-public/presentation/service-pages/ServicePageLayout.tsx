@@ -2,6 +2,7 @@ import { useI18n } from "@shared/i18n";
 import { Spinner } from "@shared/components/loading/Spinner";
 import { useServicePage } from "@landing-public/presentation/service-pages/useServicePage.hook";
 import { useServicePageSeo } from "@landing-public/presentation/service-pages/useServicePageSeo.hook";
+import { ServicePageBackNav } from "@landing-public/presentation/service-pages/ServicePageBackNav";
 import { ServicePageHero } from "@landing-public/presentation/service-pages/ServicePageHero";
 import { ServiceUsesGrid } from "@landing-public/presentation/service-pages/ServiceUsesGrid";
 import { ServiceSpecsBar } from "@landing-public/presentation/service-pages/ServiceSpecsBar";
@@ -17,6 +18,7 @@ export function ServicePageLayout({ slug }: { slug: string }) {
   if (status === "notfound" || !page) return <div className="min-h-screen p-8 text-center text-muted-foreground">{t("lpDetailNotFoundTitle")}</div>;
   return (
     <main className="lp-root min-h-screen bg-background text-foreground">
+      <ServicePageBackNav />
       <ServicePageHero hero={page.hero} />
       <ServiceUsesGrid uses={page.uses} />
       <ServiceSpecsBar specs={page.specs} />

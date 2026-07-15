@@ -8,6 +8,8 @@ import { signEvidence } from "@finance/infrastructure/supabase-evidence.storage"
 import { useMarkLeadViewed } from "@shared/hooks/useMarkLeadViewed.hook";
 import { StatusBadge, TempBadge } from "@crm/presentation/LeadBadges";
 import { LeadDetailActions } from "@crm/presentation/LeadDetailActions";
+import { LeadServiceRequestBlock } from "@crm/presentation/LeadServiceRequestBlock";
+import { LeadSourceBadge } from "@shared/components/LeadSourceBadge";
 import type { Lead } from "@crm/domain/lead.types";
 
 export function LeadDetail({ lead, onClose, onEdit, onDuplicate, onArchive }: {
@@ -28,7 +30,7 @@ export function LeadDetail({ lead, onClose, onEdit, onDuplicate, onArchive }: {
           <div className="flex flex-wrap items-center gap-2">
             <h2 className="font-display text-xl font-bold text-foreground">{lead.contactName}</h2>
             <TempBadge value={lead.temperature} /><StatusBadge value={lead.status} />
-            {lead.leadSource === "web-landing" && <span className="rounded bg-accent/20 px-2 py-0.5 text-xs font-bold text-foreground">{t("webLead")}</span>}
+            <LeadSourceBadge source={lead.leadSource} fallback={lead.leadSourceLabel} />
           </div>
           <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button>
         </div>
@@ -36,8 +38,9 @@ export function LeadDetail({ lead, onClose, onEdit, onDuplicate, onArchive }: {
           <LeadDetailActions leadId={lead.id} onEdit={onEdit} onDuplicate={onDuplicate} onArchive={onArchive} />
           <dl className="space-y-1 font-body text-sm">
             {row("phone", lead.phone)}{row("email", lead.email)}
-            {row("leadSource", lead.leadSourceLabel)}{row("serviceRequested", lead.serviceTypeLabel)}
+            {row("serviceRequested", lead.serviceTypeLabel || lead.serviceRequested)}
           </dl>
+          <LeadServiceRequestBlock lead={lead} />
           {lead.items.length > 0 && (
             <div className="rounded-lg border border-border">
               {lead.items.map((it, i) => (

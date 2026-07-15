@@ -7,13 +7,15 @@ import { formatCurrency } from "@shared/lib/format";
 import { MobileCard } from "@shared/components/MobileCard";
 import { Pagination } from "@shared/components/Pagination";
 import { StatusBadge, TempBadge } from "@crm/presentation/LeadBadges";
+import { LeadSourceBadge } from "@shared/components/LeadSourceBadge";
+import { leadSourceLabel } from "@shared/constants/lead-sources";
 import { leadQuoteId, leadInvoiceId, leadWaHref } from "@crm/presentation/lead-docs";
 import type { Lead } from "@crm/domain/lead.types";
 
 export function LeadTable({ rows, onView, onEdit, onDelete }: {
   rows: readonly Lead[]; onView: (id: string) => void; onEdit?: (id: string) => void; onDelete?: (id: string) => void;
 }) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const { can } = useModuleAccess();
   const nav = useNavigate();
   const docs = can("leads", "documents");
@@ -40,7 +42,7 @@ export function LeadTable({ rows, onView, onEdit, onDelete }: {
                 <td className="px-3 py-2">{l.callDate}</td>
                 <td className="px-3 py-2 font-medium text-foreground">{l.contactName}</td>
                 <td className="px-3 py-2"><a href={`tel:${l.phone}`} onClick={(e) => e.stopPropagation()} className="text-foreground hover:underline">{l.phone}</a></td>
-                <td className="px-3 py-2">{l.leadSource === "web-landing" ? <span className="rounded bg-accent/20 px-2 py-0.5 text-xs font-bold text-foreground">{t("webLead")}</span> : (l.leadSourceLabel || "—")}</td>
+                <td className="px-3 py-2"><LeadSourceBadge source={l.leadSource} fallback={l.leadSourceLabel} /></td>
                 <td className="px-3 py-2">{l.serviceTypeLabel || "—"}</td>
                 <td className="px-3 py-2"><TempBadge value={l.temperature} /></td>
                 <td className="px-3 py-2"><StatusBadge value={l.status} /></td>
@@ -62,7 +64,7 @@ export function LeadTable({ rows, onView, onEdit, onDelete }: {
     </div>
     <div className="space-y-2 md:hidden">
       {visible.map((l) => <MobileCard key={l.id} title={l.contactName} amount={formatCurrency(l.quotedPrice)}
-        lines={[l.phone, `${l.leadSource === "web-landing" ? t("webLead") : (l.leadSourceLabel || "—")} · ${l.serviceTypeLabel || "—"}`]}
+        lines={[l.phone, `${leadSourceLabel(l.leadSource, locale === "en", l.leadSourceLabel)} · ${l.serviceTypeLabel || "—"}`]}
         extra={<div className="flex gap-2"><TempBadge value={l.temperature} /><StatusBadge value={l.status} /></div>}
         onView={() => onView(l.id)} onEdit={onEdit ? () => onEdit(l.id) : undefined} onDelete={onDelete ? () => onDelete(l.id) : undefined} />)}
     </div>

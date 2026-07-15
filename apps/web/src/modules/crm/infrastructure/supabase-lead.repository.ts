@@ -9,14 +9,14 @@ interface Row {
   address: string | null; city: string | null; zip_code: string | null;
   lead_source: string | null; service_requested: string | null;
   lead_source_id: string | null; service_type_id: string | null;
-  temperature: string; status: string; call_date: string; notes: string | null;
+  temperature: string; status: string; call_date: string; notes: string | null; custom_fields: unknown;
   quoted_price: number | string | null; created_at: string; evidence_urls: unknown;
   source: Ref; service: Ref; items: ItemRow[] | null;
 }
 
 const SELECT =
   "id, tenant_id, contact_name, phone, email, address, city, zip_code, lead_source, service_requested," +
-  " lead_source_id, service_type_id, temperature, status, call_date, notes, quoted_price, created_at, evidence_urls," +
+  " lead_source_id, service_type_id, temperature, status, call_date, notes, custom_fields, quoted_price, created_at, evidence_urls," +
   " source:categories!leads_lead_source_id_fkey(label), service:categories!leads_service_type_id_fkey(label)," +
   " items:lead_items(description, quantity, unit_price, tax_pct, discount_pct, line_total)";
 
@@ -33,6 +33,7 @@ function toLead(r: Row): Lead {
     leadSourceId: r.lead_source_id ?? "", leadSourceLabel: r.source?.label ?? "",
     serviceTypeId: r.service_type_id ?? "", serviceTypeLabel: r.service?.label ?? "",
     temperature: r.temperature, status: r.status, callDate: r.call_date, notes: r.notes ?? "",
+    customFields: (Array.isArray(r.custom_fields) ? r.custom_fields : []) as Lead["customFields"],
     quotedPrice: Number(r.quoted_price ?? 0), createdAt: r.created_at,
     evidenceUrls: Array.isArray(r.evidence_urls) ? (r.evidence_urls as string[]) : [],
     items: Array.isArray(r.items) ? r.items.map(toItem) : [],

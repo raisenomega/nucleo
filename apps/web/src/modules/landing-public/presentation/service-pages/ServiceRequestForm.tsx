@@ -10,10 +10,18 @@ export function ServiceRequestForm({ slug, form }: { slug: string; form: SpReque
   const { busy, submit } = useCreateServiceRequest(slug);
   const [v, setV] = useState<Record<string, unknown>>({}); const [done, setDone] = useState(false);
   const oL = (o: { label_es: string; label_en: string }) => (en ? o.label_en : o.label_es);
+  const resolve = (f: SpField, raw: unknown): string =>
+    f.kind === "multi_select" ? ((raw as string[]) ?? []).map((x) => oL(f.options?.find((o) => o.value === x) ?? { label_es: x, label_en: x })).join(", ")
+      : f.kind === "select" ? oL(f.options?.find((o) => o.value === raw) ?? { label_es: String(raw ?? ""), label_en: String(raw ?? "") })
+        : String(raw ?? "");
   async function onSubmit() {
     const bad = form.fields.find((f) => f.required && !String(v[f.name] ?? "").trim());
     if (bad) return toast.error(en ? "Please complete the required fields." : "Completá los campos obligatorios.");
-    const payload = { ...v, surfaces: Array.isArray(v.surfaces) ? (v.surfaces as string[]).join(", ") : v.surfaces ?? "" };
+    const contact = ["firstName", "lastName", "phone", "email"];
+    const cf = form.fields.filter((f) => !contact.includes(f.name)).map((f) => ({ label: en ? f.label_en : f.label_es, value: resolve(f, v[f.name]) })).filter((d) => d.value.trim());
+    const st = form.fields.find((f) => f.name === "serviceType");
+    const payload = { firstName: v.firstName, lastName: v.lastName, phone: v.phone, email: v.email,
+      serviceType: v.serviceType, serviceTypeLabel: st ? resolve(st, v.serviceType) : "", custom_fields: cf };
     if (await submit(payload)) setDone(true); else toast.error(en ? "Could not send the request." : "No se pudo enviar la solicitud.");
   }
   const field = (f: SpField): ReactNode => {

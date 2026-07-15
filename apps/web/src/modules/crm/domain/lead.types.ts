@@ -34,6 +34,7 @@ export interface Lead {
   readonly quotedPrice: number;
   readonly createdAt: string;
   readonly evidenceUrls: readonly string[];
+  readonly customFields: readonly { readonly label: string; readonly value: string }[];
   readonly items: readonly LeadItem[];
 }
 

@@ -37,7 +37,7 @@ export const es = {
   clientReference: "Referencia cliente", orderNumber: "Nro. orden", paidBy: "Pagado por",
   leadList: "Lista de leads", newLead: "Nuevo lead", leadSubtitle: "Clientes potenciales y seguimiento.",
   contactName: "Contacto", phone: "Teléfono", email: "Email",
-  serviceRequested: "Servicio solicitado", leadSource: "Origen", temperature: "Temperatura",
+  serviceRequested: "Servicio solicitado", leadSource: "Origen", backToHome: "Volver al inicio", leadRequestDetails: "Detalles de solicitud", temperature: "Temperatura",
   status: "Estado", callDate: "Fecha", callNotes: "Notas de llamada",
   hot: "Caliente", warm: "Tibio", cold: "Frío",
   statusNew: "Nuevo", statusContacted: "Contactado", statusQuoted: "Cotizado",
