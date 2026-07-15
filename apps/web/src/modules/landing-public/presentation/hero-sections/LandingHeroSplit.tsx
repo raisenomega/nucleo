@@ -1,18 +1,14 @@
-import { useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { useI18n } from "@shared/i18n";
 import { ItemHighlightsChecklist } from "@landing-public/presentation/popup/ItemHighlightsChecklist";
-import { OrderModal, type OrderItem } from "@orders-public/presentation/OrderModal";
 import type { LandingHeroSection } from "@landing-public/domain/landing-hero.types";
 
-// Hero secundario split: imagen 4:5 (izq) + título/subtítulo/descripción/features + 2 CTAs (der). Stack en mobile.
-// CTA primaria → OrderModal del item. CTA secundaria → OrderModal del target (Soterrados) con hydroJet preseleccionado.
+// Hero secundario split: imagen 4:5 (izq) + título/subtítulo/descripción/features + un único botón "Ver más" que
+// navega a la página dedicada /servicios/{slug}. Stack en mobile.
 export function LandingHeroSplit({ s }: { s: LandingHeroSection }) {
   const { locale } = useI18n();
-  const [order, setOrder] = useState<{ item: OrderItem; defaults?: Record<string, unknown> } | null>(null);
+  const nav = useNavigate();
   const pick = (es: string, en: string) => (locale === "en" ? en : es);
-  const primary = () => setOrder({ item: { kind: s.kind, id: s.id, name: s.name, basePrice: s.basePrice } });
-  const secondary = () => s.secondaryTarget && setOrder({
-    item: { kind: "service", id: s.secondaryTarget.id, name: s.secondaryTarget.name, basePrice: s.secondaryTarget.basePrice }, defaults: { hydroJet: true } });
   return (
     <section className="mx-auto max-w-7xl px-6 py-12">
       <div className="grid items-center gap-8 md:grid-cols-2">
@@ -24,13 +20,12 @@ export function LandingHeroSplit({ s }: { s: LandingHeroSection }) {
           <p className="font-medium text-[color:hsl(var(--lp-fg))]">{pick(s.subtitleEs, s.subtitleEn)}</p>
           <p className="text-sm text-[color:hsl(var(--lp-muted))]">{pick(s.descriptionEs, s.descriptionEn)}</p>
           <ItemHighlightsChecklist highlights={s.features} />
-          <div className="flex flex-col gap-3 pt-2 sm:flex-row">
-            <button type="button" onClick={primary} className="rounded-lg bg-primary px-5 py-3 font-bold text-primary-foreground">{pick(s.ctaPrimaryEs, s.ctaPrimaryEn)}</button>
-            {s.secondaryTarget && s.ctaSecondaryEs && <button type="button" onClick={secondary} className="rounded-lg border border-primary px-5 py-3 font-bold text-primary">{pick(s.ctaSecondaryEs, s.ctaSecondaryEn ?? "")}</button>}
-          </div>
+          {s.linkTargetSlug && (
+            <button type="button" onClick={() => void nav({ to: "/servicios/$slug", params: { slug: s.linkTargetSlug! } })}
+              className="mt-2 rounded-lg bg-primary px-5 py-3 font-bold text-primary-foreground">{pick(s.linkLabelEs, s.linkLabelEn) || pick("Ver más", "View more")}</button>
+          )}
         </div>
       </div>
-      {order && <OrderModal item={order.item} defaultValues={order.defaults} onClose={() => setOrder(null)} />}
     </section>
   );
 }

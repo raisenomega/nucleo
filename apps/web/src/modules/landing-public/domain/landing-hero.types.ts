@@ -6,6 +6,5 @@ export interface LandingHeroSection {
   kind: "product" | "service" | "package"; id: string; slug: string; name: string; basePrice: number;
   titleEs: string; titleEn: string; subtitleEs: string; subtitleEn: string;
   descriptionEs: string; descriptionEn: string; imageUrl: string | null; features: ItemHighlight[];
-  ctaPrimaryEs: string; ctaPrimaryEn: string;
-  ctaSecondaryEs: string | null; ctaSecondaryEn: string | null; secondaryTarget: HeroTarget | null;
+  linkTargetSlug: string | null; linkLabelEs: string; linkLabelEn: string;
 }
