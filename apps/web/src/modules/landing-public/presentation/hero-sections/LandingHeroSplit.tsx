@@ -13,7 +13,9 @@ export function LandingHeroSplit({ s }: { s: LandingHeroSection }) {
     <section className="mx-auto max-w-7xl px-6 py-12">
       <div className="grid items-center gap-8 md:grid-cols-2">
         <div className="aspect-[4/5] w-full overflow-hidden rounded-2xl bg-[color:hsl(var(--lp-muted))]/10">
-          {s.imageUrl && <img src={s.imageUrl} alt={pick(s.titleEs, s.titleEn)} width={640} height={800} loading="lazy" className="h-full w-full object-cover" />}
+          {s.imageUrl && (/\.(mp4|webm|mov)$/i.test(s.imageUrl)
+            ? <video src={s.imageUrl} autoPlay muted loop playsInline aria-label={pick(s.titleEs, s.titleEn)} className="h-full w-full object-cover" />
+            : <img src={s.imageUrl} alt={pick(s.titleEs, s.titleEn)} width={640} height={800} loading="lazy" className="h-full w-full object-cover" />)}
         </div>
         <div className="space-y-4">
           <h2 style={{ fontSize: "var(--text-h2)" }} className="font-bold">{pick(s.titleEs, s.titleEn)}</h2>

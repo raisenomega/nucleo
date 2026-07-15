@@ -69,4 +69,5 @@ export const esLanding = {
   landingServicePages: "Páginas de servicios", spCreate: "Crear nueva", spTitleEs: "Título ES", spTitleEn: "Título EN", spSubtitle: "Subtítulo", spErr: "Error al guardar", spInactive: "Inactiva", spPreview: "Ver preview", spToggle: "Activar/Desactivar", spEmptyTitle: "No hay páginas de servicios", spEmptyDesc: "Crea la primera para destacar servicios especializados en tu landing.", spSecHero: "Hero", spSecUses: "Casos de uso", spSecSpecs: "Especificaciones", spSecFaq: "Preguntas frecuentes", spSecForm: "Formulario de solicitud", spSecSeo: "SEO",
   spNotFoundTitle: "Página no disponible", spNotFoundDesc: "Esta página no existe o está desactivada.", spPreviewMode: "Modo preview", uploadTooLarge: "El archivo excede {mb} MB.",
   mediaExceedsVideoSize: "El video excede {mb} MB.",
+  heroImageOrVideo: "Imagen o video del hero (imagen ≤15 MB · video ≤50 MB, autoplay muted loop)",
 } satisfies Partial<Record<TranslationKey, string>>;
