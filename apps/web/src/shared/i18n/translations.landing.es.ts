@@ -66,4 +66,5 @@ export const esLanding = {
   lpViewDetails: "Ver detalles", lpCarouselPrev: "Imagen anterior", lpCarouselNext: "Imagen siguiente",
   highlightsTitle: "Puntos destacados", highlightTextEs: "Texto (español)", highlightTextEn: "Texto (inglés)", addHighlight: "Agregar punto",
   moveUp: "Subir", moveDown: "Bajar", heroSectionTitle: "Sección landing (hero destacado)",
+  landingServicePages: "Páginas de servicios", spCreate: "Crear nueva", spTitleEs: "Título ES", spTitleEn: "Título EN", spSubtitle: "Subtítulo", spErr: "Error al guardar", spInactive: "Inactiva", spPreview: "Ver preview", spToggle: "Activar/Desactivar", spEmptyTitle: "No hay páginas de servicios", spEmptyDesc: "Crea la primera para destacar servicios especializados en tu landing.", spSecHero: "Hero", spSecUses: "Casos de uso", spSecSpecs: "Especificaciones", spSecFaq: "Preguntas frecuentes", spSecForm: "Formulario de solicitud", spSecSeo: "SEO",
 } satisfies Partial<Record<TranslationKey, string>>;
