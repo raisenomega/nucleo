@@ -1,6 +1,5 @@
 import { useI18n } from "@shared/i18n";
 import { HighlightsEditor } from "@landing/presentation/HighlightsEditor";
-import { ImageUploadWithCrop } from "@shared/components/ImageUploadWithCrop";
 import type { ItemHighlight } from "@shared/types/item-highlight.types";
 
 type Hero = Record<string, unknown>;
@@ -26,10 +25,7 @@ export function LandingHeroEditor({ value, onChange }: { value: Hero | null; onC
           {pair("title_es", "title_en", "Título ES", "Title EN")}
           {pair("subtitle_es", "subtitle_en", "Subtítulo ES", "Subtitle EN")}
           {pair("description_es", "description_en", "Descripción ES", "Description EN", true)}
-          <div>
-            <span className="mb-1 block text-sm font-medium text-foreground">{t("heroImageOrVideo")}</span>
-            <ImageUploadWithCrop entityType="landing-hero" aspectRatio={4 / 5} enableVideo value={(h.image_url as string) ?? null} onUploaded={(u) => set("image_url", u)} />
-          </div>
+          <p className="text-xs text-muted-foreground">{t("heroMediaMovedHint")}</p>
           {pair("cta_primary_label_es", "cta_primary_label_en", "CTA 1 ES", "CTA 1 EN")}
           {pair("cta_secondary_label_es", "cta_secondary_label_en", "CTA 2 ES", "CTA 2 EN")}
           {inp("cta_secondary_target_service_slug", "slug del servicio destino (CTA 2)")}
