@@ -69,7 +69,7 @@ export const enLanding = {
   landingServicePages: "Service pages", spCreate: "Create new", spTitleEs: "Title ES", spTitleEn: "Title EN", spSubtitle: "Subtitle", spErr: "Save error", spInactive: "Inactive", spPreview: "Preview", spToggle: "Toggle active", spEmptyTitle: "No service pages", spEmptyDesc: "Create the first one to highlight specialized services on your landing.", spSecHero: "Hero", spSecUses: "Use cases", spSecSpecs: "Specifications", spSecFaq: "FAQ", spSecForm: "Request form", spSecSeo: "SEO",
   spNotFoundTitle: "Page unavailable", spNotFoundDesc: "This page doesn't exist or is disabled.", spPreviewMode: "Preview mode", uploadTooLarge: "File exceeds {mb} MB.",
   mediaExceedsVideoSize: "Video exceeds {mb} MB.",
-  heroMediaMovedHint: "The home hero image/video is now uploaded from LANDING → Service pages.",
+  heroMediaMovedHint: "The home hero image/video is now uploaded from LANDING → Service pages.", heroSubtitleHint: "Leave empty to hide the subtitle.", heroCtaEmptyHint: "Leave empty to hide the CTA button.",
   spHeroMediaDedicated: "Dedicated page image/video (/servicios/...)", spHeroMediaHome: "Hero image/video on the home page",
   spHeroMediaHomeHelp: "Shown in the secondary hero section of the home",
 } satisfies Partial<Record<TranslationKey, string>>;

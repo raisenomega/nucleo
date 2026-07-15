@@ -10,7 +10,9 @@ export function LandingConfigHeroSection({ c, set }: { c: LandingConfig; set: (p
     <div className="space-y-3">
       <input value={c.heroTitle} onChange={(e) => set({ heroTitle: e.target.value })} placeholder={t("heroTitle")} className={f} />
       <input value={c.heroSubtitle} onChange={(e) => set({ heroSubtitle: e.target.value })} placeholder={t("heroSubtitle")} className={f} />
+      <p className="text-xs text-muted-foreground">{t("heroSubtitleHint")}</p>
       <input value={c.heroCtaLabel} onChange={(e) => set({ heroCtaLabel: e.target.value })} placeholder={t("heroCtaLabel")} className={f} />
+      <p className="text-xs text-muted-foreground">{t("heroCtaEmptyHint")}</p>
       <select value={c.heroCtaType} onChange={(e) => set({ heroCtaType: e.target.value as CtaType })} className={f}>
         <option value="quote">{t("ctaQuote")}</option><option value="order">{t("ctaOrder")}</option>
         <option value="contact">{t("ctaContact")}</option><option value="custom">{t("ctaCustom")}</option>
