@@ -5,15 +5,17 @@ const money = (n: number) => `$${n.toFixed(2)}`;
 
 // "Resumen del Pedido" server-authoritative (usa los totals de _public_preview_price). footer = disclaimer recurrente.
 export function OrderDynamicSummary({ totals, footer, title }: { totals: Totals; footer: string | null; title: string }) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const line = (l: string, val: number) => (
     <div className="flex justify-between text-sm"><span className="text-muted-foreground">{l}</span><span className="text-foreground">{money(val)}</span></div>
   );
+  const unitLabel = locale === "en" ? totals.unitLabelEn : totals.unitLabelEs;
   return (
     <div className="rounded-lg border-2 border-primary/30 bg-primary/5 p-4">
       <p className="mb-3 text-sm font-bold uppercase tracking-wider text-foreground">{title}</p>
       <div className="space-y-1.5">
         {line(t("opSubtotal"), totals.subtotal)}
+        {totals.unitPrice != null && <p className="-mt-1 text-xs text-muted-foreground">{money(totals.unitPrice)} {unitLabel}</p>}
         {totals.tax > 0 && line(t("opTax"), totals.tax)}
         {totals.shipping > 0 && line(t("opShipping"), totals.shipping)}
       </div>
