@@ -14,6 +14,14 @@ export async function uploadEvidence(tenantId: string, files: File[]): Promise<s
   return paths;
 }
 
+// Sube una foto de evidencia de parada (ya comprimida) a una ruta determinista por fase. upsert = reintento seguro.
+// Path: {tenant}/routes/{route}/{stop}/{phase}_{uuid}.jpg. Devuelve la ruta guardable o null si falló.
+export async function uploadStopPhoto(tenantId: string, routeId: string, stopId: string, phase: string, blob: Blob): Promise<string | null> {
+  const path = `${tenantId}/routes/${routeId}/${stopId}/${phase}_${crypto.randomUUID()}.jpg`;
+  const { error } = await supabase.storage.from(BUCKET).upload(path, blob, { contentType: "image/jpeg", upsert: true });
+  return error ? null : path;
+}
+
 // Firma URLs temporales (1h) para mostrar la evidencia sin exponer el bucket.
 export async function signEvidence(paths: readonly string[]): Promise<string[]> {
   const urls: string[] = [];

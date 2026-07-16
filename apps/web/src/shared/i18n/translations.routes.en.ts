@@ -22,4 +22,6 @@ export const enRoutes = {
   deleteForeverBtn: "Delete permanently", deleteForeverConfirm: "This action is permanent and cannot be undone. Continue?",
   deleteForeverSuccess: "Record permanently deleted", hideVoided: "Hide voided", showVoided: "Show voided",
   cannotEditOthersRoute: "You can't edit other employees' routes",
+  evidenceBefore: "Evidence — Before", evidenceAfter: "Evidence — After",
+  evidenceRequired: "Upload at least 1 before and 1 after photo to complete",
 } satisfies Partial<Record<TranslationKey, string>>;

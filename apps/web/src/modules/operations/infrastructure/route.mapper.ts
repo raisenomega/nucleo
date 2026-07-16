@@ -14,7 +14,7 @@ export const deriveDayStatus = (stops: SStat[]): string => {
   if (active.every((s) => s.status === "Pendiente")) return "Planificada";
   return "En progreso";
 };
-export type SRow = { id: string; route_id: string; stop_order: number; client_name: string; address: string; city: string | null; service_type: string; scheduled_time: string; phone: string | null; estimated_amount: number | string; actual_amount: number | string | null; payment_method_id: string | null; status: string; notes: string | null; completed_at: string | null; evidence_urls: string[] | null; amount_received: number | string | null; change_amount: number | string | null; pending_collection: boolean | null };
+export type SRow = { id: string; route_id: string; stop_order: number; client_name: string; address: string; city: string | null; service_type: string; scheduled_time: string; phone: string | null; estimated_amount: number | string; actual_amount: number | string | null; payment_method_id: string | null; status: string; notes: string | null; completed_at: string | null; evidence_urls: string[] | null; amount_received: number | string | null; change_amount: number | string | null; pending_collection: boolean | null; evidence_before: string[] | null; evidence_after: string[] | null };
 const num = (v: number | string | null) => (v == null ? null : Number(v));
 
 export const toRoute = (r: RRow): ServiceRoute => {
@@ -34,6 +34,7 @@ export const toStop = (s: SRow): RouteStop => ({
   paymentMethodId: s.payment_method_id, status: s.status, notes: s.notes, completedAt: s.completed_at,
   evidenceUrls: s.evidence_urls ?? [], amountReceived: num(s.amount_received),
   changeAmount: num(s.change_amount), pendingCollection: !!s.pending_collection,
+  evidenceBefore: s.evidence_before ?? [], evidenceAfter: s.evidence_after ?? [],
 });
 export const stopRow = (routeId: string, order: number, s: StopFormData) => ({
   route_id: routeId, stop_order: order, client_name: s.clientName, address: s.address,
@@ -48,5 +49,6 @@ export function stopPatch(p: StopPatch): Record<string, unknown> {
   set("estimated_amount", p.estimatedAmount); set("status", p.status);
   set("notes", p.notes); set("completed_at", p.completedAt); set("stop_order", p.stopOrder);
   set("evidence_urls", p.evidenceUrls);
+  set("evidence_before", p.evidenceBefore); set("evidence_after", p.evidenceAfter);
   return r;
 }

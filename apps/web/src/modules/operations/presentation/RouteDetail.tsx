@@ -12,7 +12,7 @@ type Emp = { id: string; full_name: string };
 export function RouteDetail({ route, stops, employees, tenantId, onClose, onPay, onNotAttended, onEvidence, onMarkDone }: {
   route: ServiceRoute; stops: readonly RouteStop[]; employees: Emp[]; tenantId: string; onClose: () => void;
   onPay: (id: string, p: CompletePayload) => void; onNotAttended: (id: string, r: string) => void;
-  onEvidence: (id: string, paths: string[]) => void; onMarkDone: (id: string) => void;
+  onEvidence: (id: string, phase: "before" | "after", paths: string[]) => void; onMarkDone: (id: string) => void;
 }) {
   const { t } = useI18n();
   const pdf = usePdf();
@@ -38,7 +38,7 @@ export function RouteDetail({ route, stops, employees, tenantId, onClose, onPay,
         onPay={(p) => onPay(cur.id, p)}
         onNotAttended={(r) => { onNotAttended(cur.id, r); setOpen(null); }}
         onMarkDone={() => { onMarkDone(cur.id); setOpen(null); }}
-        onEvidence={(paths) => onEvidence(cur.id, paths)} />}
+        onEvidence={(phase, paths) => onEvidence(cur.id, phase, paths)} />}
     </>
   );
 }

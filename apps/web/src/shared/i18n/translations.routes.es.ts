@@ -22,4 +22,6 @@ export const esRoutes = {
   deleteForeverBtn: "Eliminar definitivamente", deleteForeverConfirm: "Esta acción es permanente y no se puede deshacer. ¿Continuar?",
   deleteForeverSuccess: "Registro eliminado permanentemente", hideVoided: "Ocultar anuladas", showVoided: "Mostrar anuladas",
   cannotEditOthersRoute: "No puedes editar rutas de otros empleados",
+  evidenceBefore: "Evidencia — Antes", evidenceAfter: "Evidencia — Después",
+  evidenceRequired: "Sube al menos 1 foto antes y 1 después para completar",
 } satisfies Partial<Record<TranslationKey, string>>;
