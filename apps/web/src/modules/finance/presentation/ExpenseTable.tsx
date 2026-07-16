@@ -7,6 +7,7 @@ import { VoidControls } from "@shared/components/VoidControls";
 import { formatCurrency } from "@shared/lib/format";
 import { MobileCard } from "@shared/components/MobileCard";
 import { ExpenseClassBadge } from "@finance/presentation/ExpenseClassBadge";
+import { ExpenseClassChips } from "@finance/presentation/ExpenseClassChips";
 import type { Expense, Result } from "@finance/domain/expense.types";
 
 type Emp = { id: string; full_name: string };
@@ -21,29 +22,30 @@ export function ExpenseTable({ rows, employees, classOf, onView, onEdit, onVoid,
   const { session } = useSession();
   const isCeo = session?.role === "ceo";
   const nameOf = (id: string | null) => (id ? employees.find((e) => e.id === id)?.full_name ?? "—" : "—");
-  const total = rows.filter((r) => !r.deletedAt).reduce((s, i) => s + i.amount, 0);
   const [page, setPage] = useState(1);
-  const paged = rows.slice((page - 1) * 12, page * 12);
+  const [cls, setCls] = useState("");
+  const view = cls ? rows.filter((r) => classOf(r.categoryId) === cls) : rows;
+  const total = view.filter((r) => !r.deletedAt).reduce((s, i) => s + i.amount, 0);
+  const paged = view.slice((page - 1) * 12, page * 12);
   const th = "px-3 py-2 text-left font-bold";
   const vc = (i: Expense) => <VoidControls id={i.id} deletedAt={i.deletedAt} deletedByName={nameOf(i.deletedBy)}
     deletedReason={i.deletedReason} isCeo={isCeo} onVoid={onVoid} onDeleteForever={onDeleteForever} />;
   return (
     <>
+    {isCeo && <ExpenseClassChips value={cls} onChange={(v) => { setCls(v); setPage(1); }} />}
     <div className="hidden overflow-hidden rounded-lg border border-border bg-card md:block">
       <div className="flex items-center justify-between border-b border-border p-4">
-        <h2 className="font-body font-bold">{t("expenseList")} ({rows.length})</h2>
+        <h2 className="font-body font-bold">{t("expenseList")} ({view.length})</h2>
         <span className="font-body font-bold text-foreground">{t("total")}: {formatCurrency(total)}</span>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full font-body text-sm">
           <thead className="bg-secondary text-xs uppercase text-muted-foreground"><tr>
-            <th className={th}>{t("date")}</th><th className={th}>{t("category")}</th>
-            <th className={th}>{t("description")}</th><th className={`${th} text-right`}>{t("amount")}</th>
-            <th className={th}>{t("paymentMethod")}</th><th className={th}>{t("paidBy")}</th>
-            <th className={`${th} text-right`}>{t("actions")}</th>
+            <th className={th}>{t("date")}</th><th className={th}>{t("category")}</th><th className={th}>{t("description")}</th>
+            <th className={`${th} text-right`}>{t("amount")}</th><th className={th}>{t("paymentMethod")}</th><th className={th}>{t("paidBy")}</th><th className={`${th} text-right`}>{t("actions")}</th>
           </tr></thead>
           <tbody>
-            {rows.length === 0 && <tr><td colSpan={7} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>}
+            {view.length === 0 && <tr><td colSpan={7} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>}
             {paged.map((i) => (
               <tr key={i.id} onClick={() => onView(i.id)}
                 className={`cursor-pointer border-t border-border transition-colors hover:bg-secondary ${i.deletedAt ? "text-muted-foreground line-through opacity-60" : ""}`}>
@@ -67,7 +69,7 @@ export function ExpenseTable({ rows, employees, classOf, onView, onEdit, onVoid,
         extra={<span className="flex items-center gap-2"><ExpenseClassBadge value={classOf(i.categoryId)} />{vc(i)}</span>}
         onView={i.deletedAt ? undefined : () => onView(i.id)} onEdit={!i.deletedAt && onEdit ? () => onEdit(i.id) : undefined} />)}
     </div>
-    <Pagination total={rows.length} page={page} onPageChange={setPage} />
+    <Pagination total={view.length} page={page} onPageChange={setPage} />
     </>
   );
 }

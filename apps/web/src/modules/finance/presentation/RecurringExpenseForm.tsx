@@ -23,7 +23,7 @@ export function RecurringExpenseForm({ initial, onSubmit, onCancel }: {
         <button type="button" onClick={onCancel} aria-label={t("cancel")}><X className="h-6 w-6" /></button>
       </div>
       <form onSubmit={(e) => { e.preventDefault(); onSubmit(f); }} className="flex flex-1 flex-col gap-4 p-4 md:p-6">
-        <CategoryPicker kind="expense" value={f.categoryId} onChange={(id) => setF({ ...f, categoryId: id })} label="category" />
+        <CategoryPicker kind="expense" expenseClass="fixed" value={f.categoryId} onChange={(id) => setF({ ...f, categoryId: id })} label="category" />
         <label className="block space-y-1"><span className={lbl}>{t("description")}</span>
           <input value={f.label} onChange={(e) => setF({ ...f, label: e.target.value })} className={field} required /></label>
         <div className="grid grid-cols-2 gap-4">

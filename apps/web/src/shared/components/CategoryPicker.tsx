@@ -7,14 +7,12 @@ import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { useRoleGate } from "@shared/hooks/useRoleGate";
 
 type Cat = { id: string; label: string; expense_class?: string | null };
-const CLASSES: { v: string; k: TranslationKey }[] = [
-  { v: "fixed", k: "fixedExpense" }, { v: "variable", k: "variableExpense" },
-  { v: "debt", k: "debtExpense" }, { v: "one_time", k: "oneTimeExpense" },
-];
+const CLASSES: { v: string; k: TranslationKey }[] = [{ v: "variable", k: "variableExpense" }, { v: "fixed", k: "fixedExpense" }, { v: "debt", k: "debtExpense" }, { v: "one_time", k: "oneTimeExpense" }];
 
 // Crear categorías es configuración → gateado por can("settings","categories").
-export function CategoryPicker({ kind, value, onChange, label, byLabel }: {
+export function CategoryPicker({ kind, value, onChange, label, byLabel, expenseClass }: {
   kind: string; value: string; onChange: (v: string) => void; label: TranslationKey; byLabel?: boolean;
+  expenseClass?: "fixed" | "variable" | "debt" | "one_time";
 }) {
   const { t } = useI18n();
   const { can } = useModuleAccess();
@@ -24,14 +22,16 @@ export function CategoryPicker({ kind, value, onChange, label, byLabel }: {
   const [name, setName] = useState("");
   const [cls, setCls] = useState("fixed");
   const field = "w-full rounded-lg border border-border bg-background p-2 font-body";
+  // CEO ve las categorías de gasto agrupadas por expense_class; el empleado solo las operativas (variable).
+  const grouped = kind === "expense" && !expenseClass && canEdit("ceo");
   const load = () => void supabase.from("categories").select("id,label,expense_class").eq("kind", kind).eq("active", true).order("sort")
     .then(({ data }) => {
       let list = (data as Cat[] | null) ?? [];
-      // Gastos fijos (renta, luz, lease...) solo los ve el CEO; el empleado no los ve en el selector.
-      if (kind === "expense" && !canEdit("ceo")) list = list.filter((c) => c.expense_class !== "fixed");
+      if (expenseClass) list = list.filter((c) => c.expense_class === expenseClass);
+      else if (kind === "expense" && !canEdit("ceo")) list = list.filter((c) => c.expense_class === "variable");
       setCats(list);
     });
-  useEffect(() => { load(); }, [kind]);
+  useEffect(() => { load(); }, [kind, expenseClass]);
   async function create() {
     if (!name.trim()) return;
     const row: Record<string, unknown> = { kind, label: name.trim(), sort: 99 };
@@ -59,7 +59,13 @@ export function CategoryPicker({ kind, value, onChange, label, byLabel }: {
       ) : (
         <div className="flex items-center gap-2">
           <select value={value} onChange={(e) => onChange(e.target.value)} className={field}>
-            <option value="">—</option>{cats.map((c) => <option key={c.id} value={byLabel ? c.label : c.id}>{c.label}</option>)}
+            <option value="">—</option>
+            {grouped
+              ? CLASSES.map(({ v, k }) => {
+                  const g = cats.filter((c) => (c.expense_class ?? "") === v);
+                  return g.length ? <optgroup key={v} label={t(k)}>{g.map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}</optgroup> : null;
+                })
+              : cats.map((c) => <option key={c.id} value={byLabel ? c.label : c.id}>{c.label}</option>)}
           </select>
           {can("settings", "categories") && <button type="button" onClick={() => setCreating(true)} className="shrink-0 rounded-lg border border-border p-2 text-foreground" aria-label={t("newCategory")}><Plus className="h-4 w-4" /></button>}
         </div>
