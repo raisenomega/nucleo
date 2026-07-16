@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FileText } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { respondQuote } from "@quotes/infrastructure/supabase-public-quote.repository";
 
@@ -24,7 +25,7 @@ export function QuoteDecision({ token, tenantName, contactPhone, pdfUrl, pdfOk, 
       {pdfOk
         ? <div className="text-center">
             <a href={pdfUrl ?? "#"} target="_blank" rel="noreferrer"
-              className="inline-block rounded-xl border-2 border-primary bg-secondary px-8 py-4 text-lg font-bold">📄 {t("downloadPdf")}</a>
+              className="inline-flex items-center gap-2 rounded-xl border-2 border-primary bg-secondary px-8 py-4 text-lg font-bold"><FileText size={16} /> {t("downloadPdf")}</a>
             <p className="mt-2 text-sm text-muted-foreground">{t("quoteReviewPdfFirst")}</p>
           </div>
         : <p className="text-sm text-muted-foreground">{t("quotePdfUnavailable", { name: tenantName, phone: contactPhone ?? "" })}</p>}

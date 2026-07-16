@@ -3,27 +3,23 @@
 Flujo: JWT verificado (JWKS) → fetch datos (filtro tenant explícito) → Jinja2 →
 Gotenberg (HTML→PDF) → upload tenant-pdfs → signed URL.
 """
-import os
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from config import CORS_ORIGIN_REGEX
 from routes import evaluation, expense, extraordinary, income, invoice, lead, payroll, quote, reconciliation, report, route, training
 
 app = FastAPI(title="NÚCLEO pdf-api", docs_url=None, redoc_url=None)
 
-# CORS: parsear ALLOWED_ORIGINS (CSV) aquí mismo. Normalizamos slash final — el header
-# Origin del navegador nunca lo lleva, y "https://x.app/" != "https://x.app" bloqueaba todo.
-# Sin la variable → ["*"] (debug temporal; restringir cuando funcione).
-origins = os.environ.get("ALLOWED_ORIGINS", "").split(",")
-origins = [o.strip().rstrip("/") for o in origins if o.strip()]
-
+# CORS white-label por PATRÓN (ver config._cors_origin_regex): cualquier subdominio de la plataforma
+# o dominio custom de tenant (EXTRA_ALLOWED_ORIGINS) + previews Vercel + localhost. Así un tenant nuevo
+# NO obliga a tocar Railway. El JWT (auth.py) es el gate real; CORS es capa extra.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins if origins else ["*"],
+    allow_origin_regex=CORS_ORIGIN_REGEX,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type"],
 )
 
 app.include_router(invoice.router)
