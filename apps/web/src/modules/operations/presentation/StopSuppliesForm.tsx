@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { X } from "lucide-react";
+import { X, Loader2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
+import { useToast } from "@shared/providers/toast-context";
 import { ScreenModal } from "@shared/components/ScreenModal";
 import { supabaseRouteRepository } from "@operations/infrastructure/supabase-route.repository";
 import { supabaseInventoryRepository } from "@fieldops/infrastructure/supabase-inventory.repository";
@@ -10,6 +11,7 @@ import type { StopSupply } from "@operations/domain/route.types";
 // Materiales usados en una parada: descuenta stock (RPC). Muestra lo ya registrado.
 export function StopSuppliesForm({ stopId, onClose }: { stopId: string; onClose: () => void }) {
   const { t } = useI18n();
+  const toast = useToast();
   const [items, setItems] = useState<InventoryItem[]>([]);
   const [used, setUsed] = useState<readonly StopSupply[]>([]);
   const [qty, setQty] = useState<Record<string, number>>({});
@@ -24,8 +26,9 @@ export function StopSuppliesForm({ stopId, onClose }: { stopId: string; onClose:
     setBusy(true);
     const r = await supabaseRouteRepository.recordSupplies(stopId, picked);
     setBusy(false);
-    if (!r.ok) { window.alert(r.error); return; }
-    setQty({}); loadItems(); loadUsed();
+    if (!r.ok) { toast.error(r.error); return; }
+    toast.success(t("saved"));
+    onClose();
   }
   const fld = "w-20 rounded-lg border border-border bg-background p-2 text-center text-sm";
   return (
@@ -46,7 +49,7 @@ export function StopSuppliesForm({ stopId, onClose }: { stopId: string; onClose:
           </div>
         ))}
         {items.length === 0 && <p className="text-sm text-muted-foreground">{t("noRecords")}</p>}
-        <button type="button" disabled={busy} onClick={() => void save()} className="w-full rounded-lg bg-primary text-primary-foreground py-3 font-bold disabled:opacity-50">{t("save")}</button>
+        <button type="button" disabled={busy} onClick={() => void save()} className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary py-3 font-bold text-primary-foreground disabled:opacity-50">{busy && <Loader2 className="h-5 w-5 animate-spin" />}{t("save")}</button>
       </div>
     </ScreenModal>
   );

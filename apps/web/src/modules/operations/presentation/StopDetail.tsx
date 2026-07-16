@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X } from "lucide-react";
+import { X, Camera, Image as ImageIcon } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { formatCurrency } from "@shared/lib/format";
 import { ScreenModal } from "@shared/components/ScreenModal";
@@ -38,9 +38,9 @@ export function StopDetail({ stop, tenantId, onClose, onPay, onNotAttended, onEv
             <button type="button" onClick={() => onNotAttended(reason)} className="h-12 w-full rounded-lg bg-red-600 font-bold text-white">{t("notAttended")}</button>
           </div>
         )}
-        <div className="space-y-1"><span className="text-xs font-bold text-muted-foreground">📸 {t("evidenceBefore")}</span>
+        <div className="space-y-1"><span className="inline-flex items-center gap-1 text-xs font-bold text-muted-foreground"><Camera size={16} /> {t("evidenceBefore")}</span>
           <StopEvidencePhase tenantId={tenantId} routeId={stop.routeId} stopId={stop.id} phase="before" value={stop.evidenceBefore} onChange={(p) => onEvidence("before", p)} /></div>
-        <div className="space-y-1"><span className="text-xs font-bold text-muted-foreground">📸 {t("evidenceAfter")}</span>
+        <div className="space-y-1"><span className="inline-flex items-center gap-1 text-xs font-bold text-muted-foreground"><ImageIcon size={16} /> {t("evidenceAfter")}</span>
           <StopEvidencePhase tenantId={tenantId} routeId={stop.routeId} stopId={stop.id} phase="after" value={stop.evidenceAfter} onChange={(p) => onEvidence("after", p)} /></div>
         {done ? <div className="rounded-lg bg-green-50 dark:bg-green-500/15 p-3 text-center font-bold text-green-700 dark:text-green-300">{t("stopCompleted")}: {formatCurrency(stop.actualAmount ?? stop.estimatedAmount)}</div>
           : debt ? <div className="rounded-lg bg-yellow-50 dark:bg-yellow-500/15 p-3 text-center font-bold text-yellow-700 dark:text-yellow-300">{t("pendingDebt")}: {formatCurrency(stop.estimatedAmount)}</div>
