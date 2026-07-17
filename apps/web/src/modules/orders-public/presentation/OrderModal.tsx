@@ -52,7 +52,7 @@ export function OrderModal({ item, onClose, defaultValues }: { item: OrderItem; 
         {status === "ready" && form && (
           <>
             <OrderFormRenderer fields={form.fields} values={values} onChange={(k, v) => setValues((p) => ({ ...p, [k]: v }))} />
-            <CouponInput onApply={setCoupon} />
+            <CouponInput onApply={setCoupon} discount={totals.discount} activeCode={coupon} />
             <PaymentMethodPicker methods={methods} value={pm} onChange={setPm} />
           </>
         )}

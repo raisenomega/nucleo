@@ -16,6 +16,7 @@ export function OrderDynamicSummary({ totals, footer, title }: { totals: Totals;
       <div className="space-y-1.5">
         {line(t("opSubtotal"), totals.subtotal)}
         {totals.unitPrice != null && <p className="-mt-1 text-xs text-muted-foreground">{money(totals.unitPrice)} {unitLabel}</p>}
+        {totals.discount > 0 && <div className="flex justify-between text-sm"><span className="text-muted-foreground">{t("opDiscount")}</span><span className="font-medium text-green-600">−{money(totals.discount)}</span></div>}
         {totals.tax > 0 && line(t("opTax"), totals.tax)}
         {totals.shipping > 0 && line(t("opShipping"), totals.shipping)}
       </div>
