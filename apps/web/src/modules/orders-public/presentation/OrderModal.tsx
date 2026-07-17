@@ -13,25 +13,24 @@ import { OrderDynamicSummary } from "@orders-public/presentation/OrderDynamicSum
 import { PaymentMethodPicker } from "@orders-public/presentation/PaymentMethodPicker";
 import { CouponInput } from "@orders-public/presentation/CouponInput";
 import { OrderSuccessDialog } from "@orders-public/presentation/OrderSuccessDialog";
+import { PromoOrderHeader, type PromoHeaderCtx } from "@orders-public/presentation/PromoOrderHeader";
 import { firstInvalidField } from "@orders-public/domain/validate-order";
 
 export interface OrderItem { kind: "product" | "service" | "package"; id: string; name: string; basePrice: number }
 const ERR: Record<string, string> = { total_mismatch: "opErrTotal", rate_limited: "opErrRate", coupon_invalid: "opErrCoupon", payment_method_invalid: "opErrPayment", form_invalid: "opErrForm" };
 const bar = "sticky z-10 border-border bg-card/85 p-4 backdrop-blur supports-[backdrop-filter]:bg-card/70";
 
-export function OrderModal({ item, onClose, defaultValues, defaultCoupon }: { item: OrderItem; onClose: () => void; defaultValues?: Record<string, unknown>; defaultCoupon?: string | null }) {
+export function OrderModal({ item, onClose, defaultValues, defaultCoupon, promoContext }: { item: OrderItem; onClose: () => void; defaultValues?: Record<string, unknown>; defaultCoupon?: string | null; promoContext?: PromoHeaderCtx }) {
   const { t, locale } = useI18n(); const toast = useToast();
   const { form, methods, status } = useOrderForm(item.kind, item.id);
   const { busy, submit } = useCreateOrder();
   const [values, setValues] = useState<Record<string, unknown>>({});
-  const [pm, setPm] = useState(""); const [coupon, setCoupon] = useState<string | null>(defaultCoupon ?? null);
-  const [done, setDone] = useState<{ orderNumber: string; orderId: string } | null>(null);
+  const [pm, setPm] = useState(""); const [coupon, setCoupon] = useState<string | null>(defaultCoupon ?? null); const [done, setDone] = useState<{ orderNumber: string; orderId: string } | null>(null);
   useEffect(() => { if (methods[0] && !pm) setPm(methods[0].methodKey); }, [methods, pm]);
   // Semilla de valores desde validation_rules.default (frequency='4w', extraBuriedBins='2'…) → el preview de la
   // matriz calcula desde que abre y responde al cambiar frecuencia (antes arrancaba vacío → matriz devolvía $0).
   useEffect(() => { if (form) setValues({ ...Object.fromEntries(form.fields.filter((f) => f.validation.default !== undefined).map((f) => [f.fieldKey, f.validation.default])), ...defaultValues }); }, [form]);
-  const items = [{ kind: item.kind, id: item.id, qty: 1, name: item.name }];
-  const totals = useOrderPricing(item, values, coupon);
+  const items = [{ kind: item.kind, id: item.id, qty: 1, name: item.name }]; const totals = useOrderPricing(item, values, coupon);
   async function onSubmit() {
     if (!form) return;
     const bad = firstInvalidField(form.fields, values); // bloqueante: toast educativo, no se envía la orden.
@@ -51,6 +50,7 @@ export function OrderModal({ item, onClose, defaultValues, defaultCoupon }: { it
         {status === "notfound" && <p className="py-6 text-center text-sm text-muted-foreground">{t("opErrForm")}</p>}
         {status === "ready" && form && (
           <>
+            {promoContext && <PromoOrderHeader {...promoContext} />}
             <OrderFormRenderer fields={form.fields} values={values} onChange={(k, v) => setValues((p) => ({ ...p, [k]: v }))} />
             <CouponInput onApply={setCoupon} discount={totals.discount} activeCode={coupon} />
             <PaymentMethodPicker methods={methods} value={pm} onChange={setPm} />

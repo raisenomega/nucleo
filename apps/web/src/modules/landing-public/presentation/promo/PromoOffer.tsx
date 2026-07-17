@@ -32,7 +32,8 @@ export function PromoOffer() {
     <>
       {view === "popup" && <PromoPopup offer={offer} onClose={() => { markSeen(); setView("toast"); }} onCta={() => { markSeen(); setView(svc ? "order" : "toast"); }} />}
       {view === "toast" && <PromoToast text={offer.toast_text || t("promoTrendingDefault")} onClick={() => setView("popup")} />}
-      {view === "order" && svc && <OrderModal item={{ kind: "service", id: svc.id, name: svc.name, basePrice: svc.price ?? 0 }} defaultCoupon={offer.coupon_code ?? null} onClose={() => setView("toast")} />}
+      {view === "order" && svc && <OrderModal item={{ kind: "service", id: svc.id, name: svc.name, basePrice: svc.price ?? 0 }} defaultCoupon={offer.coupon_code ?? null}
+        promoContext={{ title: offer.title, subtitle: offer.badge, helper: offer.description }} onClose={() => setView("toast")} />}
     </>
   );
 }
