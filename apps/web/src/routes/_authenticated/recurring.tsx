@@ -3,6 +3,7 @@ import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
+import { useToast } from "@shared/providers/toast-context";
 import { useRecurringExpenses } from "@finance/application/useRecurringExpenses.hook";
 import { supabaseRecurringRepository } from "@finance/infrastructure/supabase-recurring.repository";
 import { RecurringExpenseTable } from "@finance/presentation/RecurringExpenseTable";
@@ -15,6 +16,7 @@ export const Route = createFileRoute("/_authenticated/recurring")({ component: R
 function RecurringPage() {
   const { t } = useI18n();
   const { can } = useModuleAccess();
+  const toast = useToast();
   const month = new Date().toISOString().slice(0, 7);
   const m = useRecurringExpenses(supabaseRecurringRepository, month);
   const [editing, setEditing] = useState<string | null>(null);
@@ -26,8 +28,8 @@ function RecurringPage() {
   }, [editing, m.items]);
 
   async function submit(d: RecurringExpenseFormData) {
-    await m.save(editing && editing !== "new" ? editing : null, d);
-    setEditing(null);
+    const r = await m.save(editing && editing !== "new" ? editing : null, d);
+    if (r.ok) { setEditing(null); toast.success(t("saved")); } else toast.error(r.error);
   }
 
   if (!can("recurring", "view")) return <Navigate to="/dashboard" />;

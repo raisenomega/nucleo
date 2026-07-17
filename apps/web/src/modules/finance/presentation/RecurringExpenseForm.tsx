@@ -14,16 +14,19 @@ export function RecurringExpenseForm({ initial, onSubmit, onCancel }: {
 }) {
   const { t } = useI18n();
   const [f, setF] = useState<RecurringExpenseFormData>(initial ?? EMPTY);
+  const [err, setErr] = useState(false);
   const field = "h-12 w-full rounded-lg border border-border bg-background px-3 font-body";
   const lbl = "text-xs font-bold text-muted-foreground";
+  const go = (e: React.FormEvent) => { e.preventDefault(); if (!f.categoryId) return void setErr(true); onSubmit(f); };
   return (
     <ScreenModal onClose={onCancel}>
       <div className="flex items-center justify-between border-b border-border p-4 md:p-6">
         <h2 className="font-display text-xl font-bold text-foreground">{t("addRecurring")}</h2>
         <button type="button" onClick={onCancel} aria-label={t("cancel")}><X className="h-6 w-6" /></button>
       </div>
-      <form onSubmit={(e) => { e.preventDefault(); onSubmit(f); }} className="flex flex-1 flex-col gap-4 p-4 md:p-6">
-        <CategoryPicker kind="expense" expenseClass="fixed" value={f.categoryId} onChange={(id) => setF({ ...f, categoryId: id })} label="category" />
+      <form onSubmit={go} className="flex flex-1 flex-col gap-4 p-4 md:p-6">
+        <div><CategoryPicker kind="expense" expenseClass="fixed" value={f.categoryId} onChange={(id) => { setF({ ...f, categoryId: id }); setErr(false); }} label="category" />
+          {err && <span className="text-xs text-destructive">{t("requiredFields")}</span>}</div>
         <label className="block space-y-1"><span className={lbl}>{t("description")}</span>
           <input value={f.label} onChange={(e) => setF({ ...f, label: e.target.value })} className={field} required /></label>
         <div className="grid grid-cols-2 gap-4">
