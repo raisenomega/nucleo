@@ -40,9 +40,7 @@ function PayrollPage() {
 
   const editRow = useMemo<PayrollFormData | undefined>(() => {
     const i = items.find((x) => x.id === editing);
-    return i ? { employeeId: i.employeeId, externalWorkerId: i.externalWorkerId, amount: i.amount, period: i.period,
-      paymentMethodId: i.paymentMethodId, date: i.date, notes: i.notes, evidenceUrls: i.evidenceUrls,
-      workerType: i.workerType, grossSalary: i.grossSalary || i.amount } : undefined;
+    return i ? { employeeId: i.employeeId, externalWorkerId: i.externalWorkerId, amount: i.amount, period: i.period, paymentMethodId: i.paymentMethodId, date: i.date, notes: i.notes, evidenceUrls: i.evidenceUrls, workerType: i.workerType, grossSalary: i.grossSalary || i.amount } : undefined;
   }, [editing, items]);
 
   async function submit(d: PayrollFormData) {
@@ -52,6 +50,8 @@ function PayrollPage() {
 
   if (!can("payroll", "view")) return <Navigate to="/dashboard" />;
   const viewItem = items.find((i) => i.id === viewing);
+  const onEdit = can("payroll", "edit") ? setEditing : undefined;
+  const onDelete = can("payroll", "delete") ? (id: string) => { if (window.confirm(`${t("delete")}?`)) void remove(id); } : undefined;
   return (
     <div className="space-y-6 p-4 md:p-8">
       <div className="space-y-2">
@@ -66,8 +66,8 @@ function PayrollPage() {
         <p className="text-xs text-muted-foreground">{t("payrollSubtitle")}</p>
       </div>
       {editing !== null && <PayrollForm employees={emps} externals={externals} payCats={cats} preview={preview} initial={editRow} onSubmit={submit} onCancel={() => setEditing(null)} />}
-      <PayrollTable rows={items} onView={setViewing} onEdit={can("payroll", "edit") ? setEditing : undefined}
-        onDelete={can("payroll", "delete") ? (id) => { if (window.confirm(`${t("delete")}?`)) void remove(id); } : undefined} />
+      <PayrollTable rows={items.filter((i) => !i.externalWorkerId)} onView={setViewing} onEdit={onEdit} onDelete={onDelete} />
+      <PayrollTable title="externalPayments" icon={<Users className="h-4 w-4" />} rows={items.filter((i) => i.externalWorkerId)} onView={setViewing} onEdit={onEdit} onDelete={onDelete} />
       {viewItem && <PayrollDetail item={viewItem} onClose={() => setViewing(null)} />}
       {managing && <ExternalWorkersModal onClose={() => { setManaging(false); void workers.refresh(); }} />}
     </div>

@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Pencil, Trash2 } from "lucide-react";
-import { useI18n } from "@shared/i18n";
+import { useI18n, type TranslationKey } from "@shared/i18n";
 import { Pagination } from "@shared/components/Pagination";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { useRoleGate } from "@shared/hooks/useRoleGate";
@@ -11,8 +11,8 @@ import type { Payroll } from "@finance/domain/payroll.types";
 
 const grossOf = (i: Payroll) => i.grossSalary || i.amount, netOf = (i: Payroll) => i.netSalary || i.amount, costOf = (i: Payroll) => i.totalEmployerCost || i.amount;
 
-export function PayrollTable({ rows, onView, onEdit, onDelete }: {
-  rows: readonly Payroll[];
+export function PayrollTable({ rows, onView, onEdit, onDelete, title = "payrollList", icon }: {
+  rows: readonly Payroll[]; title?: TranslationKey; icon?: ReactNode;
   onView: (id: string) => void; onEdit?: (id: string) => void; onDelete?: (id: string) => void;
 }) {
   const { t } = useI18n();
@@ -28,7 +28,7 @@ export function PayrollTable({ rows, onView, onEdit, onDelete }: {
     <>
     <div className="hidden overflow-hidden rounded-lg border border-border bg-card md:block">
       <div className="flex items-center justify-between border-b border-border p-4">
-        <h2 className="font-body font-bold">{t("payrollList")} ({visible.length})</h2>
+        <h2 className="flex items-center gap-2 font-body font-bold">{icon}{t(title)} ({visible.length})</h2>
         {money && <span className="font-body font-bold text-foreground">{t("totalEmployerCost")}: {formatCurrency(total)}</span>}
       </div>
       <div className="overflow-x-auto">
@@ -64,6 +64,7 @@ export function PayrollTable({ rows, onView, onEdit, onDelete }: {
       </div>
     </div>
     <div className="space-y-2 md:hidden">
+      <h2 className="flex items-center gap-2 font-body font-bold">{icon}{t(title)} ({visible.length}){money && <span className="ml-auto text-sm">{formatCurrency(total)}</span>}</h2>
       {paged.map((i) => <MobileCard key={i.id} title={i.employeeName} amount={money ? formatCurrency(costOf(i)) : undefined}
         lines={[i.period, money ? `${t("grossSalary")} ${formatCurrency(grossOf(i))} · ${t("netSalary")} ${formatCurrency(netOf(i))}` : ""]}
         onView={() => onView(i.id)} onEdit={onEdit ? () => onEdit(i.id) : undefined} onDelete={onDelete ? () => onDelete(i.id) : undefined} />)}

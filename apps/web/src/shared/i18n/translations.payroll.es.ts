@@ -30,4 +30,5 @@ export const esPayroll = {
   payAthMovil: "ATH Móvil",
   payTransferencia: "Transferencia",
   payCheque: "Cheque",
+  externalPayments: "Pagos a externos",
 } satisfies Partial<Record<TranslationKey, string>>;
