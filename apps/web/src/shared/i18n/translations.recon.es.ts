@@ -65,4 +65,10 @@ export const esRecon = {
   couponFull: "Agotado",
   couponInUse: "Este cupón tiene {n} redenciones. No se puede eliminar; desactívalo en su lugar.",
   couponDeleteConfirm: "¿Eliminar el cupón '{code}'? Esta acción no se puede deshacer.",
+  promoCreate: "Crear Oferta", promoOfferTitle: "Configurar oferta promocional", promoBadge: "Texto del badge",
+  promoTitleField: "Título", promoDescField: "Descripción", promoCtaField: "Texto del botón",
+  promoToastField: "Texto del toast flotante", promoPriceField: "Precio promo", promoRegularField: "Precio regular (tachado)",
+  promoSuffixField: "Sufijo del precio", promoServiceField: "Servicio vinculado", promoCouponField: "Cupón vinculado",
+  promoActiveField: "Oferta activa", promoAutoShow: "Mostrar popup automático al entrar", promoReserveDefault: "Reservar promo",
+  promoTrendingDefault: "OFERTA TRENDING",
 } satisfies Partial<Record<TranslationKey, string>>;

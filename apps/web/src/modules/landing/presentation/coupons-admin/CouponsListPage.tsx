@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Navigate } from "@tanstack/react-router";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Sparkles } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import type { TranslationKey } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
@@ -8,12 +8,14 @@ import { Spinner } from "@shared/components/loading/Spinner";
 import { useCoupons } from "@landing/application/useCoupons.hook";
 import { supabaseCouponsRepository } from "@landing/infrastructure/supabase-coupons.repository";
 import { CouponForm } from "@landing/presentation/coupons-admin/CouponForm";
+import { PromoOfferForm } from "@landing/presentation/coupons-admin/PromoOfferForm";
 import type { Coupon } from "@landing/domain/coupon.types";
 
 export function CouponsListPage() {
   const { t } = useI18n(); const { can } = useModuleAccess();
   const { coupons, loading, save, remove } = useCoupons(supabaseCouponsRepository);
   const [editing, setEditing] = useState<Coupon | "new" | null>(null);
+  const [promo, setPromo] = useState(false);
   if (!can("settings", "edit")) return <Navigate to="/dashboard" />;
   async function del(c: Coupon) {
     if (c.currentUses > 0) return void window.alert(t("couponInUse", { n: c.currentUses }));
@@ -32,7 +34,10 @@ export function CouponsListPage() {
     <div className="space-y-4 p-4 md:p-8">
       <div className="flex items-center justify-between">
         <h1 className="font-display text-xl font-bold text-foreground md:text-3xl">{t("landingCoupons")}</h1>
-        <button type="button" onClick={() => setEditing("new")} className="inline-flex items-center gap-1 rounded-lg bg-primary px-3 py-2 text-sm font-bold text-primary-foreground"><Plus className="h-4 w-4" /> {t("couponNew")}</button>
+        <div className="flex gap-2">
+          <button type="button" onClick={() => setPromo(true)} className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-2 text-sm font-bold text-foreground"><Sparkles className="h-4 w-4" /> {t("promoCreate")}</button>
+          <button type="button" onClick={() => setEditing("new")} className="inline-flex items-center gap-1 rounded-lg bg-primary px-3 py-2 text-sm font-bold text-primary-foreground"><Plus className="h-4 w-4" /> {t("couponNew")}</button>
+        </div>
       </div>
       {loading ? <div className="py-16"><Spinner /></div> : coupons.length === 0 ? <p className="text-sm text-muted-foreground">{t("couponEmpty")}</p> : (
         <div className="overflow-x-auto rounded-lg border border-border">
@@ -56,6 +61,7 @@ export function CouponsListPage() {
           </table>
         </div>)}
       {editing && <CouponForm initial={editing === "new" ? undefined : editing} onSave={(d) => save(editing === "new" ? null : editing.id, d)} onClose={() => setEditing(null)} />}
+      {promo && <PromoOfferForm coupons={coupons} onClose={() => setPromo(false)} />}
     </div>
   );
 }

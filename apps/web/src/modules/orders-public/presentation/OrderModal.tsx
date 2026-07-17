@@ -19,12 +19,12 @@ export interface OrderItem { kind: "product" | "service" | "package"; id: string
 const ERR: Record<string, string> = { total_mismatch: "opErrTotal", rate_limited: "opErrRate", coupon_invalid: "opErrCoupon", payment_method_invalid: "opErrPayment", form_invalid: "opErrForm" };
 const bar = "sticky z-10 border-border bg-card/85 p-4 backdrop-blur supports-[backdrop-filter]:bg-card/70";
 
-export function OrderModal({ item, onClose, defaultValues }: { item: OrderItem; onClose: () => void; defaultValues?: Record<string, unknown> }) {
+export function OrderModal({ item, onClose, defaultValues, defaultCoupon }: { item: OrderItem; onClose: () => void; defaultValues?: Record<string, unknown>; defaultCoupon?: string | null }) {
   const { t, locale } = useI18n(); const toast = useToast();
   const { form, methods, status } = useOrderForm(item.kind, item.id);
   const { busy, submit } = useCreateOrder();
   const [values, setValues] = useState<Record<string, unknown>>({});
-  const [pm, setPm] = useState(""); const [coupon, setCoupon] = useState<string | null>(null);
+  const [pm, setPm] = useState(""); const [coupon, setCoupon] = useState<string | null>(defaultCoupon ?? null);
   const [done, setDone] = useState<{ orderNumber: string; orderId: string } | null>(null);
   useEffect(() => { if (methods[0] && !pm) setPm(methods[0].methodKey); }, [methods, pm]);
   // Semilla de valores desde validation_rules.default (frequency='4w', extraBuriedBins='2'…) → el preview de la

@@ -65,4 +65,10 @@ export const enRecon = {
   couponFull: "Used up",
   couponInUse: "This coupon has {n} redemptions. It can't be deleted; deactivate it instead.",
   couponDeleteConfirm: "Delete coupon '{code}'? This can't be undone.",
+  promoCreate: "Create Offer", promoOfferTitle: "Configure promo offer", promoBadge: "Badge text",
+  promoTitleField: "Title", promoDescField: "Description", promoCtaField: "Button text",
+  promoToastField: "Floating toast text", promoPriceField: "Promo price", promoRegularField: "Regular price (struck)",
+  promoSuffixField: "Price suffix", promoServiceField: "Linked service", promoCouponField: "Linked coupon",
+  promoActiveField: "Offer active", promoAutoShow: "Auto-show popup on entry", promoReserveDefault: "Book promo",
+  promoTrendingDefault: "TRENDING OFFER",
 } satisfies Partial<Record<TranslationKey, string>>;
