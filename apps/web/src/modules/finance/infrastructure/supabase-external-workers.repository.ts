@@ -1,22 +1,30 @@
 import { supabase } from "@shared/lib/supabase";
 import type {
   ExternalWorker, ExternalWorkerFormData, ExternalWorkerListResult,
-  IExternalWorkerRepository, ExternalWorkerType,
+  IExternalWorkerRepository, ExternalWorkerType, PaymentPreference,
 } from "@finance/domain/external-worker.types";
 import type { Result } from "@finance/domain/payroll.types";
 
-const SELECT = "id, full_name, worker_type, tax_id, contact, notes, active";
+const SELECT = "id, full_name, worker_type, phone, email, address, specialty, department, tax_id, hourly_rate, daily_rate, payment_preference, bank_account, notes, active";
 interface Row {
-  id: string; full_name: string; worker_type: string;
-  tax_id: string | null; contact: string | null; notes: string | null; active: boolean;
+  id: string; full_name: string; worker_type: string; phone: string | null; email: string | null;
+  address: string | null; specialty: string | null; department: string | null; tax_id: string | null;
+  hourly_rate: number | string | null; daily_rate: number | string | null;
+  payment_preference: string | null; bank_account: string | null; notes: string | null; active: boolean;
 }
+const num = (v: number | string | null) => (v === null || v === "" ? null : Number(v));
 const toWorker = (r: Row): ExternalWorker => ({
   id: r.id, fullName: r.full_name, workerType: r.worker_type as ExternalWorkerType,
-  taxId: r.tax_id ?? "", contact: r.contact ?? "", notes: r.notes ?? "", active: r.active,
+  phone: r.phone ?? "", email: r.email ?? "", address: r.address ?? "", specialty: r.specialty ?? "",
+  department: r.department ?? "", taxId: r.tax_id ?? "", hourlyRate: num(r.hourly_rate), dailyRate: num(r.daily_rate),
+  paymentPreference: (r.payment_preference ?? "efectivo") as PaymentPreference, bankAccount: r.bank_account ?? "",
+  notes: r.notes ?? "", active: r.active,
 });
 const toRow = (d: ExternalWorkerFormData) => ({
-  full_name: d.fullName, worker_type: d.workerType, tax_id: d.taxId || null,
-  contact: d.contact || null, notes: d.notes || null, active: d.active,
+  full_name: d.fullName, worker_type: d.workerType, phone: d.phone || null, email: d.email || null,
+  address: d.address || null, specialty: d.specialty || null, department: d.department || null,
+  tax_id: d.taxId || null, hourly_rate: d.hourlyRate, daily_rate: d.dailyRate,
+  payment_preference: d.paymentPreference, bank_account: d.bankAccount || null, notes: d.notes || null, active: d.active,
 });
 
 export const supabaseExternalWorkerRepository: IExternalWorkerRepository = {

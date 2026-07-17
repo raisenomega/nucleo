@@ -31,7 +31,7 @@ function PayrollPage() {
   const [editing, setEditing] = useState<string | null>(null);
   const [viewing, setViewing] = useState<string | null>(null);
   const [managing, setManaging] = useState(false);
-  const externals = useMemo(() => workers.items.filter((w) => w.active).map((w) => ({ id: w.id, full_name: w.fullName, workerType: w.workerType })), [workers.items]);
+  const externals = useMemo(() => workers.items.filter((w) => w.active).map((w) => ({ id: w.id, full_name: w.fullName, workerType: w.workerType, dailyRate: w.dailyRate, hourlyRate: w.hourlyRate, specialty: w.specialty, department: w.department })), [workers.items]);
 
   useEffect(() => {
     void supabase.from("profiles").select("id, full_name").then(({ data }) => setEmps((data as Emp[] | null) ?? []));

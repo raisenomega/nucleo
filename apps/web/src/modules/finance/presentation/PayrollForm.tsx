@@ -13,7 +13,7 @@ const PERIODS = ["Semana", "Quincena", "Mensual", "Pago único"];
 const WORKERS: [WorkerType, TranslationKey][] = [["employee", "employee"], ["contractor", "contractor"], ["helper", "workerHelper"], ["speaker", "workerSpeaker"], ["consultant", "workerConsultant"], ["technician", "workerTechnician"], ["freelancer", "workerFreelancer"]];
 const ONE_TIME_DEFAULT = new Set<WorkerType>(["helper", "speaker", "consultant", "technician", "freelancer"]);
 const EMPTY: PayrollFormData = { employeeId: "", externalWorkerId: "", amount: 0, period: "", paymentMethodId: "", date: "", notes: "", evidenceUrls: [], workerType: "employee", grossSalary: 0 };
-type Ext = { id: string; full_name: string; workerType: WorkerType };
+type Ext = { id: string; full_name: string; workerType: WorkerType; dailyRate: number | null; hourlyRate: number | null; specialty: string; department: string };
 
 export function PayrollForm({ employees, externals, payCats, initial, preview, onSubmit, onCancel }: {
   employees: Emp[]; externals: Ext[]; payCats: Cat[]; initial?: PayrollFormData;
@@ -28,9 +28,10 @@ export function PayrollForm({ employees, externals, payCats, initial, preview, o
   const gross = f.grossSalary ?? f.amount;
   const setWorker = (w: WorkerType) => setF((c) => ({ ...c, workerType: w, ...(ONE_TIME_DEFAULT.has(w) && !c.period ? { period: "Pago único" } : {}) }));
   const pickBeneficiary = (v: string) => {
-    if (v.startsWith("ext:")) { const w = externals.find((x) => x.id === v.slice(4)); setF((c) => ({ ...c, employeeId: "", externalWorkerId: v.slice(4), workerType: w?.workerType ?? c.workerType })); }
+    if (v.startsWith("ext:")) { const w = externals.find((x) => x.id === v.slice(4)); const s = w?.dailyRate ?? w?.hourlyRate ?? 0; setF((c) => ({ ...c, employeeId: "", externalWorkerId: v.slice(4), workerType: w?.workerType ?? c.workerType, ...(s ? { grossSalary: s, amount: s } : {}) })); }
     else setF((c) => ({ ...c, employeeId: v.slice(4), externalWorkerId: "" }));
   };
+  const selExt = externals.find((x) => x.id === f.externalWorkerId);
   useEffect(() => { if (gross > 0) void preview(gross, worker).then(setCalc); else setCalc(null); }, [gross, worker, preview]);
   const field = "w-full rounded-lg border border-border bg-background p-2 font-body";
   const lbl = "text-xs font-bold text-muted-foreground";
@@ -47,7 +48,8 @@ export function PayrollForm({ employees, externals, payCats, initial, preview, o
             <option value="">—</option>
             <optgroup label={t("internalStaff")}>{employees.map((c) => <option key={c.id} value={`emp:${c.id}`}>{c.full_name}</option>)}</optgroup>
             <optgroup label={t("externalWorkers")}>{externals.map((c) => <option key={c.id} value={`ext:${c.id}`}>{c.full_name}</option>)}</optgroup>
-          </select></label>
+          </select>
+          {selExt && (selExt.specialty || selExt.department) && <span className="text-xs text-muted-foreground">{[selExt.specialty, selExt.department].filter(Boolean).join(" · ")}</span>}</label>
         <label className="space-y-1"><span className={lbl}>{worker === "employee" ? t("grossSalary") : t("amount")}</span>
           <input type="number" step="0.01" min="0" value={gross || ""} onChange={(e) => setF({ ...f, grossSalary: Number(e.target.value), amount: Number(e.target.value) })} className={field} /></label>
         <label className="space-y-1"><span className={lbl}>{t("period")}</span>
