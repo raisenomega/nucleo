@@ -1,0 +1,75 @@
+-- pricing-fix — el cupón promo calculaba disc = max(base − promo_price, 0) sobre (subscription + addons), lo que
+-- descontaba TODO indiscriminadamente: los addons no sumaban ($19.98 con o sin Hydro-Jet) y frequency vacío daba $0
+-- (el cupón solo descuenta, nunca pone piso). Modelo correcto del negocio:
+--   1er ciclo con promo → subscription = first_cycle_price (OVERRIDE) + addons encima; 2 tapas incluidas.
+--   recurrente / sin cupón → subscription = matriz(frequency) + addons.
+-- Fix: separar _sub (subscription: matriz, con fallback a service.price si frequency vacío/no matchea) de _addons;
+-- la promo hace OVERRIDE del _sub en primer ciclo (recurrente usa la matriz); el total = _sub + _addons + tax + ship.
+-- Cupón estándar (%/fijo) sigue descontando sobre (subscription+addons). No se toca la matriz, addons ni la redención.
+-- Verificado (dry-run + live): base $19.98 · +hydroJet $59.97 · +tapa $34.98 · sin cupón 4w $29.98 · 2w $19.98 ·
+-- freq vacío $19.98 (no $0) · recurrente 4w $29.98 · Evaluación/Instalación/Soterrados intactos.
+
+create or replace function public._public_price_order(_t uuid, _items jsonb, _cf jsonb, _coupon text, _is_first_cycle boolean default true)
+ returns jsonb language plpgsql stable security definer set search_path to 'public'
+as $function$
+declare _base numeric := 0; _addons numeric := 0; _sub numeric := 0; _tax numeric := 0; _ship numeric := 0; _disc numeric := 0; _stdisc numeric := 0; _taxpct numeric;
+        _it jsonb; _kind text; _iid uuid; _qty numeric; _p numeric; _mrule jsonb; _mri uuid; _arule jsonb; _trule jsonb; _promo jsonb; _c record;
+        _freq text := nullif(_cf->>'frequency',''); _fi int; _bi int; _bins int; _steps jsonb := '[]'::jsonb; _tier numeric; _fval text;
+        _m1 jsonb; _uprice numeric; _grand numeric;
+begin
+  select config, applies_to_id into _mrule, _mri from public.tenant_pricing_rules where tenant_id=_t and rule_type='matrix_2d' and is_active limit 1;
+  select config into _arule from public.tenant_pricing_rules where tenant_id=_t and rule_type='flat' and config->>'kind'='addons' and is_active limit 1;
+  select config into _trule from public.tenant_pricing_rules where tenant_id=_t and rule_type='tiered_qty' and is_active and config ? 'field' and _cf ? (config->>'field') limit 1;
+  for _it in select value from jsonb_array_elements(coalesce(_items,'[]'::jsonb)) loop
+    _kind := _it->>'kind'; _iid := nullif(_it->>'id','')::uuid; _qty := coalesce(nullif(_it->>'qty','')::numeric,1); _p := 0;
+    if _kind='service' and _trule is not null then
+      _fval := _cf->>(_trule->>'field');
+      select (tt->>'price')::numeric into _tier from jsonb_array_elements(_trule->'tiers') tt where tt->>'value'=_fval limit 1;
+      _p := coalesce(_tier, 0);
+      _steps := _steps || jsonb_build_object('rule','field_tiered','field',_trule->>'field','value',_fval,'price',_p);
+    elsif _kind='service' and _freq is not null and _mrule is not null and _cf ? (_mrule->'axis_y'->>'field') and (_mri is null or _mri=_iid) then
+      _bins := coalesce(nullif(_cf->>'extraBuriedBins','')::int,0);
+      _fi := array_position(array(select jsonb_array_elements_text(_mrule->'axis_x'->'values')),_freq)-1;
+      _bi := array_position(array(select jsonb_array_elements_text(_mrule->'axis_y'->'values')),_bins::text)-1;
+      if _fi>=0 and _bi>=0 then _p := (_mrule->'matrix'->_fi->>_bi)::numeric; end if;
+    elsif _kind='product' then select price into _p from public.tenant_landing_products where id=_iid and tenant_id=_t;
+    elsif _kind='service' then
+      select config into _m1 from public.tenant_pricing_rules where tenant_id=_t and rule_type='matrix_1d' and is_active and applies_to_id=_iid limit 1;
+      if _m1 is not null then
+        select (tt->>'price')::numeric, (tt->>'unit_price')::numeric into _p, _uprice from jsonb_array_elements(_m1->'tiers') tt where tt->>'value'=nullif(_cf->>(_m1->>'field_name'),'') limit 1;
+        _p := coalesce(_p,0);
+        if _p=0 then select price into _p from public.tenant_landing_services where id=_iid and tenant_id=_t; _p := coalesce(_p,0); end if;
+        _steps := _steps || jsonb_build_object('rule','matrix_1d','value',_cf->>(_m1->>'field_name'),'price',_p,'unit_price',_uprice,'unit_label_es',_m1->>'unit_label_es','unit_label_en',_m1->>'unit_label_en');
+      else select price into _p from public.tenant_landing_services where id=_iid and tenant_id=_t; end if;
+    elsif _kind='package' then select price into _p from public.tenant_landing_packages where id=_iid and tenant_id=_t;
+    end if;
+    _base := _base + coalesce(_p,0)*_qty;
+  end loop;
+  if _arule is not null then
+    _addons := coalesce(nullif(_cf->>'extraLids','')::numeric,0)*coalesce((_arule->>'extraLids')::numeric,0)
+      + coalesce(nullif(_cf->>'extraRegularBins','')::numeric,0)*coalesce((_arule->>'extraRegularBins')::numeric,0)
+      + coalesce(nullif(_cf->>'additionalUnits','')::numeric,0)*coalesce((_arule->>'additionalUnits')::numeric,0)
+      + case when coalesce((_cf->>'hydroJet')::boolean,false) then coalesce((_arule->>'hydroJet')::numeric,0) else 0 end;
+  end if;
+  _sub := _base;
+  if coalesce(_coupon,'')<>'' then
+    select config into _promo from public.tenant_pricing_rules where tenant_id=_t and rule_type='coupon' and config->>'code'=_coupon and is_active limit 1;
+    if _promo is not null then
+      -- Promo = OVERRIDE de la suscripción (solo primer ciclo). El recurrente usa la matriz normal. Los addons SUMAN encima.
+      if _is_first_cycle then _sub := coalesce((_promo->>'first_cycle_price')::numeric, _base); end if;
+      _disc := greatest(_base - _sub, 0);
+      _steps := _steps || jsonb_build_object('rule','coupon','code',_coupon,'type',case when _is_first_cycle then 'first_cycle' else 'recurring' end,'discount',_disc);
+    else
+      select * into _c from public.tenant_coupons where tenant_id=_t and code=_coupon and is_active and (expires_at is null or expires_at>now()) and (max_uses is null or current_uses<max_uses) limit 1;
+      if found then _stdisc := case when _c.discount_type='percentage' then round((_base+_addons)*_c.value/100.0,2) else least(_c.value,_base+_addons) end; end if;
+    end if;
+  end if;
+  _grand := _sub + _addons;
+  select (config->>'percentage')::numeric into _taxpct from public.tenant_pricing_rules where tenant_id=_t and rule_type='tax' and is_active order by priority desc limit 1;
+  _tax := round(_grand*coalesce(_taxpct,0)/100.0,2);
+  select coalesce((config->>'amount')::numeric,0) into _ship from public.tenant_pricing_rules where tenant_id=_t and rule_type='shipping' and is_active order by priority desc limit 1;
+  _ship := coalesce(_ship,0);
+  return jsonb_build_object('subtotal',round(_base+_addons,2),'tax',_tax,'shipping',_ship,'discount',round(greatest(_disc,_stdisc),2),
+    'total',round(_grand+_tax+_ship-_stdisc,2),
+    'breakdown',jsonb_build_object('steps',_steps,'tax_pct',coalesce(_taxpct,0),'coupon_applied',(_disc>0 or _stdisc>0),'matrix_used',_freq is not null));
+end $function$;
