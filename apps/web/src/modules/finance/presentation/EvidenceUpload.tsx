@@ -27,7 +27,7 @@ export function EvidenceUpload({ tenantId, value, onChange }: {
     <div className="space-y-2">
       <label className={`inline-flex cursor-pointer items-center gap-2 rounded-lg bg-secondary px-3 py-2 text-sm font-body ${value.length >= MAX ? "pointer-events-none opacity-50" : ""}`}>
         <Camera className="h-4 w-4" /> {busy ? "…" : t("addEvidence")} ({value.length}/{MAX})
-        <input type="file" accept="image/*" capture="environment" multiple hidden onChange={onPick} />
+        <input type="file" accept="image/*" capture="environment" multiple className="sr-only" onChange={onPick} />
       </label>
       {previews.length > 0 && (
         <div className="flex gap-2">

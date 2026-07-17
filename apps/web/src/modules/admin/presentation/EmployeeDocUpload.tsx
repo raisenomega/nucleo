@@ -33,7 +33,7 @@ export function EmployeeDocUpload({ onUpload }: { onUpload: (file: File, docType
       <div className="flex flex-wrap items-center gap-3">
         <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-bold text-foreground hover:bg-secondary">
           <Upload className="h-4 w-4" /> {file ? file.name : t("addEvidence")}
-          <input type="file" onChange={(e) => setFile(e.target.files?.[0] ?? null)} className="hidden" /></label>
+          <input type="file" onChange={(e) => setFile(e.target.files?.[0] ?? null)} className="sr-only" /></label>
         <button type="button" onClick={submit} disabled={!file} className="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground disabled:opacity-40">{t("uploadDoc")}</button>
       </div>
     </div>
