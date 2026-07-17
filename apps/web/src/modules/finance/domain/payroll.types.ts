@@ -12,8 +12,9 @@ export interface PayrollDeduction {
 export interface Payroll {
   readonly id: string;
   readonly tenantId: string;
-  readonly employeeId: string;
-  readonly employeeName: string;       // del join a profiles
+  readonly employeeId: string;         // "" si el pago es a un trabajador externo
+  readonly externalWorkerId: string;   // "" si el pago es a un empleado interno
+  readonly employeeName: string;       // join a profiles o, si externo, a payroll_workers
   readonly amount: number;
   readonly period: string;             // ENUM: Semana | Quincena | Mensual
   readonly paymentMethodId: string;
@@ -33,6 +34,7 @@ export interface Payroll {
 
 export interface PayrollFormData {
   readonly employeeId: string;
+  readonly externalWorkerId?: string;  // exactamente uno de employeeId / externalWorkerId
   readonly amount: number;
   readonly period: string;
   readonly paymentMethodId: string;

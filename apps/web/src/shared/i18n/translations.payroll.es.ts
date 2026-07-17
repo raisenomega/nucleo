@@ -14,4 +14,10 @@ export const esPayroll = {
   workerConsultant: "Consultor externo",
   workerTechnician: "Servicio técnico",
   workerFreelancer: "Freelancer",
+  externalWorkers: "Trabajadores externos",
+  newExternalWorker: "Nuevo trabajador externo",
+  contactInfo: "Contacto",
+  beneficiary: "Beneficiario",
+  internalStaff: "Personal interno",
+  noExternalWorkers: "Aún no hay trabajadores externos",
 } satisfies Partial<Record<TranslationKey, string>>;

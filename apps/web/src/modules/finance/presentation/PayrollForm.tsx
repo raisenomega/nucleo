@@ -12,10 +12,11 @@ type Cat = { id: string; label: string };
 const PERIODS = ["Semana", "Quincena", "Mensual", "Pago único"];
 const WORKERS: [WorkerType, TranslationKey][] = [["employee", "employee"], ["contractor", "contractor"], ["helper", "workerHelper"], ["speaker", "workerSpeaker"], ["consultant", "workerConsultant"], ["technician", "workerTechnician"], ["freelancer", "workerFreelancer"]];
 const ONE_TIME_DEFAULT = new Set<WorkerType>(["helper", "speaker", "consultant", "technician", "freelancer"]);
-const EMPTY: PayrollFormData = { employeeId: "", amount: 0, period: "", paymentMethodId: "", date: "", notes: "", evidenceUrls: [], workerType: "employee", grossSalary: 0 };
+const EMPTY: PayrollFormData = { employeeId: "", externalWorkerId: "", amount: 0, period: "", paymentMethodId: "", date: "", notes: "", evidenceUrls: [], workerType: "employee", grossSalary: 0 };
+type Ext = { id: string; full_name: string; workerType: WorkerType };
 
-export function PayrollForm({ employees, payCats, initial, preview, onSubmit, onCancel }: {
-  employees: Emp[]; payCats: Cat[]; initial?: PayrollFormData;
+export function PayrollForm({ employees, externals, payCats, initial, preview, onSubmit, onCancel }: {
+  employees: Emp[]; externals: Ext[]; payCats: Cat[]; initial?: PayrollFormData;
   preview: (gross: number, worker: WorkerType) => Promise<PayrollCalc | null>;
   onSubmit: (d: PayrollFormData) => void; onCancel: () => void;
 }) {
@@ -26,6 +27,10 @@ export function PayrollForm({ employees, payCats, initial, preview, onSubmit, on
   const worker = f.workerType ?? "employee";
   const gross = f.grossSalary ?? f.amount;
   const setWorker = (w: WorkerType) => setF((c) => ({ ...c, workerType: w, ...(ONE_TIME_DEFAULT.has(w) && !c.period ? { period: "Pago único" } : {}) }));
+  const pickBeneficiary = (v: string) => {
+    if (v.startsWith("ext:")) { const w = externals.find((x) => x.id === v.slice(4)); setF((c) => ({ ...c, employeeId: "", externalWorkerId: v.slice(4), workerType: w?.workerType ?? c.workerType })); }
+    else setF((c) => ({ ...c, employeeId: v.slice(4), externalWorkerId: "" }));
+  };
   useEffect(() => { if (gross > 0) void preview(gross, worker).then(setCalc); else setCalc(null); }, [gross, worker, preview]);
   const field = "w-full rounded-lg border border-border bg-background p-2 font-body";
   const lbl = "text-xs font-bold text-muted-foreground";
@@ -37,9 +42,11 @@ export function PayrollForm({ employees, payCats, initial, preview, onSubmit, on
           {WORKERS.map(([v, k]) => <option key={v} value={v}>{t(k)}</option>)}
         </select></label>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <label className="space-y-1"><span className={lbl}>{t("employee")}</span>
-          <select value={f.employeeId} onChange={(e) => setF({ ...f, employeeId: e.target.value })} className={field}>
-            <option value="">—</option>{employees.map((c) => <option key={c.id} value={c.id}>{c.full_name}</option>)}
+        <label className="space-y-1"><span className={lbl}>{t("beneficiary")}</span>
+          <select value={f.externalWorkerId ? `ext:${f.externalWorkerId}` : f.employeeId ? `emp:${f.employeeId}` : ""} onChange={(e) => pickBeneficiary(e.target.value)} className={field}>
+            <option value="">—</option>
+            <optgroup label={t("internalStaff")}>{employees.map((c) => <option key={c.id} value={`emp:${c.id}`}>{c.full_name}</option>)}</optgroup>
+            <optgroup label={t("externalWorkers")}>{externals.map((c) => <option key={c.id} value={`ext:${c.id}`}>{c.full_name}</option>)}</optgroup>
           </select></label>
         <label className="space-y-1"><span className={lbl}>{worker === "employee" ? t("grossSalary") : t("amount")}</span>
           <input type="number" step="0.01" min="0" value={gross || ""} onChange={(e) => setF({ ...f, grossSalary: Number(e.target.value), amount: Number(e.target.value) })} className={field} /></label>

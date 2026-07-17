@@ -14,4 +14,10 @@ export const enPayroll = {
   workerConsultant: "External consultant",
   workerTechnician: "Technician",
   workerFreelancer: "Freelancer",
+  externalWorkers: "External workers",
+  newExternalWorker: "New external worker",
+  contactInfo: "Contact",
+  beneficiary: "Payee",
+  internalStaff: "Internal staff",
+  noExternalWorkers: "No external workers yet",
 } satisfies Partial<Record<TranslationKey, string>>;

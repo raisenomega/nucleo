@@ -19,7 +19,8 @@ async function buildRow(d: PayrollFormData) {
   const worker = d.workerType ?? "employee";
   const c = await calc(gross, worker);
   return {
-    employee_id: d.employeeId, amount: gross, period: d.period, payment_method_id: d.paymentMethodId,
+    employee_id: d.employeeId || null, external_worker_id: d.externalWorkerId || null,
+    amount: gross, period: d.period, payment_method_id: d.paymentMethodId,
     pay_date: d.date, notes: d.notes, evidence_urls: d.evidenceUrls ?? [], worker_type: worker, gross_salary: gross,
     deductions_employee: c?.employee_deductions ?? [], contributions_employer: c?.employer_contributions ?? [],
     net_salary: c?.net_salary ?? gross, total_employer_cost: c?.total_employer_cost ?? gross,
