@@ -35,7 +35,7 @@ export function CategoryPicker({ kind, value, onChange, label, byLabel, expenseC
   async function create() {
     if (!name.trim()) return;
     const row: Record<string, unknown> = { kind, label: name.trim(), sort: 99 };
-    if (kind === "expense") row.expense_class = cls;
+    if (kind === "expense") row.expense_class = expenseClass ?? cls;  // picker filtrado → nace con esa clase (aparece en el dropdown)
     const { data } = await supabase.from("categories").insert(row).select("id").single();
     const id = (data as { id: string } | null)?.id;
     if (id) { load(); onChange(byLabel ? name.trim() : id); setName(""); setCreating(false); }
@@ -46,7 +46,7 @@ export function CategoryPicker({ kind, value, onChange, label, byLabel, expenseC
       {creating ? (
         <div className="space-y-2">
           <input value={name} onChange={(e) => setName(e.target.value)} placeholder={t("categoryName")} className={field} />
-          {kind === "expense" && (
+          {kind === "expense" && !expenseClass && (
             <select value={cls} onChange={(e) => setCls(e.target.value)} className={field} aria-label={t("selectExpenseClass")}>
               {CLASSES.map((c) => <option key={c.v} value={c.v}>{t(c.k)}</option>)}
             </select>
