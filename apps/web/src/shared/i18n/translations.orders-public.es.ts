@@ -11,4 +11,9 @@ export const esOrdersPublic = {
   opAthThanks: "¡Gracias! Verificaremos tu pago y confirmaremos por email en menos de 24 horas.",
   checkoutRequiredField: "Completá los campos obligatorios para continuar.", viewTermsLink: "Ver",
   opSummaryTitle: "Resumen del Pedido", opCancel: "Cancelar",
+  promoPriceLine: "Línea de precio (header)", promoSummaryLine: "Línea principal del resumen", promoIncludedLine: "Línea 'incluido'",
+  promoIncludedLabelField: "Valor 'incluido'", promoTotalLabelField: "Label del total", promoRecurringNote: "Nota recurrente",
+  promoTermsLabelField: "Label del link de términos", promoTermsText: "Texto de términos y condiciones", promoSecHeader: "Header de la oferta",
+  promoSecSummary: "Resumen del pedido", promoSecTerms: "Términos y condiciones", promoIncluded: "Incluido",
+  promoTotalToday: "Total hoy", promoAcceptPrefix: "Al enviar, acepto los", promoTermsDefault: "Términos y condiciones de la oferta",
 } satisfies Partial<Record<TranslationKey, string>>;

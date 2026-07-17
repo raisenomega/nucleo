@@ -14,6 +14,7 @@ import { PaymentMethodPicker } from "@orders-public/presentation/PaymentMethodPi
 import { CouponInput } from "@orders-public/presentation/CouponInput";
 import { OrderSuccessDialog } from "@orders-public/presentation/OrderSuccessDialog";
 import { PromoOrderHeader, type PromoHeaderCtx } from "@orders-public/presentation/PromoOrderHeader";
+import { PromoOrderSummary } from "@orders-public/presentation/PromoOrderSummary";
 import { firstInvalidField } from "@orders-public/domain/validate-order";
 
 export interface OrderItem { kind: "product" | "service" | "package"; id: string; name: string; basePrice: number }
@@ -22,8 +23,7 @@ const bar = "sticky z-10 border-border bg-card/85 p-4 backdrop-blur supports-[ba
 
 export function OrderModal({ item, onClose, defaultValues, defaultCoupon, promoContext }: { item: OrderItem; onClose: () => void; defaultValues?: Record<string, unknown>; defaultCoupon?: string | null; promoContext?: PromoHeaderCtx }) {
   const { t, locale } = useI18n(); const toast = useToast();
-  const { form, methods, status } = useOrderForm(item.kind, item.id);
-  const { busy, submit } = useCreateOrder();
+  const { form, methods, status } = useOrderForm(item.kind, item.id); const { busy, submit } = useCreateOrder();
   const [values, setValues] = useState<Record<string, unknown>>({});
   const [pm, setPm] = useState(""); const [coupon, setCoupon] = useState<string | null>(defaultCoupon ?? null); const [done, setDone] = useState<{ orderNumber: string; orderId: string } | null>(null);
   useEffect(() => { if (methods[0] && !pm) setPm(methods[0].methodKey); }, [methods, pm]);
@@ -59,8 +59,8 @@ export function OrderModal({ item, onClose, defaultValues, defaultCoupon, promoC
       </div>
       {status === "ready" && form && (
         <div className={`${bar} bottom-0 space-y-3 border-t`}>
-          {form.showSummary
-            ? <OrderDynamicSummary totals={totals} title={t("opSummaryTitle")} footer={locale === "en" ? form.summaryFooterEn : form.summaryFooterEs} />
+          {promoContext?.summaryLine ? <PromoOrderSummary promo={promoContext} total={totals.total} />
+            : form.showSummary ? <OrderDynamicSummary totals={totals} title={t("opSummaryTitle")} footer={locale === "en" ? form.summaryFooterEn : form.summaryFooterEs} />
             : <OrderTotalPreview totals={totals} />}
           <div className="flex gap-2">
             <button type="button" onClick={onClose} className="rounded-lg border border-border px-4 py-3 font-bold text-foreground">{(locale === "en" ? form.cancelLabelEn : form.cancelLabelEs) || t("opCancel")}</button>

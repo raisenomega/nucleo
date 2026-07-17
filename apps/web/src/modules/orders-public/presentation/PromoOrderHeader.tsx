@@ -1,6 +1,10 @@
 import { Sparkles } from "lucide-react";
 
-export interface PromoHeaderCtx { title?: string; subtitle?: string; helper?: string }
+export interface PromoHeaderCtx {
+  title?: string; subtitle?: string; helper?: string;
+  summaryLine?: string; includedLine?: string; includedLabel?: string; totalLabel?: string; recurringNote?: string;
+  termsText?: string; termsLabel?: string;
+}
 
 // Header destacado de oferta que se muestra encima del form cuando el OrderModal se abre desde la promo.
 // Los textos vienen de promo_offer (editables desde el panel), no hardcodeados.

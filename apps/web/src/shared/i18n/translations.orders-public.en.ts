@@ -11,4 +11,9 @@ export const enOrdersPublic = {
   opAthThanks: "Thanks! We'll verify your payment and confirm by email within 24 hours.",
   checkoutRequiredField: "Please complete the required fields to continue.", viewTermsLink: "View",
   opSummaryTitle: "Order Summary", opCancel: "Cancel",
+  promoPriceLine: "Price line (header)", promoSummaryLine: "Summary main line", promoIncludedLine: "'Included' line",
+  promoIncludedLabelField: "'Included' value", promoTotalLabelField: "Total label", promoRecurringNote: "Recurring note",
+  promoTermsLabelField: "Terms link label", promoTermsText: "Terms & conditions text", promoSecHeader: "Offer header",
+  promoSecSummary: "Order summary", promoSecTerms: "Terms & conditions", promoIncluded: "Included",
+  promoTotalToday: "Total today", promoAcceptPrefix: "By submitting, I accept the", promoTermsDefault: "Offer terms & conditions",
 } satisfies Partial<Record<TranslationKey, string>>;

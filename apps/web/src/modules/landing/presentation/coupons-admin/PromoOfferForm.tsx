@@ -7,7 +7,8 @@ import { usePromoOffer } from "@landing/application/usePromoOffer.hook";
 import type { PromoOffer } from "@landing-public/domain/promo-offer.types";
 import type { Coupon } from "@landing/domain/coupon.types";
 
-type SKey = "badge" | "title" | "description" | "cta_text" | "toast_text" | "price_suffix";
+type SKey = "badge" | "title" | "description" | "cta_text" | "toast_text" | "price_suffix" | "price_line" | "summary_line" | "included_line" | "included_label" | "total_label" | "recurring_note" | "terms_label";
+const SEC = "border-t border-border pt-3 text-xs font-bold uppercase tracking-wider text-muted-foreground";
 export function PromoOfferForm({ coupons, onClose }: { coupons: readonly Coupon[]; onClose: () => void }) {
   const { t } = useI18n();
   const { offer, ready, save } = usePromoOffer();
@@ -37,6 +38,15 @@ export function PromoOfferForm({ coupons, onClose }: { coupons: readonly Coupon[
           <select value={f.coupon_code ?? ""} onChange={(e) => set({ coupon_code: e.target.value || null })} className={fld}>
             <option value="">—</option>{coupons.map((c) => <option key={c.id} value={c.code}>{c.code}</option>)}</select></label>
         {inp("toast_text", t("promoToastField"))}
+        <p className={SEC}>{t("promoSecHeader")}</p>
+        {inp("price_line", t("promoPriceLine"))}
+        <p className={SEC}>{t("promoSecSummary")}</p>
+        {inp("summary_line", t("promoSummaryLine"))}{inp("included_line", t("promoIncludedLine"))}
+        <div className="grid grid-cols-2 gap-3">{inp("included_label", t("promoIncludedLabelField"))}{inp("total_label", t("promoTotalLabelField"))}</div>
+        {inp("recurring_note", t("promoRecurringNote"))}
+        <p className={SEC}>{t("promoSecTerms")}</p>
+        {inp("terms_label", t("promoTermsLabelField"))}
+        <label className="block text-sm font-medium">{t("promoTermsText")}<textarea value={f.terms_text ?? ""} onChange={(e) => set({ terms_text: e.target.value })} rows={4} className={fld} /></label>
         <label className="flex items-center gap-2 text-sm font-medium"><input type="checkbox" checked={f.is_active ?? false} onChange={(e) => set({ is_active: e.target.checked })} className="h-4 w-4" /> {t("promoActiveField")}</label>
         <label className="flex items-center gap-2 text-sm font-medium"><input type="checkbox" checked={f.auto_show ?? false} onChange={(e) => set({ auto_show: e.target.checked })} className="h-4 w-4" /> {t("promoAutoShow")}</label>
         <button type="button" disabled={busy} onClick={() => void submit()} className="w-full rounded-lg bg-primary py-2.5 font-bold text-primary-foreground disabled:opacity-50">{t("save")}</button>
