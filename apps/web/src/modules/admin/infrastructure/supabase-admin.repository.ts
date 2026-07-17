@@ -60,6 +60,10 @@ export const supabaseAdminRepository: IAdminRepository = {
   async toggleCategory(id, active): Promise<RepoResult> {
     return ok((await supabase.from("categories").update({ active }).eq("id", id)).error);
   },
+  async countCategoryUsage(id): Promise<number> {
+    const { data } = await supabase.rpc("_count_category_usage", { p_category_id: id }); return typeof data === "number" ? data : 0;
+  },
+  async deleteCategory(id): Promise<RepoResult> { return ok((await supabase.from("categories").delete().eq("id", id)).error); },
   async listSettings(): Promise<readonly SettingEntry[]> {
     const { data } = await supabase.from("settings").select("key,value");
     return ((data as { key: string; value: unknown }[] | null) ?? []).map((s) => ({ key: s.key, value: String(s.value) }));

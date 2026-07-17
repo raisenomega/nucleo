@@ -42,7 +42,7 @@ function SettingsPage() {
         ))}
       </div>
       {tab === "team" && isCeo && <AdminTeamTab team={m.team} onInvite={m.invite} onStatus={m.setStatus} onRole={m.changeRole} />}
-      {tab === "categories" && <AdminCategoriesTab categories={m.categories} onSave={m.saveCategory} onToggle={m.toggleCategory} />}
+      {tab === "categories" && <AdminCategoriesTab categories={m.categories} onSave={m.saveCategory} onToggle={m.toggleCategory} onCount={m.countCategoryUsage} onDelete={m.deleteCategory} />}
       {tab === "general" && isCeo && <AdminSettingsTab settings={m.settings} onSave={m.upsertSetting} />}
       {tab === "brand" && isCeo && <AdminBrandTab tenantId={session?.tenantId ?? ""} settings={m.settings} onSaveSetting={m.upsertSetting} />}
       {tab === "themes" && isCeo && <AdminThemesTab tenantId={session?.tenantId ?? ""} />}

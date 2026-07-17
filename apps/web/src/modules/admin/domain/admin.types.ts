@@ -48,6 +48,8 @@ export interface IAdminRepository {
   listCategories(): Promise<readonly CategoryConfig[]>;
   saveCategory(id: string | null, kind: string, label: string, expenseClass: string | null): Promise<RepoResult>;
   toggleCategory(id: string, active: boolean): Promise<RepoResult>;
+  countCategoryUsage(id: string): Promise<number>;
+  deleteCategory(id: string): Promise<RepoResult>;
   listSettings(): Promise<readonly SettingEntry[]>;
   upsertSetting(key: string, value: string): Promise<RepoResult>;
 }

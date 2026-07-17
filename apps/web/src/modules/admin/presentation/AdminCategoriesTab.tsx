@@ -1,15 +1,17 @@
 import { useState } from "react";
-import { Pencil } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import type { CategoryConfig, RepoResult } from "@admin/domain/admin.types";
 
 const KINDS = ["income", "expense", "extraordinary", "payment_method", "channel", "lead_source", "service_type", "tax_obligation"];
 const CLASSES = ["fixed", "variable", "debt", "one_time"];
 
-export function AdminCategoriesTab({ categories, onSave, onToggle }: {
+export function AdminCategoriesTab({ categories, onSave, onToggle, onCount, onDelete }: {
   categories: readonly CategoryConfig[];
   onSave: (id: string | null, kind: string, label: string, cls: string | null) => Promise<RepoResult>;
   onToggle: (id: string, active: boolean) => Promise<RepoResult>;
+  onCount: (id: string) => Promise<number>;
+  onDelete: (id: string) => Promise<RepoResult>;
 }) {
   const { t } = useI18n();
   const [kind, setKind] = useState("income");
@@ -20,6 +22,13 @@ export function AdminCategoriesTab({ categories, onSave, onToggle }: {
     if (!label.trim()) return;
     const r = await onSave(null, kind, label.trim(), kind === "expense" ? cls : null);
     window.alert(r.ok ? "Guardado exitoso" : r.error); if (r.ok) setLabel("");
+  }
+  async function remove(c: CategoryConfig) {
+    const n = await onCount(c.id);
+    if (n > 0) return void window.alert(t("catInUse", { n }));
+    if (!window.confirm(t("catDeleteConfirm", { label: c.label }))) return;
+    const r = await onDelete(c.id);
+    window.alert(r.ok ? t("catDeleted") : r.error);
   }
   return (
     <div className="space-y-4">
@@ -44,6 +53,7 @@ export function AdminCategoriesTab({ categories, onSave, onToggle }: {
                   <div className="flex justify-end gap-2 text-xs font-bold">
                     <button type="button" onClick={() => { const l = window.prompt(t("categoryName"), c.label); if (l) void onSave(c.id, c.kind, l, c.expenseClass).then((r) => window.alert(r.ok ? "Guardado exitoso" : r.error)); }} className="text-foreground"><Pencil className="h-4 w-4" /></button>
                     <button type="button" onClick={() => void onToggle(c.id, !c.active).then((r) => window.alert(r.ok ? "Guardado exitoso" : r.error))}>{c.active ? t("deactivate") : t("approve")}</button>
+                    <button type="button" onClick={() => void remove(c)} aria-label={t("delete")} className="text-destructive"><Trash2 className="h-4 w-4" /></button>
                   </div>
                 </td>
               </tr>

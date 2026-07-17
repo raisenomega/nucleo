@@ -11,7 +11,7 @@ export const esRecon = {
   accumulated: "Acumulado", operatingMargin: "Margen operativo",
   breakEven: "Punto de equilibrio", surplus: "Superávit", shortfall: "Faltante", trend: "Tendencia",
   dashboardFiscal: "Fiscal", breakEvenProgress: "del punto de equilibrio", bankBalance: "Balance en banco",
-  fixedExpense: "Fijo", variableExpense: "Variable", debtExpense: "Deuda", oneTimeExpense: "Único",
+  fixedExpense: "Fijo", catInUse: "Esta categoría tiene {n} registros asociados. No se puede eliminar; desactívala en su lugar.", catDeleteConfirm: "¿Eliminar '{label}'? Esta acción no se puede deshacer.", catDeleted: "Categoría eliminada", variableExpense: "Variable", debtExpense: "Deuda", oneTimeExpense: "Único",
   unclassified: "Sin clasificar", classifyCategories: "clasifique sus categorías",
   breakEvenComposition: "gastos fijos + nómina",
   payrollCost: "Costo total nómina", fixedCosts: "Gastos fijos",

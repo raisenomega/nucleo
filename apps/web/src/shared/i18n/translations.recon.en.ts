@@ -11,7 +11,7 @@ export const enRecon = {
   accumulated: "Accumulated", operatingMargin: "Operating margin",
   breakEven: "Break-even", surplus: "Surplus", shortfall: "Shortfall", trend: "Trend",
   dashboardFiscal: "Fiscal", breakEvenProgress: "of break-even", bankBalance: "Bank balance",
-  fixedExpense: "Fixed", variableExpense: "Variable", debtExpense: "Debt", oneTimeExpense: "One-time",
+  fixedExpense: "Fixed", catInUse: "This category has {n} linked records. It can't be deleted; deactivate it instead.", catDeleteConfirm: "Delete '{label}'? This can't be undone.", catDeleted: "Category deleted", variableExpense: "Variable", debtExpense: "Debt", oneTimeExpense: "One-time",
   unclassified: "Unclassified", classifyCategories: "classify your categories",
   breakEvenComposition: "fixed expenses + payroll",
   payrollCost: "Total payroll cost", fixedCosts: "Fixed costs",
