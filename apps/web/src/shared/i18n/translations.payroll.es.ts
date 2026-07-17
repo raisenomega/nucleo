@@ -8,4 +8,10 @@ export const esPayroll = {
   employerContributions: "Contribuciones patronales", remitToTreasury: "Remitir a Hacienda",
   contractorReceives: "El contratista recibe",
   payrollDisclaimer: "Cálculos estimados según las tasas configuradas. NO sustituyen el cálculo oficial de un especialista en nómina o CPA. Consulte a su profesional contable.",
+  workerTypeLabel: "Tipo de trabajador",
+  workerHelper: "Ayudante del día",
+  workerSpeaker: "Orador/capacitador",
+  workerConsultant: "Consultor externo",
+  workerTechnician: "Servicio técnico",
+  workerFreelancer: "Freelancer",
 } satisfies Partial<Record<TranslationKey, string>>;

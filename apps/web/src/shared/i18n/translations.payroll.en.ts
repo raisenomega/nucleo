@@ -8,4 +8,10 @@ export const enPayroll = {
   employerContributions: "Employer contributions", remitToTreasury: "Remit to Treasury",
   contractorReceives: "Contractor receives",
   payrollDisclaimer: "Estimates based on configured rates. They DO NOT replace an official payroll calculation by a payroll specialist or CPA. Consult your tax professional.",
+  workerTypeLabel: "Worker type",
+  workerHelper: "Day helper",
+  workerSpeaker: "Speaker/trainer",
+  workerConsultant: "External consultant",
+  workerTechnician: "Technician",
+  workerFreelancer: "Freelancer",
 } satisfies Partial<Record<TranslationKey, string>>;

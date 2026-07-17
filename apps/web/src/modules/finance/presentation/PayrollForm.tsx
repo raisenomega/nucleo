@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useI18n } from "@shared/i18n";
+import type { TranslationKey } from "@shared/i18n";
 import { useSession } from "@shared/providers/SessionProvider";
 import { EvidenceUpload } from "@finance/presentation/EvidenceUpload";
 import { PayrollDeductionPreview } from "@finance/presentation/PayrollDeductionPreview";
@@ -8,7 +9,9 @@ import type { PayrollFormData, PayrollCalc, WorkerType } from "@finance/domain/p
 
 type Emp = { id: string; full_name: string };
 type Cat = { id: string; label: string };
-const PERIODS = ["Semana", "Quincena", "Mensual"];
+const PERIODS = ["Semana", "Quincena", "Mensual", "Pago único"];
+const WORKERS: [WorkerType, TranslationKey][] = [["employee", "employee"], ["contractor", "contractor"], ["helper", "workerHelper"], ["speaker", "workerSpeaker"], ["consultant", "workerConsultant"], ["technician", "workerTechnician"], ["freelancer", "workerFreelancer"]];
+const ONE_TIME_DEFAULT = new Set<WorkerType>(["helper", "speaker", "consultant", "technician", "freelancer"]);
 const EMPTY: PayrollFormData = { employeeId: "", amount: 0, period: "", paymentMethodId: "", date: "", notes: "", evidenceUrls: [], workerType: "employee", grossSalary: 0 };
 
 export function PayrollForm({ employees, payCats, initial, preview, onSubmit, onCancel }: {
@@ -22,17 +25,17 @@ export function PayrollForm({ employees, payCats, initial, preview, onSubmit, on
   const [calc, setCalc] = useState<PayrollCalc | null>(null);
   const worker = f.workerType ?? "employee";
   const gross = f.grossSalary ?? f.amount;
+  const setWorker = (w: WorkerType) => setF((c) => ({ ...c, workerType: w, ...(ONE_TIME_DEFAULT.has(w) && !c.period ? { period: "Pago único" } : {}) }));
   useEffect(() => { if (gross > 0) void preview(gross, worker).then(setCalc); else setCalc(null); }, [gross, worker, preview]);
   const field = "w-full rounded-lg border border-border bg-background p-2 font-body";
   const lbl = "text-xs font-bold text-muted-foreground";
   return (
     <form onSubmit={(e) => { e.preventDefault(); onSubmit(f); }} className="space-y-4 rounded-lg border border-border bg-card p-5">
       <h2 className="font-body font-bold">{t("newPayroll")}</h2>
-      <div className="flex gap-4 text-sm">
-        {(["employee", "contractor"] as WorkerType[]).map((w) => (
-          <label key={w} className="flex items-center gap-1"><input type="radio" checked={worker === w} onChange={() => setF({ ...f, workerType: w })} /> {t(w)}</label>
-        ))}
-      </div>
+      <label className="block max-w-xs space-y-1"><span className={lbl}>{t("workerTypeLabel")}</span>
+        <select value={worker} onChange={(e) => setWorker(e.target.value as WorkerType)} className={field}>
+          {WORKERS.map(([v, k]) => <option key={v} value={v}>{t(k)}</option>)}
+        </select></label>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <label className="space-y-1"><span className={lbl}>{t("employee")}</span>
           <select value={f.employeeId} onChange={(e) => setF({ ...f, employeeId: e.target.value })} className={field}>

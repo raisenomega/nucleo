@@ -3,7 +3,7 @@ export type Result<T, E> =
   | { readonly ok: true; readonly value: T }
   | { readonly ok: false; readonly error: E };
 
-export type WorkerType = "employee" | "contractor";
+export type WorkerType = "employee" | "contractor" | "helper" | "speaker" | "consultant" | "technician" | "freelancer";
 
 export interface PayrollDeduction {
   readonly label: string; readonly rate: number; readonly base: number; readonly amount: number;
