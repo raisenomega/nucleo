@@ -14,7 +14,7 @@ import { PayrollForm } from "@finance/presentation/PayrollForm";
 import { PayrollTable } from "@finance/presentation/PayrollTable";
 import { PayrollDetail } from "@finance/presentation/PayrollDetail";
 import { ExternalWorkersModal } from "@finance/presentation/ExternalWorkersModal";
-import { ExternalPaymentsTable } from "@finance/presentation/ExternalPaymentsTable";
+import { ExternalWorkersTable } from "@finance/presentation/ExternalWorkersTable";
 import type { PayrollFormData } from "@finance/domain/payroll.types";
 import type { ExternalWorker } from "@finance/domain/external-worker.types";
 
@@ -65,8 +65,8 @@ function PayrollPage() {
       </div>
       {editing !== null && <PayrollForm employees={emps} externals={externals} payCats={cats} preview={preview} initial={editing === "new" ? prefill : editRow} onSubmit={submit} onCancel={() => setEditing(null)} />}
       <PayrollTable rows={items.filter((i) => !i.externalWorkerId)} onView={setViewing} onEdit={onEdit} onDelete={onDelete} />
-      <ExternalPaymentsTable rows={items.filter((i) => i.externalWorkerId)} onView={setViewing} onEdit={onEdit} onDelete={onDelete} />
-      {viewItem && <PayrollDetail item={viewItem} worker={workers.items.find((w) => w.id === viewItem.externalWorkerId)} onClose={() => setViewing(null)} />}
+      <ExternalWorkersTable rows={workers.items} paidOf={(id) => items.filter((i) => i.externalWorkerId === id).reduce((s, i) => s + (i.grossSalary || i.amount), 0)} onAdd={() => setManaging("new")} onEdit={(id) => setManaging(id)} onToggle={(w) => void workers.update(w.id, { ...w, active: !w.active })} />
+      {viewItem && <PayrollDetail item={viewItem} onClose={() => setViewing(null)} />}
       {managing && <ExternalWorkersModal editId={managing === "new" ? undefined : managing} initial={managing === "new" ? undefined : workers.items.find((w) => w.id === managing)} onClose={() => setManaging(null)} onSaved={() => { setManaging(null); void workers.refresh(); }} onWorkerCreated={onWorkerCreated} />}
     </div>
   );
