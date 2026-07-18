@@ -26,6 +26,7 @@
       "@sales/*":     ["./apps/web/src/modules/sales/*"],
       "@finance/*":   ["./apps/web/src/modules/finance/*"],
       "@fieldops/*":  ["./apps/web/src/modules/fieldops/*"],
+      "@assets/*":    ["./apps/web/src/modules/assets/*"],
       "@tenant/*":    ["./apps/web/src/modules/tenant/*"],
       "@identity/*":  ["./apps/web/src/modules/identity/*"],
       "@cognition/*": ["./apps/web/src/modules/cognition/*"],

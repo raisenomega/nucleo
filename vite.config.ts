@@ -20,6 +20,7 @@ export default defineConfig({
       "@sales": r("apps/web/src/modules/sales"),
       "@finance": r("apps/web/src/modules/finance"),
       "@fieldops": r("apps/web/src/modules/fieldops"),
+      "@assets": r("apps/web/src/modules/assets"),
       "@tenant": r("apps/web/src/modules/tenant"),
       "@identity": r("apps/web/src/modules/identity"),
       "@cognition": r("apps/web/src/modules/cognition"),

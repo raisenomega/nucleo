@@ -11,6 +11,7 @@ import { useUnseenWebLeads } from "@shared/hooks/useUnseenWebLeads.hook";
 import { useUpcomingAppointments } from "@shared/hooks/useUpcomingAppointments.hook";
 import { useOrdersUnseenCount } from "@shared/hooks/useOrdersUnseenCount.hook";
 import { useLowStockCount } from "@shared/hooks/useLowStockCount.hook";
+import { useAssetsDueCount } from "@shared/hooks/useAssetsDueCount.hook";
 
 function activeSection(pathname: string): string {
   const s = SECTIONS.find((sec) => sec.items.some((i) => i.to && pathname.startsWith(i.to)));
@@ -31,7 +32,8 @@ export function Sidebar({ expanded, onClose, onToggle }: { expanded: boolean; on
   const { count: upcomingApts } = useUpcomingAppointments(pathname);
   const { count: unseenOrders } = useOrdersUnseenCount(pathname);
   const { count: lowStock } = useLowStockCount(pathname);
-  const badges = { leads: unseenWeb, agenda: upcomingApts, orders: unseenOrders, inventory: lowStock };
+  const { count: assetsDue } = useAssetsDueCount(pathname);
+  const badges = { leads: unseenWeb, agenda: upcomingApts, orders: unseenOrders, inventory: lowStock, assets: assetsDue };
   const onNavigate = () => onClose(); // solo un link de página cierra el sidebar
   const panelActive = pathname.startsWith("/dashboard");
   return (

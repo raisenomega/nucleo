@@ -16,6 +16,7 @@ export const ACCESS_MODULES: { key: string; label: string; crud: Perm[]; note: s
   { key: "payroll", label: "Nómina", crud: [...ALL, "salary"], note: "salary = salario/deducciones" },
   { key: "extraordinary", label: "Extraordinarios", crud: ALL, note: "" },
   { key: "inventory", label: "Inventario", crud: [...ALL, "cost"], note: "cost = precios/costo" },
+  { key: "assets", label: "Activos", crud: [...ALL, "cost"], note: "cost = valor/precio" },
   { key: "leads", label: "Leads", crud: [...ALL, "documents"], note: "documents = WhatsApp/cotizar/factura" },
   { key: "marketing", label: "Marketing", crud: ALL, note: "" },
   { key: "reconciliation", label: "Conciliación", crud: [...ALL, "bank", "fiscal"], note: "bank/fiscal = datos sensibles" },
