@@ -10,6 +10,10 @@ export interface InventoryItem {
   readonly stock: number;
   readonly unitCost: number;
   readonly minStock: number;
+  readonly avgCost: number;
+  readonly supplierName: string;
+  readonly landingProductId: string | null;
+  readonly lastRestockDate: string | null;
 }
 
 export interface InventoryFormData {
@@ -17,7 +21,18 @@ export interface InventoryFormData {
   readonly stock: number;
   readonly unitCost: number;
   readonly minStock: number;
+  readonly landingProductId: string | null;
 }
+
+export interface RestockData {
+  readonly quantity: number;
+  readonly unitCost: number;
+  readonly supplier: string;
+  readonly notes: string;
+  readonly date: string;
+}
+
+export interface LandingProductRef { readonly id: string; readonly name: string; }
 
 export type InventoryListResult = Result<InventoryItem[], string>;
 
@@ -33,5 +48,7 @@ export interface IInventoryRepository {
   create(data: InventoryFormData): Promise<Result<InventoryItem, string>>;
   update(id: string, data: InventoryFormData): Promise<Result<InventoryItem, string>>;
   remove(id: string): Promise<Result<null, string>>;
+  restock(itemId: string, data: RestockData): Promise<Result<string, string>>;
   listMovements(itemId: string): Promise<InventoryMovement[]>;
+  listLandingProducts(): Promise<LandingProductRef[]>;
 }

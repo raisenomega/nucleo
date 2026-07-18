@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AlertTriangle, Pencil, Trash2 } from "lucide-react";
+import { AlertTriangle, Pencil, Trash2, PackagePlus, Globe } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { formatCurrency } from "@shared/lib/format";
@@ -7,8 +7,9 @@ import { MobileCard } from "@shared/components/MobileCard";
 import { Pagination } from "@shared/components/Pagination";
 import type { InventoryItem } from "@fieldops/domain/inventory.types";
 
-export function InventoryTable({ rows, onView, onEdit, onDelete }: {
-  rows: readonly InventoryItem[]; onView: (id: string) => void; onEdit: (id: string) => void; onDelete: (id: string) => void;
+export function InventoryTable({ rows, onView, onEdit, onDelete, onRestock }: {
+  rows: readonly InventoryItem[]; onView: (id: string) => void; onEdit: (id: string) => void;
+  onDelete: (id: string) => void; onRestock: (id: string) => void;
 }) {
   const { t } = useI18n();
   const { can } = useModuleAccess();
@@ -33,7 +34,7 @@ export function InventoryTable({ rows, onView, onEdit, onDelete }: {
             )}
             {visible.map((i) => (
               <tr key={i.id} onClick={() => onView(i.id)} className="cursor-pointer border-t border-border transition-colors hover:bg-secondary">
-                <td className="px-3 py-2">{i.name}</td>
+                <td className="px-3 py-2"><span className="inline-flex items-center gap-1">{i.name}{i.landingProductId && <span title={t("inCatalogTooltip")} className="inline-flex items-center gap-0.5 rounded bg-primary/10 px-1 text-xs text-primary"><Globe className="h-3 w-3" /> {t("inCatalog")}</span>}</span></td>
                 <td className="px-3 py-2 text-right">
                   <span className="font-semibold">{i.stock}</span>
                   {i.minStock > 0 && i.stock < i.minStock && (
@@ -46,6 +47,7 @@ export function InventoryTable({ rows, onView, onEdit, onDelete }: {
                 <td className="px-3 py-2 text-right">{i.minStock}</td>
                 <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
                   <div className="flex justify-end gap-2">
+                    {can("inventory", "edit") && <button type="button" onClick={() => onRestock(i.id)} aria-label={t("restock")} className="text-primary"><PackagePlus className="h-4 w-4" /></button>}
                     {can("inventory", "edit") && <button type="button" onClick={() => onEdit(i.id)} aria-label={t("edit")} className="text-foreground"><Pencil className="h-4 w-4" /></button>}
                     {can("inventory", "delete") && <button type="button" onClick={() => onDelete(i.id)} aria-label={t("delete")} className="text-destructive"><Trash2 className="h-4 w-4" /></button>}
                   </div>

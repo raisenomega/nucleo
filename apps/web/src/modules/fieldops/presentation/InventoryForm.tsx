@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
-import type { InventoryFormData } from "@fieldops/domain/inventory.types";
+import type { InventoryFormData, LandingProductRef } from "@fieldops/domain/inventory.types";
 
-export function InventoryForm({ initial, onSubmit, onCancel }: {
-  initial?: InventoryFormData;
+export function InventoryForm({ initial, landingProducts, onSubmit, onCancel }: {
+  initial?: InventoryFormData; landingProducts: readonly LandingProductRef[];
   onSubmit: (d: InventoryFormData) => void;
   onCancel: () => void;
 }) {
   const { t } = useI18n();
   const { can } = useModuleAccess();
-  const [f, setF] = useState<InventoryFormData>(initial ?? { name: "", stock: 0, unitCost: 0, minStock: 0 });
+  const [f, setF] = useState<InventoryFormData>(initial ?? { name: "", stock: 0, unitCost: 0, minStock: 0, landingProductId: null });
   const field = "w-full rounded-lg border border-border bg-background p-2 font-body";
   const lbl = "text-xs font-bold text-muted-foreground";
   const num = (k: "stock" | "unitCost" | "minStock", label: string) => (
@@ -27,6 +27,10 @@ export function InventoryForm({ initial, onSubmit, onCancel }: {
         {num("stock", t("stock"))}
         {can("inventory", "cost") && num("unitCost", t("unitCost"))}
         {num("minStock", t("minStock"))}
+        <label className="space-y-1 md:col-span-2"><span className={lbl}>{t("catalogProduct")}</span>
+          <select value={f.landingProductId ?? ""} onChange={(e) => setF({ ...f, landingProductId: e.target.value || null })} className={field}>
+            <option value="">— {t("unlinked")} —</option>{landingProducts.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+          </select></label>
       </div>
       <div className="flex gap-2">
         <button type="submit" className="rounded-lg bg-primary text-primary-foreground px-4 py-2 font-body font-bold">{t("save")}</button>

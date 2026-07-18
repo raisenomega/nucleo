@@ -1,25 +1,31 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { Plus, FileText } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { usePdf } from "@shared/hooks/usePdf";
+import { useToast } from "@shared/providers/toast-context";
 import { useInventory } from "@fieldops/application/useInventory.hook";
 import { supabaseInventoryRepository } from "@fieldops/infrastructure/supabase-inventory.repository";
 import { InventoryForm } from "@fieldops/presentation/InventoryForm";
 import { InventoryTable } from "@fieldops/presentation/InventoryTable";
 import { InventoryDetail } from "@fieldops/presentation/InventoryDetail";
-import type { InventoryFormData } from "@fieldops/domain/inventory.types";
+import { RestockModal } from "@fieldops/presentation/RestockModal";
+import type { InventoryFormData, RestockData, LandingProductRef } from "@fieldops/domain/inventory.types";
 
 export const Route = createFileRoute("/_authenticated/inventory")({ component: InventoryPage });
 
 function InventoryPage() {
   const { t } = useI18n();
   const { can } = useModuleAccess();
-  const { items, create, update, remove } = useInventory(supabaseInventoryRepository);
+  const { items, create, update, remove, restock } = useInventory(supabaseInventoryRepository);
+  const toast = useToast();
   const [editing, setEditing] = useState<string | null>(null);
   const [viewing, setViewing] = useState<string | null>(null);
+  const [restocking, setRestocking] = useState<string | null>(null);
+  const [landing, setLanding] = useState<LandingProductRef[]>([]);
   const pdf = usePdf();
+  useEffect(() => { void supabaseInventoryRepository.listLandingProducts().then(setLanding); }, []);
   const exportPdf = () => void pdf.generatePdf("report", null, {
     title: t("inventory"), date_from: "", date_to: "",
     kpis: [{ label: t("stock"), value: String(items.length) }, { label: t("lowStock"), value: String(items.filter((i) => i.stock <= i.minStock).length) }],
@@ -29,13 +35,11 @@ function InventoryPage() {
 
   const editRow = useMemo<InventoryFormData | undefined>(() => {
     const i = items.find((x) => x.id === editing);
-    return i ? { name: i.name, stock: i.stock, unitCost: i.unitCost, minStock: i.minStock } : undefined;
+    return i ? { name: i.name, stock: i.stock, unitCost: i.unitCost, minStock: i.minStock, landingProductId: i.landingProductId } : undefined;
   }, [editing, items]);
 
-  async function submit(d: InventoryFormData) {
-    if (editing && editing !== "new") await update(editing, d); else await create(d);
-    setEditing(null);
-  }
+  async function submit(d: InventoryFormData) { if (editing && editing !== "new") await update(editing, d); else await create(d); setEditing(null); }
+  async function doRestock(d: RestockData) { if (!restocking) return; const r = await restock(restocking, d); if (r.ok) { setRestocking(null); toast.success(t("entryRegistered")); } else toast.error(r.error); }
 
   if (!can("inventory", "view")) return <Navigate to="/dashboard" />;
   return (
@@ -57,11 +61,12 @@ function InventoryPage() {
         <p className="text-xs text-muted-foreground">{t("inventorySubtitle")}</p>
       </div>
       {editing !== null && (
-        <InventoryForm key={editing} initial={editRow} onSubmit={submit} onCancel={() => setEditing(null)} />
+        <InventoryForm key={editing} initial={editRow} landingProducts={landing} onSubmit={submit} onCancel={() => setEditing(null)} />
       )}
-      <InventoryTable rows={items} onView={setViewing} onEdit={setEditing}
+      <InventoryTable rows={items} onView={setViewing} onEdit={setEditing} onRestock={setRestocking}
         onDelete={(id) => { if (window.confirm(`${t("delete")}?`)) void remove(id); }} />
       {viewing && (() => { const v = items.find((i) => i.id === viewing); return v ? <InventoryDetail item={v} onClose={() => setViewing(null)} /> : null; })()}
+      {restocking && (() => { const it = items.find((i) => i.id === restocking); return it ? <RestockModal item={it} onSubmit={doRestock} onClose={() => setRestocking(null)} /> : null; })()}
     </div>
   );
 }
