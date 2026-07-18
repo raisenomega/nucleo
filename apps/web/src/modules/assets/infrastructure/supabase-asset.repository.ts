@@ -1,5 +1,5 @@
 import { supabase } from "@shared/lib/supabase";
-import type { Asset, AssetFormData, AssetRoute, MaintenanceLog, MaintenanceFormData, CustodyLog, CheckoutData, CheckinData, CustodyType, IAssetRepository, Result, AssetType, AssetCondition, AssetStatus, MaintenanceType } from "@assets/domain/asset.types";
+import type { Asset, AssetFormData, AssetRoute, GpsLog, MaintenanceLog, MaintenanceFormData, CustodyLog, CheckoutData, CheckinData, CustodyType, IAssetRepository, Result, AssetType, AssetCondition, AssetStatus, MaintenanceType } from "@assets/domain/asset.types";
 
 const SELECT = "id, name, asset_type, category, serial_number, model, brand, purchase_date, purchase_price, current_value, depreciation_method, depreciation_years, warranty_expires, condition, status, assigned_to, location, insurance_policy, insurance_expires, notes, image_url, is_active, gps_enabled, gps_device_id, gps_provider, assignee:profiles!tenant_assets_assigned_to_fkey(full_name)";
 type Row = Record<string, unknown>;
@@ -65,5 +65,9 @@ export const supabaseAssetRepository: IAssetRepository = {
   async listRoutes(assetId): Promise<AssetRoute[]> {
     const { data } = await supabase.from("service_routes").select("id, route_date, status, route_stops(count)").eq("asset_id", assetId).is("deleted_at", null).order("route_date", { ascending: false });
     return ((data as Row[] | null) ?? []).map((r) => ({ id: r.id as string, routeDate: (r.route_date as string) ?? "", status: s(r.status), stopsCount: Number((r.route_stops as { count?: number }[] | null)?.[0]?.count ?? 0) }));
+  },
+  async listGpsLogs(assetId): Promise<GpsLog[]> {
+    const { data } = await supabase.from("asset_gps_logs").select("latitude, longitude, speed, accuracy, recorded_at, custody_log_id").eq("asset_id", assetId).order("recorded_at", { ascending: true });
+    return ((data as Row[] | null) ?? []).map((r) => ({ latitude: Number(r.latitude), longitude: Number(r.longitude), speed: n(r.speed), accuracy: n(r.accuracy), recordedAt: (r.recorded_at as string) ?? "", custodyLogId: (r.custody_log_id as string) ?? null }));
   },
 };

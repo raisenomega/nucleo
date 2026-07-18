@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useI18n } from "@shared/i18n";
 import { useToast } from "@shared/providers/toast-context";
+import { useGps } from "@shared/gps/gps-context";
 import { AssetTable } from "@assets/presentation/AssetTable";
 import { AssetDetail } from "@assets/presentation/AssetDetail";
 import { MaintenanceModal } from "@assets/presentation/MaintenanceModal";
@@ -17,14 +18,15 @@ export function AssetsPanel({ assets, rows, now, profiles, onEdit, onDelete }: {
 }) {
   const { t } = useI18n();
   const toast = useToast();
+  const gps = useGps();
   const [viewing, setViewing] = useState<string | null>(null);
   const [maintaining, setMaintaining] = useState<string | null>(null);
   const [flow, setFlow] = useState<{ id: string; mode: "out" | "in" } | null>(null);
   const find = (id: string | null | undefined) => assets.items.find((a) => a.id === id);
   const view = find(viewing); const maint = find(maintaining); const fa = find(flow?.id);
   async function addM(d: MaintenanceFormData) { if (!maintaining) return; const r = await assets.addMaintenance(maintaining, d); if (r.ok) { setMaintaining(null); toast.success(t("saved")); } else toast.error(r.error); }
-  async function doOut(d: CheckoutData) { if (!flow) return; const r = await assets.checkout(flow.id, d); if (r.ok) { setFlow(null); setViewing(null); toast.success(t("saved")); } else toast.error(r.error); }
-  async function doIn(d: CheckinData) { if (!flow) return; const r = await assets.checkin(flow.id, d); if (r.ok) { setFlow(null); setViewing(null); toast.success(t("saved")); } else toast.error(r.error); }
+  async function doOut(d: CheckoutData) { if (!flow) return; const r = await assets.checkout(flow.id, d); if (r.ok) { if (d.gps && r.value && fa) gps.start({ assetId: flow.id, custodyLogId: r.value, assetName: fa.name }); setFlow(null); setViewing(null); toast.success(t("saved")); } else toast.error(r.error); }
+  async function doIn(d: CheckinData) { if (!flow) return; const r = await assets.checkin(flow.id, d); if (r.ok) { gps.stop(); setFlow(null); setViewing(null); toast.success(t("saved")); } else toast.error(r.error); }
   return (
     <>
       <AssetTable rows={rows} now={now} onView={setViewing} onEdit={onEdit} onDelete={onDelete} onMaintain={setMaintaining} />

@@ -33,6 +33,14 @@
   </div>
   {% endif %}
 
+  {% if gps %}
+  <div class="box">
+    <strong>RECORRIDO GPS</strong><br>
+    Distancia: {{ "%.1f"|format(gps.miles) }} mi · Velocidad prom.: {{ "%.0f"|format(gps.speed) }} mph<br>
+    Tiempo: {{ "%.0f"|format(gps.minutes) }} min · Puntos registrados: {{ gps.points }}
+  </div>
+  {% endif %}
+
   <div style="margin-top:48px; display:flex; gap:40px;">
     <div style="flex:1; border-top:1px solid #333; padding-top:6px;">Firma conductor</div>
     <div style="flex:1; border-top:1px solid #333; padding-top:6px;">Firma supervisor</div>

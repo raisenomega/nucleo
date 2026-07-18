@@ -22,4 +22,6 @@ export const esAssets = {
   chartMiles: "Millas por mes", chartFuel: "Galones por mes", chartUseByEmployee: "Uso por empleado", assetReport: "Reporte activos", miles: "Millas",
   secGps: "GPS", gpsDeviceId: "ID del dispositivo", gpsProvider: "Proveedor GPS", gps: "GPS", gpsReady: "Preparado — conectar dispositivo GPS",
   generatePdf: "Generar PDF", routesDone: "Rutas realizadas", printReceipt: "Imprimir recibo",
+  gpsTracking: "GPS rastreando", gpsSearching: "Buscando señal GPS", gpsTrack: "Recorrido GPS", distance: "Distancia", avgSpeed: "Vel. promedio", duration: "Duración", gpsPoints: "Puntos GPS", viewRouteMap: "Ver recorrido en mapa",
+  gpsDeviceNote: "En iPhone, mantén la app abierta durante la ruta. Para tracking continuo usa una tablet Android montada (desactiva el ahorro de batería).",
 } satisfies Partial<Record<TranslationKey, string>>;

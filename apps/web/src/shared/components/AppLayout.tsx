@@ -3,6 +3,7 @@ import { MessageCircle } from "lucide-react";
 import { Outlet } from "@tanstack/react-router";
 import { Sidebar } from "@shared/components/Sidebar";
 import { MobileNav } from "@shared/components/MobileNav";
+import { GpsIndicator } from "@shared/gps/GpsIndicator";
 import { useI18n } from "@shared/i18n";
 
 export function AppLayout() {
@@ -13,6 +14,7 @@ export function AppLayout() {
       <Sidebar expanded={expanded} onClose={() => setExpanded(false)} onToggle={() => setExpanded((v) => !v)} />
       <div className={`flex min-h-screen flex-col transition-all duration-300 ${expanded ? "md:pl-60" : "md:pl-16"}`}>
         <header className="sticky top-0 z-30 flex items-center gap-2 border-b border-border bg-background p-3 md:p-4">
+          <GpsIndicator />
           <div className="flex-1" />
           <button type="button"
             className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-body font-semibold">

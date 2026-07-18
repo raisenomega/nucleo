@@ -25,4 +25,5 @@ export const esRoutes = {
   evidenceBefore: "Evidencia — Antes", evidenceAfter: "Evidencia — Después",
   evidenceRequired: "Sube al menos 1 foto antes y 1 después para completar",
   assignedVehicle: "Vehículo asignado", vehicle: "Vehículo",
+  stopVerified: "Verificada por GPS", stopUnverified: "No verificada",
 } satisfies Partial<Record<TranslationKey, string>>;

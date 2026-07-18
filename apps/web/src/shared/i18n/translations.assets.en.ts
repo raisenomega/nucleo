@@ -22,4 +22,6 @@ export const enAssets = {
   chartMiles: "Miles per month", chartFuel: "Gallons per month", chartUseByEmployee: "Use by employee", assetReport: "Assets report", miles: "Miles",
   secGps: "GPS", gpsDeviceId: "Device ID", gpsProvider: "GPS provider", gps: "GPS", gpsReady: "Ready — connect GPS device",
   generatePdf: "Generate PDF", routesDone: "Routes completed", printReceipt: "Print receipt",
+  gpsTracking: "GPS tracking", gpsSearching: "Searching GPS signal", gpsTrack: "GPS track", distance: "Distance", avgSpeed: "Avg. speed", duration: "Duration", gpsPoints: "GPS points", viewRouteMap: "View route on map",
+  gpsDeviceNote: "On iPhone, keep the app open during the route. For continuous tracking use a mounted Android tablet (disable battery saver).",
 } satisfies Partial<Record<TranslationKey, string>>;

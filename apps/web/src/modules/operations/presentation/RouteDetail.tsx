@@ -5,6 +5,7 @@ import { usePdf } from "@shared/hooks/usePdf";
 import { ScreenModal } from "@shared/components/ScreenModal";
 import { StopCard } from "@operations/presentation/StopCard";
 import { StopDetail } from "@operations/presentation/StopDetail";
+import { RouteGpsVerify } from "@operations/presentation/RouteGpsVerify";
 import type { ServiceRoute, RouteStop, CompletePayload } from "@operations/domain/route.types";
 
 type Emp = { id: string; full_name: string };
@@ -33,6 +34,7 @@ export function RouteDetail({ route, stops, employees, tenantId, onClose, onPay,
           {stops.length === 0 && <p className="text-xs text-muted-foreground">{t("noRecords")}</p>}
           {stops.map((s) => <StopCard key={s.id} stop={s} onOpen={setOpen} />)}
         </div>
+        {route.assetId && <RouteGpsVerify assetId={route.assetId} routeDate={route.routeDate} stops={stops} />}
       </ScreenModal>
       {cur && <StopDetail stop={cur} tenantId={tenantId} onClose={() => setOpen(null)}
         onPay={(p) => onPay(cur.id, p)}

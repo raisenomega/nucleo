@@ -4,6 +4,7 @@ import { ModuleAccessProvider } from "@shared/providers/ModuleAccessProvider";
 import { BrandProvider } from "@shared/providers/BrandProvider";
 import { ToastProvider } from "@shared/providers/ToastProvider";
 import { AppLayout } from "@shared/components/AppLayout";
+import { GpsProvider } from "@shared/gps/GpsProvider";
 
 export const Route = createFileRoute("/_authenticated")({
   component: AuthenticatedRoute,
@@ -33,7 +34,9 @@ function Guard() {
     <ToastProvider>
       <BrandProvider>
         <ModuleAccessProvider>
-          <AppLayout />
+          <GpsProvider>
+            <AppLayout />
+          </GpsProvider>
         </ModuleAccessProvider>
       </BrandProvider>
     </ToastProvider>

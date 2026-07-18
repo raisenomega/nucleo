@@ -18,6 +18,7 @@ export interface RouteStop {
   readonly evidenceUrls: string[]; readonly amountReceived: number | null;
   readonly changeAmount: number | null; readonly pendingCollection: boolean;
   readonly evidenceBefore: string[]; readonly evidenceAfter: string[];
+  readonly lat: number | null; readonly lng: number | null;
 }
 // status NO va en el form: el estado del día se DERIVA de los stops (B.3.c/120). Ver deriveDayStatus.
 export interface RouteFormData { routeDate: string; assignedTo: string; notes: string; assetId: string; }
@@ -27,7 +28,7 @@ export interface StopFormData {
 }
 export interface CompletePayload { amount: number; paymentMethodId: string; received: number | null; change: number | null; evidence: string[]; }
 export type EditableStop = StopFormData & { id?: string };
-export type StopPatch = Partial<StopFormData> & { status?: string; completedAt?: string | null; stopOrder?: number; evidenceUrls?: string[]; evidenceBefore?: string[]; evidenceAfter?: string[] };
+export type StopPatch = Partial<StopFormData> & { status?: string; completedAt?: string | null; stopOrder?: number; evidenceUrls?: string[]; evidenceBefore?: string[]; evidenceAfter?: string[]; lat?: number | null; lng?: number | null };
 export interface StopSupply { readonly itemId: string; readonly name: string; readonly quantity: number; }
 export interface SupplyUse { itemId: string; quantity: number; }
 

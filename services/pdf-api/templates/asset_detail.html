@@ -33,4 +33,14 @@
     {% if not maint %}<tr><td colspan="5" class="muted">Sin mantenimiento</td></tr>{% endif %}
     </tbody>
   </table>
+
+  {% if routes %}
+  <h3>Rutas realizadas</h3>
+  <table class="items">
+    <thead><tr><th>Fecha</th><th>Empleado</th><th>Estado</th><th class="num">Paradas</th></tr></thead>
+    <tbody>
+    {% for r in routes %}<tr><td>{{ r.route_date }}</td><td>{{ r.emp }}</td><td>{{ r.status }}</td><td class="num">{{ r.stops }}</td></tr>{% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
 {% endblock %}

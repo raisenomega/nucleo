@@ -28,6 +28,7 @@ export function CheckoutModal({ assetName, profiles, onSubmit, onClose }: {
         <label className="space-y-1"><span className={lbl}>{t("fuelType")}</span><input value={f.fuelType} onChange={(e) => setF({ ...f, fuelType: e.target.value })} className={fld} /></label>
         <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={f.gps} onChange={(e) => setF({ ...f, gps: e.target.checked })} className="h-4 w-4" /> {t("gpsEnabled")}</label>
         <label className="space-y-1"><span className={lbl}>{t("notes")}</span><input value={f.notes} onChange={(e) => setF({ ...f, notes: e.target.value })} className={fld} /></label>
+        {f.gps && <p className="text-xs text-muted-foreground md:col-span-2">{t("gpsDeviceNote")}</p>}
         <div className="space-y-1 md:col-span-2"><span className={lbl}>{t("exitPhotos")}</span><EvidenceUpload tenantId={session?.tenantId ?? ""} value={f.evidence} onChange={(paths) => setF({ ...f, evidence: paths })} /></div>
         <div className="flex gap-2 md:col-span-2"><button type="submit" className="rounded-lg bg-primary text-primary-foreground px-4 py-2 font-body font-bold">{t("save")}</button><button type="button" onClick={onClose} className="rounded-lg bg-secondary text-foreground px-4 py-2 font-body">{t("cancel")}</button></div>
       </form>

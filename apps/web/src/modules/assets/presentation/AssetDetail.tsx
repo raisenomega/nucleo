@@ -7,6 +7,7 @@ import { formatCurrency } from "@shared/lib/format";
 import { ScreenModal } from "@shared/components/ScreenModal";
 import { supabaseAssetRepository } from "@assets/infrastructure/supabase-asset.repository";
 import { AssetCustodyHistory } from "@assets/presentation/AssetCustodyHistory";
+import { AssetGpsTrack } from "@assets/presentation/AssetGpsTrack";
 import { ASSET_TYPE, CONDITION, STATUS, MAINT_TYPE } from "@assets/presentation/asset-labels";
 import { assetValue } from "@assets/application/asset-helpers";
 import type { Asset, MaintenanceLog, AssetRoute } from "@assets/domain/asset.types";
@@ -41,6 +42,7 @@ export function AssetDetail({ asset, onCheckout, onCheckin, onClose }: { asset: 
           {row(t("notes"), asset.notes)}
         </dl>
         {asset.gpsEnabled && <div className="flex items-center gap-2 border-t border-border pt-2 text-sm"><Navigation className="h-4 w-4 text-primary" /><span className="font-bold">{t("gps")}:</span><span className="text-muted-foreground">{t("gpsReady")}{asset.gpsProvider && ` · ${asset.gpsProvider}`}{asset.gpsDeviceId && ` · ${asset.gpsDeviceId}`}</span></div>}
+        <AssetGpsTrack assetId={asset.id} />
         <AssetCustodyHistory assetId={asset.id} />
         {routes.length > 0 && <div className="space-y-1 border-t border-border pt-2">
           <p className="text-xs font-bold uppercase text-muted-foreground">{t("routesDone")}</p>

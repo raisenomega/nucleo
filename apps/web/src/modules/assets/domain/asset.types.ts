@@ -20,6 +20,7 @@ export interface Asset {
 export type AssetFormData = Omit<Asset, "id" | "assignedToName">;
 export interface ProfileRef { readonly id: string; readonly name: string; }
 export interface AssetRoute { readonly id: string; readonly routeDate: string; readonly status: string; readonly stopsCount: number; }
+export interface GpsLog { readonly latitude: number; readonly longitude: number; readonly speed: number | null; readonly accuracy: number | null; readonly recordedAt: string; readonly custodyLogId: string | null; }
 
 export interface MaintenanceLog {
   readonly id: string; readonly maintenanceType: MaintenanceType; readonly description: string;
@@ -47,4 +48,5 @@ export interface IAssetRepository {
   checkin(assetId: string, data: CheckinData): Promise<Result<string | null, string>>;
   listCustody(assetId: string): Promise<CustodyLog[]>;
   listRoutes(assetId: string): Promise<AssetRoute[]>;
+  listGpsLogs(assetId: string): Promise<GpsLog[]>;
 }
