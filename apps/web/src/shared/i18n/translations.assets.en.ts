@@ -24,4 +24,5 @@ export const enAssets = {
   generatePdf: "Generate PDF", routesDone: "Routes completed", printReceipt: "Print receipt",
   gpsTracking: "GPS tracking", gpsSearching: "Searching GPS signal", gpsTrack: "GPS track", distance: "Distance", avgSpeed: "Avg. speed", duration: "Duration", gpsPoints: "GPS points", viewRouteMap: "View route on map",
   gpsDeviceNote: "On iPhone, keep the app open during the route. For continuous tracking use a mounted Android tablet (disable battery saver).",
+  liveLocation: "Live location", trackingLive: "Tracking live", noRecentData: "No recent data", updatedAgo: "Last update", currentSpeed: "Current speed", accuracy: "Accuracy", viewOnMap: "View on map", viewDayRoute: "View day route",
 } satisfies Partial<Record<TranslationKey, string>>;

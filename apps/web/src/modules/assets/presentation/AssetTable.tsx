@@ -5,6 +5,7 @@ import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { formatCurrency } from "@shared/lib/format";
 import { Pagination } from "@shared/components/Pagination";
 import { assetValue, expiringSoon } from "@assets/application/asset-helpers";
+import { GpsBadge } from "@assets/presentation/GpsBadge";
 import { ASSET_TYPE, CONDITION, STATUS } from "@assets/presentation/asset-labels";
 import type { Asset } from "@assets/domain/asset.types";
 
@@ -29,7 +30,7 @@ export function AssetTable({ rows, now, onView, onEdit, onDelete, onMaintain }: 
           {rows.length === 0 && <tr><td colSpan={cost ? 7 : 6} className="py-8 text-center text-muted-foreground">{t("noAssets")}</td></tr>}
           {visible.map((a) => (
             <tr key={a.id} onClick={() => onView(a.id)} className="cursor-pointer border-t border-border hover:bg-secondary">
-              <td className="px-3 py-2"><span className="inline-flex flex-wrap items-center gap-1">{a.imageUrl && <img src={a.imageUrl} alt="" className="h-6 w-6 rounded object-cover" />}{a.name}{a.status === "in_use" && a.assignedToName && <span className="rounded bg-blue-500/10 px-1 text-xs text-blue-600">{t("inUseBy")} {a.assignedToName}</span>}{expiringSoon(a, now) && <span title={t("warrantyAlert")} className="inline-flex items-center rounded bg-destructive/10 px-1 text-xs text-destructive"><ShieldAlert className="h-3 w-3" /></span>}</span></td>
+              <td className="px-3 py-2"><span className="inline-flex flex-wrap items-center gap-1">{a.imageUrl && <img src={a.imageUrl} alt="" className="h-6 w-6 rounded object-cover" />}{a.name}{a.status === "in_use" && a.assignedToName && <span className="rounded bg-blue-500/10 px-1 text-xs text-blue-600">{t("inUseBy")} {a.assignedToName}</span>}{a.gpsEnabled && a.status === "in_use" && <GpsBadge assetId={a.id} />}{expiringSoon(a, now) && <span title={t("warrantyAlert")} className="inline-flex items-center rounded bg-destructive/10 px-1 text-xs text-destructive"><ShieldAlert className="h-3 w-3" /></span>}</span></td>
               <td className="px-3 py-2">{t(ASSET_TYPE[a.assetType])}</td>
               <td className="px-3 py-2"><span className={`rounded px-1.5 py-0.5 text-xs font-bold ${STATUS[a.status].cls}`}>{t(STATUS[a.status].key)}</span></td>
               <td className="px-3 py-2 text-muted-foreground">{a.assignedToName || "—"}</td>
@@ -48,7 +49,7 @@ export function AssetTable({ rows, now, onView, onEdit, onDelete, onMaintain }: 
     <div className="space-y-2 md:hidden">
       {visible.map((a) => (
         <button key={a.id} type="button" onClick={() => onView(a.id)} className="block w-full rounded-lg border border-border bg-card p-3 text-left">
-          <div className="flex justify-between"><span className="font-bold">{a.name}</span><span className={`rounded px-1.5 text-xs font-bold ${STATUS[a.status].cls}`}>{t(STATUS[a.status].key)}</span></div>
+          <div className="flex justify-between"><span className="inline-flex items-center gap-1.5 font-bold">{a.name}{a.gpsEnabled && a.status === "in_use" && <GpsBadge assetId={a.id} />}</span><span className={`rounded px-1.5 text-xs font-bold ${STATUS[a.status].cls}`}>{t(STATUS[a.status].key)}</span></div>
           <p className="text-xs text-muted-foreground">{t(ASSET_TYPE[a.assetType])} · {a.assignedToName || "—"}{cost && ` · ${formatCurrency(assetValue(a))}`}</p>
         </button>
       ))}

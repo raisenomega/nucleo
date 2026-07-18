@@ -24,4 +24,5 @@ export const esAssets = {
   generatePdf: "Generar PDF", routesDone: "Rutas realizadas", printReceipt: "Imprimir recibo",
   gpsTracking: "GPS rastreando", gpsSearching: "Buscando señal GPS", gpsTrack: "Recorrido GPS", distance: "Distancia", avgSpeed: "Vel. promedio", duration: "Duración", gpsPoints: "Puntos GPS", viewRouteMap: "Ver recorrido en mapa",
   gpsDeviceNote: "En iPhone, mantén la app abierta durante la ruta. Para tracking continuo usa una tablet Android montada (desactiva el ahorro de batería).",
+  liveLocation: "Ubicación en vivo", trackingLive: "Rastreando en vivo", noRecentData: "Sin datos recientes", updatedAgo: "Última actualización", currentSpeed: "Velocidad actual", accuracy: "Precisión", viewOnMap: "Ver en mapa", viewDayRoute: "Ver recorrido del día",
 } satisfies Partial<Record<TranslationKey, string>>;
