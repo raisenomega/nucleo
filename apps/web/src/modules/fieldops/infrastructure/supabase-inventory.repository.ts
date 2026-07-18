@@ -13,9 +13,10 @@ interface Row {
   id: string; tenant_id: string; name: string;
   stock: number | string; unit_cost: number | string; min_stock: number | string;
   sku: string | null; avg_cost: number | string; supplier_name: string | null; supplier_id: string | null; landing_product_id: string | null; last_restock_date: string | null;
+  warehouse_zone: string | null; aisle: string | null; shelf: string | null; bin: string | null;
 }
 
-const SELECT = "id, tenant_id, name, stock, unit_cost, min_stock, sku, avg_cost, supplier_name, supplier_id, landing_product_id, last_restock_date";
+const SELECT = "id, tenant_id, name, stock, unit_cost, min_stock, sku, avg_cost, supplier_name, supplier_id, landing_product_id, last_restock_date, warehouse_zone, aisle, shelf, bin";
 
 function toItem(r: Row): InventoryItem {
   return {
@@ -23,11 +24,12 @@ function toItem(r: Row): InventoryItem {
     stock: Number(r.stock), unitCost: Number(r.unit_cost), minStock: Number(r.min_stock), sku: r.sku ?? "",
     avgCost: Number(r.avg_cost), supplierName: r.supplier_name ?? "", supplierId: r.supplier_id,
     landingProductId: r.landing_product_id, lastRestockDate: r.last_restock_date,
+    warehouseZone: r.warehouse_zone ?? "", aisle: r.aisle ?? "", shelf: r.shelf ?? "", bin: r.bin ?? "",
   };
 }
 
 function toRow(d: InventoryFormData) {
-  return { name: d.name, stock: d.stock, unit_cost: d.unitCost, min_stock: d.minStock, landing_product_id: d.landingProductId, supplier_id: d.supplierId };
+  return { name: d.name, stock: d.stock, unit_cost: d.unitCost, min_stock: d.minStock, landing_product_id: d.landingProductId, supplier_id: d.supplierId, warehouse_zone: d.warehouseZone || null, aisle: d.aisle || null, shelf: d.shelf || null, bin: d.bin || null };
 }
 
 async function rpcId(fn: string, args: object): Promise<Result<string | null, string>> {

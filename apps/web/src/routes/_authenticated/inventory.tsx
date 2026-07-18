@@ -42,9 +42,9 @@ function InventoryPage() {
   useEffect(() => { void supabaseInventoryRepository.listLandingProducts().then(setLanding); }, []);
   const shown = useMemo(() => items.filter((i) => {
     const low = i.minStock > 0 && i.stock <= i.minStock; const q = search.trim().toLowerCase();
-    return (filter === "all" || (filter === "low" && low) || (filter === "catalog" && i.landingProductId) || (filter === "nostock" && i.stock <= 0) || (filter === "slow" && slow.has(i.id))) && (!q || i.name.toLowerCase().includes(q) || (i.sku ?? "").toLowerCase().includes(q));
+    return (filter === "all" || (filter === "low" && low) || (filter === "catalog" && i.landingProductId) || (filter === "nostock" && i.stock <= 0) || (filter === "slow" && slow.has(i.id))) && (!q || `${i.name} ${i.sku} ${i.warehouseZone} ${i.aisle} ${i.shelf} ${i.bin}`.toLowerCase().includes(q));
   }), [items, filter, search, slow]);
-  const editRow = useMemo<InventoryFormData | undefined>(() => { const i = items.find((x) => x.id === editing); return i ? { name: i.name, stock: i.stock, unitCost: i.unitCost, minStock: i.minStock, landingProductId: i.landingProductId, supplierId: i.supplierId } : undefined; }, [editing, items]);
+  const editRow = useMemo<InventoryFormData | undefined>(() => { const i = items.find((x) => x.id === editing); return i ? { name: i.name, stock: i.stock, unitCost: i.unitCost, minStock: i.minStock, landingProductId: i.landingProductId, supplierId: i.supplierId, warehouseZone: i.warehouseZone, aisle: i.aisle, shelf: i.shelf, bin: i.bin } : undefined; }, [editing, items]);
   async function submit(d: InventoryFormData) { if (editing && editing !== "new") await update(editing, d); else await create(d); setEditing(null); }
   async function doRestock(d: RestockData) { if (!restocking) return; const r = await restock(restocking, d); if (r.ok) { setRestocking(null); toast.success(t("entryRegistered")); } else toast.error(r.error); }
   async function doAction(qty: number, reason: string) { if (!action) return; const r = action.mode === "adjust" ? await adjust(action.id, qty, reason) : await shrink(action.id, qty, reason); if (r.ok) { setAction(null); toast.success(t("saved")); } else toast.error(r.error); }
@@ -57,7 +57,7 @@ function InventoryPage() {
       <div className="flex items-center justify-between gap-4">
         <h1 className="font-display text-xl font-bold text-foreground md:text-3xl">{t("inventory")}</h1>
         <div className="flex items-center gap-2">
-          <button type="button" disabled={pdf.generating || !items.length} onClick={() => void pdf.generatePdf("report", null, inventoryReportBody(items, t))} className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold disabled:opacity-50"><FileText className="h-4 w-4" /> {pdf.generating ? t("generatingPdf") : t("inventoryReport")}</button>
+          <button type="button" disabled={pdf.generating || !items.length} onClick={() => void pdf.generatePdf("report", null, inventoryReportBody(items, movs, sup.items, now, t))} className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold disabled:opacity-50"><FileText className="h-4 w-4" /> {pdf.generating ? t("generatingPdf") : t("inventoryReport")}</button>
           {can("inventory", "create") && <button type="button" onClick={() => setEditing("new")} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-body font-bold"><Plus className="h-4 w-4" /> {t("newItem")}</button>}
         </div>
       </div>

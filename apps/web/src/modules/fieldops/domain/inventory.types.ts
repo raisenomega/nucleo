@@ -16,6 +16,10 @@ export interface InventoryItem {
   readonly supplierId: string | null;
   readonly landingProductId: string | null;
   readonly lastRestockDate: string | null;
+  readonly warehouseZone: string;
+  readonly aisle: string;
+  readonly shelf: string;
+  readonly bin: string;
 }
 
 export interface InventoryFormData {
@@ -25,6 +29,10 @@ export interface InventoryFormData {
   readonly minStock: number;
   readonly landingProductId: string | null;
   readonly supplierId: string | null;
+  readonly warehouseZone: string;
+  readonly aisle: string;
+  readonly shelf: string;
+  readonly bin: string;
 }
 
 export interface RestockData {

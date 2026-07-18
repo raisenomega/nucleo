@@ -23,4 +23,6 @@ export const esInventory = {
   slowStock: "Stock lento", highConsumption: "Consumo alto", consumeThisMonth: "Consumo este mes", average: "promedio",
   chartConsumeRestock: "Consumo vs Reposición", chartInvValue: "Valor de inventario", chartTopConsumed: "Top 5 consumidos",
   chartCumCost: "Costo acumulado", chartStockTrend: "Tendencia de stock",
+  location: "Ubicación", warehouseLocation: "Ubicación en almacén", warehouseZone: "Zona",
+  aisle: "Pasillo", shelf: "Isla/Estante", bin: "Bahía", activityMonth: "Actividad del mes", movementType: "Tipo",
 } satisfies Partial<Record<TranslationKey, string>>;

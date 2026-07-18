@@ -23,4 +23,6 @@ export const enInventory = {
   slowStock: "Slow stock", highConsumption: "High consumption", consumeThisMonth: "This month", average: "average",
   chartConsumeRestock: "Consumption vs Restock", chartInvValue: "Inventory value", chartTopConsumed: "Top 5 consumed",
   chartCumCost: "Cumulative cost", chartStockTrend: "Stock trend",
+  location: "Location", warehouseLocation: "Warehouse location", warehouseZone: "Zone",
+  aisle: "Aisle", shelf: "Shelf", bin: "Bin", activityMonth: "Monthly activity", movementType: "Type",
 } satisfies Partial<Record<TranslationKey, string>>;

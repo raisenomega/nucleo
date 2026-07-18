@@ -2,6 +2,8 @@
 import type { InventoryItem } from "@fieldops/domain/inventory.types";
 
 export interface RawMov { itemId: string; type: string; quantity: number; unitCost: number; date: string }
+// Valor del item con fallback: avg_cost recalculado en restock; si 0 (nunca repuesto), usa unit_cost.
+export const itemValue = (i: { stock: number; avgCost: number; unitCost: number }) => i.stock * (i.avgCost || i.unitCost || 0);
 const IN = new Set(["entrada", "devolucion"]);
 const OUT = new Set(["salida", "venta_publica", "merma"]);
 const ym = (d: string) => d.slice(0, 7);
@@ -26,8 +28,8 @@ function reverse(months6: string[], start: number, net: (m: string) => number, k
   return out;
 }
 export function valueByMonth(movs: RawMov[], items: readonly InventoryItem[], now: Date, n = 6) {
-  const cur = items.reduce((s, i) => s + i.stock * i.avgCost, 0);
-  const avg = (id: string) => items.find((i) => i.id === id)?.avgCost ?? 0;
+  const cur = items.reduce((s, i) => s + itemValue(i), 0);
+  const avg = (id: string) => { const it = items.find((i) => i.id === id); return it ? (it.avgCost || it.unitCost || 0) : 0; };
   const net = (m: string) => movs.filter((x) => ym(x.date) === m).reduce((s, x) => s + (IN.has(x.type) ? 1 : -1) * x.quantity * avg(x.itemId), 0);
   return reverse(months(n, now), cur, net, "value") as { month: string; value: number }[];
 }
