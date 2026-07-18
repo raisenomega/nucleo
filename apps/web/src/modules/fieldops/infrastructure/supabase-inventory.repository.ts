@@ -13,23 +13,22 @@ interface Row {
   id: string; tenant_id: string; name: string;
   stock: number | string; unit_cost: number | string; min_stock: number | string;
   sku: string | null; avg_cost: number | string; supplier_name: string | null; supplier_id: string | null; landing_product_id: string | null; last_restock_date: string | null;
-  warehouse_zone: string | null; aisle: string | null; shelf: string | null; bin: string | null;
+  warehouse_zone: string | null; aisle: string | null; shelf: string | null; bin: string | null; reorder_point: number | null; reorder_qty: number | null;
 }
 
-const SELECT = "id, tenant_id, name, stock, unit_cost, min_stock, sku, avg_cost, supplier_name, supplier_id, landing_product_id, last_restock_date, warehouse_zone, aisle, shelf, bin";
+const SELECT = "id, tenant_id, name, stock, unit_cost, min_stock, sku, avg_cost, supplier_name, supplier_id, landing_product_id, last_restock_date, warehouse_zone, aisle, shelf, bin, reorder_point, reorder_qty";
 
 function toItem(r: Row): InventoryItem {
   return {
     id: r.id, tenantId: r.tenant_id, name: r.name,
     stock: Number(r.stock), unitCost: Number(r.unit_cost), minStock: Number(r.min_stock), sku: r.sku ?? "",
-    avgCost: Number(r.avg_cost), supplierName: r.supplier_name ?? "", supplierId: r.supplier_id,
-    landingProductId: r.landing_product_id, lastRestockDate: r.last_restock_date,
-    warehouseZone: r.warehouse_zone ?? "", aisle: r.aisle ?? "", shelf: r.shelf ?? "", bin: r.bin ?? "",
+    avgCost: Number(r.avg_cost), supplierName: r.supplier_name ?? "", supplierId: r.supplier_id, landingProductId: r.landing_product_id, lastRestockDate: r.last_restock_date,
+    warehouseZone: r.warehouse_zone ?? "", aisle: r.aisle ?? "", shelf: r.shelf ?? "", bin: r.bin ?? "", reorderPoint: r.reorder_point, reorderQty: r.reorder_qty,
   };
 }
 
 function toRow(d: InventoryFormData) {
-  return { name: d.name, sku: d.sku || null, stock: d.stock, unit_cost: d.unitCost, min_stock: d.minStock, landing_product_id: d.landingProductId, supplier_id: d.supplierId, warehouse_zone: d.warehouseZone || null, aisle: d.aisle || null, shelf: d.shelf || null, bin: d.bin || null };
+  return { name: d.name, sku: d.sku || null, stock: d.stock, unit_cost: d.unitCost, min_stock: d.minStock, landing_product_id: d.landingProductId, supplier_id: d.supplierId, warehouse_zone: d.warehouseZone || null, aisle: d.aisle || null, shelf: d.shelf || null, bin: d.bin || null, reorder_point: d.reorderPoint, reorder_qty: d.reorderQty };
 }
 
 async function rpcId(fn: string, args: object): Promise<Result<string | null, string>> {
@@ -61,6 +60,7 @@ export const supabaseInventoryRepository: IInventoryRepository = {
   restock(itemId, d) { return rpcId("record_restock", { p_item_id: itemId, p_quantity: d.quantity, p_unit_cost: d.unitCost, p_supplier: d.supplier || null, p_notes: d.notes || null, p_date: d.date || undefined, p_supplier_id: d.supplierId || null }); },
   adjust(itemId, newQty, reason) { return rpcId("record_adjustment", { p_item_id: itemId, p_new_qty: newQty, p_reason: reason || null }); },
   shrink(itemId, qty, reason) { return rpcId("record_shrinkage", { p_item_id: itemId, p_qty: qty, p_reason: reason || null }); },
+  transfer(itemId, d) { return rpcId("transfer_stock", { p_item_id: itemId, p_qty: d.qty, p_zone: d.zone || null, p_aisle: d.aisle || null, p_shelf: d.shelf || null, p_bin: d.bin || null, p_notes: d.notes || null }); },
   async listMovements(itemId): Promise<InventoryMovement[]> {
     const { data } = await supabase.rpc("list_item_movements", { p_item_id: itemId });
     return ((data as MovRow[] | null) ?? []).map((r) => ({

@@ -4,23 +4,20 @@ import { Plus, FileText } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { usePdf } from "@shared/hooks/usePdf";
-import { useToast } from "@shared/providers/toast-context";
 import { useInventory } from "@fieldops/application/useInventory.hook";
 import { useSuppliers } from "@fieldops/application/useSuppliers.hook";
 import { useInventoryAnalytics } from "@fieldops/application/useInventoryAnalytics.hook";
 import { supabaseInventoryRepository } from "@fieldops/infrastructure/supabase-inventory.repository";
 import { supabaseSupplierRepository } from "@fieldops/infrastructure/supabase-suppliers.repository";
 import { InventoryForm } from "@fieldops/presentation/InventoryForm";
-import { InventoryTable } from "@fieldops/presentation/InventoryTable";
-import { InventoryDetail } from "@fieldops/presentation/InventoryDetail";
+import { InventoryItemsPanel } from "@fieldops/presentation/InventoryItemsPanel";
 import { InventoryKpis } from "@fieldops/presentation/InventoryKpis";
 import { InventoryDashboard } from "@fieldops/presentation/InventoryDashboard";
 import { InventoryFilters, type InvFilter } from "@fieldops/presentation/InventoryFilters";
 import { InventorySuppliers } from "@fieldops/presentation/InventorySuppliers";
-import { RestockModal } from "@fieldops/presentation/RestockModal";
-import { StockActionModal } from "@fieldops/presentation/StockActionModal";
+import { InventoryPurchaseOrders } from "@fieldops/presentation/InventoryPurchaseOrders";
 import { inventoryReportBody } from "@fieldops/presentation/inventory-report";
-import type { InventoryFormData, RestockData, LandingProductRef } from "@fieldops/domain/inventory.types";
+import type { InventoryFormData, LandingProductRef } from "@fieldops/domain/inventory.types";
 import type { Supplier, SupplierFormData } from "@fieldops/domain/supplier.types";
 
 export const Route = createFileRoute("/_authenticated/inventory")({ component: InventoryPage });
@@ -28,30 +25,27 @@ export const Route = createFileRoute("/_authenticated/inventory")({ component: I
 function InventoryPage() {
   const { t } = useI18n();
   const { can } = useModuleAccess();
-  const { items, create, update, remove, restock, adjust, shrink } = useInventory(supabaseInventoryRepository);
+  const inv = useInventory(supabaseInventoryRepository);
   const sup = useSuppliers(supabaseSupplierRepository);
-  const { movs, slow, high, now } = useInventoryAnalytics(items);
-  const toast = useToast();
+  const { movs, slow, high, now } = useInventoryAnalytics(inv.items);
   const pdf = usePdf();
   const [editing, setEditing] = useState<string | null>(null);
-  const [viewing, setViewing] = useState<string | null>(null); const [restocking, setRestocking] = useState<string | null>(null);
-  const [action, setAction] = useState<{ id: string; mode: "adjust" | "shrink" } | null>(null);
   const [landing, setLanding] = useState<LandingProductRef[]>([]);
   const [filter, setFilter] = useState<InvFilter>("all");
   const [search, setSearch] = useState("");
+  const items = inv.items;
   useEffect(() => { void supabaseInventoryRepository.listLandingProducts().then(setLanding); }, []);
+  const reorder = useMemo(() => new Set(items.filter((i) => i.reorderPoint != null && i.stock <= i.reorderPoint && (i.reorderQty ?? 0) > 0).map((i) => i.id)), [items]);
   const shown = useMemo(() => items.filter((i) => {
     const low = i.minStock > 0 && i.stock <= i.minStock; const q = search.trim().toLowerCase();
-    return (filter === "all" || (filter === "low" && low) || (filter === "catalog" && i.landingProductId) || (filter === "nostock" && i.stock <= 0) || (filter === "slow" && slow.has(i.id))) && (!q || `${i.name} ${i.sku} ${i.warehouseZone} ${i.aisle} ${i.shelf} ${i.bin}`.toLowerCase().includes(q));
-  }), [items, filter, search, slow]);
-  const editRow = useMemo<InventoryFormData | undefined>(() => { const i = items.find((x) => x.id === editing); return i ? { name: i.name, sku: i.sku, stock: i.stock, unitCost: i.unitCost, minStock: i.minStock, landingProductId: i.landingProductId, supplierId: i.supplierId, warehouseZone: i.warehouseZone, aisle: i.aisle, shelf: i.shelf, bin: i.bin } : undefined; }, [editing, items]);
-  async function submit(d: InventoryFormData) { if (editing && editing !== "new") await update(editing, d); else await create(d); setEditing(null); }
-  async function doRestock(d: RestockData) { if (!restocking) return; const r = await restock(restocking, d); if (r.ok) { setRestocking(null); toast.success(t("entryRegistered")); } else toast.error(r.error); }
-  async function doAction(qty: number, reason: string) { if (!action) return; const r = action.mode === "adjust" ? await adjust(action.id, qty, reason) : await shrink(action.id, qty, reason); if (r.ok) { setAction(null); toast.success(t("saved")); } else toast.error(r.error); }
+    return (filter === "all" || (filter === "low" && low) || (filter === "catalog" && i.landingProductId) || (filter === "nostock" && i.stock <= 0) || (filter === "slow" && slow.has(i.id)) || (filter === "reorder" && reorder.has(i.id))) && (!q || `${i.name} ${i.sku} ${i.warehouseZone} ${i.aisle} ${i.shelf} ${i.bin}`.toLowerCase().includes(q));
+  }), [items, filter, search, slow, reorder]);
+  const editRow = useMemo<InventoryFormData | undefined>(() => { const i = items.find((x) => x.id === editing); return i ? { name: i.name, sku: i.sku, stock: i.stock, unitCost: i.unitCost, minStock: i.minStock, landingProductId: i.landingProductId, supplierId: i.supplierId, warehouseZone: i.warehouseZone, aisle: i.aisle, shelf: i.shelf, bin: i.bin, reorderPoint: i.reorderPoint, reorderQty: i.reorderQty } : undefined; }, [editing, items]);
+  async function submit(d: InventoryFormData) { if (editing && editing !== "new") await inv.update(editing, d); else await inv.create(d); setEditing(null); }
+  const onDelete = (id: string) => { if (window.confirm(`${t("delete")}?`)) void inv.remove(id); };
   const saveSupplier = async (id: string | null, d: SupplierFormData) => (id ? await sup.update(id, d) : await sup.create(d)).ok;
 
   if (!can("inventory", "view")) return <Navigate to="/dashboard" />;
-  const actItem = items.find((i) => i.id === (restocking ?? action?.id));
   return (
     <div className="space-y-6 p-4 md:p-8">
       <div className="flex items-center justify-between gap-4">
@@ -65,11 +59,9 @@ function InventoryPage() {
       <InventoryDashboard movs={movs} items={items} now={now} />
       <InventoryFilters filter={filter} search={search} onFilter={setFilter} onSearch={setSearch} />
       {editing !== null && <InventoryForm key={editing} initial={editRow} landingProducts={landing} suppliers={sup.items} onSubmit={submit} onCancel={() => setEditing(null)} />}
-      <InventoryTable rows={shown} slow={slow} high={high} onView={setViewing} onEdit={setEditing} onDelete={(id) => { if (window.confirm(`${t("delete")}?`)) void remove(id); }} onRestock={setRestocking} onAdjust={(id) => setAction({ id, mode: "adjust" })} onShrink={(id) => setAction({ id, mode: "shrink" })} />
+      <InventoryItemsPanel inv={inv} rows={shown} movs={movs} now={now} suppliers={sup.items} slow={slow} high={high} reorder={reorder} onEdit={setEditing} onDelete={onDelete} />
       <InventorySuppliers items={sup.items} onSave={saveSupplier} onToggle={(s: Supplier) => void sup.update(s.id, { ...s, active: !s.active })} />
-      {viewing && (() => { const v = items.find((i) => i.id === viewing); return v ? <InventoryDetail item={v} movs={movs} now={now} onClose={() => setViewing(null)} /> : null; })()}
-      {restocking && actItem && <RestockModal item={actItem} suppliers={sup.items} onSubmit={doRestock} onClose={() => setRestocking(null)} />}
-      {action && actItem && <StockActionModal item={actItem} mode={action.mode} onSubmit={doAction} onClose={() => setAction(null)} />}
+      <InventoryPurchaseOrders suppliers={sup.items} items={items} onChanged={inv.refresh} />
     </div>
   );
 }

@@ -2,8 +2,8 @@ import { Search } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import type { TranslationKey } from "@shared/i18n";
 
-export type InvFilter = "all" | "low" | "catalog" | "nostock" | "slow";
-const CHIPS: [InvFilter, TranslationKey][] = [["all", "filterAll"], ["low", "filterLow"], ["catalog", "filterCatalog"], ["nostock", "filterNoStock"], ["slow", "slowStock"]];
+export type InvFilter = "all" | "low" | "catalog" | "nostock" | "slow" | "reorder";
+const CHIPS: [InvFilter, TranslationKey][] = [["all", "filterAll"], ["low", "filterLow"], ["catalog", "filterCatalog"], ["nostock", "filterNoStock"], ["slow", "slowStock"], ["reorder", "filterReorder"]];
 
 // FIX2 — chips de filtro + búsqueda por nombre/SKU.
 export function InventoryFilters({ filter, search, onFilter, onSearch }: {

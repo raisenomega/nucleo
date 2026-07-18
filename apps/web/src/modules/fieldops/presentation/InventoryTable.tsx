@@ -12,10 +12,10 @@ import type { InventoryItem } from "@fieldops/domain/inventory.types";
 const isLow = (i: InventoryItem) => i.minStock > 0 && i.stock <= i.minStock;
 const loc = (i: InventoryItem) => [i.aisle, i.shelf, i.bin].filter(Boolean).join("-") || "—";
 
-export function InventoryTable({ rows, slow, high, onView, onEdit, onDelete, onRestock, onAdjust, onShrink }: {
-  rows: readonly InventoryItem[]; slow?: ReadonlySet<string>; high?: ReadonlySet<string>;
+export function InventoryTable({ rows, slow, high, reorder, onView, onEdit, onDelete, onRestock, onAdjust, onShrink, onTransfer }: {
+  rows: readonly InventoryItem[]; slow?: ReadonlySet<string>; high?: ReadonlySet<string>; reorder?: ReadonlySet<string>;
   onView: (id: string) => void; onEdit: (id: string) => void; onDelete: (id: string) => void;
-  onRestock: (id: string) => void; onAdjust: (id: string) => void; onShrink: (id: string) => void;
+  onRestock: (id: string) => void; onAdjust: (id: string) => void; onShrink: (id: string) => void; onTransfer: (id: string) => void;
 }) {
   const { t } = useI18n();
   const { can } = useModuleAccess();
@@ -23,7 +23,7 @@ export function InventoryTable({ rows, slow, high, onView, onEdit, onDelete, onR
   const th = "px-3 py-2 text-left font-bold";
   const [page, setPage] = useState(1);
   const visible = rows.slice((page - 1) * 12, page * 12);
-  const acts = { onRestock, onAdjust, onShrink, onEdit, onDelete };
+  const acts = { onRestock, onAdjust, onShrink, onTransfer, onEdit, onDelete };
   return (
     <>
     <div className="hidden overflow-hidden rounded-lg border border-border bg-card md:block">
@@ -37,7 +37,7 @@ export function InventoryTable({ rows, slow, high, onView, onEdit, onDelete, onR
           {rows.length === 0 && <tr><td colSpan={cost ? 10 : 8} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>}
           {visible.map((i) => (
             <tr key={i.id} onClick={() => onView(i.id)} className={`cursor-pointer border-t border-border hover:bg-secondary ${isLow(i) ? "bg-destructive/5" : ""}`}>
-              <td className="px-3 py-2"><span className="inline-flex flex-wrap items-center gap-1">{i.name}{i.landingProductId && <span title={t("inCatalogTooltip")} className="text-primary"><Globe className="h-3.5 w-3.5" /></span>}{slow?.has(i.id) && <span className="rounded bg-amber-500/10 px-1 text-xs text-amber-600">{t("slowStock")}</span>}{high?.has(i.id) && <span className="rounded bg-destructive/10 px-1 text-xs text-destructive">{t("highConsumption")}</span>}</span></td>
+              <td className="px-3 py-2"><span className="inline-flex flex-wrap items-center gap-1">{i.name}{i.landingProductId && <span title={t("inCatalogTooltip")} className="text-primary"><Globe className="h-3.5 w-3.5" /></span>}{slow?.has(i.id) && <span className="rounded bg-amber-500/10 px-1 text-xs text-amber-600">{t("slowStock")}</span>}{high?.has(i.id) && <span className="rounded bg-destructive/10 px-1 text-xs text-destructive">{t("highConsumption")}</span>}{reorder?.has(i.id) && <span className="rounded bg-orange-500/10 px-1 text-xs text-orange-600">{t("reorderBadge")}</span>}</span></td>
               <td className="px-3 py-2 text-muted-foreground">{i.sku || "—"}</td>
               <td className="px-3 py-2 text-muted-foreground">{loc(i)}</td>
               <td className="px-3 py-2 text-right"><span className={`font-semibold ${isLow(i) ? "text-destructive" : ""}`}>{i.stock}</span>{isLow(i) && <AlertTriangle className="ml-1 inline h-3 w-3 text-destructive" />}</td>

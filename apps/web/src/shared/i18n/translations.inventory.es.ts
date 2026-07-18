@@ -30,4 +30,10 @@ export const esInventory = {
   acceptedPayments: "Métodos de pago", bankName: "Banco", routingNumber: "Routing", creditLimit: "Límite de crédito",
   creditBalance: "Balance de crédito", deliveryMethod: "Método de entrega", minOrder: "Orden mínima", returnPolicy: "Política de devoluciones",
   secGeneral: "Información general", secFiscal: "Datos fiscales", secLogistics: "Logística", secEval: "Evaluación",
+  reorderPoint: "Punto de reorden", reorderQty: "Cantidad a pedir", reorderSection: "Reorden automático", reorderBadge: "Reordenar", filterReorder: "Pendientes de reorden",
+  purchaseOrders: "Órdenes de compra", newPurchaseOrder: "Nueva orden de compra", noPurchaseOrders: "Sin órdenes de compra",
+  poDraft: "Borrador", poOrdered: "Ordenada", poPartial: "Parcial", poReceived: "Recibida", poCancelled: "Cancelada",
+  markOrdered: "Marcar como ordenada", receiveGoods: "Recibir mercancía", receiveRemaining: "Recibir restante",
+  orderedQty: "Pedida", receivedQty: "Recibida", expectedDate: "Fecha esperada", reorderSuggestions: "Sugerencias de reorden", createPO: "Crear orden de compra",
+  currentLocation: "Ubicación actual", destination: "Destino", subtotal: "Subtotal",
 } satisfies Partial<Record<TranslationKey, string>>;

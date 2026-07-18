@@ -20,7 +20,10 @@ export interface InventoryItem {
   readonly aisle: string;
   readonly shelf: string;
   readonly bin: string;
+  readonly reorderPoint: number | null; readonly reorderQty: number | null;
 }
+
+export interface TransferData { readonly qty: number; readonly zone: string; readonly aisle: string; readonly shelf: string; readonly bin: string; readonly notes: string; }
 
 export interface InventoryFormData {
   readonly name: string;
@@ -34,6 +37,7 @@ export interface InventoryFormData {
   readonly aisle: string;
   readonly shelf: string;
   readonly bin: string;
+  readonly reorderPoint: number | null; readonly reorderQty: number | null;
 }
 
 export interface RestockData {
@@ -64,6 +68,7 @@ export interface IInventoryRepository {
   restock(itemId: string, data: RestockData): Promise<Result<string | null, string>>;
   adjust(itemId: string, newQty: number, reason: string): Promise<Result<string | null, string>>;
   shrink(itemId: string, qty: number, reason: string): Promise<Result<string | null, string>>;
+  transfer(itemId: string, data: TransferData): Promise<Result<string | null, string>>;
   listMovements(itemId: string): Promise<InventoryMovement[]>;
   listLandingProducts(): Promise<LandingProductRef[]>;
 }

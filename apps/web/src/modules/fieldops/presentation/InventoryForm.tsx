@@ -11,7 +11,7 @@ export function InventoryForm({ initial, landingProducts, suppliers, onSubmit, o
 }) {
   const { t } = useI18n();
   const { can } = useModuleAccess();
-  const [f, setF] = useState<InventoryFormData>(initial ?? { name: "", sku: "", stock: 0, unitCost: 0, minStock: 0, landingProductId: null, supplierId: null, warehouseZone: "", aisle: "", shelf: "", bin: "" });
+  const [f, setF] = useState<InventoryFormData>(initial ?? { name: "", sku: "", stock: 0, unitCost: 0, minStock: 0, landingProductId: null, supplierId: null, warehouseZone: "", aisle: "", shelf: "", bin: "", reorderPoint: null, reorderQty: null });
   const field = "w-full rounded-lg border border-border bg-background p-2 font-body";
   const lbl = "text-xs font-bold text-muted-foreground";
   const num = (k: "stock" | "unitCost" | "minStock", label: string) => (
@@ -44,6 +44,9 @@ export function InventoryForm({ initial, landingProducts, suppliers, onSubmit, o
           </select></label>
         <p className="text-xs font-bold uppercase text-muted-foreground md:col-span-2">{t("warehouseLocation")}</p>
         {loc("warehouseZone", t("warehouseZone"))}{loc("aisle", t("aisle"))}{loc("shelf", t("shelf"))}{loc("bin", t("bin"))}
+        <p className="text-xs font-bold uppercase text-muted-foreground md:col-span-2">{t("reorderSection")}</p>
+        <label className="space-y-1"><span className={lbl}>{t("reorderPoint")}</span><input type="number" min="0" value={f.reorderPoint ?? ""} onChange={(e) => setF({ ...f, reorderPoint: e.target.value ? Number(e.target.value) : null })} className={field} /></label>
+        <label className="space-y-1"><span className={lbl}>{t("reorderQty")}</span><input type="number" min="0" value={f.reorderQty ?? ""} onChange={(e) => setF({ ...f, reorderQty: e.target.value ? Number(e.target.value) : null })} className={field} /></label>
       </div>
       <div className="flex gap-2">
         <button type="submit" className="rounded-lg bg-primary text-primary-foreground px-4 py-2 font-body font-bold">{t("save")}</button>

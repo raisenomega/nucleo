@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import type { InventoryItem, InventoryFormData, RestockData, IInventoryRepository } from "@fieldops/domain/inventory.types";
+import type { InventoryItem, InventoryFormData, RestockData, TransferData, IInventoryRepository } from "@fieldops/domain/inventory.types";
 
 // Recibe el repositorio por inyección (DI) — NO importa infrastructure (A9 + oráculo #3).
 export function useInventory(repo: IInventoryRepository) {
@@ -43,6 +43,7 @@ export function useInventory(repo: IInventoryRepository) {
 
   const adjust = useCallback(async (id: string, newQty: number, reason: string) => { const r = await repo.adjust(id, newQty, reason); if (r.ok) await refresh(); return r; }, [repo, refresh]);
   const shrink = useCallback(async (id: string, qty: number, reason: string) => { const r = await repo.shrink(id, qty, reason); if (r.ok) await refresh(); return r; }, [repo, refresh]);
+  const transfer = useCallback(async (id: string, d: TransferData) => { const r = await repo.transfer(id, d); if (r.ok) await refresh(); return r; }, [repo, refresh]);
 
-  return { items, isLoading, create, update, remove, restock, adjust, shrink, refresh };
+  return { items, isLoading, create, update, remove, restock, adjust, shrink, transfer, refresh };
 }
