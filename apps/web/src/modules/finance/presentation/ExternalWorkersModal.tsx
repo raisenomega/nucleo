@@ -9,7 +9,7 @@ import { supabaseExternalWorkerRepository } from "@finance/infrastructure/supaba
 import { ExternalWorkerForm, EXTERNAL_TYPE_LABEL } from "@finance/presentation/ExternalWorkerForm";
 import type { ExternalWorker, ExternalWorkerFormData } from "@finance/domain/external-worker.types";
 
-export function ExternalWorkersModal({ onClose }: { onClose: () => void }) {
+export function ExternalWorkersModal({ onClose, onWorkerCreated }: { onClose: () => void; onWorkerCreated?: (w: ExternalWorker) => void }) {
   const { t } = useI18n();
   const { can } = useModuleAccess();
   const toast = useToast();
@@ -18,8 +18,11 @@ export function ExternalWorkersModal({ onClose }: { onClose: () => void }) {
 
   const editRow = useMemo<ExternalWorkerFormData | undefined>(() => items.find((x) => x.id === editing), [editing, items]);
   async function submit(d: ExternalWorkerFormData) {
-    const r = editing && editing !== "new" ? await update(editing, d) : await create(d);
-    if (r.ok) { setEditing(null); toast.success(t("saved")); } else toast.error(r.error);
+    const isNew = !editing || editing === "new";
+    const r = isNew ? await create(d) : await update(editing, d);
+    if (!r.ok) return void toast.error(r.error);
+    setEditing(null); toast.success(t("saved"));
+    if (isNew) onWorkerCreated?.(r.value); // crear → el parent cierra el modal y abre nueva nómina preseleccionada
   }
   const toggle = (w: ExternalWorker) => void update(w.id, { ...w, active: !w.active });
   const th = "p-2 text-left text-xs font-bold uppercase text-muted-foreground";
