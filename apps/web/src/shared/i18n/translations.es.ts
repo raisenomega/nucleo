@@ -20,7 +20,7 @@ export const es = {
   training: "Capacitación", support: "Soporte",
   incomeSubtitle: "Registra y consulta los ingresos del negocio.",
   assets: "Activos", billing: "Facturación", portal: "Portal cliente",
-  documents: "Documentos", notifications: "Notificaciones", menu: "Menú", aiChat: "Chat IA",
+  documents: "Documentos", notifications: "Notificaciones", menu: "Menú", aiChat: "Chat IA", markAllRead: "Marcar todas leídas", viewAll: "Ver todas", noNotifications: "Sin notificaciones", notifUnread: "No leídas", system: "Sistema",
   addEvidence: "Añadir evidencia", viewDetail: "Ver detalle",
   expenseList: "Lista de gastos", newExpense: "Nuevo gasto",
   expenseSubtitle: "Registra y consulta los gastos del negocio.", expenseDetail: "Detalle del gasto",

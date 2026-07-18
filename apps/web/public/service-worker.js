@@ -66,3 +66,15 @@ async function flushGpsBuffer() {
 self.addEventListener("sync", (event) => {
   if (event.tag === "gps-sync") event.waitUntil(flushGpsBuffer());
 });
+
+// Click en una push de notificación → enfoca una pestaña abierta o abre la URL del recurso.
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const url = (event.notification.data && event.notification.data.url) || "/notifications";
+  event.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((list) => {
+      for (const c of list) if ("focus" in c) return c.focus().then(() => c.navigate && c.navigate(url));
+      return self.clients.openWindow(url);
+    }),
+  );
+});

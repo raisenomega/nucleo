@@ -20,7 +20,7 @@ export const en = {
   training: "Training", support: "Support",
   incomeSubtitle: "Record and review your business income.",
   assets: "Assets", billing: "Billing", portal: "Client Portal",
-  documents: "Documents", notifications: "Notifications", menu: "Menu", aiChat: "AI Chat",
+  documents: "Documents", notifications: "Notifications", menu: "Menu", aiChat: "AI Chat", markAllRead: "Mark all read", viewAll: "View all", noNotifications: "No notifications", notifUnread: "Unread", system: "System",
   addEvidence: "Add evidence", viewDetail: "View detail",
   expenseList: "Expense list", newExpense: "New expense",
   expenseSubtitle: "Record and review your business expenses.", expenseDetail: "Expense detail",

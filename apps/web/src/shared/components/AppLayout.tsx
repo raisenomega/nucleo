@@ -5,6 +5,7 @@ import { Sidebar } from "@shared/components/Sidebar";
 import { MobileNav } from "@shared/components/MobileNav";
 import { GpsIndicator } from "@shared/gps/GpsIndicator";
 import { GpsResilience } from "@shared/gps/GpsResilience";
+import { NotificationBell } from "@shared/notifications/NotificationBell";
 import { useI18n } from "@shared/i18n";
 
 export function AppLayout() {
@@ -18,6 +19,7 @@ export function AppLayout() {
         <header className="sticky top-0 z-30 flex items-center gap-2 border-b border-border bg-background p-3 md:p-4">
           <GpsIndicator />
           <div className="flex-1" />
+          <NotificationBell />
           <button type="button"
             className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-body font-semibold">
             <MessageCircle className="h-4 w-4" /> <span className="hidden sm:inline">{t("aiChat")}</span>
