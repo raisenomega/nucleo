@@ -41,7 +41,7 @@ app.include_router(quote.router)
 app.include_router(payroll.router)
 app.include_router(report.router)
 app.include_router(evaluation.router)
-for r in (income, expense, extraordinary, lead, route, training, reconciliation):
+for r in (income, expense, extraordinary, lead, route, training, reconciliation, asset):
     app.include_router(r.router)
 
 
