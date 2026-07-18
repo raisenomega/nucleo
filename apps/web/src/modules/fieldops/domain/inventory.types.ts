@@ -24,6 +24,7 @@ export interface InventoryItem {
 
 export interface InventoryFormData {
   readonly name: string;
+  readonly sku: string;
   readonly stock: number;
   readonly unitCost: number;
   readonly minStock: number;

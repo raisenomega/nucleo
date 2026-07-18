@@ -25,4 +25,9 @@ export const esInventory = {
   chartCumCost: "Costo acumulado", chartStockTrend: "Tendencia de stock",
   location: "Ubicación", warehouseLocation: "Ubicación en almacén", warehouseZone: "Zona",
   aisle: "Pasillo", shelf: "Isla/Estante", bin: "Bahía", activityMonth: "Actividad del mes", movementType: "Tipo",
+  companyType: "Tipo de empresa", primaryCategory: "Categoría principal", secondaryCategories: "Categorías secundarias (coma)",
+  catalogUrl: "Catálogo online", stateProvince: "Estado", taxExempt: "Exento de impuestos", taxRate: "Tasa de impuesto (%)",
+  acceptedPayments: "Métodos de pago", bankName: "Banco", routingNumber: "Routing", creditLimit: "Límite de crédito",
+  creditBalance: "Balance de crédito", deliveryMethod: "Método de entrega", minOrder: "Orden mínima", returnPolicy: "Política de devoluciones",
+  secGeneral: "Información general", secFiscal: "Datos fiscales", secLogistics: "Logística", secEval: "Evaluación",
 } satisfies Partial<Record<TranslationKey, string>>;

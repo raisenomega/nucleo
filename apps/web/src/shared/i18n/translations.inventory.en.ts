@@ -25,4 +25,9 @@ export const enInventory = {
   chartCumCost: "Cumulative cost", chartStockTrend: "Stock trend",
   location: "Location", warehouseLocation: "Warehouse location", warehouseZone: "Zone",
   aisle: "Aisle", shelf: "Shelf", bin: "Bin", activityMonth: "Monthly activity", movementType: "Type",
+  companyType: "Company type", primaryCategory: "Primary category", secondaryCategories: "Secondary categories (comma)",
+  catalogUrl: "Online catalog", stateProvince: "State", taxExempt: "Tax exempt", taxRate: "Tax rate (%)",
+  acceptedPayments: "Accepted payments", bankName: "Bank", routingNumber: "Routing number", creditLimit: "Credit limit",
+  creditBalance: "Credit balance", deliveryMethod: "Delivery method", minOrder: "Min order", returnPolicy: "Return policy",
+  secGeneral: "General info", secFiscal: "Tax info", secLogistics: "Logistics", secEval: "Evaluation",
 } satisfies Partial<Record<TranslationKey, string>>;

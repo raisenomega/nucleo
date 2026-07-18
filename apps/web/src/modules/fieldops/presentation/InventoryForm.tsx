@@ -11,7 +11,7 @@ export function InventoryForm({ initial, landingProducts, suppliers, onSubmit, o
 }) {
   const { t } = useI18n();
   const { can } = useModuleAccess();
-  const [f, setF] = useState<InventoryFormData>(initial ?? { name: "", stock: 0, unitCost: 0, minStock: 0, landingProductId: null, supplierId: null, warehouseZone: "", aisle: "", shelf: "", bin: "" });
+  const [f, setF] = useState<InventoryFormData>(initial ?? { name: "", sku: "", stock: 0, unitCost: 0, minStock: 0, landingProductId: null, supplierId: null, warehouseZone: "", aisle: "", shelf: "", bin: "" });
   const field = "w-full rounded-lg border border-border bg-background p-2 font-body";
   const lbl = "text-xs font-bold text-muted-foreground";
   const num = (k: "stock" | "unitCost" | "minStock", label: string) => (
@@ -29,6 +29,8 @@ export function InventoryForm({ initial, landingProducts, suppliers, onSubmit, o
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <label className="space-y-1"><span className={lbl}>{t("itemName")}</span>
           <input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} className={field} /></label>
+        <label className="space-y-1"><span className={lbl}>{t("sku")}</span>
+          <input value={f.sku} onChange={(e) => setF({ ...f, sku: e.target.value })} placeholder="ZAF-30GL-001" className={field} /></label>
         {num("stock", t("stock"))}
         {can("inventory", "cost") && num("unitCost", t("unitCost"))}
         {num("minStock", t("minStock"))}

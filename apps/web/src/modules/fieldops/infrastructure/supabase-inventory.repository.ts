@@ -29,7 +29,7 @@ function toItem(r: Row): InventoryItem {
 }
 
 function toRow(d: InventoryFormData) {
-  return { name: d.name, stock: d.stock, unit_cost: d.unitCost, min_stock: d.minStock, landing_product_id: d.landingProductId, supplier_id: d.supplierId, warehouse_zone: d.warehouseZone || null, aisle: d.aisle || null, shelf: d.shelf || null, bin: d.bin || null };
+  return { name: d.name, sku: d.sku || null, stock: d.stock, unit_cost: d.unitCost, min_stock: d.minStock, landing_product_id: d.landingProductId, supplier_id: d.supplierId, warehouse_zone: d.warehouseZone || null, aisle: d.aisle || null, shelf: d.shelf || null, bin: d.bin || null };
 }
 
 async function rpcId(fn: string, args: object): Promise<Result<string | null, string>> {
