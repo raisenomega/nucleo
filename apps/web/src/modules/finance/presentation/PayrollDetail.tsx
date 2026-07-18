@@ -7,9 +7,11 @@ import { usePdf } from "@shared/hooks/usePdf";
 import { formatCurrency } from "@shared/lib/format";
 import { ScreenModal } from "@shared/components/ScreenModal";
 import { signEvidence } from "@finance/infrastructure/supabase-evidence.storage";
+import type { TranslationKey } from "@shared/i18n";
 import type { Payroll } from "@finance/domain/payroll.types";
+import type { ExternalWorker } from "@finance/domain/external-worker.types";
 
-export function PayrollDetail({ item, onClose }: { item: Payroll; onClose: () => void }) {
+export function PayrollDetail({ item, worker, onClose }: { item: Payroll; worker?: ExternalWorker; onClose: () => void }) {
   const { t } = useI18n();
   const { can } = useModuleAccess();
   const pdf = usePdf();
@@ -32,6 +34,14 @@ export function PayrollDetail({ item, onClose }: { item: Payroll; onClose: () =>
             {row("amount", formatCurrency(item.amount))}{row("paymentMethod", item.paymentMethodLabel)}
             {row("notes", item.notes)}
           </dl>
+          {worker && (
+            <dl className="space-y-1 border-t border-border pt-2 font-body text-sm">
+              <div className="text-xs font-bold text-muted-foreground">{t("professionalInfo")}</div>
+              {(([["phone", worker.phone], ["email", worker.email], ["address", worker.address], ["specialty", worker.specialty], ["department", worker.department], ["taxId", worker.taxId], ["hourlyRate", worker.hourlyRate != null ? formatCurrency(worker.hourlyRate) : ""], ["dailyRate", worker.dailyRate != null ? formatCurrency(worker.dailyRate) : ""]] as [TranslationKey, string][]).filter(([, v]) => v).map(([k, v]) => (
+                <div key={k}><dt className="inline text-muted-foreground">{t(k)}: </dt><dd className="inline">{v}</dd></div>
+              )))}
+            </dl>
+          )}
           {can("payroll", "salary") && item.deductionsEmployee.length > 0 && (
             <div className="space-y-1 border-t border-border pt-2 text-sm">
               <div className="text-xs font-bold text-muted-foreground">{t("employeeDeductions")}</div>
