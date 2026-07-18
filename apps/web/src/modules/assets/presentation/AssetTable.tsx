@@ -29,7 +29,7 @@ export function AssetTable({ rows, now, onView, onEdit, onDelete, onMaintain }: 
           {rows.length === 0 && <tr><td colSpan={cost ? 7 : 6} className="py-8 text-center text-muted-foreground">{t("noAssets")}</td></tr>}
           {visible.map((a) => (
             <tr key={a.id} onClick={() => onView(a.id)} className="cursor-pointer border-t border-border hover:bg-secondary">
-              <td className="px-3 py-2"><span className="inline-flex flex-wrap items-center gap-1">{a.name}{expiringSoon(a, now) && <span title={t("warrantyAlert")} className="inline-flex items-center rounded bg-destructive/10 px-1 text-xs text-destructive"><ShieldAlert className="h-3 w-3" /></span>}</span></td>
+              <td className="px-3 py-2"><span className="inline-flex flex-wrap items-center gap-1">{a.imageUrl && <img src={a.imageUrl} alt="" className="h-6 w-6 rounded object-cover" />}{a.name}{a.status === "in_use" && a.assignedToName && <span className="rounded bg-blue-500/10 px-1 text-xs text-blue-600">{t("inUseBy")} {a.assignedToName}</span>}{expiringSoon(a, now) && <span title={t("warrantyAlert")} className="inline-flex items-center rounded bg-destructive/10 px-1 text-xs text-destructive"><ShieldAlert className="h-3 w-3" /></span>}</span></td>
               <td className="px-3 py-2">{t(ASSET_TYPE[a.assetType])}</td>
               <td className="px-3 py-2"><span className={`rounded px-1.5 py-0.5 text-xs font-bold ${STATUS[a.status].cls}`}>{t(STATUS[a.status].key)}</span></td>
               <td className="px-3 py-2 text-muted-foreground">{a.assignedToName || "—"}</td>

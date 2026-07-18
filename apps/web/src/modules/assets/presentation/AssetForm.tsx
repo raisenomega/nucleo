@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
+import { CategoryPicker } from "@shared/components/CategoryPicker";
+import { ImageUploadWithCrop } from "@shared/components/ImageUploadWithCrop";
 import type { TranslationKey } from "@shared/i18n";
 import { ASSET_TYPE, CONDITION, STATUS } from "@assets/presentation/asset-labels";
 import type { AssetFormData, ProfileRef, AssetType, AssetCondition, AssetStatus } from "@assets/domain/asset.types";
@@ -27,9 +29,11 @@ export function AssetForm({ initial, profiles, onSubmit, onCancel }: {
       <h2 className="font-body font-bold">{t("newAsset")}</h2>
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
         <p className={sec}>{t("secGeneral")}</p>
+        <div className="md:col-span-2"><ImageUploadWithCrop entityType="asset" aspectRatio={16 / 9} value={f.imageUrl || null} onUploaded={(url) => set({ imageUrl: url ?? "" })} /></div>
         <label className="space-y-1"><span className={lbl}>{t("name")}</span><input value={f.name} onChange={(e) => set({ name: e.target.value })} className={fld} required /></label>
         <label className="space-y-1"><span className={lbl}>{t("assetType")}</span><select value={f.assetType} onChange={(e) => set({ assetType: e.target.value as AssetType })} className={fld}>{Object.keys(ASSET_TYPE).map((k) => <option key={k} value={k}>{t(ASSET_TYPE[k as AssetType])}</option>)}</select></label>
-        {txt("category", "category")}{txt("brand", "brand")}{txt("model", "model")}{txt("serialNumber", "serialNumber")}{txt("imageUrl", "imageUrl")}
+        <CategoryPicker kind="asset_type" value={f.category} onChange={(v) => set({ category: v })} label="category" byLabel />
+        {txt("brand", "brand")}{txt("model", "model")}{txt("serialNumber", "serialNumber")}
         <p className={sec}>{t("secPurchase")}</p>
         {dt("purchaseDate", "purchaseDate")}{can("assets", "cost") && num("purchasePrice", "purchasePrice")}{can("assets", "cost") && num("currentValue", "currentValue")}
         <label className="space-y-1"><span className={lbl}>{t("depMethod")}</span><select value={f.depreciationMethod} onChange={(e) => set({ depreciationMethod: e.target.value })} className={fld}><option value="none">{t("depNone")}</option><option value="straight_line">{t("depStraight")}</option></select></label>

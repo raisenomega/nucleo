@@ -3,7 +3,7 @@ import { Pencil, Trash2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import type { CategoryConfig, RepoResult } from "@admin/domain/admin.types";
 
-const KINDS = ["income", "expense", "extraordinary", "payment_method", "channel", "lead_source", "service_type", "tax_obligation"];
+const KINDS = ["income", "expense", "extraordinary", "payment_method", "channel", "lead_source", "service_type", "tax_obligation", "asset_type", "asset_condition"];
 const CLASSES = ["fixed", "variable", "debt", "one_time"];
 
 export function AdminCategoriesTab({ categories, onSave, onToggle, onCount, onDelete }: {
