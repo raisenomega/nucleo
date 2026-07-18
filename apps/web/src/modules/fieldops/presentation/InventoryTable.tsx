@@ -1,67 +1,56 @@
 import { useState } from "react";
-import { AlertTriangle, Pencil, Trash2, PackagePlus, Globe } from "lucide-react";
+import { AlertTriangle, Globe } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { formatCurrency } from "@shared/lib/format";
 import { MobileCard } from "@shared/components/MobileCard";
 import { Pagination } from "@shared/components/Pagination";
+import { InventoryRowActions } from "@fieldops/presentation/InventoryRowActions";
 import type { InventoryItem } from "@fieldops/domain/inventory.types";
 
-export function InventoryTable({ rows, onView, onEdit, onDelete, onRestock }: {
-  rows: readonly InventoryItem[]; onView: (id: string) => void; onEdit: (id: string) => void;
-  onDelete: (id: string) => void; onRestock: (id: string) => void;
+const isLow = (i: InventoryItem) => i.minStock > 0 && i.stock <= i.minStock;
+
+export function InventoryTable({ rows, onView, onEdit, onDelete, onRestock, onAdjust, onShrink }: {
+  rows: readonly InventoryItem[]; onView: (id: string) => void; onEdit: (id: string) => void; onDelete: (id: string) => void;
+  onRestock: (id: string) => void; onAdjust: (id: string) => void; onShrink: (id: string) => void;
 }) {
   const { t } = useI18n();
   const { can } = useModuleAccess();
-  const showCost = can("inventory", "cost"); // costo gateado por checkbox inventory.cost
+  const cost = can("inventory", "cost");
   const th = "px-3 py-2 text-left font-bold";
   const [page, setPage] = useState(1);
   const visible = rows.slice((page - 1) * 12, page * 12);
+  const acts = { onRestock, onAdjust, onShrink, onEdit, onDelete };
   return (
     <>
     <div className="hidden overflow-hidden rounded-lg border border-border bg-card md:block">
-      <div className="border-b border-border p-4"><h2 className="font-body font-bold">{t("inventoryList")} ({rows.length})</h2></div>
-      <div className="overflow-x-auto">
-        <table className="w-full font-body text-sm">
-          <thead className="bg-secondary text-xs uppercase text-muted-foreground"><tr>
-            <th className={th}>{t("itemName")}</th><th className={`${th} text-right`}>{t("stock")}</th>
-            {showCost && <th className={`${th} text-right`}>{t("unitCost")}</th>}
-            <th className={`${th} text-right`}>{t("minStock")}</th><th className={`${th} text-right`}>{t("actions")}</th>
-          </tr></thead>
-          <tbody>
-            {rows.length === 0 && (
-              <tr><td colSpan={showCost ? 5 : 4} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>
-            )}
-            {visible.map((i) => (
-              <tr key={i.id} onClick={() => onView(i.id)} className="cursor-pointer border-t border-border transition-colors hover:bg-secondary">
-                <td className="px-3 py-2"><span className="inline-flex items-center gap-1">{i.name}{i.landingProductId && <span title={t("inCatalogTooltip")} className="inline-flex items-center gap-0.5 rounded bg-primary/10 px-1 text-xs text-primary"><Globe className="h-3 w-3" /> {t("inCatalog")}</span>}</span></td>
-                <td className="px-3 py-2 text-right">
-                  <span className="font-semibold">{i.stock}</span>
-                  {i.minStock > 0 && i.stock < i.minStock && (
-                    <span className="ml-2 inline-flex items-center gap-1 rounded bg-destructive/10 px-1.5 text-xs text-destructive">
-                      <AlertTriangle className="h-3 w-3" /> {t("lowStock")}
-                    </span>
-                  )}
-                </td>
-                {showCost && <td className="px-3 py-2 text-right">{formatCurrency(i.unitCost)}</td>}
-                <td className="px-3 py-2 text-right">{i.minStock}</td>
-                <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
-                  <div className="flex justify-end gap-2">
-                    {can("inventory", "edit") && <button type="button" onClick={() => onRestock(i.id)} aria-label={t("restock")} className="text-primary"><PackagePlus className="h-4 w-4" /></button>}
-                    {can("inventory", "edit") && <button type="button" onClick={() => onEdit(i.id)} aria-label={t("edit")} className="text-foreground"><Pencil className="h-4 w-4" /></button>}
-                    {can("inventory", "delete") && <button type="button" onClick={() => onDelete(i.id)} aria-label={t("delete")} className="text-destructive"><Trash2 className="h-4 w-4" /></button>}
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <div className="overflow-x-auto"><table className="w-full font-body text-sm">
+        <thead className="bg-secondary text-xs uppercase text-muted-foreground"><tr>
+          <th className={th}>{t("itemName")}</th><th className={th}>{t("sku")}</th><th className={`${th} text-right`}>{t("stock")}</th><th className={`${th} text-right`}>{t("minStock")}</th>
+          {cost && <><th className={`${th} text-right`}>{t("unitCost")}</th><th className={`${th} text-right`}>{t("value")}</th></>}
+          <th className={th}>{t("supplier")}</th><th className={th}>{t("lastRestock")}</th><th className={`${th} text-right`}>{t("actions")}</th>
+        </tr></thead>
+        <tbody>
+          {rows.length === 0 && <tr><td colSpan={cost ? 9 : 7} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>}
+          {visible.map((i) => (
+            <tr key={i.id} onClick={() => onView(i.id)} className={`cursor-pointer border-t border-border hover:bg-secondary ${isLow(i) ? "bg-destructive/5" : ""}`}>
+              <td className="px-3 py-2"><span className="inline-flex items-center gap-1">{i.name}{i.landingProductId && <span title={t("inCatalogTooltip")} className="text-primary"><Globe className="h-3.5 w-3.5" /></span>}</span></td>
+              <td className="px-3 py-2 text-muted-foreground">{i.sku || "—"}</td>
+              <td className="px-3 py-2 text-right"><span className={`font-semibold ${isLow(i) ? "text-destructive" : ""}`}>{i.stock}</span>{isLow(i) && <AlertTriangle className="ml-1 inline h-3 w-3 text-destructive" />}</td>
+              <td className="px-3 py-2 text-right">{i.minStock}</td>
+              {cost && <><td className="px-3 py-2 text-right">{formatCurrency(i.unitCost)}</td><td className="px-3 py-2 text-right font-semibold">{formatCurrency(i.stock * i.avgCost)}</td></>}
+              <td className="px-3 py-2 text-muted-foreground">{i.supplierName || "—"}</td>
+              <td className="px-3 py-2 text-muted-foreground">{i.lastRestockDate ? i.lastRestockDate.slice(0, 10) : "—"}</td>
+              <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}><InventoryRowActions id={i.id} {...acts} /></td>
+            </tr>
+          ))}
+        </tbody>
+      </table></div>
     </div>
     <div className="space-y-2 md:hidden">
-      {visible.map((i) => <MobileCard key={i.id} title={i.name} amount={showCost ? formatCurrency(i.unitCost) : undefined}
-        lines={[`${t("stock")}: ${i.stock} · ${t("minStock")}: ${i.minStock}`]}
-        extra={i.minStock > 0 && i.stock < i.minStock ? <span className="inline-flex items-center gap-1 rounded bg-destructive/10 px-1.5 text-xs text-destructive"><AlertTriangle className="h-3 w-3" /> {t("lowStock")}</span> : undefined}
+      {visible.map((i) => <MobileCard key={i.id} title={i.name} amount={cost ? formatCurrency(i.stock * i.avgCost) : undefined}
+        lines={[`${t("stock")}: ${i.stock} · ${t("minStock")}: ${i.minStock}`, i.supplierName || ""]}
+        extra={isLow(i) ? <span className="inline-flex items-center gap-1 text-xs text-destructive"><AlertTriangle className="h-3 w-3" /> {t("lowStock")}</span> : undefined}
         onView={() => onView(i.id)} onEdit={can("inventory", "edit") ? () => onEdit(i.id) : undefined} onDelete={can("inventory", "delete") ? () => onDelete(i.id) : undefined} />)}
     </div>
     <Pagination total={rows.length} page={page} onPageChange={setPage} />

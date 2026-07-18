@@ -41,5 +41,8 @@ export function useInventory(repo: IInventoryRepository) {
     return r;
   }, [repo, refresh]);
 
-  return { items, isLoading, create, update, remove, restock, refresh };
+  const adjust = useCallback(async (id: string, newQty: number, reason: string) => { const r = await repo.adjust(id, newQty, reason); if (r.ok) await refresh(); return r; }, [repo, refresh]);
+  const shrink = useCallback(async (id: string, qty: number, reason: string) => { const r = await repo.shrink(id, qty, reason); if (r.ok) await refresh(); return r; }, [repo, refresh]);
+
+  return { items, isLoading, create, update, remove, restock, adjust, shrink, refresh };
 }

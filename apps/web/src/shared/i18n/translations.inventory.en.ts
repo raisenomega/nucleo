@@ -14,4 +14,8 @@ export const enInventory = {
   movAjuste: "Adjustment",
   movMerma: "Shrinkage",
   movDevolucion: "Return",
+  totalItems: "Total items", stockValue: "Total value", lastRestock: "Last restock",
+  filterAll: "All", filterLow: "Low stock", filterCatalog: "In catalog", filterNoStock: "Out of stock",
+  value: "Value", itemData: "Item data", movIns: "Ins", movOuts: "Outs",
+  adjustStock: "Adjust stock", newQuantity: "New quantity", registerShrinkage: "Register shrinkage", lostQuantity: "Lost quantity",
 } satisfies Partial<Record<TranslationKey, string>>;

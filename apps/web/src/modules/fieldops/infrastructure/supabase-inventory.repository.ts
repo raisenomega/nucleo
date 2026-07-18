@@ -12,15 +12,15 @@ interface MovRow {
 interface Row {
   id: string; tenant_id: string; name: string;
   stock: number | string; unit_cost: number | string; min_stock: number | string;
-  avg_cost: number | string; supplier_name: string | null; landing_product_id: string | null; last_restock_date: string | null;
+  sku: string | null; avg_cost: number | string; supplier_name: string | null; landing_product_id: string | null; last_restock_date: string | null;
 }
 
-const SELECT = "id, tenant_id, name, stock, unit_cost, min_stock, avg_cost, supplier_name, landing_product_id, last_restock_date";
+const SELECT = "id, tenant_id, name, stock, unit_cost, min_stock, sku, avg_cost, supplier_name, landing_product_id, last_restock_date";
 
 function toItem(r: Row): InventoryItem {
   return {
     id: r.id, tenantId: r.tenant_id, name: r.name,
-    stock: Number(r.stock), unitCost: Number(r.unit_cost), minStock: Number(r.min_stock),
+    stock: Number(r.stock), unitCost: Number(r.unit_cost), minStock: Number(r.min_stock), sku: r.sku ?? "",
     avgCost: Number(r.avg_cost), supplierName: r.supplier_name ?? "",
     landingProductId: r.landing_product_id, lastRestockDate: r.last_restock_date,
   };
@@ -28,6 +28,11 @@ function toItem(r: Row): InventoryItem {
 
 function toRow(d: InventoryFormData) {
   return { name: d.name, stock: d.stock, unit_cost: d.unitCost, min_stock: d.minStock, landing_product_id: d.landingProductId };
+}
+
+async function rpcId(fn: string, args: object): Promise<Result<string | null, string>> {
+  const { data, error } = await supabase.rpc(fn, args);
+  return error ? { ok: false, error: error.message } : { ok: true, value: data as string | null };
 }
 
 export const supabaseInventoryRepository: IInventoryRepository = {
@@ -51,14 +56,9 @@ export const supabaseInventoryRepository: IInventoryRepository = {
     if (error) return { ok: false, error: error.message };
     return { ok: true, value: null };
   },
-  async restock(itemId, d): Promise<Result<string, string>> {
-    const { data, error } = await supabase.rpc("record_restock", {
-      p_item_id: itemId, p_quantity: d.quantity, p_unit_cost: d.unitCost,
-      p_supplier: d.supplier || null, p_notes: d.notes || null, p_date: d.date || undefined,
-    });
-    if (error) return { ok: false, error: error.message };
-    return { ok: true, value: data as string };
-  },
+  restock(itemId, d) { return rpcId("record_restock", { p_item_id: itemId, p_quantity: d.quantity, p_unit_cost: d.unitCost, p_supplier: d.supplier || null, p_notes: d.notes || null, p_date: d.date || undefined }); },
+  adjust(itemId, newQty, reason) { return rpcId("record_adjustment", { p_item_id: itemId, p_new_qty: newQty, p_reason: reason || null }); },
+  shrink(itemId, qty, reason) { return rpcId("record_shrinkage", { p_item_id: itemId, p_qty: qty, p_reason: reason || null }); },
   async listMovements(itemId): Promise<InventoryMovement[]> {
     const { data } = await supabase.rpc("list_item_movements", { p_item_id: itemId });
     return ((data as MovRow[] | null) ?? []).map((r) => ({

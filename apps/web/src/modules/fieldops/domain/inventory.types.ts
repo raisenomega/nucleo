@@ -10,6 +10,7 @@ export interface InventoryItem {
   readonly stock: number;
   readonly unitCost: number;
   readonly minStock: number;
+  readonly sku: string;
   readonly avgCost: number;
   readonly supplierName: string;
   readonly landingProductId: string | null;
@@ -48,7 +49,9 @@ export interface IInventoryRepository {
   create(data: InventoryFormData): Promise<Result<InventoryItem, string>>;
   update(id: string, data: InventoryFormData): Promise<Result<InventoryItem, string>>;
   remove(id: string): Promise<Result<null, string>>;
-  restock(itemId: string, data: RestockData): Promise<Result<string, string>>;
+  restock(itemId: string, data: RestockData): Promise<Result<string | null, string>>;
+  adjust(itemId: string, newQty: number, reason: string): Promise<Result<string | null, string>>;
+  shrink(itemId: string, qty: number, reason: string): Promise<Result<string | null, string>>;
   listMovements(itemId: string): Promise<InventoryMovement[]>;
   listLandingProducts(): Promise<LandingProductRef[]>;
 }

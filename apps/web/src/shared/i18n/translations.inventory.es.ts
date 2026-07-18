@@ -14,4 +14,8 @@ export const esInventory = {
   movAjuste: "Ajuste",
   movMerma: "Merma",
   movDevolucion: "Devolución",
+  totalItems: "Total items", stockValue: "Valor total", lastRestock: "Último restock",
+  filterAll: "Todos", filterLow: "Stock bajo", filterCatalog: "En catálogo", filterNoStock: "Sin stock",
+  value: "Valor", itemData: "Datos del item", movIns: "Entradas", movOuts: "Salidas",
+  adjustStock: "Ajustar stock", newQuantity: "Nueva cantidad", registerShrinkage: "Registrar merma", lostQuantity: "Cantidad perdida",
 } satisfies Partial<Record<TranslationKey, string>>;

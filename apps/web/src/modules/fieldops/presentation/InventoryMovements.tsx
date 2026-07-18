@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ArrowDownCircle, ArrowUpCircle } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import type { TranslationKey } from "@shared/i18n";
+import { Pagination } from "@shared/components/Pagination";
 import { supabaseInventoryRepository } from "@fieldops/infrastructure/supabase-inventory.repository";
 import type { InventoryMovement } from "@fieldops/domain/inventory.types";
 
@@ -20,12 +21,14 @@ const FALLBACK = { key: "movAjuste" as TranslationKey, cls: "text-muted-foregrou
 export function InventoryMovements({ itemId }: { itemId: string }) {
   const { t } = useI18n();
   const [rows, setRows] = useState<InventoryMovement[]>([]);
+  const [page, setPage] = useState(1);
   useEffect(() => { void supabaseInventoryRepository.listMovements(itemId).then(setRows); }, [itemId]);
+  const paged = rows.slice((page - 1) * 12, page * 12);
   return (
     <div className="space-y-2">
       <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("movementHistory")}</p>
       {rows.length === 0 && <p className="text-xs text-muted-foreground">{t("noRecords")}</p>}
-      {rows.map((m) => {
+      {paged.map((m) => {
         const mv = MOV[m.type] ?? FALLBACK;
         const ctx = [m.employee, m.clientName, m.serviceType].filter(Boolean).join(" · ");
         return (
@@ -43,6 +46,7 @@ export function InventoryMovements({ itemId }: { itemId: string }) {
           </div>
         );
       })}
+      <Pagination total={rows.length} page={page} onPageChange={setPage} />
     </div>
   );
 }
