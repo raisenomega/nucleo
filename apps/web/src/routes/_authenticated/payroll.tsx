@@ -15,6 +15,7 @@ import { PayrollTable } from "@finance/presentation/PayrollTable";
 import { PayrollDetail } from "@finance/presentation/PayrollDetail";
 import { ExternalWorkersModal } from "@finance/presentation/ExternalWorkersModal";
 import { ExternalWorkersTable } from "@finance/presentation/ExternalWorkersTable";
+import { ExternalWorkerDetail } from "@finance/presentation/ExternalWorkerDetail";
 import type { PayrollFormData } from "@finance/domain/payroll.types";
 import type { ExternalWorker } from "@finance/domain/external-worker.types";
 
@@ -36,10 +37,7 @@ function PayrollPage() {
   const [prefill, setPrefill] = useState<PayrollFormData | undefined>();
   const externals = useMemo(() => workers.items.filter((w) => w.active).map((w) => ({ id: w.id, full_name: w.fullName, workerType: w.workerType, dailyRate: w.dailyRate, hourlyRate: w.hourlyRate, specialty: w.specialty, department: w.department })), [workers.items]);
 
-  useEffect(() => {
-    void supabase.from("profiles").select("id, full_name").then(({ data }) => setEmps((data as Emp[] | null) ?? []));
-    void supabase.from("categories").select("id,label,kind").eq("kind", "payment_method").then(({ data }) => setCats((data as Cat[] | null) ?? []));
-  }, []);
+  useEffect(() => { void supabase.from("profiles").select("id, full_name").then(({ data }) => setEmps((data as Emp[] | null) ?? [])); void supabase.from("categories").select("id,label,kind").eq("kind", "payment_method").then(({ data }) => setCats((data as Cat[] | null) ?? [])); }, []);
 
   const editRow = useMemo<PayrollFormData | undefined>(() => { const i = items.find((x) => x.id === editing); return i ? { employeeId: i.employeeId, externalWorkerId: i.externalWorkerId, amount: i.amount, period: i.period, paymentMethodId: i.paymentMethodId, date: i.date, notes: i.notes, evidenceUrls: i.evidenceUrls, workerType: i.workerType, grossSalary: i.grossSalary || i.amount } : undefined; }, [editing, items]);
   const payWorker = (w: ExternalWorker) => { const s = w.dailyRate ?? w.hourlyRate ?? 0; setPrefill({ employeeId: "", externalWorkerId: w.id, amount: s, period: "", paymentMethodId: "", date: "", notes: "", evidenceUrls: [], workerType: w.workerType, grossSalary: s }); setEditing("new"); };
@@ -52,6 +50,7 @@ function PayrollPage() {
 
   if (!can("payroll", "view")) return <Navigate to="/dashboard" />;
   const viewItem = items.find((i) => i.id === viewing);
+  const viewWorker = workers.items.find((w) => w.id === viewing);
   const onEdit = can("payroll", "edit") ? setEditing : undefined;
   const onDelete = can("payroll", "delete") ? (id: string) => { if (window.confirm(`${t("delete")}?`)) void remove(id); } : undefined;
   return (
@@ -66,8 +65,9 @@ function PayrollPage() {
       </div>
       {editing !== null && <PayrollForm employees={emps} externals={externals} payCats={cats} preview={preview} initial={editing === "new" ? prefill : editRow} onSubmit={submit} onCancel={() => setEditing(null)} />}
       <PayrollTable rows={items.filter((i) => !i.externalWorkerId)} onView={setViewing} onEdit={onEdit} onDelete={onDelete} />
-      <ExternalWorkersTable rows={workers.items} paidOf={(id) => items.filter((i) => i.externalWorkerId === id).reduce((s, i) => s + (i.grossSalary || i.amount), 0)} onPay={payWorker} onEdit={(id) => setManaging(id)} onToggle={(w) => void workers.update(w.id, { ...w, active: !w.active })} />
+      <ExternalWorkersTable rows={workers.items} paidOf={(id) => items.filter((i) => i.externalWorkerId === id).reduce((s, i) => s + (i.grossSalary || i.amount), 0)} onView={setViewing} onPay={payWorker} onEdit={(id) => setManaging(id)} onToggle={(w) => void workers.update(w.id, { ...w, active: !w.active })} />
       {viewItem && <PayrollDetail item={viewItem} onClose={() => setViewing(null)} />}
+      {viewWorker && <ExternalWorkerDetail worker={viewWorker} payments={items.filter((i) => i.externalWorkerId === viewWorker.id)} onClose={() => setViewing(null)} />}
       {managing && <ExternalWorkersModal editId={managing === "new" ? undefined : managing} initial={managing === "new" ? undefined : workers.items.find((w) => w.id === managing)} onClose={() => setManaging(null)} onSaved={() => { setManaging(null); void workers.refresh(); }} onWorkerCreated={onWorkerCreated} />}
     </div>
   );

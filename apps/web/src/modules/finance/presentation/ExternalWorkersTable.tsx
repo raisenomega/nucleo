@@ -8,8 +8,8 @@ import { EXTERNAL_TYPE_LABEL } from "@finance/presentation/ExternalWorkerForm";
 import type { ExternalWorker } from "@finance/domain/external-worker.types";
 
 // Única sección de externos: un trabajador registrado por fila. Total pagado sale de payroll (paidOf). Click → editar ficha.
-export function ExternalWorkersTable({ rows, paidOf, onPay, onEdit, onToggle }: {
-  rows: readonly ExternalWorker[]; paidOf: (id: string) => number;
+export function ExternalWorkersTable({ rows, paidOf, onView, onPay, onEdit, onToggle }: {
+  rows: readonly ExternalWorker[]; paidOf: (id: string) => number; onView: (id: string) => void;
   onPay: (w: ExternalWorker) => void; onEdit: (id: string) => void; onToggle: (w: ExternalWorker) => void;
 }) {
   const { t } = useI18n();
@@ -30,7 +30,7 @@ export function ExternalWorkersTable({ rows, paidOf, onPay, onEdit, onToggle }: 
           {money && <th className={`${th} text-right`}>{t("totalPaid")}</th>}<th className={th}>{t("active")}</th><th className={`${th} text-right`}>{t("actions")}</th>
         </tr></thead>
         <tbody>{paged.map((w) => (
-          <tr key={w.id} onClick={() => onEdit(w.id)} className={`cursor-pointer border-t border-border hover:bg-secondary ${w.active ? "" : "opacity-50"}`}>
+          <tr key={w.id} onClick={() => onView(w.id)} className={`cursor-pointer border-t border-border hover:bg-secondary ${w.active ? "" : "opacity-50"}`}>
             <td className="px-3 py-2 text-foreground">{w.fullName}</td>
             <td className="px-3 py-2">{t(EXTERNAL_TYPE_LABEL[w.workerType])}</td>
             <td className="px-3 py-2">{w.specialty || "—"}</td><td className="px-3 py-2">{w.phone || "—"}</td><td className="px-3 py-2">{w.department || "—"}</td>
