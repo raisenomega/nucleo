@@ -42,7 +42,8 @@ function PayrollPage() {
   }, []);
 
   const editRow = useMemo<PayrollFormData | undefined>(() => { const i = items.find((x) => x.id === editing); return i ? { employeeId: i.employeeId, externalWorkerId: i.externalWorkerId, amount: i.amount, period: i.period, paymentMethodId: i.paymentMethodId, date: i.date, notes: i.notes, evidenceUrls: i.evidenceUrls, workerType: i.workerType, grossSalary: i.grossSalary || i.amount } : undefined; }, [editing, items]);
-  const onWorkerCreated = (w: ExternalWorker) => { const s = w.dailyRate ?? w.hourlyRate ?? 0; setPrefill({ employeeId: "", externalWorkerId: w.id, amount: s, period: "", paymentMethodId: "", date: "", notes: "", evidenceUrls: [], workerType: w.workerType, grossSalary: s }); setManaging(null); setEditing("new"); void workers.refresh(); };
+  const payWorker = (w: ExternalWorker) => { const s = w.dailyRate ?? w.hourlyRate ?? 0; setPrefill({ employeeId: "", externalWorkerId: w.id, amount: s, period: "", paymentMethodId: "", date: "", notes: "", evidenceUrls: [], workerType: w.workerType, grossSalary: s }); setEditing("new"); };
+  const onWorkerCreated = (w: ExternalWorker) => { setManaging(null); payWorker(w); void workers.refresh(); };
 
   async function submit(d: PayrollFormData) {
     if (editing && editing !== "new") await update(editing, d); else await create(d);
@@ -65,7 +66,7 @@ function PayrollPage() {
       </div>
       {editing !== null && <PayrollForm employees={emps} externals={externals} payCats={cats} preview={preview} initial={editing === "new" ? prefill : editRow} onSubmit={submit} onCancel={() => setEditing(null)} />}
       <PayrollTable rows={items.filter((i) => !i.externalWorkerId)} onView={setViewing} onEdit={onEdit} onDelete={onDelete} />
-      <ExternalWorkersTable rows={workers.items} paidOf={(id) => items.filter((i) => i.externalWorkerId === id).reduce((s, i) => s + (i.grossSalary || i.amount), 0)} onAdd={() => setManaging("new")} onEdit={(id) => setManaging(id)} onToggle={(w) => void workers.update(w.id, { ...w, active: !w.active })} />
+      <ExternalWorkersTable rows={workers.items} paidOf={(id) => items.filter((i) => i.externalWorkerId === id).reduce((s, i) => s + (i.grossSalary || i.amount), 0)} onAdd={() => setManaging("new")} onPay={payWorker} onEdit={(id) => setManaging(id)} onToggle={(w) => void workers.update(w.id, { ...w, active: !w.active })} />
       {viewItem && <PayrollDetail item={viewItem} onClose={() => setViewing(null)} />}
       {managing && <ExternalWorkersModal editId={managing === "new" ? undefined : managing} initial={managing === "new" ? undefined : workers.items.find((w) => w.id === managing)} onClose={() => setManaging(null)} onSaved={() => { setManaging(null); void workers.refresh(); }} onWorkerCreated={onWorkerCreated} />}
     </div>

@@ -32,4 +32,5 @@ export const esPayroll = {
   payCheque: "Cheque",
   externalPayments: "Pagos a externos",
   totalPaid: "Total pagado",
+  addPayment: "Añadir pago",
 } satisfies Partial<Record<TranslationKey, string>>;

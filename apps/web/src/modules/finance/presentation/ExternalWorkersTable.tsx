@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Users, Plus, Pencil, Power } from "lucide-react";
+import { Users, Plus, Pencil, Power, Banknote } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { Pagination } from "@shared/components/Pagination";
@@ -8,9 +8,9 @@ import { EXTERNAL_TYPE_LABEL } from "@finance/presentation/ExternalWorkerForm";
 import type { ExternalWorker } from "@finance/domain/external-worker.types";
 
 // Única sección de externos: un trabajador registrado por fila. Total pagado sale de payroll (paidOf). Click → editar ficha.
-export function ExternalWorkersTable({ rows, paidOf, onAdd, onEdit, onToggle }: {
-  rows: readonly ExternalWorker[]; paidOf: (id: string) => number;
-  onAdd: () => void; onEdit: (id: string) => void; onToggle: (w: ExternalWorker) => void;
+export function ExternalWorkersTable({ rows, paidOf, onAdd, onPay, onEdit, onToggle }: {
+  rows: readonly ExternalWorker[]; paidOf: (id: string) => number; onAdd: () => void;
+  onPay: (w: ExternalWorker) => void; onEdit: (id: string) => void; onToggle: (w: ExternalWorker) => void;
 }) {
   const { t } = useI18n();
   const { can } = useModuleAccess();
@@ -38,6 +38,7 @@ export function ExternalWorkersTable({ rows, paidOf, onAdd, onEdit, onToggle }: 
             {money && <td className="px-3 py-2 text-right font-semibold">{formatCurrency(paidOf(w.id))}</td>}
             <td className="px-3 py-2">{w.active ? t("active") : "—"}</td>
             <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}><div className="flex justify-end gap-3">
+              {can("payroll", "create") && <button type="button" onClick={() => onPay(w)} aria-label={t("addPayment")} className="text-primary"><Banknote className="h-4 w-4" /></button>}
               {can("payroll", "edit") && <button type="button" onClick={() => onEdit(w.id)} aria-label={t("edit")}><Pencil className="h-4 w-4" /></button>}
               {can("payroll", "edit") && <button type="button" onClick={() => onToggle(w)} aria-label={t("active")} className={w.active ? "text-destructive" : "text-primary"}><Power className="h-4 w-4" /></button>}
             </div></td>
