@@ -1,0 +1,45 @@
+import { useState } from "react";
+import { Users, Plus, Pencil, Power } from "lucide-react";
+import { useI18n } from "@shared/i18n";
+import { useModuleAccess } from "@shared/hooks/useModuleAccess";
+import { Pagination } from "@shared/components/Pagination";
+import { EXTERNAL_TYPE_LABEL } from "@finance/presentation/ExternalWorkerForm";
+import type { ExternalWorker } from "@finance/domain/external-worker.types";
+
+// Sección 3 de la página de nómina: registro permanente de trabajadores externos (la lista salió del modal).
+export function ExternalWorkersTable({ rows, onAdd, onEdit, onToggle }: {
+  rows: readonly ExternalWorker[]; onAdd: () => void; onEdit: (id: string) => void; onToggle: (w: ExternalWorker) => void;
+}) {
+  const { t } = useI18n();
+  const { can } = useModuleAccess();
+  const [page, setPage] = useState(1);
+  const paged = rows.slice((page - 1) * 12, page * 12);
+  const th = "px-3 py-2 text-left text-xs font-bold uppercase text-muted-foreground";
+  return (
+    <div className="overflow-hidden rounded-lg border border-border bg-card">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border p-4">
+        <h2 className="flex items-center gap-2 font-body font-bold"><Users className="h-4 w-4" />{t("externalWorkers")} ({rows.length})</h2>
+        {can("payroll", "create") && <button type="button" onClick={onAdd} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-1.5 text-sm font-body font-bold"><Plus className="h-4 w-4" /> {t("newExternalWorker")}</button>}
+      </div>
+      {rows.length === 0 ? <p className="p-4 text-sm text-muted-foreground">{t("noExternalWorkers")}</p> : (
+      <div className="overflow-x-auto"><table className="w-full font-body text-sm">
+        <thead className="bg-secondary"><tr>
+          <th className={th}>{t("name")}</th><th className={th}>{t("workerTypeLabel")}</th><th className={th}>{t("specialty")}</th><th className={th}>{t("phone")}</th><th className={th}>{t("department")}</th><th className={th}>{t("active")}</th><th className={`${th} text-right`}>{t("actions")}</th>
+        </tr></thead>
+        <tbody>{paged.map((w) => (
+          <tr key={w.id} className={`border-t border-border ${w.active ? "" : "opacity-50"}`}>
+            <td className="px-3 py-2 text-foreground">{w.fullName}</td>
+            <td className="px-3 py-2">{t(EXTERNAL_TYPE_LABEL[w.workerType])}</td>
+            <td className="px-3 py-2">{w.specialty || "—"}</td><td className="px-3 py-2">{w.phone || "—"}</td>
+            <td className="px-3 py-2">{w.department || "—"}</td><td className="px-3 py-2">{w.active ? t("active") : "—"}</td>
+            <td className="px-3 py-2"><div className="flex justify-end gap-3">
+              {can("payroll", "edit") && <button type="button" onClick={() => onEdit(w.id)} aria-label={t("edit")}><Pencil className="h-4 w-4" /></button>}
+              {can("payroll", "edit") && <button type="button" onClick={() => onToggle(w)} aria-label={t("active")} className={w.active ? "text-destructive" : "text-primary"}><Power className="h-4 w-4" /></button>}
+            </div></td>
+          </tr>
+        ))}</tbody>
+      </table></div>)}
+      <Pagination total={rows.length} page={page} onPageChange={setPage} />
+    </div>
+  );
+}
