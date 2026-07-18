@@ -40,10 +40,10 @@ export function ExternalWorkerDetail({ worker, payments, onClose }: {
           <div className="flex justify-between text-xs font-bold text-muted-foreground"><span>{t("externalPayments")}</span>{money && <span>{t("totalPaid")}: {formatCurrency(total)}</span>}</div>
           {payments.length === 0 && <p className="text-muted-foreground">{t("noRecords")}</p>}
           {payments.map((p) => (
-            <div key={p.id} className="flex items-center justify-between gap-2">
-              <span>{p.date} · {p.paymentMethodLabel}</span>
-              <span className="flex items-center gap-2">{money && <span className="font-semibold">{formatCurrency(p.grossSalary || p.amount)}</span>}
-                {money && <button type="button" disabled={pdf.generating} onClick={() => void pdf.generatePdf("payroll", p.id)} aria-label={t("payslipPdf")} className="text-primary disabled:opacity-50"><FileDown className="h-4 w-4" /></button>}</span>
+            <div key={p.id} className="flex flex-wrap items-center justify-between gap-2 border-t border-border pt-2">
+              <span>{p.date} · {p.paymentMethodLabel}{money && ` · ${formatCurrency(p.grossSalary || p.amount)}`}</span>
+              {money && <button type="button" disabled={pdf.generating} onClick={() => void pdf.generatePdf("payroll", p.id)}
+                className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-sm font-bold disabled:opacity-50"><FileDown className="h-4 w-4" /> {pdf.generating ? t("generatingPdf") : t("payslipPdf")}</button>}
             </div>
           ))}
         </div>
