@@ -66,7 +66,7 @@ function PayrollPage() {
       </div>
       {editing !== null && <PayrollForm employees={emps} externals={externals} payCats={cats} preview={preview} initial={editing === "new" ? prefill : editRow} onSubmit={submit} onCancel={() => setEditing(null)} />}
       <PayrollTable rows={items.filter((i) => !i.externalWorkerId)} onView={setViewing} onEdit={onEdit} onDelete={onDelete} />
-      <ExternalWorkersTable rows={workers.items} paidOf={(id) => items.filter((i) => i.externalWorkerId === id).reduce((s, i) => s + (i.grossSalary || i.amount), 0)} onAdd={() => setManaging("new")} onPay={payWorker} onEdit={(id) => setManaging(id)} onToggle={(w) => void workers.update(w.id, { ...w, active: !w.active })} />
+      <ExternalWorkersTable rows={workers.items} paidOf={(id) => items.filter((i) => i.externalWorkerId === id).reduce((s, i) => s + (i.grossSalary || i.amount), 0)} onPay={payWorker} onEdit={(id) => setManaging(id)} onToggle={(w) => void workers.update(w.id, { ...w, active: !w.active })} />
       {viewItem && <PayrollDetail item={viewItem} onClose={() => setViewing(null)} />}
       {managing && <ExternalWorkersModal editId={managing === "new" ? undefined : managing} initial={managing === "new" ? undefined : workers.items.find((w) => w.id === managing)} onClose={() => setManaging(null)} onSaved={() => { setManaging(null); void workers.refresh(); }} onWorkerCreated={onWorkerCreated} />}
     </div>
