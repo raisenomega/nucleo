@@ -21,7 +21,7 @@ export const enAssets = {
   milesExcess: "Miles excess", flEmpty: "Empty", flQuarter: "1/4", flHalf: "1/2", flThreeQuarter: "3/4", flFull: "Full",
   chartMiles: "Miles per month", chartFuel: "Gallons per month", chartUseByEmployee: "Use by employee", assetReport: "Assets report", miles: "Miles",
   secGps: "GPS", gpsDeviceId: "Device ID", gpsProvider: "GPS provider", gps: "GPS", gpsReady: "Ready — connect GPS device",
-  generatePdf: "Generate PDF", routesDone: "Routes completed", printReceipt: "Print receipt",
+  generatePdf: "Generate PDF", routesDone: "Routes completed", printReceipt: "Print receipt", enterOdometer: "Enter the odometer", selectEmployee: "Select the employee",
   gpsTracking: "GPS tracking", gpsSearching: "Searching GPS signal", gpsTrack: "GPS track", distance: "Distance", avgSpeed: "Avg. speed", duration: "Duration", gpsPoints: "GPS points", viewRouteMap: "View route on map",
   gpsDeviceNote: "On iPhone, keep the app open during the route. For continuous tracking use a mounted Android tablet (disable battery saver).",
   liveLocation: "Live location", trackingLive: "Tracking live", noRecentData: "No recent data", updatedAgo: "Last update", currentSpeed: "Current speed", accuracy: "Accuracy", viewOnMap: "View on map", viewDayRoute: "View day route",

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useSession } from "@shared/providers/SessionProvider";
+import { useToast } from "@shared/providers/toast-context";
 import { ScreenModal } from "@shared/components/ScreenModal";
 import { EvidenceUpload } from "@finance/presentation/EvidenceUpload";
 import { supabaseAssetRepository } from "@assets/infrastructure/supabase-asset.repository";
@@ -12,13 +13,14 @@ import type { CheckinData } from "@assets/domain/asset.types";
 export function CheckinModal({ assetId, assetName, onSubmit, onClose }: {
   assetId: string; assetName: string; onSubmit: (d: CheckinData) => void; onClose: () => void;
 }) {
-  const { t } = useI18n(); const { session } = useSession();
+  const { t } = useI18n(); const { session } = useSession(); const toast = useToast();
   const [f, setF] = useState<CheckinData>({ odometer: null, fuelLevel: "half", gallons: null, route: "", stops: null, cargo: "", condition: "", notes: "", evidence: [] });
-  const [last, setLast] = useState<number | null>(null);
+  const [last, setLast] = useState<number | null>(null); const [errOdo, setErrOdo] = useState(false);
   useEffect(() => { void supabaseAssetRepository.listCustody(assetId).then((logs) => setLast(logs.find((l) => l.custodyType === "checkout")?.odometer ?? null)); }, [assetId]);
   const miles = f.odometer != null && last != null ? f.odometer - last : null;
   const fld = "w-full rounded-lg border border-border bg-background p-2 text-sm"; const lbl = "text-xs font-bold text-muted-foreground";
-  const go = (e: React.FormEvent) => { e.preventDefault(); onSubmit(f); };
+  // Validación VISIBLE (toast + borde rojo): el required nativo se ignora silenciosamente en móvil (#checkin-ux).
+  const go = (e: React.FormEvent) => { e.preventDefault(); if (f.odometer == null) { setErrOdo(true); return void toast.error(t("enterOdometer")); } onSubmit(f); };
   return (
     <ScreenModal onClose={onClose}>
       <div className="flex items-center justify-between border-b border-border p-4">
@@ -26,7 +28,7 @@ export function CheckinModal({ assetId, assetName, onSubmit, onClose }: {
         <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button>
       </div>
       <form onSubmit={go} className="grid grid-cols-1 gap-3 p-4 md:grid-cols-2">
-        <label className="space-y-1"><span className={lbl}>{t("odometer")}</span><input type="number" min="0" value={f.odometer ?? ""} onChange={(e) => setF({ ...f, odometer: e.target.value ? Number(e.target.value) : null })} className={fld} required /></label>
+        <label className="space-y-1"><span className={lbl}>{t("odometer")}</span><input type="number" min="0" value={f.odometer ?? ""} onChange={(e) => { const v = e.target.value ? Number(e.target.value) : null; setF({ ...f, odometer: v }); if (v != null) setErrOdo(false); }} className={errOdo ? fld.replace("border-border", "border-destructive") : fld} /></label>
         <div className="space-y-1"><span className={lbl}>{t("milesTraveled")}</span><p className={`rounded-lg border border-border p-2 text-sm ${miles != null && miles < 0 ? "text-destructive" : "font-semibold"}`}>{miles ?? "—"}</p></div>
         <label className="space-y-1"><span className={lbl}>{t("fuelLevel")}</span><select value={f.fuelLevel} onChange={(e) => setF({ ...f, fuelLevel: e.target.value })} className={fld}>{FUEL.map(([v, k]) => <option key={v} value={v}>{t(k)}</option>)}</select></label>
         <label className="space-y-1"><span className={lbl}>{t("gallons")}</span><input type="number" min="0" step="0.01" value={f.gallons ?? ""} onChange={(e) => setF({ ...f, gallons: e.target.value ? Number(e.target.value) : null })} className={fld} /></label>
