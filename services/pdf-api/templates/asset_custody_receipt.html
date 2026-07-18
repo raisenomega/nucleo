@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Recibo de custodia — {{ asset.name }}{% endblock %}
+
+{% block meta %}
+  <div class="doc-number">RECIBO DE CUSTODIA DE UNIDAD</div>
+  <div>{{ asset.name }}</div>
+{% endblock %}
+
+{% block content %}
+  <div class="box">
+    <strong>Datos de la unidad</strong><br>
+    {{ asset.name }} · {{ asset.asset_type }} · {{ asset.brand or '—' }} {{ asset.model or '' }} · Serial: {{ asset.serial_number or '—' }}
+  </div>
+
+  {% if checkout %}
+  <div class="box">
+    <strong>SALIDA (checkout)</strong><br>
+    Fecha: {{ checkout.custody_at[:16] }} · Empleado: {{ employee }}<br>
+    Odómetro: {{ checkout.odometer_reading or '—' }} · Gasolina: {{ checkout.fuel_level or '—' }} · GPS: {% if checkout.gps_enabled %}Activo{% else %}Inactivo{% endif %}<br>
+    Notas: {{ checkout.notes or '—' }} · Fotos al salir: {{ checkout.evidence_urls|default([], true)|length }}
+  </div>
+  {% endif %}
+
+  {% if checkin %}
+  <div class="box">
+    <strong>DEVOLUCIÓN (checkin)</strong><br>
+    Fecha: {{ checkin.custody_at[:16] }}<br>
+    Odómetro: {{ checkin.odometer_reading or '—' }} · Millas recorridas: {% if miles is not none %}{{ "%.0f"|format(miles) }}{% else %}—{% endif %} · Galones: {{ checkin.fuel_gallons or '—' }}<br>
+    Gasolina: {{ checkin.fuel_level or '—' }} · Paradas: {{ checkin.stops_count or '—' }}<br>
+    Ruta: {{ checkin.route_summary or '—' }}<br>
+    Carga: {{ checkin.cargo_description or '—' }} · Condición: {{ checkin.condition_notes or '—' }}<br>
+    Fotos al devolver: {{ checkin.evidence_urls|default([], true)|length }}
+  </div>
+  {% endif %}
+
+  <div style="margin-top:48px; display:flex; gap:40px;">
+    <div style="flex:1; border-top:1px solid #333; padding-top:6px;">Firma conductor</div>
+    <div style="flex:1; border-top:1px solid #333; padding-top:6px;">Firma supervisor</div>
+  </div>
+{% endblock %}

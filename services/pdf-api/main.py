@@ -8,7 +8,7 @@ from starlette.concurrency import run_in_threadpool
 from starlette.responses import Response
 
 from cors import is_allowed_origin
-from routes import evaluation, expense, extraordinary, income, invoice, lead, payroll, quote, reconciliation, report, route, training
+from routes import asset, evaluation, expense, extraordinary, income, invoice, lead, payroll, quote, reconciliation, report, route, training
 
 app = FastAPI(title="NÚCLEO pdf-api", docs_url=None, redoc_url=None)
 

@@ -1,7 +1,7 @@
 import { supabase } from "@shared/lib/supabase";
-import type { Asset, AssetFormData, MaintenanceLog, MaintenanceFormData, CustodyLog, CheckoutData, CheckinData, CustodyType, IAssetRepository, Result, AssetType, AssetCondition, AssetStatus, MaintenanceType } from "@assets/domain/asset.types";
+import type { Asset, AssetFormData, AssetRoute, MaintenanceLog, MaintenanceFormData, CustodyLog, CheckoutData, CheckinData, CustodyType, IAssetRepository, Result, AssetType, AssetCondition, AssetStatus, MaintenanceType } from "@assets/domain/asset.types";
 
-const SELECT = "id, name, asset_type, category, serial_number, model, brand, purchase_date, purchase_price, current_value, depreciation_method, depreciation_years, warranty_expires, condition, status, assigned_to, location, insurance_policy, insurance_expires, notes, image_url, is_active, assignee:profiles!tenant_assets_assigned_to_fkey(full_name)";
+const SELECT = "id, name, asset_type, category, serial_number, model, brand, purchase_date, purchase_price, current_value, depreciation_method, depreciation_years, warranty_expires, condition, status, assigned_to, location, insurance_policy, insurance_expires, notes, image_url, is_active, gps_enabled, gps_device_id, gps_provider, assignee:profiles!tenant_assets_assigned_to_fkey(full_name)";
 type Row = Record<string, unknown>;
 const s = (v: unknown) => (v as string | null) ?? "";
 const n = (v: unknown) => (v == null || v === "" ? null : Number(v));
@@ -14,6 +14,7 @@ const toAsset = (r: Row): Asset => ({
   assignedTo: (r.assigned_to as string) ?? null, assignedToName: ((r.assignee as { full_name?: string } | null)?.full_name) ?? "",
   location: s(r.location), insurancePolicy: s(r.insurance_policy), insuranceExpires: (r.insurance_expires as string) ?? null,
   notes: s(r.notes), imageUrl: s(r.image_url), active: !!r.is_active,
+  gpsEnabled: !!r.gps_enabled, gpsDeviceId: s(r.gps_device_id), gpsProvider: s(r.gps_provider),
 });
 const toRow = (d: AssetFormData) => ({
   name: d.name, asset_type: d.assetType, category: d.category || null, serial_number: d.serialNumber || null, model: d.model || null, brand: d.brand || null,
@@ -21,6 +22,7 @@ const toRow = (d: AssetFormData) => ({
   depreciation_method: d.depreciationMethod, depreciation_years: d.depreciationYears, warranty_expires: d.warrantyExpires || null,
   condition: d.condition, status: d.status, assigned_to: d.assignedTo, location: d.location || null,
   insurance_policy: d.insurancePolicy || null, insurance_expires: d.insuranceExpires || null, notes: d.notes || null, image_url: d.imageUrl || null, is_active: d.active,
+  gps_enabled: d.gpsEnabled, gps_device_id: d.gpsDeviceId || null, gps_provider: d.gpsProvider || null,
 });
 
 export const supabaseAssetRepository: IAssetRepository = {
@@ -59,5 +61,9 @@ export const supabaseAssetRepository: IAssetRepository = {
   async listCustody(assetId): Promise<CustodyLog[]> {
     const { data } = await supabase.from("asset_custody_log").select("id, employee_id, custody_type, custody_at, odometer_reading, fuel_level, fuel_type, fuel_gallons, gps_enabled, route_summary, cargo_description, stops_count, condition_notes, evidence_urls, notes, emp:profiles!asset_custody_log_employee_id_fkey(full_name)").eq("asset_id", assetId).order("custody_at", { ascending: false });
     return ((data as Row[] | null) ?? []).map((r) => ({ id: r.id as string, employeeId: r.employee_id as string, employeeName: ((r.emp as { full_name?: string } | null)?.full_name) ?? "", custodyType: r.custody_type as CustodyType, custodyAt: (r.custody_at as string) ?? "", odometer: n(r.odometer_reading), fuelLevel: s(r.fuel_level), fuelType: s(r.fuel_type), fuelGallons: n(r.fuel_gallons), gpsEnabled: !!r.gps_enabled, routeSummary: s(r.route_summary), cargoDescription: s(r.cargo_description), stopsCount: n(r.stops_count), conditionNotes: s(r.condition_notes), evidenceUrls: (r.evidence_urls as string[] | null) ?? [], notes: s(r.notes) }));
+  },
+  async listRoutes(assetId): Promise<AssetRoute[]> {
+    const { data } = await supabase.from("service_routes").select("id, route_date, status, route_stops(count)").eq("asset_id", assetId).is("deleted_at", null).order("route_date", { ascending: false });
+    return ((data as Row[] | null) ?? []).map((r) => ({ id: r.id as string, routeDate: (r.route_date as string) ?? "", status: s(r.status), stopsCount: Number((r.route_stops as { count?: number }[] | null)?.[0]?.count ?? 0) }));
   },
 };

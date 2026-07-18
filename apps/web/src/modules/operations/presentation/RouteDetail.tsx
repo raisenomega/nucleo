@@ -24,7 +24,7 @@ export function RouteDetail({ route, stops, employees, tenantId, onClose, onPay,
       <ScreenModal onClose={onClose}>
         <div className="flex items-start justify-between border-b border-border p-4">
           <div><h2 className="font-display text-lg font-bold text-foreground">{route.routeDate} · {emp}</h2>
-            <p className="text-xs text-muted-foreground">{route.status} · {route.completedCount}/{route.stopCount} {t("stopsCompleted")}</p></div>
+            <p className="text-xs text-muted-foreground">{route.status} · {route.completedCount}/{route.stopCount} {t("stopsCompleted")}{route.assetName && ` · ${t("vehicle")}: ${route.assetName}`}</p></div>
           <div className="flex items-center gap-3">
             <button type="button" disabled={pdf.generating} onClick={() => void pdf.generatePdf("route", route.id)} aria-label={t("routePdf")} className="text-muted-foreground hover:text-foreground disabled:opacity-50"><FileDown className="h-5 w-5" /></button>
             <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button></div>

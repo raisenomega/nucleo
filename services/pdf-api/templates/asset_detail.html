@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Ficha de activo — {{ asset.name }}{% endblock %}
+
+{% block meta %}
+  <div class="doc-number">FICHA DE ACTIVO</div>
+  <div>{{ asset.name }}</div>
+{% endblock %}
+
+{% block content %}
+  {% if asset.image_url %}<img src="{{ asset.image_url }}" style="max-height:150px; border-radius:6px; margin:8px 0;" alt="">{% endif %}
+  <table class="items"><tbody>
+    <tr><td class="muted">Tipo</td><td>{{ asset.asset_type }}{% if asset.category %} · {{ asset.category }}{% endif %}</td><td class="muted">Estado</td><td>{{ asset.status }}</td></tr>
+    <tr><td class="muted">Marca / Modelo</td><td>{{ asset.brand or '—' }} {{ asset.model or '' }}</td><td class="muted">Serial</td><td>{{ asset.serial_number or '—' }}</td></tr>
+    <tr><td class="muted">Compra</td><td>{{ asset.purchase_date or '—' }} · ${{ "%.2f"|format(asset.purchase_price or 0) }}</td><td class="muted">Valor actual</td><td>${{ "%.2f"|format(asset.current_value or 0) }}</td></tr>
+    <tr><td class="muted">Condición</td><td>{{ asset.condition }}</td><td class="muted">Ubicación</td><td>{{ asset.location or '—' }}</td></tr>
+    <tr><td class="muted">Asignado a</td><td>{{ assignee or '—' }}</td><td class="muted">Garantía / Seguro</td><td>{{ asset.warranty_expires or '—' }} / {{ asset.insurance_expires or '—' }}</td></tr>
+  </tbody></table>
+
+  <h3>Historial de uso ({{ uses }} usos · {{ "%.0f"|format(total_miles) }} millas)</h3>
+  <table class="items">
+    <thead><tr><th>Fecha</th><th>Empleado</th><th>Tipo</th><th class="num">Odómetro</th><th class="num">Millas</th><th class="num">Paradas</th><th>Notas</th></tr></thead>
+    <tbody>
+    {% for l in custody %}<tr><td>{{ l.custody_at[:10] }}</td><td>{{ l.emp }}</td><td>{{ l.custody_type }}</td><td class="num">{{ l.odometer_reading or '—' }}</td><td class="num">{% if l.miles is defined %}{{ "%.0f"|format(l.miles) }}{% else %}—{% endif %}</td><td class="num">{{ l.stops_count or '—' }}</td><td>{{ l.notes or '' }}</td></tr>{% endfor %}
+    {% if not custody %}<tr><td colspan="7" class="muted">Sin registros de custodia</td></tr>{% endif %}
+    </tbody>
+  </table>
+
+  <h3>Historial de mantenimiento</h3>
+  <table class="items">
+    <thead><tr><th>Fecha</th><th>Tipo</th><th>Descripción</th><th class="num">Costo</th><th>Próximo</th></tr></thead>
+    <tbody>
+    {% for m in maint %}<tr><td>{{ m.performed_at or '—' }}</td><td>{{ m.maintenance_type }}</td><td>{{ m.description or '' }}</td><td class="num">${{ "%.2f"|format(m.cost or 0) }}</td><td>{{ m.next_due or '—' }}</td></tr>{% endfor %}
+    {% if not maint %}<tr><td colspan="5" class="muted">Sin mantenimiento</td></tr>{% endif %}
+    </tbody>
+  </table>
+{% endblock %}

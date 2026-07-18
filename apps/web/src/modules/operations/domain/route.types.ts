@@ -5,6 +5,7 @@ export interface ServiceRoute {
   readonly id: string; readonly routeDate: string; readonly assignedTo: string;
   readonly status: string; readonly notes: string | null;
   readonly createdBy: string; readonly stopCount: number; readonly completedCount: number;
+  readonly assetId: string | null; readonly assetName: string;
   readonly deletedAt: string | null; readonly deletedBy: string | null; readonly deletedReason: string | null;
 }
 export interface RouteStop {
@@ -19,7 +20,7 @@ export interface RouteStop {
   readonly evidenceBefore: string[]; readonly evidenceAfter: string[];
 }
 // status NO va en el form: el estado del día se DERIVA de los stops (B.3.c/120). Ver deriveDayStatus.
-export interface RouteFormData { routeDate: string; assignedTo: string; notes: string; }
+export interface RouteFormData { routeDate: string; assignedTo: string; notes: string; assetId: string; }
 export interface StopFormData {
   clientName: string; address: string; city: string; serviceType: string;
   scheduledTime: string; estimatedAmount: number; notes: string; phone: string;

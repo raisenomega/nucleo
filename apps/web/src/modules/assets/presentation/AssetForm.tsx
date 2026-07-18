@@ -7,7 +7,7 @@ import type { TranslationKey } from "@shared/i18n";
 import { ASSET_TYPE, CONDITION, STATUS } from "@assets/presentation/asset-labels";
 import type { AssetFormData, ProfileRef, AssetType, AssetCondition, AssetStatus } from "@assets/domain/asset.types";
 
-const EMPTY: AssetFormData = { name: "", assetType: "equipment", category: "", serialNumber: "", model: "", brand: "", purchaseDate: null, purchasePrice: null, currentValue: null, depreciationMethod: "none", depreciationYears: null, warrantyExpires: null, condition: "good", status: "active", assignedTo: null, location: "", insurancePolicy: "", insuranceExpires: null, notes: "", imageUrl: "", active: true };
+const EMPTY: AssetFormData = { name: "", assetType: "equipment", category: "", serialNumber: "", model: "", brand: "", purchaseDate: null, purchasePrice: null, currentValue: null, depreciationMethod: "none", depreciationYears: null, warrantyExpires: null, condition: "good", status: "active", assignedTo: null, location: "", insurancePolicy: "", insuranceExpires: null, notes: "", imageUrl: "", active: true, gpsEnabled: false, gpsDeviceId: "", gpsProvider: "" };
 type StrKey = "category" | "serialNumber" | "model" | "brand" | "location" | "insurancePolicy" | "imageUrl";
 type NumKey = "purchasePrice" | "currentValue" | "depreciationYears";
 type DateKey = "purchaseDate" | "warrantyExpires" | "insuranceExpires";
@@ -45,6 +45,10 @@ export function AssetForm({ initial, profiles, onSubmit, onCancel }: {
         {txt("location", "location")}
         <p className={sec}>{t("secInsurance")}</p>
         {dt("warrantyExpires", "warrantyExpires")}{txt("insurancePolicy", "insurancePolicy")}{dt("insuranceExpires", "insuranceExpires")}
+        <p className={sec}>{t("secGps")}</p>
+        <label className="flex items-center gap-2 md:col-span-2"><input type="checkbox" checked={f.gpsEnabled} onChange={(e) => set({ gpsEnabled: e.target.checked })} /><span className={lbl}>{t("gpsEnabled")}</span></label>
+        {f.gpsEnabled && <label className="space-y-1"><span className={lbl}>{t("gpsDeviceId")}</span><input value={f.gpsDeviceId} onChange={(e) => set({ gpsDeviceId: e.target.value })} className={fld} /></label>}
+        {f.gpsEnabled && <label className="space-y-1"><span className={lbl}>{t("gpsProvider")}</span><input value={f.gpsProvider} onChange={(e) => set({ gpsProvider: e.target.value })} className={fld} placeholder="Samsara / Geotab" /></label>}
         <label className="space-y-1 md:col-span-2"><span className={lbl}>{t("notes")}</span><input value={f.notes} onChange={(e) => set({ notes: e.target.value })} className={fld} /></label>
       </div>
       <div className="flex gap-2">

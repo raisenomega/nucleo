@@ -20,4 +20,6 @@ export const esAssets = {
   routeSummary: "Resumen de ruta", stopsCount: "N° de paradas", cargoDescription: "Descripción de carga", conditionNotes: "Condición al devolver", exitPhotos: "Fotos al salir", returnPhotos: "Fotos al devolver",
   milesExcess: "Exceso de millas", flEmpty: "Vacío", flQuarter: "1/4", flHalf: "1/2", flThreeQuarter: "3/4", flFull: "Lleno",
   chartMiles: "Millas por mes", chartFuel: "Galones por mes", chartUseByEmployee: "Uso por empleado", assetReport: "Reporte activos", miles: "Millas",
+  secGps: "GPS", gpsDeviceId: "ID del dispositivo", gpsProvider: "Proveedor GPS", gps: "GPS", gpsReady: "Preparado — conectar dispositivo GPS",
+  generatePdf: "Generar PDF", routesDone: "Rutas realizadas", printReceipt: "Imprimir recibo",
 } satisfies Partial<Record<TranslationKey, string>>;

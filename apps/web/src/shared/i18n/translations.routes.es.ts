@@ -24,4 +24,5 @@ export const esRoutes = {
   cannotEditOthersRoute: "No puedes editar rutas de otros empleados",
   evidenceBefore: "Evidencia — Antes", evidenceAfter: "Evidencia — Después",
   evidenceRequired: "Sube al menos 1 foto antes y 1 después para completar",
+  assignedVehicle: "Vehículo asignado", vehicle: "Vehículo",
 } satisfies Partial<Record<TranslationKey, string>>;

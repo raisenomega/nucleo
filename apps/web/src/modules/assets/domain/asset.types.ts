@@ -15,9 +15,11 @@ export interface Asset {
   readonly assignedTo: string | null; readonly assignedToName: string;
   readonly location: string; readonly insurancePolicy: string; readonly insuranceExpires: string | null;
   readonly notes: string; readonly imageUrl: string; readonly active: boolean;
+  readonly gpsEnabled: boolean; readonly gpsDeviceId: string; readonly gpsProvider: string;
 }
 export type AssetFormData = Omit<Asset, "id" | "assignedToName">;
 export interface ProfileRef { readonly id: string; readonly name: string; }
+export interface AssetRoute { readonly id: string; readonly routeDate: string; readonly status: string; readonly stopsCount: number; }
 
 export interface MaintenanceLog {
   readonly id: string; readonly maintenanceType: MaintenanceType; readonly description: string;
@@ -44,4 +46,5 @@ export interface IAssetRepository {
   checkout(assetId: string, data: CheckoutData): Promise<Result<string | null, string>>;
   checkin(assetId: string, data: CheckinData): Promise<Result<string | null, string>>;
   listCustody(assetId: string): Promise<CustodyLog[]>;
+  listRoutes(assetId: string): Promise<AssetRoute[]>;
 }

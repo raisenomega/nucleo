@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
+import { Printer } from "lucide-react";
 import { Bar, BarChart, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { useI18n } from "@shared/i18n";
+import { usePdf } from "@shared/hooks/usePdf";
 import { supabaseAssetRepository } from "@assets/infrastructure/supabase-asset.repository";
 import type { CustodyLog } from "@assets/domain/asset.types";
 
@@ -9,6 +11,7 @@ const PIE = ["hsl(217 91% 60%)", "hsl(142 71% 45%)", "hsl(38 92% 50%)", "hsl(0 8
 // Historial de custodia: tabla + gráficos (millas/galones por mes, uso por empleado).
 export function AssetCustodyHistory({ assetId }: { assetId: string }) {
   const { t } = useI18n();
+  const { generatePdf, generating } = usePdf();
   const [logs, setLogs] = useState<CustodyLog[]>([]);
   useEffect(() => { void supabaseAssetRepository.listCustody(assetId).then(setLogs); }, [assetId]);
   const rows = useMemo(() => {
@@ -22,8 +25,8 @@ export function AssetCustodyHistory({ assetId }: { assetId: string }) {
       <p className="text-xs font-bold uppercase text-muted-foreground">{t("custodyHistory")}</p>
       {logs.length === 0 && <p className="text-sm text-muted-foreground">{t("noRecords")}</p>}
       {logs.length > 0 && <div className="overflow-x-auto"><table className="w-full text-sm">
-        <thead className="text-xs uppercase text-muted-foreground"><tr><th className="text-left">{t("date")}</th><th className="text-left">{t("employee")}</th><th className="text-left">{t("assetType")}</th><th className="text-right">{t("odometer")}</th><th className="text-right">{t("miles")}</th><th className="text-right">{t("stopsCount")}</th></tr></thead>
-        <tbody>{rows.slice().reverse().map((r) => (<tr key={r.id} className="border-t border-border"><td className="py-1">{r.custodyAt.slice(0, 10)}</td><td className="py-1">{r.employeeName}</td><td className="py-1">{r.custodyType === "checkout" ? t("checkout") : t("checkin")}</td><td className="py-1 text-right">{r.odometer ?? "—"}</td><td className={`py-1 text-right ${r.miles != null && r.miles < 0 ? "text-destructive" : ""}`}>{r.miles ?? "—"}</td><td className="py-1 text-right">{r.stopsCount ?? "—"}</td></tr>))}</tbody>
+        <thead className="text-xs uppercase text-muted-foreground"><tr><th className="text-left">{t("date")}</th><th className="text-left">{t("employee")}</th><th className="text-left">{t("assetType")}</th><th className="text-right">{t("odometer")}</th><th className="text-right">{t("miles")}</th><th className="text-right">{t("stopsCount")}</th><th></th></tr></thead>
+        <tbody>{rows.slice().reverse().map((r) => (<tr key={r.id} className="border-t border-border"><td className="py-1">{r.custodyAt.slice(0, 10)}</td><td className="py-1">{r.employeeName}</td><td className="py-1">{r.custodyType === "checkout" ? t("checkout") : t("checkin")}</td><td className="py-1 text-right">{r.odometer ?? "—"}</td><td className={`py-1 text-right ${r.miles != null && r.miles < 0 ? "text-destructive" : ""}`}>{r.miles ?? "—"}</td><td className="py-1 text-right">{r.stopsCount ?? "—"}</td><td className="py-1 text-right"><button type="button" disabled={generating} title={t("printReceipt")} onClick={() => void generatePdf("asset_custody", r.id)} className="text-muted-foreground hover:text-foreground disabled:opacity-50"><Printer className="h-4 w-4" /></button></td></tr>))}</tbody>
       </table></div>}
       {byMonth.length > 0 && <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
         <div className="rounded-lg border border-border p-2"><p className="text-xs text-muted-foreground">{t("chartMiles")} / {t("chartFuel")}</p><ResponsiveContainer width="100%" height={160}><BarChart data={byMonth}><XAxis dataKey="month" tick={{ fontSize: 11 }} /><YAxis tick={{ fontSize: 11 }} /><Tooltip /><Legend /><Bar dataKey="miles" name={t("miles")} fill="hsl(217 91% 60%)" /><Bar dataKey="gallons" name={t("gallons")} fill="hsl(142 71% 45%)" /></BarChart></ResponsiveContainer></div>

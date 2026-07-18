@@ -14,6 +14,7 @@ import type { RouteFormData, EditableStop, CompletePayload } from "@operations/d
 
 export const Route = createFileRoute("/_authenticated/routes")({ component: RoutesPage });
 type Emp = { id: string; full_name: string };
+type Vehicle = { id: string; name: string };
 
 function RoutesPage() {
   const { t } = useI18n();
@@ -22,9 +23,11 @@ function RoutesPage() {
   const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
   const m = useRoutes(supabaseRouteRepository, date);
   const [emps, setEmps] = useState<Emp[]>([]);
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [editing, setEditing] = useState<string | null>(null);
   const [viewing, setViewing] = useState<string | null>(null);
   useEffect(() => { void supabase.from("profiles").select("id, full_name").then(({ data }) => setEmps((data as Emp[] | null) ?? [])); }, []);
+  useEffect(() => { void supabase.from("tenant_assets").select("id, name").eq("asset_type", "vehicle").eq("is_active", true).in("status", ["active", "in_use"]).order("name").then(({ data }) => setVehicles((data as Vehicle[] | null) ?? [])); }, []);
 
   async function submit(d: RouteFormData, stops: EditableStop[]) {
     const editId = editing && editing !== "new" ? editing : null;
@@ -39,7 +42,7 @@ function RoutesPage() {
   const doMarkDone = (id: string) => void m.completeStop(id).then((r) => { if (!r.ok) window.alert(r.error); });
   if (!can("routes", "view")) return <Navigate to="/dashboard" />;
   const cur = m.routes.find((r) => r.id === editing);
-  const initial = cur ? { routeDate: cur.routeDate, assignedTo: cur.assignedTo, notes: cur.notes ?? "" } : undefined;
+  const initial = cur ? { routeDate: cur.routeDate, assignedTo: cur.assignedTo, notes: cur.notes ?? "", assetId: cur.assetId ?? "" } : undefined;
   const viewRoute = m.routes.find((r) => r.id === viewing);
   return (
     <div className="space-y-6 p-4 md:p-8">
@@ -50,7 +53,7 @@ function RoutesPage() {
           {can("routes", "create") && <button type="button" onClick={() => setEditing("new")} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-body font-bold"><Plus className="h-4 w-4" /> {t("newRoute")}</button>}
         </div>
       </div>
-      {editing !== null && <RouteForm key={editing} employees={emps} initial={initial}
+      {editing !== null && <RouteForm key={editing} employees={emps} vehicles={vehicles} initial={initial}
         initialStops={editing !== "new" ? m.stops : undefined} onSubmit={submit} onCancel={() => setEditing(null)} />}
       <RouteTable rows={m.routes} employees={emps} onView={(id) => { setViewing(id); m.setActive(id); }}
         onEdit={can("routes", "edit") ? (id) => { setEditing(id); m.setActive(id); } : undefined}

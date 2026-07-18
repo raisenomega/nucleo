@@ -6,10 +6,11 @@ import { RouteStopsEditor, emptyStop } from "@operations/presentation/RouteStops
 import type { RouteFormData, EditableStop, RouteStop } from "@operations/domain/route.types";
 
 type Emp = { id: string; full_name: string };
+type Vehicle = { id: string; name: string };
 const toEditable = (s: RouteStop): EditableStop => ({ id: s.id, clientName: s.clientName, address: s.address, city: s.city ?? "", serviceType: s.serviceType, scheduledTime: s.scheduledTime, estimatedAmount: s.estimatedAmount, notes: s.notes ?? "", phone: s.phone ?? "" });
 
-export function RouteForm({ employees, initial, initialStops, onSubmit, onCancel }: {
-  employees: Emp[]; initial?: RouteFormData; initialStops?: readonly RouteStop[];
+export function RouteForm({ employees, vehicles, initial, initialStops, onSubmit, onCancel }: {
+  employees: Emp[]; vehicles: Vehicle[]; initial?: RouteFormData; initialStops?: readonly RouteStop[];
   onSubmit: (d: RouteFormData, stops: EditableStop[]) => void; onCancel: () => void;
 }) {
   const { t } = useI18n();
@@ -17,7 +18,7 @@ export function RouteForm({ employees, initial, initialStops, onSubmit, onCancel
   const isServicio = session?.role === "servicio";
   const uid = session?.userId ?? "";
   const ownName = employees.find((e) => e.id === uid)?.full_name || session?.email || uid;
-  const [f, setF] = useState<RouteFormData>(initial ?? { routeDate: "", assignedTo: "", notes: "" });
+  const [f, setF] = useState<RouteFormData>(initial ?? { routeDate: "", assignedTo: "", notes: "", assetId: "" });
   const [stops, setStops] = useState<EditableStop[]>(initial ? [] : [emptyStop()]);
   useEffect(() => { if (initialStops && initialStops.length) setStops(initialStops.map(toEditable)); }, [initialStops]);
   const fld = "w-full rounded-lg border border-border bg-background p-2 text-sm";
@@ -46,6 +47,9 @@ export function RouteForm({ employees, initial, initialStops, onSubmit, onCancel
             : <select required value={f.assignedTo} onChange={(e) => setF({ ...f, assignedTo: e.target.value })} className={fld}>
                 <option value="">—</option>{employees.map((emp) => <option key={emp.id} value={emp.id}>{emp.full_name}</option>)}</select>}</label>
       </div>
+      <label className="block space-y-1"><span className={lbl}>{t("assignedVehicle")}</span>
+        <select value={f.assetId} onChange={(e) => setF({ ...f, assetId: e.target.value })} className={fld}>
+          <option value="">—</option>{vehicles.map((v) => <option key={v.id} value={v.id}>{v.name}</option>)}</select></label>
       <label className="block space-y-1"><span className={lbl}>{t("notes")}</span>
         <input value={f.notes} onChange={(e) => setF({ ...f, notes: e.target.value })} className={fld} /></label>
       <div className="space-y-1"><span className={lbl}>{t("routeStops")}</span><RouteStopsEditor stops={stops} onChange={setStops} /></div>

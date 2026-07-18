@@ -20,4 +20,6 @@ export const enAssets = {
   routeSummary: "Route summary", stopsCount: "Stops", cargoDescription: "Cargo description", conditionNotes: "Return condition", exitPhotos: "Exit photos", returnPhotos: "Return photos",
   milesExcess: "Miles excess", flEmpty: "Empty", flQuarter: "1/4", flHalf: "1/2", flThreeQuarter: "3/4", flFull: "Full",
   chartMiles: "Miles per month", chartFuel: "Gallons per month", chartUseByEmployee: "Use by employee", assetReport: "Assets report", miles: "Miles",
+  secGps: "GPS", gpsDeviceId: "Device ID", gpsProvider: "GPS provider", gps: "GPS", gpsReady: "Ready — connect GPS device",
+  generatePdf: "Generate PDF", routesDone: "Routes completed", printReceipt: "Print receipt",
 } satisfies Partial<Record<TranslationKey, string>>;

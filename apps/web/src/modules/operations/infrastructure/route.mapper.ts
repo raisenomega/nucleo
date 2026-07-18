@@ -1,7 +1,7 @@
 import type { ServiceRoute, RouteStop, StopFormData, StopPatch } from "@operations/domain/route.types";
 
 type SStat = { status: string; deleted_at: string | null };
-export type RRow = { id: string; route_date: string; assigned_to: string; status: string; notes: string | null; created_by: string; route_stops: SStat[]; deleted_at: string | null; deleted_by: string | null; deleted_reason: string | null };
+export type RRow = { id: string; route_date: string; assigned_to: string; status: string; notes: string | null; created_by: string; route_stops: SStat[]; asset_id: string | null; asset: { name: string } | null; deleted_at: string | null; deleted_by: string | null; deleted_reason: string | null };
 
 // Estado del día DERIVADO de los stops (B.3.c/120). VOID excluidos; 'No atendido' (No cobrado)
 // cuenta como completado. La columna service_routes.status queda vestigial (Camino 1).
@@ -24,6 +24,7 @@ export const toRoute = (r: RRow): ServiceRoute => {
     status: deriveDayStatus(r.route_stops ?? []),   // derivado; ignora r.status (vestigial)
     notes: r.notes, createdBy: r.created_by, stopCount: active.length,
     completedCount: active.filter((s) => DONE.has(s.status)).length,   // Completada + No cobrado
+    assetId: r.asset_id, assetName: r.asset?.name ?? "",
     deletedAt: r.deleted_at, deletedBy: r.deleted_by, deletedReason: r.deleted_reason,
   };
 };
