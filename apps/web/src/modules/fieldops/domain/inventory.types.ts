@@ -21,6 +21,7 @@ export interface InventoryItem {
   readonly shelf: string;
   readonly bin: string;
   readonly reorderPoint: number | null; readonly reorderQty: number | null;
+  readonly photoUrls: readonly string[];
 }
 
 export interface TransferData { readonly qty: number; readonly zone: string; readonly aisle: string; readonly shelf: string; readonly bin: string; readonly notes: string; }

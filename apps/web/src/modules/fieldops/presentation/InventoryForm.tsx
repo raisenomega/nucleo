@@ -1,16 +1,19 @@
 import { useState } from "react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
+import { ItemPhotoUploader } from "@fieldops/presentation/ItemPhotoUploader";
 import type { InventoryFormData, LandingProductRef } from "@fieldops/domain/inventory.types";
 import type { SupplierRef } from "@fieldops/domain/supplier.types";
 
-export function InventoryForm({ initial, landingProducts, suppliers, onSubmit, onCancel }: {
-  initial?: InventoryFormData; landingProducts: readonly LandingProductRef[]; suppliers: readonly SupplierRef[];
+export function InventoryForm({ initial, itemId, photoUrls, tenantId, landingProducts, suppliers, onSubmit, onCancel }: {
+  initial?: InventoryFormData; itemId?: string; photoUrls?: readonly string[]; tenantId: string;
+  landingProducts: readonly LandingProductRef[]; suppliers: readonly SupplierRef[];
   onSubmit: (d: InventoryFormData) => void;
   onCancel: () => void;
 }) {
   const { t } = useI18n();
   const { can } = useModuleAccess();
+  const [photos, setPhotos] = useState<string[]>([...(photoUrls ?? [])]);
   const [f, setF] = useState<InventoryFormData>(initial ?? { name: "", sku: "", stock: 0, unitCost: 0, minStock: 0, landingProductId: null, supplierId: null, warehouseZone: "", aisle: "", shelf: "", bin: "", reorderPoint: null, reorderQty: null });
   const field = "w-full rounded-lg border border-border bg-background p-2 font-body";
   const lbl = "text-xs font-bold text-muted-foreground";
@@ -31,6 +34,8 @@ export function InventoryForm({ initial, landingProducts, suppliers, onSubmit, o
           <input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} className={field} /></label>
         <label className="space-y-1"><span className={lbl}>{t("sku")}</span>
           <input value={f.sku} onChange={(e) => setF({ ...f, sku: e.target.value })} placeholder="ZAF-30GL-001" className={field} /></label>
+        <div className="space-y-1 md:col-span-2"><span className={lbl}>{t("itemPhotos")}</span>
+          {itemId ? <ItemPhotoUploader tenantId={tenantId} itemId={itemId} value={photos} onChange={setPhotos} /> : <p className="text-xs text-muted-foreground">{t("savePhotoHint")}</p>}</div>
         {num("stock", t("stock"))}
         {can("inventory", "cost") && num("unitCost", t("unitCost"))}
         {num("minStock", t("minStock"))}

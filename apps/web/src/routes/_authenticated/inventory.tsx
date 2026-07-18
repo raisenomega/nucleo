@@ -3,6 +3,7 @@ import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { Plus, FileText } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
+import { useSession } from "@shared/providers/SessionProvider";
 import { usePdf } from "@shared/hooks/usePdf";
 import { useInventory } from "@fieldops/application/useInventory.hook";
 import { useSuppliers } from "@fieldops/application/useSuppliers.hook";
@@ -25,6 +26,7 @@ export const Route = createFileRoute("/_authenticated/inventory")({ component: I
 function InventoryPage() {
   const { t } = useI18n();
   const { can } = useModuleAccess();
+  const { session } = useSession();
   const inv = useInventory(supabaseInventoryRepository);
   const sup = useSuppliers(supabaseSupplierRepository);
   const { movs, slow, high, now } = useInventoryAnalytics(inv.items);
@@ -58,7 +60,7 @@ function InventoryPage() {
       <InventoryKpis items={items} />
       <InventoryDashboard movs={movs} items={items} now={now} />
       <InventoryFilters filter={filter} search={search} onFilter={setFilter} onSearch={setSearch} />
-      {editing !== null && <InventoryForm key={editing} initial={editRow} landingProducts={landing} suppliers={sup.items} onSubmit={submit} onCancel={() => setEditing(null)} />}
+      {editing !== null && <InventoryForm key={editing} initial={editRow} itemId={editing !== "new" ? editing : undefined} photoUrls={items.find((i) => i.id === editing)?.photoUrls} tenantId={session?.tenantId ?? ""} landingProducts={landing} suppliers={sup.items} onSubmit={submit} onCancel={() => setEditing(null)} />}
       <InventoryItemsPanel inv={inv} rows={shown} movs={movs} now={now} suppliers={sup.items} slow={slow} high={high} reorder={reorder} onEdit={setEditing} onDelete={onDelete} />
       <InventorySuppliers items={sup.items} onSave={saveSupplier} onToggle={(s: Supplier) => void sup.update(s.id, { ...s, active: !s.active })} />
       <InventoryPurchaseOrders suppliers={sup.items} items={items} onChanged={inv.refresh} />

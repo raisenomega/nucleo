@@ -6,6 +6,7 @@ import { formatCurrency } from "@shared/lib/format";
 import { MobileCard } from "@shared/components/MobileCard";
 import { Pagination } from "@shared/components/Pagination";
 import { InventoryRowActions } from "@fieldops/presentation/InventoryRowActions";
+import { SignedPhotos } from "@fieldops/presentation/SignedPhotos";
 import { itemValue } from "@fieldops/application/inventory-analytics";
 import type { InventoryItem } from "@fieldops/domain/inventory.types";
 
@@ -37,7 +38,7 @@ export function InventoryTable({ rows, slow, high, reorder, onView, onEdit, onDe
           {rows.length === 0 && <tr><td colSpan={cost ? 10 : 8} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>}
           {visible.map((i) => (
             <tr key={i.id} onClick={() => onView(i.id)} className={`cursor-pointer border-t border-border hover:bg-secondary ${isLow(i) ? "bg-destructive/5" : ""}`}>
-              <td className="px-3 py-2"><span className="inline-flex flex-wrap items-center gap-1">{i.name}{i.landingProductId && <span title={t("inCatalogTooltip")} className="text-primary"><Globe className="h-3.5 w-3.5" /></span>}{slow?.has(i.id) && <span className="rounded bg-amber-500/10 px-1 text-xs text-amber-600">{t("slowStock")}</span>}{high?.has(i.id) && <span className="rounded bg-destructive/10 px-1 text-xs text-destructive">{t("highConsumption")}</span>}{reorder?.has(i.id) && <span className="rounded bg-orange-500/10 px-1 text-xs text-orange-600">{t("reorderBadge")}</span>}</span></td>
+              <td className="px-3 py-2"><span className="inline-flex flex-wrap items-center gap-1"><SignedPhotos paths={i.photoUrls.slice(0, 1)} />{i.name}{i.landingProductId && <span title={t("inCatalogTooltip")} className="text-primary"><Globe className="h-3.5 w-3.5" /></span>}{slow?.has(i.id) && <span className="rounded bg-amber-500/10 px-1 text-xs text-amber-600">{t("slowStock")}</span>}{high?.has(i.id) && <span className="rounded bg-destructive/10 px-1 text-xs text-destructive">{t("highConsumption")}</span>}{reorder?.has(i.id) && <span className="rounded bg-orange-500/10 px-1 text-xs text-orange-600">{t("reorderBadge")}</span>}</span></td>
               <td className="px-3 py-2 text-muted-foreground">{i.sku || "—"}</td>
               <td className="px-3 py-2 text-muted-foreground">{loc(i)}</td>
               <td className="px-3 py-2 text-right"><span className={`font-semibold ${isLow(i) ? "text-destructive" : ""}`}>{i.stock}</span>{isLow(i) && <AlertTriangle className="ml-1 inline h-3 w-3 text-destructive" />}</td>

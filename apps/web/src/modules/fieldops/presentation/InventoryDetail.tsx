@@ -5,6 +5,7 @@ import { formatCurrency } from "@shared/lib/format";
 import { ScreenModal } from "@shared/components/ScreenModal";
 import { InventoryMovements } from "@fieldops/presentation/InventoryMovements";
 import { InventoryItemCharts } from "@fieldops/presentation/InventoryItemCharts";
+import { SignedPhotos } from "@fieldops/presentation/SignedPhotos";
 import { consumption, itemValue, type RawMov } from "@fieldops/application/inventory-analytics";
 import type { InventoryItem } from "@fieldops/domain/inventory.types";
 
@@ -23,6 +24,7 @@ export function InventoryDetail({ item, movs, now, onClose }: { item: InventoryI
         <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button>
       </div>
       <div className="space-y-4 p-4 md:p-6">
+        {item.photoUrls.length > 0 && <SignedPhotos paths={item.photoUrls} size="lg" />}
         <dl className="space-y-1 font-body text-sm">
           <div className="text-xs font-bold uppercase text-muted-foreground">{t("itemData")}</div>
           {item.sku && row(t("sku"), item.sku)}
