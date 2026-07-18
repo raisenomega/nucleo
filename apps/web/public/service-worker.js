@@ -34,3 +34,35 @@ self.addEventListener("fetch", (event) => {
     ),
   );
 });
+
+// --- GPS Background Sync (Chrome/Android): descarga el buffer offline aunque la app esté cerrada. ---
+const GPS_DB = "nucleo_gps", GPS_STORE = "gps_offline_buffer";
+function gpsIdb(key, mode, action) {
+  return new Promise((resolve) => {
+    const o = indexedDB.open(GPS_DB, 1);
+    o.onupgradeneeded = () => { try { o.result.createObjectStore(GPS_STORE); } catch (_) { /* existe */ } };
+    o.onerror = () => resolve(null);
+    o.onsuccess = () => {
+      try {
+        const req = action(o.result.transaction(GPS_STORE, mode).objectStore(GPS_STORE), key);
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => resolve(null);
+      } catch (_) { resolve(null); }
+    };
+  });
+}
+async function flushGpsBuffer() {
+  const pts = await gpsIdb("all", "readonly", (s, k) => s.get(k));
+  const auth = await gpsIdb("auth", "readonly", (s, k) => s.get(k));
+  if (!pts || !pts.length || !auth) return;
+  const res = await fetch(`${auth.url}/rest/v1/rpc/batch_insert_gps_logs`, {
+    method: "POST",
+    headers: { apikey: auth.key, Authorization: `Bearer ${auth.token}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ p_logs: pts }),
+  });
+  if (res.ok) await gpsIdb("all", "readwrite", (s, k) => s.delete(k));
+  else throw new Error("gps sync retry"); // token vencido/red: el browser reintenta luego
+}
+self.addEventListener("sync", (event) => {
+  if (event.tag === "gps-sync") event.waitUntil(flushGpsBuffer());
+});

@@ -25,4 +25,8 @@ export const enAssets = {
   gpsTracking: "GPS tracking", gpsSearching: "Searching GPS signal", gpsTrack: "GPS track", distance: "Distance", avgSpeed: "Avg. speed", duration: "Duration", gpsPoints: "GPS points", viewRouteMap: "View route on map",
   gpsDeviceNote: "On iPhone, keep the app open during the route. For continuous tracking use a mounted Android tablet (disable battery saver).",
   liveLocation: "Live location", trackingLive: "Tracking live", noRecentData: "No recent data", updatedAgo: "Last update", currentSpeed: "Current speed", accuracy: "Accuracy", viewOnMap: "View on map", viewDayRoute: "View day route",
+  wakeOn: "screen kept on", wakeUnsupported: "keep the app open", gpsSynced: "GPS synced",
+  gpsNoteAndroid: "GPS will track even with the screen off. For best results, disable battery saver for this app.",
+  gpsNoteIos: "GPS only works with the app on screen. For continuous tracking, use a mounted Android tablet in the vehicle.",
+  gpsNoteDesktop: "GPS uses your computer's location (less accurate than a phone).",
 } satisfies Partial<Record<TranslationKey, string>>;

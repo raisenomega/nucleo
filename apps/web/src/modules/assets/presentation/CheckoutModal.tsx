@@ -1,17 +1,21 @@
 import { useState } from "react";
 import { X } from "lucide-react";
-import { useI18n } from "@shared/i18n";
+import { useI18n, type TranslationKey } from "@shared/i18n";
 import { useSession } from "@shared/providers/SessionProvider";
 import { ScreenModal } from "@shared/components/ScreenModal";
+import { detectPlatform } from "@shared/lib/platform";
 import { EvidenceUpload } from "@finance/presentation/EvidenceUpload";
 import { FUEL } from "@assets/presentation/asset-labels";
 import type { CheckoutData, ProfileRef } from "@assets/domain/asset.types";
+
+const NOTE: Record<string, TranslationKey> = { android: "gpsNoteAndroid", ios: "gpsNoteIos", desktop: "gpsNoteDesktop" };
 
 // Checkout: el empleado toma la unidad — odómetro/gasolina/GPS/fotos al salir.
 export function CheckoutModal({ assetName, profiles, onSubmit, onClose }: {
   assetName: string; profiles: readonly ProfileRef[]; onSubmit: (d: CheckoutData) => void; onClose: () => void;
 }) {
   const { t } = useI18n(); const { session } = useSession();
+  const noteKey = NOTE[detectPlatform()] ?? "gpsDeviceNote";
   const [f, setF] = useState<CheckoutData>({ employeeId: "", odometer: null, fuelLevel: "full", fuelType: "", gps: false, notes: "", evidence: [] });
   const fld = "w-full rounded-lg border border-border bg-background p-2 text-sm"; const lbl = "text-xs font-bold text-muted-foreground";
   const go = (e: React.FormEvent) => { e.preventDefault(); if (!f.employeeId) return; onSubmit(f); };
@@ -28,7 +32,7 @@ export function CheckoutModal({ assetName, profiles, onSubmit, onClose }: {
         <label className="space-y-1"><span className={lbl}>{t("fuelType")}</span><input value={f.fuelType} onChange={(e) => setF({ ...f, fuelType: e.target.value })} className={fld} /></label>
         <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={f.gps} onChange={(e) => setF({ ...f, gps: e.target.checked })} className="h-4 w-4" /> {t("gpsEnabled")}</label>
         <label className="space-y-1"><span className={lbl}>{t("notes")}</span><input value={f.notes} onChange={(e) => setF({ ...f, notes: e.target.value })} className={fld} /></label>
-        {f.gps && <p className="text-xs text-muted-foreground md:col-span-2">{t("gpsDeviceNote")}</p>}
+        {f.gps && <p className="text-xs text-muted-foreground md:col-span-2">{t(noteKey)}</p>}
         <div className="space-y-1 md:col-span-2"><span className={lbl}>{t("exitPhotos")}</span><EvidenceUpload tenantId={session?.tenantId ?? ""} value={f.evidence} onChange={(paths) => setF({ ...f, evidence: paths })} /></div>
         <div className="flex gap-2 md:col-span-2"><button type="submit" className="rounded-lg bg-primary text-primary-foreground px-4 py-2 font-body font-bold">{t("save")}</button><button type="button" onClick={onClose} className="rounded-lg bg-secondary text-foreground px-4 py-2 font-body">{t("cancel")}</button></div>
       </form>
