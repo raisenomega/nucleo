@@ -13,6 +13,7 @@ export interface InventoryItem {
   readonly sku: string;
   readonly avgCost: number;
   readonly supplierName: string;
+  readonly supplierId: string | null;
   readonly landingProductId: string | null;
   readonly lastRestockDate: string | null;
 }
@@ -23,12 +24,14 @@ export interface InventoryFormData {
   readonly unitCost: number;
   readonly minStock: number;
   readonly landingProductId: string | null;
+  readonly supplierId: string | null;
 }
 
 export interface RestockData {
   readonly quantity: number;
   readonly unitCost: number;
   readonly supplier: string;
+  readonly supplierId: string | null;
   readonly notes: string;
   readonly date: string;
 }

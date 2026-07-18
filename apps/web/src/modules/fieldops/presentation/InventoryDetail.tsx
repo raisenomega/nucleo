@@ -4,13 +4,15 @@ import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { formatCurrency } from "@shared/lib/format";
 import { ScreenModal } from "@shared/components/ScreenModal";
 import { InventoryMovements } from "@fieldops/presentation/InventoryMovements";
-import { InventoryChart } from "@fieldops/presentation/InventoryChart";
+import { InventoryItemCharts } from "@fieldops/presentation/InventoryItemCharts";
+import { consumption, type RawMov } from "@fieldops/application/inventory-analytics";
 import type { InventoryItem } from "@fieldops/domain/inventory.types";
 
-export function InventoryDetail({ item, onClose }: { item: InventoryItem; onClose: () => void }) {
+export function InventoryDetail({ item, movs, now, onClose }: { item: InventoryItem; movs: RawMov[]; now: Date; onClose: () => void }) {
   const { t } = useI18n();
   const { can } = useModuleAccess();
   const cost = can("inventory", "cost");
+  const cons = consumption(movs, item.id, now);
   const row = (label: string, v: string) => (
     <div><dt className="inline text-muted-foreground">{label}: </dt><dd className="inline">{v}</dd></div>
   );
@@ -31,7 +33,8 @@ export function InventoryDetail({ item, onClose }: { item: InventoryItem; onClos
           {item.supplierName && row(t("supplier"), item.supplierName)}
           {item.lastRestockDate && row(t("lastRestock"), item.lastRestockDate.slice(0, 10))}
         </dl>
-        <InventoryChart itemId={item.id} />
+        {cons.avg > 0 && <p className={`text-sm ${cons.high ? "font-bold text-destructive" : "text-muted-foreground"}`}>{t("consumeThisMonth")}: {cons.cur} ({t("average")}: {cons.avg.toFixed(1)}){cons.high && ` · ${t("highConsumption")}`}</p>}
+        <InventoryItemCharts item={item} movs={movs} now={now} />
         <InventoryMovements itemId={item.id} />
       </div>
     </ScreenModal>

@@ -18,4 +18,9 @@ export const enInventory = {
   filterAll: "All", filterLow: "Low stock", filterCatalog: "In catalog", filterNoStock: "Out of stock",
   value: "Value", itemData: "Item data", movIns: "Ins", movOuts: "Outs",
   adjustStock: "Adjust stock", newQuantity: "New quantity", registerShrinkage: "Register shrinkage", lostQuantity: "Lost quantity",
+  suppliers: "Suppliers", newSupplier: "New supplier", leadTime: "Lead time (days)", paymentTerms: "Payment terms",
+  supplierMain: "Main supplier", noSuppliers: "No suppliers",
+  slowStock: "Slow stock", highConsumption: "High consumption", consumeThisMonth: "This month", average: "average",
+  chartConsumeRestock: "Consumption vs Restock", chartInvValue: "Inventory value", chartTopConsumed: "Top 5 consumed",
+  chartCumCost: "Cumulative cost", chartStockTrend: "Stock trend",
 } satisfies Partial<Record<TranslationKey, string>>;

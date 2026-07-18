@@ -12,22 +12,22 @@ interface MovRow {
 interface Row {
   id: string; tenant_id: string; name: string;
   stock: number | string; unit_cost: number | string; min_stock: number | string;
-  sku: string | null; avg_cost: number | string; supplier_name: string | null; landing_product_id: string | null; last_restock_date: string | null;
+  sku: string | null; avg_cost: number | string; supplier_name: string | null; supplier_id: string | null; landing_product_id: string | null; last_restock_date: string | null;
 }
 
-const SELECT = "id, tenant_id, name, stock, unit_cost, min_stock, sku, avg_cost, supplier_name, landing_product_id, last_restock_date";
+const SELECT = "id, tenant_id, name, stock, unit_cost, min_stock, sku, avg_cost, supplier_name, supplier_id, landing_product_id, last_restock_date";
 
 function toItem(r: Row): InventoryItem {
   return {
     id: r.id, tenantId: r.tenant_id, name: r.name,
     stock: Number(r.stock), unitCost: Number(r.unit_cost), minStock: Number(r.min_stock), sku: r.sku ?? "",
-    avgCost: Number(r.avg_cost), supplierName: r.supplier_name ?? "",
+    avgCost: Number(r.avg_cost), supplierName: r.supplier_name ?? "", supplierId: r.supplier_id,
     landingProductId: r.landing_product_id, lastRestockDate: r.last_restock_date,
   };
 }
 
 function toRow(d: InventoryFormData) {
-  return { name: d.name, stock: d.stock, unit_cost: d.unitCost, min_stock: d.minStock, landing_product_id: d.landingProductId };
+  return { name: d.name, stock: d.stock, unit_cost: d.unitCost, min_stock: d.minStock, landing_product_id: d.landingProductId, supplier_id: d.supplierId };
 }
 
 async function rpcId(fn: string, args: object): Promise<Result<string | null, string>> {
@@ -56,7 +56,7 @@ export const supabaseInventoryRepository: IInventoryRepository = {
     if (error) return { ok: false, error: error.message };
     return { ok: true, value: null };
   },
-  restock(itemId, d) { return rpcId("record_restock", { p_item_id: itemId, p_quantity: d.quantity, p_unit_cost: d.unitCost, p_supplier: d.supplier || null, p_notes: d.notes || null, p_date: d.date || undefined }); },
+  restock(itemId, d) { return rpcId("record_restock", { p_item_id: itemId, p_quantity: d.quantity, p_unit_cost: d.unitCost, p_supplier: d.supplier || null, p_notes: d.notes || null, p_date: d.date || undefined, p_supplier_id: d.supplierId || null }); },
   adjust(itemId, newQty, reason) { return rpcId("record_adjustment", { p_item_id: itemId, p_new_qty: newQty, p_reason: reason || null }); },
   shrink(itemId, qty, reason) { return rpcId("record_shrinkage", { p_item_id: itemId, p_qty: qty, p_reason: reason || null }); },
   async listMovements(itemId): Promise<InventoryMovement[]> {

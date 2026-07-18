@@ -3,15 +3,16 @@ import { X } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { ScreenModal } from "@shared/components/ScreenModal";
 import type { InventoryItem, RestockData } from "@fieldops/domain/inventory.types";
+import type { SupplierRef } from "@fieldops/domain/supplier.types";
 
 const today = () => new Date().toISOString().slice(0, 10);
 
 // Reposición de inventario: entrada con cantidad/costo/proveedor/fecha → RPC record_restock (avg ponderado + gasto auto).
-export function RestockModal({ item, onSubmit, onClose }: {
-  item: InventoryItem; onSubmit: (d: RestockData) => void; onClose: () => void;
+export function RestockModal({ item, suppliers, onSubmit, onClose }: {
+  item: InventoryItem; suppliers: readonly SupplierRef[]; onSubmit: (d: RestockData) => void; onClose: () => void;
 }) {
   const { t } = useI18n();
-  const [f, setF] = useState<RestockData>({ quantity: 1, unitCost: item.unitCost || 0, supplier: item.supplierName, notes: "", date: today() });
+  const [f, setF] = useState<RestockData>({ quantity: 1, unitCost: item.unitCost || 0, supplier: item.supplierName, supplierId: item.supplierId, notes: "", date: today() });
   const field = "w-full rounded-lg border border-border bg-background p-2 font-body";
   const lbl = "text-xs font-bold text-muted-foreground";
   const go = (e: React.FormEvent) => { e.preventDefault(); if (f.quantity < 1 || f.unitCost <= 0) return; onSubmit(f); };
@@ -27,7 +28,9 @@ export function RestockModal({ item, onSubmit, onClose }: {
         <label className="space-y-1"><span className={lbl}>{t("unitCost")}</span>
           <input type="number" min="0.01" step="0.01" value={f.unitCost || ""} onChange={(e) => setF({ ...f, unitCost: Number(e.target.value) })} className={field} required /></label>
         <label className="space-y-1"><span className={lbl}>{t("supplier")}</span>
-          <input value={f.supplier} onChange={(e) => setF({ ...f, supplier: e.target.value })} className={field} /></label>
+          <select value={f.supplierId ?? ""} onChange={(e) => { const s = suppliers.find((x) => x.id === e.target.value); setF({ ...f, supplierId: e.target.value || null, supplier: s?.name ?? "" }); }} className={field}>
+            <option value="">— {t("unlinked")} —</option>{suppliers.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
+          </select></label>
         <label className="space-y-1"><span className={lbl}>{t("date")}</span>
           <input type="date" value={f.date} onChange={(e) => setF({ ...f, date: e.target.value })} className={field} /></label>
         <label className="space-y-1 md:col-span-2"><span className={lbl}>{t("notes")}</span>

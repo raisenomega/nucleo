@@ -18,4 +18,9 @@ export const esInventory = {
   filterAll: "Todos", filterLow: "Stock bajo", filterCatalog: "En catálogo", filterNoStock: "Sin stock",
   value: "Valor", itemData: "Datos del item", movIns: "Entradas", movOuts: "Salidas",
   adjustStock: "Ajustar stock", newQuantity: "Nueva cantidad", registerShrinkage: "Registrar merma", lostQuantity: "Cantidad perdida",
+  suppliers: "Proveedores", newSupplier: "Nuevo proveedor", leadTime: "Lead time (días)", paymentTerms: "Términos de pago",
+  supplierMain: "Proveedor principal", noSuppliers: "Sin proveedores",
+  slowStock: "Stock lento", highConsumption: "Consumo alto", consumeThisMonth: "Consumo este mes", average: "promedio",
+  chartConsumeRestock: "Consumo vs Reposición", chartInvValue: "Valor de inventario", chartTopConsumed: "Top 5 consumidos",
+  chartCumCost: "Costo acumulado", chartStockTrend: "Tendencia de stock",
 } satisfies Partial<Record<TranslationKey, string>>;
