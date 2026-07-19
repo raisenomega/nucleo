@@ -29,6 +29,7 @@ function Guard() {
     );
   }
   if (!session) return <Navigate to="/login" />;
+  if (!session.tenantId && !session.role) return <Navigate to="/portal" />; // customer (sin claims de staff) → portal
   // ToastProvider debe envolver a BrandProvider: el guard cross-tenant (D6) usa useToast.
   return (
     <ToastProvider>
