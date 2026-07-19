@@ -25,6 +25,7 @@ export const ACCESS_MODULES: { key: string; label: string; crud: Perm[]; note: s
   { key: "billing", label: "Facturación", crud: ALL, note: "facturas + planes (ceo/coo)" },
   { key: "quotes", label: "Cotizaciones", crud: ALL, note: "lead→quote→invoice (ceo/coo)" },
   { key: "orders", label: "Órdenes", crud: [...ALL], note: "órdenes web (ceo/coo)" },
+  { key: "customers", label: "Portal cliente", crud: ["view", "edit"], note: "clientes del portal (ceo/coo)" },
   { key: "reports", label: "Reportes", crud: ["view"], note: "operaciones = solo su rendimiento" },
   { key: "evaluations", label: "Evaluaciones", crud: ALL, note: "desempeño (ceo/coo)" },
   { key: "observations", label: "Observaciones", crud: ALL, note: "coaching (ceo/coo)" },

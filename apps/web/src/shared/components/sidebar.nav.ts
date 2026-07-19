@@ -10,7 +10,7 @@ import type { TranslationKey } from "@shared/i18n";
 // Solo las rutas ya construidas llevan `to`; el resto se renderiza deshabilitado.
 // Solo rutas con archivo real (TanStack <Link to> valida contra rutas generadas). Las rutas landing
 // futuras (products/services/packages/faqs/…) se agregan acá cuando exista su archivo (Sesión 3.b+).
-type EnabledPath = "/dashboard" | "/routes" | "/income" | "/expenses" | "/extraordinary" | "/payroll" | "/inventory" | "/leads" | "/marketing" | "/reconciliation" | "/recurring" | "/accounts-receivable" | "/billing" | "/quotes" | "/reports" | "/evaluations" | "/observations" | "/training" | "/support" | "/documents" | "/settings" | "/settings/agenda" | "/agenda" | "/orders" | "/assets" | "/notifications"
+type EnabledPath = "/dashboard" | "/routes" | "/income" | "/expenses" | "/extraordinary" | "/payroll" | "/inventory" | "/leads" | "/marketing" | "/reconciliation" | "/recurring" | "/accounts-receivable" | "/billing" | "/quotes" | "/reports" | "/evaluations" | "/observations" | "/training" | "/support" | "/documents" | "/settings" | "/settings/agenda" | "/agenda" | "/orders" | "/assets" | "/notifications" | "/customers"
   | "/settings/landing/config" | "/settings/landing/categories" | "/settings/landing/products" | "/settings/landing/services" | "/settings/landing/packages" | "/settings/landing/testimonials" | "/settings/landing/faqs" | "/settings/landing/order-forms" | "/settings/landing/service-pages" | "/settings/landing/coupons";
 // mod = clave de módulo para el gate (can(mod,"view")). Items sin mod = "próximamente" (solo roadmap coo/ceo).
 export type NavItem = { key: TranslationKey; icon: LucideIcon; to?: EnabledPath; mod?: string };
@@ -31,7 +31,7 @@ export const SECTIONS: NavSection[] = [
   { title: "salesCrm", icon: Store, items: [
     { key: "leads", icon: UserPlus, to: "/leads", mod: "leads" }, { key: "marketing", icon: Megaphone, to: "/marketing", mod: "marketing" },
     { key: "orders", icon: ShoppingCart, to: "/orders", mod: "orders" }, { key: "quotes", icon: FileText, to: "/quotes", mod: "quotes" },
-    { key: "portal", icon: Home }, { key: "documents", icon: FileCheck, to: "/documents", mod: "documents" },
+    { key: "portal", icon: Home, to: "/customers", mod: "customers" }, { key: "documents", icon: FileCheck, to: "/documents", mod: "documents" },
   ] },
   { title: "management", icon: Briefcase, items: [
     { key: "evaluations", icon: ClipboardCheck, to: "/evaluations", mod: "evaluations" },
