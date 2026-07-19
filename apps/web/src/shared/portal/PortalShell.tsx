@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Outlet, Link, useNavigate } from "@tanstack/react-router";
-import { LogOut, Sun, Moon, User, Settings } from "lucide-react";
+import { LogOut, Sun, Moon, User, Settings, Menu } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { PortalNav } from "@shared/portal/PortalNav";
+import { PortalMobileDrawer } from "@shared/portal/PortalMobileDrawer";
 import { PortalNotifBell } from "@shared/portal/PortalNotifBell";
 import { signOutCustomer } from "@shared/portal/portal-auth";
 import { applySavedTheme, toggleTheme, isDark } from "@shared/portal/portal-theme";
@@ -15,6 +16,7 @@ export function PortalShell({ customer, logoUrl, displayName }: { customer: Cust
   const nav = useNavigate();
   const [dark, setDark] = useState(false);
   const [exp, setExp] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   useEffect(() => { applySavedTheme(); setDark(isDark()); }, []);
   useEffect(() => { if (customer.language === "es" || customer.language === "en") setLocale(customer.language); }, [customer.language, setLocale]);
   const out = async () => { await signOutCustomer(); void nav({ to: "/portal/login" }); };
@@ -38,6 +40,7 @@ export function PortalShell({ customer, logoUrl, displayName }: { customer: Cust
       </aside>
       <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
         <header className="sticky top-0 z-30 flex items-center gap-2 border-b border-border bg-background p-3">
+          <button type="button" onClick={() => setMenuOpen(true)} aria-label={t("menu")} className={`${ico} md:hidden`}><Menu className="h-5 w-5" /></button>
           <span className="truncate font-display font-bold md:hidden">{displayName}</span>
           <div className="flex-1" />
           <button type="button" onClick={flip} aria-label={t("pTheme")} className={ico}>{dark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}</button>
@@ -49,6 +52,7 @@ export function PortalShell({ customer, logoUrl, displayName }: { customer: Cust
         <div className="flex-1 p-4 pb-24 md:p-6 md:pb-6"><Outlet /></div>
       </main>
       <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background md:hidden"><PortalNav variant="bottom" /></nav>
+      <PortalMobileDrawer open={menuOpen} onClose={() => setMenuOpen(false)} onLogout={() => void out()} logoUrl={logoUrl} displayName={displayName} />
     </div>
   );
 }

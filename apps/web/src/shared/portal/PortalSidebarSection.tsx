@@ -6,7 +6,7 @@ import { PortalNavLink } from "@shared/portal/PortalNavLink";
 import type { PortalSection } from "@shared/portal/portal.nav";
 
 // Sección acordeón del sidebar del portal (patrón SidebarSection admin). Auto-abre si un hijo es la ruta activa.
-export function PortalSidebarSection({ section, expanded }: { section: PortalSection; expanded: boolean }) {
+export function PortalSidebarSection({ section, expanded, onNavigate }: { section: PortalSection; expanded: boolean; onNavigate?: () => void }) {
   const { t } = useI18n();
   const { pathname } = useLocation();
   const Icon = section.icon;
@@ -28,7 +28,7 @@ export function PortalSidebarSection({ section, expanded }: { section: PortalSec
       </button>
       {open && (
         <div className="mt-1 space-y-1 pl-2">
-          {section.items.map((n) => <PortalNavLink key={n.key} item={n} label={t(n.key)} active={pathname === n.to} expanded />)}
+          {section.items.map((n) => <PortalNavLink key={n.key} item={n} label={t(n.key)} active={pathname === n.to} expanded onNavigate={onNavigate} />)}
         </div>
       )}
     </div>

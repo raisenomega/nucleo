@@ -4,7 +4,7 @@ import type { PortalNavItem } from "@shared/portal/portal.nav";
 
 // Ítem-hoja del sidebar del portal: icono + label (si expandido) + check activo (patrón SidebarSection admin).
 // Colapsado (expanded=false) = solo el icono centrado, con el label como title (tooltip).
-export function PortalNavLink({ item, label, active, expanded }: { item: PortalNavItem; label: string; active: boolean; expanded: boolean }) {
+export function PortalNavLink({ item, label, active, expanded, onNavigate }: { item: PortalNavItem; label: string; active: boolean; expanded: boolean; onNavigate?: () => void }) {
   const cls = `flex items-center gap-3 rounded-lg px-3 py-2 text-sm ${active ? "bg-secondary font-medium" : "hover:bg-secondary"} ${expanded ? "" : "justify-center"}`;
   const inner = (
     <>
@@ -14,6 +14,6 @@ export function PortalNavLink({ item, label, active, expanded }: { item: PortalN
     </>
   );
   return item.to
-    ? <Link to={item.to} title={label} className={cls}>{inner}</Link>
-    : <a href={item.href} title={label} className={cls}>{inner}</a>;
+    ? <Link to={item.to} onClick={onNavigate} title={label} className={cls}>{inner}</Link>
+    : <a href={item.href} onClick={onNavigate} title={label} className={cls}>{inner}</a>;
 }

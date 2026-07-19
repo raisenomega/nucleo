@@ -6,7 +6,7 @@ import { PortalNavLink } from "@shared/portal/PortalNavLink";
 
 // Navegación del portal: sidebar acordeón (side: Inicio → secciones → Soporte, con estado colapsado/expandido)
 // o barra inferior mobile (bottom, 3 ítems). PortalSidebarSection solo se usa en side, nunca en bottom.
-export function PortalNav({ variant, expanded = true }: { variant: "side" | "bottom"; expanded?: boolean }) {
+export function PortalNav({ variant, expanded = true, onNavigate }: { variant: "side" | "bottom"; expanded?: boolean; onNavigate?: () => void }) {
   const { t } = useI18n();
   const { pathname } = useLocation();
   if (variant === "bottom") return (
@@ -19,11 +19,11 @@ export function PortalNav({ variant, expanded = true }: { variant: "side" | "bot
   );
   return (
     <nav className="flex flex-1 flex-col gap-1 overflow-y-auto p-2">
-      <PortalNavLink item={PORTAL_HOME} label={t(PORTAL_HOME.key)} active={pathname === PORTAL_HOME.to} expanded={expanded} />
+      <PortalNavLink item={PORTAL_HOME} label={t(PORTAL_HOME.key)} active={pathname === PORTAL_HOME.to} expanded={expanded} onNavigate={onNavigate} />
       <div className="my-1 border-t border-border" />
-      {PORTAL_SECTIONS.map((s) => <PortalSidebarSection key={s.key} section={s} expanded={expanded} />)}
+      {PORTAL_SECTIONS.map((s) => <PortalSidebarSection key={s.key} section={s} expanded={expanded} onNavigate={onNavigate} />)}
       <div className="my-1 border-t border-border" />
-      <PortalNavLink item={PORTAL_SUPPORT} label={t(PORTAL_SUPPORT.key)} active={pathname === PORTAL_SUPPORT.to} expanded={expanded} />
+      <PortalNavLink item={PORTAL_SUPPORT} label={t(PORTAL_SUPPORT.key)} active={pathname === PORTAL_SUPPORT.to} expanded={expanded} onNavigate={onNavigate} />
     </nav>
   );
 }
