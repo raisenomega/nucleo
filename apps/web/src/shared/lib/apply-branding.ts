@@ -18,7 +18,7 @@ export function applyBranding(b: { tenantId: string; displayName: string; legalN
   const root = document.documentElement.style;
   for (const k in vars) root.setProperty(k, vars[k]!);
   document.title = b.displayName || b.legalName || "Portal";
-  if (b.faviconUrl) { clearStaticIcons(); setFavicon(b.faviconUrl); }
+  if (b.faviconUrl) setFavicon(b.faviconUrl);
   else if (b.theme.primaryColor) applyFavicon(b.theme.primaryColor, b.displayName || b.legalName);
   if (!localStorage.getItem("theme")) document.documentElement.classList.toggle("dark", resolveMode(b.theme.defaultMode));
   try {
@@ -39,16 +39,13 @@ function applyFavicon(color: string, name: string): void {
   setFavicon(c.toDataURL("image/png"));
 }
 
-// Neutraliza los <link rel=icon> estáticos (SVG/ICO de NÚCLEO) quitándoles rel (sin removeChild →
-// no rompe hidratación) para que el browser no los prefiera sobre el favicon propio del tenant.
-function clearStaticIcons(): void {
-  document.querySelectorAll("link[rel~='icon']:not([data-dynamic-icon])").forEach((l) => l.removeAttribute("rel"));
-}
-
-// Usa UN link dedicado (data-dynamic-icon), appendeado al final para que el browser lo prefiera.
-// Nunca hace remove() de los <link rel=icon> que gestiona React (HeadContent) → evita "removeChild of
-// null" durante la hidratación (Fix 3, Fase 2). Idempotente: reusa el link en llamadas siguientes.
+// Repunta los <link rel=icon> estáticos (SVG/ICO de NÚCLEO) al favicon del tenant en vez de solo quitarles
+// rel: si se quitaba el rel, el browser caía al /favicon.ico por convención (= ícono NÚCLEO). Sin removeChild
+// (no rompe hidratación). Además mantiene UN link dedicado (data-dynamic-icon) appendeado al final.
 function setFavicon(href: string): void {
+  document.querySelectorAll<HTMLLinkElement>("link[rel~='icon']:not([data-dynamic-icon])").forEach((l) => {
+    l.removeAttribute("type"); l.removeAttribute("sizes"); l.href = href;
+  });
   let link = document.querySelector<HTMLLinkElement>("link[data-dynamic-icon]");
   if (!link) {
     link = document.createElement("link");
