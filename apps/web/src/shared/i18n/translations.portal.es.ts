@@ -20,4 +20,8 @@ export const esPortal = {
   pReschedule: "Reagendar", pCancelAppt: "Cancelar", pCancelApptQ: "¿Cancelar esta cita?", pNoAppointments: "No tienes citas", pReorder: "Reordenar", pReorderCreated: "Nueva orden creada",
   pToReview: "Por evaluar", pEvaluate: "Evaluar", pMyReviews: "Mis evaluaciones", pNoReviews: "Aún no has evaluado", pComment: "Comentario", pRecommendQ: "¿Recomendarías este servicio?", pBusinessReply: "Respuesta del negocio",
   pNewTicket: "Nuevo ticket", pNoTickets: "No tienes tickets", pSubject: "Asunto", pDescription: "Descripción", pReply: "Escribe un mensaje", pSend: "Enviar",
+  pChangePassword: "Cambiar contraseña", pNewPassword: "Nueva contraseña", pPasswordShort: "Mínimo 6 caracteres", pNotifPref: "Preferencia de notificaciones",
+  pTheme: "Tema", pThemeLight: "Claro", pThemeDark: "Oscuro", pThemeAuto: "Automático", pInstall: "Instalar app", pInstallApp: "Instalar en mi dispositivo",
+  pMyData: "Mis datos", pExportData: "Descargar mis datos", pDangerZone: "Zona de peligro", pDeleteAccount: "Eliminar mi cuenta", pDeleteQ: "¿Eliminar tu cuenta? Perderás el acceso al portal.",
+  pNotifEmail: "Email", pNotifPush: "Push", pNotifBoth: "Ambos", pNotifNone: "Ninguna", pDeactivated: "Cuenta desactivada", pDeactivatedMsg: "Tu cuenta fue desactivada. Contacta al negocio para reactivarla.",
 } satisfies Partial<Record<TranslationKey, string>>;

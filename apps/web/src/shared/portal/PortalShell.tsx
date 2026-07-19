@@ -1,15 +1,19 @@
+import { useEffect } from "react";
 import { Outlet, useNavigate } from "@tanstack/react-router";
 import { LogOut } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { PortalNav } from "@shared/portal/PortalNav";
 import { PortalNotifBell } from "@shared/portal/PortalNotifBell";
 import { signOutCustomer } from "@shared/portal/portal-auth";
+import { applySavedTheme } from "@shared/portal/portal-theme";
 import type { CustomerProfile } from "@shared/portal/customer.types";
 
 // Layout del portal: header (logo tenant + nombre + salir) + sidebar desktop + barra inferior mobile + Outlet.
 export function PortalShell({ customer, logoUrl, displayName }: { customer: CustomerProfile; logoUrl: string | null; displayName: string }) {
-  const { t } = useI18n();
+  const { t, setLocale } = useI18n();
   const nav = useNavigate();
+  useEffect(() => { applySavedTheme(); }, []);
+  useEffect(() => { if (customer.language === "es" || customer.language === "en") setLocale(customer.language); }, [customer.language, setLocale]);
   const out = async () => { await signOutCustomer(); void nav({ to: "/portal/login" }); };
   return (
     <div className="min-h-screen bg-background text-foreground">

@@ -20,4 +20,8 @@ export const enPortal = {
   pReschedule: "Reschedule", pCancelAppt: "Cancel", pCancelApptQ: "Cancel this appointment?", pNoAppointments: "You have no appointments", pReorder: "Reorder", pReorderCreated: "New order created",
   pToReview: "To review", pEvaluate: "Rate", pMyReviews: "My reviews", pNoReviews: "You haven't reviewed yet", pComment: "Comment", pRecommendQ: "Would you recommend this service?", pBusinessReply: "Business reply",
   pNewTicket: "New ticket", pNoTickets: "You have no tickets", pSubject: "Subject", pDescription: "Description", pReply: "Type a message", pSend: "Send",
+  pChangePassword: "Change password", pNewPassword: "New password", pPasswordShort: "Minimum 6 characters", pNotifPref: "Notification preference",
+  pTheme: "Theme", pThemeLight: "Light", pThemeDark: "Dark", pThemeAuto: "Automatic", pInstall: "Install app", pInstallApp: "Install on my device",
+  pMyData: "My data", pExportData: "Download my data", pDangerZone: "Danger zone", pDeleteAccount: "Delete my account", pDeleteQ: "Delete your account? You will lose portal access.",
+  pNotifEmail: "Email", pNotifPush: "Push", pNotifBoth: "Both", pNotifNone: "None", pDeactivated: "Account deactivated", pDeactivatedMsg: "Your account was deactivated. Contact the business to reactivate it.",
 } satisfies Partial<Record<TranslationKey, string>>;

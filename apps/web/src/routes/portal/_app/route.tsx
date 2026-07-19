@@ -1,6 +1,8 @@
 import { useEffect, useRef } from "react";
 import { createFileRoute, Navigate } from "@tanstack/react-router";
+import { useI18n } from "@shared/i18n";
 import { useSession } from "@shared/providers/SessionProvider";
+import { signOutCustomer } from "@shared/portal/portal-auth";
 import { usePublicBrand } from "@landing-public/presentation/usePublicBrand.hook";
 import { useCustomer } from "@shared/portal/useCustomer.hook";
 import { registerCustomer } from "@shared/portal/customer.repository";
@@ -14,6 +16,7 @@ const Spin = () => <div className="grid min-h-screen place-items-center bg-backg
 
 // Guard del portal: staff → admin; sin sesión → login; customer sin perfil aún → auto-registra bajo este tenant.
 function PortalApp() {
+  const { t } = useI18n();
   const { session, isLoading } = useSession();
   const b = usePublicBrand();
   const tenantId = b.status === "ready" ? b.brand.tenantId : null;
@@ -31,6 +34,12 @@ function PortalApp() {
   if (!session) return <Navigate to="/portal/login" />;
   if (session.tenantId || session.role) return <Navigate to="/dashboard" />; // staff no entra al portal
   if (loading || !customer) return <Spin />;
+  if (!customer.isActive) return (
+    <div className="grid min-h-screen place-items-center bg-background p-6 text-center text-foreground">
+      <div className="space-y-3"><p className="font-bold">{t("pDeactivated")}</p><p className="text-sm text-muted-foreground">{t("pDeactivatedMsg")}</p>
+        <button type="button" onClick={() => void signOutCustomer().then(() => window.location.assign("/portal/login"))} className="rounded-lg bg-secondary px-4 py-2 text-sm">{t("signOut")}</button></div>
+    </div>
+  );
   const brand = b.status === "ready" ? b.brand : null;
   return (
     <PortalContext.Provider value={{ customer, refresh }}>

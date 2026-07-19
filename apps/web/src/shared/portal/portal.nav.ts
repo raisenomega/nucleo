@@ -3,7 +3,7 @@ import type { LucideIcon } from "lucide-react";
 import type { TranslationKey } from "@shared/i18n";
 
 // Rutas ya construidas llevan `to`; el resto se muestra deshabilitado ("próximamente") — se habilitan en P2-P5.
-export type PortalPath = "/portal" | "/portal/profile" | "/portal/orders" | "/portal/invoices" | "/portal/payments" | "/portal/services" | "/portal/appointments" | "/portal/reviews" | "/portal/support" | "/portal/notifications";
+export type PortalPath = "/portal" | "/portal/profile" | "/portal/orders" | "/portal/invoices" | "/portal/payments" | "/portal/services" | "/portal/appointments" | "/portal/reviews" | "/portal/support" | "/portal/notifications" | "/portal/settings";
 export type PortalNavItem = { key: TranslationKey; icon: LucideIcon; to?: PortalPath; href?: string };
 
 export const PORTAL_NAV: PortalNavItem[] = [
@@ -18,7 +18,7 @@ export const PORTAL_NAV: PortalNavItem[] = [
   { key: "navReviews", icon: Star, to: "/portal/reviews" },
   { key: "navSupport", icon: LifeBuoy, to: "/portal/support" },
   { key: "navNotifications", icon: Bell, to: "/portal/notifications" },
-  { key: "navSettings", icon: Settings },
+  { key: "navSettings", icon: Settings, to: "/portal/settings" },
 ];
 
 // Barra inferior mobile: ítems ya construidos (crece en P3+).

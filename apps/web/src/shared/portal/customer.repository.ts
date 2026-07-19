@@ -3,11 +3,12 @@ import type { CustomerProfile, CustomerFormData } from "@shared/portal/customer.
 
 type Row = Record<string, unknown>;
 const s = (v: unknown) => (v as string | null) ?? "";
-const SEL = "id, tenant_id, full_name, email, phone, address, city, state, zip_code, photo_url, contact_preference, language, notes_for_team";
+const SEL = "id, tenant_id, full_name, email, phone, address, city, state, zip_code, photo_url, contact_preference, language, notes_for_team, is_active, notification_pref";
 const toCustomer = (r: Row): CustomerProfile => ({
   id: r.id as string, tenantId: r.tenant_id as string, fullName: s(r.full_name), email: s(r.email), phone: s(r.phone),
   address: s(r.address), city: s(r.city), state: s(r.state), zipCode: s(r.zip_code), photoUrl: s(r.photo_url),
   contactPreference: s(r.contact_preference) || "email", language: s(r.language) || "es", notesForTeam: s(r.notes_for_team),
+  isActive: r.is_active !== false, notificationPref: s(r.notification_pref) || "both",
 });
 
 // RLS (cp_select_own) devuelve solo las filas del usuario; filtramos por tenant del host (puede ser cliente de varios).
