@@ -6,7 +6,8 @@ export async function signInCustomer(email: string, password: string): Promise<s
   return error ? error.message : null;
 }
 export async function signUpCustomer(email: string, password: string): Promise<string | null> {
-  const { error } = await supabase.auth.signUp({ email, password });
+  const emailRedirectTo = typeof window !== "undefined" ? `${window.location.origin}/portal` : undefined;
+  const { error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo } });
   return error ? error.message : null;
 }
 export async function magicLinkCustomer(email: string): Promise<string | null> {
