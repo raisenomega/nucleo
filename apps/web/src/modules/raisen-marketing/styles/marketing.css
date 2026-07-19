@@ -1,27 +1,45 @@
-/* Landing comercial Raisen/NÚCLEO — tokens del sistema de diseño (aesthetic mi-landing: oscuro, violet+cyan, glass).
-   Aislado en .rm-root: no afecta al panel ni a @landing-public. Colores estándar (violet-500…) van por Tailwind;
-   estos tokens son solo para fondos custom, glass recipe y composición de alpha (rgb components). */
+@import "@fontsource/syne/400.css";
+@import "@fontsource/syne/500.css";
+@import "@fontsource/syne/600.css";
+@import "@fontsource/syne/700.css";
+@import "@fontsource/syne/800.css";
+@import "@fontsource/dm-sans/300.css";
+@import "@fontsource/dm-sans/400.css";
+@import "@fontsource/dm-sans/500.css";
+@import "@fontsource/dm-sans/600.css";
+@import "@fontsource/dm-sans/700.css";
+
+/* Landing comercial Raisen/NÚCLEO — DNA dorado extraído de OMEGA (mismo sistema de diseño para los 3
+   productos; solo cambia el contenido). Tokens HSL scoped a .rm-root: fuerzan el tema oscuro/dorado
+   dentro de la landing sin tocar el panel. Los valores son los de OMEGA src/index.css verbatim. */
 .rm-root {
-  --rm-bg: #0a0a0f;
-  --rm-bg-hero: #020208;
-  --rm-text: #f0f0f8;
-  --rm-violet: 139, 92, 246;   /* rgb components para composición con alpha */
-  --rm-cyan: 6, 182, 212;
-  --rm-emerald: 52, 211, 153;
-
-  /* Glass recipe */
-  --rm-glass-bg: rgba(255, 255, 255, 0.04);
-  --rm-glass-border: rgba(255, 255, 255, 0.08);
-  --rm-glass-blur: 12px;
-
-  /* Scrollbar */
-  --rm-scrollbar-thumb: #333;
-
-  background: var(--rm-bg);
-  color: var(--rm-text);
-  font-family: "Inter", system-ui, sans-serif;
+  --background: 225 15% 5%;
+  --foreground: 40 6% 90%;
+  --card: 225 15% 8%;
+  --card-foreground: 40 6% 90%;
+  --primary: 38 85% 55%;
+  --primary-foreground: 225 20% 5%;
+  --secondary: 225 12% 14%;
+  --secondary-foreground: 40 6% 90%;
+  --muted: 225 12% 18%;
+  --muted-foreground: 225 8% 55%;
+  --accent: 38 40% 20%;
+  --destructive: 0 72% 51%;
+  --border: 225 12% 16%;
+  --input: 225 12% 14%;
+  --ring: 38 85% 55%;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: "DM Sans", system-ui, sans-serif;
 }
+.rm-root .font-display { font-family: "Syne", system-ui, sans-serif; }
 
-.rm-root ::-webkit-scrollbar { width: 6px; }
-.rm-root ::-webkit-scrollbar-track { background: var(--rm-bg); }
-.rm-root ::-webkit-scrollbar-thumb { background: var(--rm-scrollbar-thumb); border-radius: 3px; }
+/* Utilidades de OMEGA (scoped a .rm-root) */
+.rm-root .glass { background: hsl(var(--card) / 0.8); backdrop-filter: blur(24px); border: 1px solid hsl(var(--border) / 0.5); }
+.rm-root .gradient-primary { background: linear-gradient(135deg, hsl(38 85% 55%), hsl(42 90% 65%)); }
+.rm-root .text-gradient { background-clip: text; -webkit-background-clip: text; color: transparent; background-image: linear-gradient(135deg, hsl(38 85% 55%), hsl(42 90% 65%)); }
+
+/* Fade-up del hero (OMEGA la invoca por clase; la definimos scoped). Respeta reduced-motion. */
+@keyframes rm-fade-up { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+.rm-root .animate-fade-up { animation: rm-fade-up 0.7s ease-out both; }
+@media (prefers-reduced-motion: reduce) { .rm-root .animate-fade-up { animation: none; } }

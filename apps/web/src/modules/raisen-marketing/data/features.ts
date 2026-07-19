@@ -1,12 +1,19 @@
-// Datos hardcodeados (Sesión 1) de las 6 features del bento grid — PARTE 7.2 del documento maestro.
-// `icon` = nombre Lucide; `colSpan` 2 en índices 0 y 3 (cards anchas), 1 en el resto.
-export type MarketingFeature = { icon: string; titleEs: string; titleEn: string; descriptionEs: string; descriptionEn: string; colSpan: 1 | 2 };
+import { FileText, Route, BarChart3, Bot, type LucideIcon } from "lucide-react";
 
-export const FEATURES: MarketingFeature[] = [
-  { icon: "FileText", titleEs: "Facturación inteligente", titleEn: "Smart billing", descriptionEs: "Cotizaciones → facturas → cobro. Flujo completo con aprobación pública, auto-facturación y PDFs profesionales bajo tu marca.", descriptionEn: "Quotes → invoices → collection. Full flow with public approval, auto-invoicing and professional PDFs under your brand.", colSpan: 2 },
-  { icon: "Route", titleEs: "Rutas y campo", titleEn: "Routes & field", descriptionEs: "Asigna paradas, captura evidencia fotográfica, completa servicios desde el móvil. Control total de operaciones en campo.", descriptionEn: "Assign stops, capture photo evidence, complete services from mobile. Full control of field operations.", colSpan: 1 },
-  { icon: "Bot", titleEs: "Agentes IA", titleEn: "AI agents", descriptionEs: "Asistentes entrenados en tu negocio que responden, sugieren y automatizan — integrados con voz, chat y tus datos reales.", descriptionEn: "Assistants trained on your business that respond, suggest and automate — integrated with voice, chat and your real data.", colSpan: 1 },
-  { icon: "BarChart3", titleEs: "Fiscal PR", titleEn: "PR tax compliance", descriptionEs: "Motor de contribución con reglas versionadas, alertas de informativas y estrategias de optimización fiscal adaptadas a Puerto Rico.", descriptionEn: "Tax engine with versioned rules, filing alerts and optimization strategies adapted to Puerto Rico.", colSpan: 2 },
-  { icon: "Globe", titleEs: "Landing white-label", titleEn: "White-label landing", descriptionEs: "Tu cliente ve TU marca. Catálogo, cotizaciones, contacto — todo bajo tu dominio con SEO y PWA incluidos.", descriptionEn: "Your client sees YOUR brand. Catalog, quotes, contact — all under your domain with SEO and PWA included.", colSpan: 1 },
-  { icon: "Users", titleEs: "Nómina y equipo", titleEn: "Payroll & team", descriptionEs: "Empleados, contratistas, deducciones automáticas, evaluaciones y capacitación — gestión de talento completa.", descriptionEn: "Employees, contractors, automatic deductions, evaluations and training — complete talent management.", colSpan: 1 },
+// 4 features del grid de servicios (Facturación/Rutas/Fiscal/IA). icon = componente Lucide directo.
+export type Feature = { icon: LucideIcon; titleEs: string; titleEn: string; descEs: string; descEn: string; benefitsEs: string[]; benefitsEn: string[] };
+
+export const FEATURES: Feature[] = [
+  { icon: FileText, titleEs: "Facturación inteligente", titleEn: "Smart billing",
+    descEs: "Cotizaciones → facturas → cobro, con aprobación pública y PDFs bajo tu marca.", descEn: "Quotes → invoices → collection, with public approval and PDFs under your brand.",
+    benefitsEs: ["Aprobación pública del cliente", "Auto-facturación", "PDFs profesionales"], benefitsEn: ["Public client approval", "Auto-invoicing", "Professional PDFs"] },
+  { icon: Route, titleEs: "Rutas y campo", titleEn: "Routes & field",
+    descEs: "Paradas asignadas, evidencia fotográfica y servicios completados desde el móvil.", descEn: "Assigned stops, photo evidence and services completed from mobile.",
+    benefitsEs: ["Paradas asignadas", "Evidencia antes/después", "Completar desde el móvil"], benefitsEn: ["Assigned stops", "Before/after evidence", "Complete from mobile"] },
+  { icon: BarChart3, titleEs: "Fiscal Puerto Rico", titleEn: "PR tax compliance",
+    descEs: "Motor de contribución con reglas versionadas, alertas de informativas y optimización.", descEn: "Tax engine with versioned rules, filing alerts and optimization.",
+    benefitsEs: ["Reglas versionadas", "Alertas de informativas", "Optimización fiscal"], benefitsEn: ["Versioned rules", "Filing alerts", "Tax optimization"] },
+  { icon: Bot, titleEs: "Agentes IA", titleEn: "AI agents",
+    descEs: "Asistentes entrenados en tu negocio, integrados con voz, chat y tus datos reales.", descEn: "Assistants trained on your business, integrated with voice, chat and your real data.",
+    benefitsEs: ["Voz y chat", "Entrenados en tu negocio", "Datos reales"], benefitsEn: ["Voice and chat", "Trained on your business", "Real data"] },
 ];
