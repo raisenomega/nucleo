@@ -7,15 +7,16 @@ export type PortalPath = "/portal" | "/portal/profile" | "/portal/orders" | "/po
 export type PortalNavItem = { key: TranslationKey; icon: LucideIcon; to?: PortalPath; href?: string };
 export type PortalSection = { key: string; labelKey: TranslationKey; icon: LucideIcon; items: PortalNavItem[] };
 
-// Ítem fijo arriba del sidebar (fuera de secciones).
+// Ítems fijos (fuera de secciones) + hoja Órdenes reutilizada en el bottom nav.
 export const PORTAL_HOME: PortalNavItem = { key: "navHome", icon: Home, to: "/portal" };
-// Perfil: footer del sidebar (PortalShell) + bottom nav mobile.
 export const PORTAL_PROFILE: PortalNavItem = { key: "navProfile", icon: User, to: "/portal/profile" };
+export const PORTAL_SUPPORT: PortalNavItem = { key: "navSupport", icon: LifeBuoy, to: "/portal/support" };
+const ORDERS: PortalNavItem = { key: "navOrders", icon: ShoppingCart, to: "/portal/orders" };
 
 // Secciones acordeón (patrón del sidebar admin).
 export const PORTAL_SECTIONS: PortalSection[] = [
   { key: "tienda", labelKey: "sectionTienda", icon: ShoppingBag, items: [
-    { key: "navOrders", icon: ShoppingCart, to: "/portal/orders" },
+    ORDERS,
     { key: "navInvoices", icon: FileText, to: "/portal/invoices" },
     { key: "navPayments", icon: CreditCard, to: "/portal/payments" },
     { key: "navRequest", icon: Send, href: "/catalog" },
@@ -27,8 +28,5 @@ export const PORTAL_SECTIONS: PortalSection[] = [
   ] },
 ];
 
-// Ítem fijo fuera de secciones (después de las secciones).
-export const PORTAL_SUPPORT: PortalNavItem = { key: "navSupport", icon: LifeBuoy, to: "/portal/support" };
-
 // Barra inferior mobile (3 ítems): Inicio, Órdenes, Perfil.
-export const BOTTOM_NAV: PortalNavItem[] = [PORTAL_HOME, PORTAL_SECTIONS[0]!.items[0]!, PORTAL_PROFILE];
+export const BOTTOM_NAV: PortalNavItem[] = [PORTAL_HOME, ORDERS, PORTAL_PROFILE];

@@ -29,9 +29,11 @@ export function PublicBrandProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<PublicBrandState>({ status: "loading" });
   useEffect(() => {
     if (typeof window === "undefined") return;
+    // .catch: si la resolución del brand rechaza (red mobile, RPC caído), NO dejar el estado en "loading"
+    // para siempre (colgaba el portal en el spinner "…" + flash dorado NÚCLEO). Cae a fallback.
     void resolvePublicBrand(window.location.hostname).then((b) => {
       if (b) { apply(b); injectPwaTags(b); registerPublicSw(); setState({ status: "ready", brand: b }); } else setState({ status: "fallback" });
-    });
+    }).catch(() => setState({ status: "fallback" }));
   }, []);
   return <PublicBrandContext.Provider value={state}>{children}</PublicBrandContext.Provider>;
 }
