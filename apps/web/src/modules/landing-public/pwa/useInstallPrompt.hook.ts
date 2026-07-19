@@ -27,5 +27,5 @@ export function useInstallPrompt() {
     await e.userChoice;
     deferred.current = null; setReady(false);
   }, []);
-  return { canInstall: !installed && (isIOS || ready), isIOS, isInstalled: installed, promptInstall, dismissPrompt: () => { deferred.current = null; setReady(false); } };
+  return { canInstall: !installed && (isIOS || ready), ready, isIOS, isInstalled: installed, promptInstall, dismissPrompt: () => { deferred.current = null; setReady(false); } };
 }
