@@ -11,10 +11,11 @@ function PortalLogin() {
   const { t } = useI18n(); const nav = useNavigate(); const b = usePublicBrand();
   const name = b.status === "ready" ? b.brand.displayName : "";
   const logoUrl = b.status === "ready" ? b.brand.logoUrl : null;
+  const tenantId = b.status === "ready" ? b.brand.tenantId : null;
   const [email, setEmail] = useState(""); const [pw, setPw] = useState("");
   const [err, setErr] = useState<string | null>(null); const [busy, setBusy] = useState(false); const [sent, setSent] = useState(false);
   const login = async (e: React.FormEvent) => { e.preventDefault(); setBusy(true); setErr(null); const m = await signInCustomer(email, pw); setBusy(false); if (m) setErr(m); else void nav({ to: "/portal" }); };
-  const magic = async () => { if (!email) return setErr(t("pEmailFirst")); const m = await magicLinkCustomer(email); if (m) setErr(m); else setSent(true); };
+  const magic = async () => { if (!email) return setErr(t("pEmailFirst")); const m = await magicLinkCustomer(email, { tenantId }); if (m) setErr(m); else setSent(true); };
   const forgot = async () => { if (!email) return setErr(t("pEmailFirst")); const m = await resetPasswordCustomer(email); if (m) setErr(m); else setSent(true); };
   const fld = "w-full rounded-lg bg-secondary text-foreground p-3 font-body";
   return (

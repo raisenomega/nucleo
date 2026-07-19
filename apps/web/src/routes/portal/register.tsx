@@ -17,7 +17,7 @@ function PortalRegister() {
   const fld = "w-full rounded-lg bg-secondary text-foreground p-3 font-body";
   const submit = async (e: React.FormEvent) => {
     e.preventDefault(); setBusy(true); setErr(null);
-    const up = await signUpCustomer(f.email, f.pw); if (up) { setBusy(false); return setErr(up); }
+    const up = await signUpCustomer(f.email, f.pw, { tenantId, name: f.name, phone: f.phone }); if (up) { setBusy(false); return setErr(up); }
     if (tenantId) setPending({ tenantId, name: f.name, phone: f.phone }); // el guard completa el perfil tras confirmar/login
     const inErr = await signInCustomer(f.email, f.pw); // confirmación OFF → sesión lista; ON → cae a "revisa tu correo"
     if (!inErr && tenantId) { await registerCustomer(tenantId, f.name, f.phone); setBusy(false); return void nav({ to: "/portal" }); }
