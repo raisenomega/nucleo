@@ -12,4 +12,8 @@ export const esPortal = {
   pProfileSaved: "Perfil guardado", pSaveError: "No se pudo guardar", pPassword: "Contraseña",
   pLogin: "Entrar", pMagicLink: "Enviar enlace mágico", pMagicSent: "Te enviamos un enlace a tu correo", pEmailFirst: "Ingresa tu correo primero",
   pNoAccount: "¿No tienes cuenta?", pHaveAccount: "¿Ya tienes cuenta?", pRegister: "Crear cuenta", pConfirmEmail: "Revisa tu correo para confirmar tu cuenta.",
+  osPending: "Pendiente", osAwaitingPayment: "Esperando pago", osAwaitingConfirmation: "Verificando pago", osPaid: "Pagada", osCanceled: "Cancelada", osRefunded: "Reembolsada",
+  pTotal: "Total", pConfirmPayment: "Confirmar pago", pCancelOrder: "Cancelar", pConfirmPaidQ: "¿Confirmas que ya realizaste el pago?", pCancelQ: "¿Cancelar esta orden?",
+  pNoOrders: "No tienes órdenes", pNoInvoices: "No tienes facturas", pDueDate: "Vence", pOverdue: "Vencida", pPaid: "Pagada", pPending: "Pendiente",
+  pPdfUnavailable: "PDF no disponible aún", pPaymentHistory: "Historial de pagos", pNoPayments: "Sin pagos registrados", pTotalOwed: "Total adeudado",
 } satisfies Partial<Record<TranslationKey, string>>;
