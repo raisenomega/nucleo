@@ -15,4 +15,9 @@ export async function magicLinkCustomer(email: string): Promise<string | null> {
   const { error } = await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo } });
   return error ? error.message : null;
 }
+export async function resetPasswordCustomer(email: string): Promise<string | null> {
+  const redirectTo = typeof window !== "undefined" ? `${window.location.origin}/portal` : undefined;
+  const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
+  return error ? error.message : null;
+}
 export async function signOutCustomer(): Promise<void> { await supabase.auth.signOut(); }
