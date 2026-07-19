@@ -71,5 +71,5 @@ export const enLanding = {
   mediaExceedsVideoSize: "Video exceeds {mb} MB.",
   heroMediaMovedHint: "The home hero image/video is now uploaded from LANDING → Service pages.", heroSubtitleHint: "Leave empty to hide the subtitle.", heroCtaEmptyHint: "Leave empty to hide the CTA button.",
   spHeroMediaDedicated: "Dedicated page image/video (/servicios/...)", spHeroMediaHome: "Hero image/video on the home page",
-  spHeroMediaHomeHelp: "Shown in the secondary hero section of the home",
+  spHeroMediaHomeHelp: "Shown in the secondary hero section of the home", lpLogin: "Log in",
 } satisfies Partial<Record<TranslationKey, string>>;

@@ -71,5 +71,5 @@ export const esLanding = {
   mediaExceedsVideoSize: "El video excede {mb} MB.",
   heroMediaMovedHint: "La imagen/video del hero en el home se sube ahora desde LANDING → Páginas de servicios.", heroSubtitleHint: "Dejar vacío para ocultar el subtítulo.", heroCtaEmptyHint: "Dejar vacío para ocultar el botón CTA.",
   spHeroMediaDedicated: "Imagen/video de la página dedicada (/servicios/...)", spHeroMediaHome: "Imagen/video del hero en la página principal",
-  spHeroMediaHomeHelp: "Se muestra en la sección hero secundaria del home",
+  spHeroMediaHomeHelp: "Se muestra en la sección hero secundaria del home", lpLogin: "Iniciar sesión",
 } satisfies Partial<Record<TranslationKey, string>>;
