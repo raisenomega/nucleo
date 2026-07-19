@@ -83,3 +83,7 @@ yarn-error.log*
 # Python
 __pycache__/
 *.pyc
+
+# Service Workers generados por scripts/inject-sw-version.mjs (templates en apps/web/sw-src/)
+apps/web/public/service-worker.js
+apps/web/public/service-worker-public.js

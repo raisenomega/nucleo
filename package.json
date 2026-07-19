@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "build": "vite build",
+    "build": "node scripts/inject-sw-version.mjs && vite build",
     "dev": "vite dev",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",

@@ -1,5 +1,7 @@
 // SW landing pública white-label — network-first para HTML/navegación, cache-first para assets. Scope '/'.
-const CACHE = "landing-public-v3";
+// El id de build (constante CACHE) lo inyecta scripts/inject-sw-version.mjs en cada build → SW byte-distinto
+// por deploy → el browser detecta la actualización SIEMPRE → activate purga los caches viejos (mata chunks stale).
+const CACHE = "landing-public-__BUILD_ID__";
 const ASSET_RE = /\.(?:js|css|woff2?|png|svg|ico|webp|jpg|jpeg)$/;
 
 self.addEventListener("install", () => self.skipWaiting());

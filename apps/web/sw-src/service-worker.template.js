@@ -1,6 +1,8 @@
 // NÚCLEO PWA service worker — stale-while-revalidate SOLO para assets estáticos.
 // HTML, navegación y llamadas a Supabase van SIEMPRE a la red (nunca se sirve data vieja).
-const CACHE = "nucleo-static-v2";
+// El id de build (constante CACHE) lo inyecta scripts/inject-sw-version.mjs en cada build → SW byte-distinto
+// por deploy → el browser detecta la actualización SIEMPRE → activate purga caches viejos (mata assets stale).
+const CACHE = "nucleo-static-__BUILD_ID__";
 const ASSET_RE = /\.(?:js|css|woff2?|png|svg|ico|webp|jpg|jpeg)$/;
 
 self.addEventListener("install", () => {
