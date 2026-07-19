@@ -13,7 +13,7 @@ export const en = {
   testimonialsTitle: "Businesses already running on NÚCLEO",
   testimonialsSubtitle: "Service owners in Puerto Rico who digitalized their operation.",
   solutionsTitle: "Solutions that scale with you",
-  solutionsSubtitle: "For your business, or to resell NÚCLEO under your own agency.",
+  solutionsSubtitle: "For your business, or to resell NÚCLEO under your own agency.", solutionsBadge: "Featured",
   leadTitle: "Let's talk about your business", leadSubtitle: "Leave your details and we'll reach out.",
   pillBusiness: "For my business", pillPartner: "I want to be a partner",
   fName: "Name", fEmail: "Email", fPhone: "Phone", fMessage: "How can we help?",

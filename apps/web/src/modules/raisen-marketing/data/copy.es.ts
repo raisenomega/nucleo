@@ -13,7 +13,7 @@ export const es = {
   testimonialsTitle: "Negocios que ya operan con NÚCLEO",
   testimonialsSubtitle: "Dueños de servicio en Puerto Rico que digitalizaron su operación.",
   solutionsTitle: "Soluciones que escalan contigo",
-  solutionsSubtitle: "Para tu negocio, o para revender NÚCLEO bajo tu propia agencia.",
+  solutionsSubtitle: "Para tu negocio, o para revender NÚCLEO bajo tu propia agencia.", solutionsBadge: "Destacado",
   leadTitle: "Hablemos de tu negocio", leadSubtitle: "Déjanos tus datos y te contactamos.",
   pillBusiness: "Para mi negocio", pillPartner: "Quiero ser partner",
   fName: "Nombre", fEmail: "Email", fPhone: "Teléfono", fMessage: "¿En qué te ayudamos?",

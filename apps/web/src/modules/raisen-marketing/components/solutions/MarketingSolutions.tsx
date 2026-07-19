@@ -16,7 +16,7 @@ export function MarketingSolutions({ lang, onCta }: { lang: Lang; onCta: (a: Aud
           <p className="mx-auto max-w-lg text-muted-foreground">{c.solutionsSubtitle}</p>
         </div>
         <div className="grid items-stretch gap-6 md:grid-cols-2">
-          {SOLUTIONS.map((s) => <SolutionBlock key={s.audience} block={s} lang={lang} onCta={onCta} />)}
+          {SOLUTIONS.map((s, i) => <SolutionBlock key={i} block={s} lang={lang} badge={c.solutionsBadge} onCta={onCta} />)}
         </div>
       </div>
     </section>
