@@ -12,8 +12,8 @@ interface Tenant { display_name: string; primary_color: string; accent_color: st
 function tenantManifest(b: Tenant) {
   const icons = b.logo_url ? [ICON(b.logo_url, "192x192"), ICON(b.logo_url, "512x512")] : DEFAULT_ICONS;
   return {
-    name: b.display_name, short_name: String(b.display_name).slice(0, 12), description: `Sitio oficial de ${b.display_name}`,
-    start_url: "/", scope: "/", display: "standalone", orientation: "portrait",
+    name: b.display_name, short_name: String(b.display_name).slice(0, 12), description: `Portal de clientes de ${b.display_name}`,
+    start_url: "/portal", scope: "/", display: "standalone", orientation: "portrait",
     theme_color: b.accent_color, background_color: b.primary_color,
     icons, categories: ["business", "services"], lang: b.default_language || "es",
   };

@@ -14,7 +14,7 @@ function apply(b: HostBrand): void {
       primaryColor: b.primary_color, secondaryColor: null, accentColor: b.accent_color, sidebarBg: null,
       sidebarText: null, sidebarHover: null, dangerColor: null, successColor: null, warningColor: null, defaultMode: null,
     },
-    faviconUrl: b.favicon_url,
+    faviconUrl: b.favicon_url ?? b.logo_url, // sin favicon dedicado → usa el logo del tenant
   });
 }
 

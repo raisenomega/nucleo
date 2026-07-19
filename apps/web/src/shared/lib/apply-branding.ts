@@ -17,7 +17,7 @@ export function applyBranding(b: { tenantId: string; displayName: string; legalN
   const vars = themeVars(b.theme);
   const root = document.documentElement.style;
   for (const k in vars) root.setProperty(k, vars[k]!);
-  document.title = b.displayName || b.legalName || "NÚCLEO by raisen";
+  document.title = b.displayName || b.legalName || "Portal";
   if (b.faviconUrl) { clearStaticIcons(); setFavicon(b.faviconUrl); }
   else if (b.theme.primaryColor) applyFavicon(b.theme.primaryColor, b.displayName || b.legalName);
   if (!localStorage.getItem("theme")) document.documentElement.classList.toggle("dark", resolveMode(b.theme.defaultMode));

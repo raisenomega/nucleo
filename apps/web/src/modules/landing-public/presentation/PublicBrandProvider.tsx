@@ -20,7 +20,7 @@ function apply(b: PublicBrand): void {
     tenantId: b.tenantId, displayName: b.displayName, legalName: b.displayName,
     theme: { primaryColor: b.primaryColor, secondaryColor: null, accentColor: b.accentColor, sidebarBg: null,
       sidebarText: null, sidebarHover: null, dangerColor: null, successColor: null, warningColor: null, defaultMode: null },
-    faviconUrl: b.faviconUrl,
+    faviconUrl: b.faviconUrl ?? b.logoUrl, // sin favicon dedicado → usa el logo del tenant (nunca el de NÚCLEO)
   });
 }
 
