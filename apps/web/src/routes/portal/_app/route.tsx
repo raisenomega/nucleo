@@ -32,7 +32,22 @@ function PortalApp() {
   }, [isCustomer, tenantId, loading, customer, refresh]);
   if (isLoading || b.status === "loading") return <Spin />;
   if (!session) return <Navigate to="/portal/login" />;
-  if (session.tenantId || session.role) return <Navigate to="/dashboard" />; // staff no entra al portal
+  // Staff con sesión en el dominio del cliente: NO renderizar el admin acá (leak white-label). Aviso + salir.
+  if (session.tenantId || session.role) {
+    const h = typeof window !== "undefined" ? window.location.hostname.replace(/^www\./, "") : "";
+    const adminUrl = `https://${h.startsWith("app.") ? h : "app." + h}/dashboard`;
+    return (
+      <div className="grid min-h-screen place-items-center bg-background p-6 text-center text-foreground">
+        <div className="space-y-3">
+          <p className="font-bold">{t("pStaffTitle")}</p><p className="text-sm text-muted-foreground">{t("pStaffMsg")}</p>
+          <div className="flex flex-wrap justify-center gap-2">
+            <a href={adminUrl} className="rounded-lg bg-primary text-primary-foreground px-4 py-2 text-sm font-bold">{t("pGoAdmin")}</a>
+            <button type="button" onClick={() => void signOutCustomer().then(() => window.location.assign("/portal/login"))} className="rounded-lg bg-secondary px-4 py-2 text-sm">{t("signOut")}</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
   if (loading || !customer) return <Spin />;
   if (!customer.isActive) return (
     <div className="grid min-h-screen place-items-center bg-background p-6 text-center text-foreground">

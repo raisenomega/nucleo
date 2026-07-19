@@ -24,4 +24,5 @@ export const enPortal = {
   pTheme: "Theme", pThemeLight: "Light", pThemeDark: "Dark", pThemeAuto: "Automatic", pInstall: "Install app", pInstallApp: "Install on my device",
   pMyData: "My data", pExportData: "Download my data", pDangerZone: "Danger zone", pDeleteAccount: "Delete my account", pDeleteQ: "Delete your account? You will lose portal access.",
   pNotifEmail: "Email", pNotifPush: "Push", pNotifBoth: "Both", pNotifNone: "None", pDeactivated: "Account deactivated", pDeactivatedMsg: "Your account was deactivated. Contact the business to reactivate it.",
+  pStaffTitle: "Business session", pStaffMsg: "You're on a business (staff) account. This is the customer portal.", pGoAdmin: "Go to admin panel",
 } satisfies Partial<Record<TranslationKey, string>>;

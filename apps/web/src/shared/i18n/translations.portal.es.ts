@@ -24,4 +24,5 @@ export const esPortal = {
   pTheme: "Tema", pThemeLight: "Claro", pThemeDark: "Oscuro", pThemeAuto: "Automático", pInstall: "Instalar app", pInstallApp: "Instalar en mi dispositivo",
   pMyData: "Mis datos", pExportData: "Descargar mis datos", pDangerZone: "Zona de peligro", pDeleteAccount: "Eliminar mi cuenta", pDeleteQ: "¿Eliminar tu cuenta? Perderás el acceso al portal.",
   pNotifEmail: "Email", pNotifPush: "Push", pNotifBoth: "Ambos", pNotifNone: "Ninguna", pDeactivated: "Cuenta desactivada", pDeactivatedMsg: "Tu cuenta fue desactivada. Contacta al negocio para reactivarla.",
+  pStaffTitle: "Sesión de negocio", pStaffMsg: "Estás con una cuenta de negocio (staff). Este es el portal de clientes.", pGoAdmin: "Ir al panel",
 } satisfies Partial<Record<TranslationKey, string>>;
