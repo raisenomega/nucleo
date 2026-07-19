@@ -18,4 +18,6 @@ export const esPortal = {
   pPdfUnavailable: "PDF no disponible aún", pPaymentHistory: "Historial de pagos", pNoPayments: "Sin pagos registrados", pTotalOwed: "Total adeudado",
   pService: "Servicio", pServicesNote: "Servicios asociados a tu teléfono.", pNoServices: "Sin servicios registrados", pJoinCall: "Unirse a la videollamada",
   pReschedule: "Reagendar", pCancelAppt: "Cancelar", pCancelApptQ: "¿Cancelar esta cita?", pNoAppointments: "No tienes citas", pReorder: "Reordenar", pReorderCreated: "Nueva orden creada",
+  pToReview: "Por evaluar", pEvaluate: "Evaluar", pMyReviews: "Mis evaluaciones", pNoReviews: "Aún no has evaluado", pComment: "Comentario", pRecommendQ: "¿Recomendarías este servicio?", pBusinessReply: "Respuesta del negocio",
+  pNewTicket: "Nuevo ticket", pNoTickets: "No tienes tickets", pSubject: "Asunto", pDescription: "Descripción", pReply: "Escribe un mensaje", pSend: "Enviar",
 } satisfies Partial<Record<TranslationKey, string>>;

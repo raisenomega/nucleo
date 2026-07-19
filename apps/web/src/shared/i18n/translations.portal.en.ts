@@ -18,4 +18,6 @@ export const enPortal = {
   pPdfUnavailable: "PDF not available yet", pPaymentHistory: "Payment history", pNoPayments: "No payments recorded", pTotalOwed: "Total owed",
   pService: "Service", pServicesNote: "Services linked to your phone number.", pNoServices: "No services recorded", pJoinCall: "Join the video call",
   pReschedule: "Reschedule", pCancelAppt: "Cancel", pCancelApptQ: "Cancel this appointment?", pNoAppointments: "You have no appointments", pReorder: "Reorder", pReorderCreated: "New order created",
+  pToReview: "To review", pEvaluate: "Rate", pMyReviews: "My reviews", pNoReviews: "You haven't reviewed yet", pComment: "Comment", pRecommendQ: "Would you recommend this service?", pBusinessReply: "Business reply",
+  pNewTicket: "New ticket", pNoTickets: "You have no tickets", pSubject: "Subject", pDescription: "Description", pReply: "Type a message", pSend: "Send",
 } satisfies Partial<Record<TranslationKey, string>>;
