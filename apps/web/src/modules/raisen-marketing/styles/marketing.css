@@ -1,0 +1,27 @@
+/* Landing comercial Raisen/NÚCLEO — tokens del sistema de diseño (aesthetic mi-landing: oscuro, violet+cyan, glass).
+   Aislado en .rm-root: no afecta al panel ni a @landing-public. Colores estándar (violet-500…) van por Tailwind;
+   estos tokens son solo para fondos custom, glass recipe y composición de alpha (rgb components). */
+.rm-root {
+  --rm-bg: #0a0a0f;
+  --rm-bg-hero: #020208;
+  --rm-text: #f0f0f8;
+  --rm-violet: 139, 92, 246;   /* rgb components para composición con alpha */
+  --rm-cyan: 6, 182, 212;
+  --rm-emerald: 52, 211, 153;
+
+  /* Glass recipe */
+  --rm-glass-bg: rgba(255, 255, 255, 0.04);
+  --rm-glass-border: rgba(255, 255, 255, 0.08);
+  --rm-glass-blur: 12px;
+
+  /* Scrollbar */
+  --rm-scrollbar-thumb: #333;
+
+  background: var(--rm-bg);
+  color: var(--rm-text);
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+.rm-root ::-webkit-scrollbar { width: 6px; }
+.rm-root ::-webkit-scrollbar-track { background: var(--rm-bg); }
+.rm-root ::-webkit-scrollbar-thumb { background: var(--rm-scrollbar-thumb); border-radius: 3px; }

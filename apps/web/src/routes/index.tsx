@@ -1,17 +1,18 @@
-import { useEffect } from "react";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useI18n } from "@shared/i18n";
+import { lazy, Suspense, useEffect } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { isRaisenHost } from "@shared/lib/brand-host";
 import { useMounted } from "@shared/hooks/useMounted";
 import { PublicBrandProvider } from "@landing-public/presentation/PublicBrandProvider";
 import { PublicLandingRoot } from "@landing-public/presentation/PublicLandingRoot";
+
+// Landing comercial de Raisen (marketing) — lazy + aislada: no entra al bundle del panel ni de @landing-public.
+const MarketingLanding = lazy(() => import("@raisen-marketing"));
 
 export const Route = createFileRoute("/")({
   component: Home,
 });
 
 function Home() {
-  const { t } = useI18n();
   const nav = useNavigate();
   const mounted = useMounted();
   const host = mounted ? window.location.hostname : "";
@@ -22,13 +23,5 @@ function Home() {
   if (!mounted) return <div className="min-h-screen bg-background" />; // SSR/1er render: placeholder neutro
   if (isLanding) return <PublicBrandProvider><PublicLandingRoot /></PublicBrandProvider>;
   if (!isRaisenHost()) return null; // app.* → redirigiendo a /login
-  return (
-    <main className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
-      <div className="text-center">
-        <h1 className="font-display text-5xl font-bold text-primary">{t("title")}</h1>
-        <p className="mt-4 text-muted-foreground">{t("tagline")}</p>
-        <Link to="/login" className="mt-8 inline-block rounded-lg bg-primary text-primary-foreground px-6 py-3 font-body font-bold">{t("goToLogin")}</Link>
-      </div>
-    </main>
-  );
+  return <Suspense fallback={null}><MarketingLanding /></Suspense>; // hostname Raisen → landing comercial
 }

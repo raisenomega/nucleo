@@ -87,3 +87,6 @@ __pycache__/
 # Service Workers generados por scripts/inject-sw-version.mjs (templates en apps/web/sw-src/)
 apps/web/public/service-worker.js
 apps/web/public/service-worker-public.js
+
+# Documento maestro de la landing comercial (confidencial, no commitear)
+LANDING-COMERCIAL-NUCLEO.md
