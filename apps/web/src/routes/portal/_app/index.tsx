@@ -19,8 +19,8 @@ function PortalHome() {
         </Link>
       )}
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <Link to="/portal/profile" className="rounded-lg border border-border bg-card p-4 font-bold text-foreground">{t("navProfile")}</Link>
-        <span className="cursor-not-allowed rounded-lg border border-border bg-card p-4 font-bold text-muted-foreground opacity-60">{t("navRequest")} · {t("pComingSoon")}</span>
+        <a href="/catalog" className="rounded-lg border border-primary bg-primary/5 p-4 font-bold text-foreground">{t("navRequest")}</a>
+        <Link to="/portal/orders" className="rounded-lg border border-border bg-card p-4 font-bold text-foreground">{t("navOrders")}</Link>
       </div>
     </div>
   );

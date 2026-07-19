@@ -14,12 +14,15 @@ export function PortalNav({ variant }: { variant: "side" | "bottom" }) {
         </Link>) : null)}
     </div>
   );
+  const cls = "flex items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-secondary";
   return (
     <div className="space-y-1">
       {PORTAL_NAV.map((n) => n.to ? (
         <Link key={n.key} to={n.to} className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm ${pathname === n.to ? "bg-secondary font-medium" : "hover:bg-secondary"}`}>
           <n.icon className="h-4 w-4" />{t(n.key)}
         </Link>
+      ) : n.href ? (
+        <a key={n.key} href={n.href} className={cls}><n.icon className="h-4 w-4" />{t(n.key)}</a>
       ) : (
         <span key={n.key} title={t("pComingSoon")} className="flex cursor-not-allowed items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground opacity-50">
           <n.icon className="h-4 w-4" />{t(n.key)}

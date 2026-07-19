@@ -7,11 +7,12 @@ import { isDead, STATUS_LABEL } from "@shared/portal/order-status";
 import type { CustomerOrder } from "@shared/portal/order.types";
 
 // Detalle de orden: timeline + ítems + total + acciones (confirmar pago ATH / cancelar) según estado.
-export function OrderDetail({ order, onClose, onConfirm, onCancel }: {
-  order: CustomerOrder; onClose: () => void; onConfirm: (id: string) => void; onCancel: (id: string) => void;
+export function OrderDetail({ order, onClose, onConfirm, onCancel, onReorder }: {
+  order: CustomerOrder; onClose: () => void; onConfirm: (id: string) => void; onCancel: (id: string) => void; onReorder: (id: string) => void;
 }) {
   const { t } = useI18n();
   const canPay = order.status === "pending" || order.status === "awaiting_payment";
+  const canReorder = order.status === "paid" || isDead(order.status);
   return (
     <ScreenModal onClose={onClose}>
       <div className="flex items-center justify-between border-b border-border p-4">
@@ -28,6 +29,7 @@ export function OrderDetail({ order, onClose, onConfirm, onCancel }: {
             <button type="button" onClick={() => onCancel(order.id)} className="rounded-lg bg-secondary text-foreground px-3 py-2 text-sm">{t("pCancelOrder")}</button>
           </div>
         )}
+        {canReorder && <button type="button" onClick={() => onReorder(order.id)} className="w-full rounded-lg bg-secondary text-foreground px-3 py-2 text-sm font-bold">{t("pReorder")}</button>}
       </div>
     </ScreenModal>
   );

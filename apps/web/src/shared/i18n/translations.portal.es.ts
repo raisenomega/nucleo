@@ -16,4 +16,6 @@ export const esPortal = {
   pTotal: "Total", pConfirmPayment: "Confirmar pago", pCancelOrder: "Cancelar", pConfirmPaidQ: "¿Confirmas que ya realizaste el pago?", pCancelQ: "¿Cancelar esta orden?",
   pNoOrders: "No tienes órdenes", pNoInvoices: "No tienes facturas", pDueDate: "Vence", pOverdue: "Vencida", pPaid: "Pagada", pPending: "Pendiente",
   pPdfUnavailable: "PDF no disponible aún", pPaymentHistory: "Historial de pagos", pNoPayments: "Sin pagos registrados", pTotalOwed: "Total adeudado",
+  pService: "Servicio", pServicesNote: "Servicios asociados a tu teléfono.", pNoServices: "Sin servicios registrados", pJoinCall: "Unirse a la videollamada",
+  pReschedule: "Reagendar", pCancelAppt: "Cancelar", pCancelApptQ: "¿Cancelar esta cita?", pNoAppointments: "No tienes citas", pReorder: "Reordenar", pReorderCreated: "Nueva orden creada",
 } satisfies Partial<Record<TranslationKey, string>>;

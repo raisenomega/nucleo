@@ -23,3 +23,4 @@ async function act(fn: string, id: string): Promise<boolean> {
 }
 export const confirmPayment = (id: string) => act("customer_confirm_payment", id);
 export const cancelOrder = (id: string) => act("customer_cancel_order", id);
+export const reorder = (id: string) => act("customer_reorder", id);

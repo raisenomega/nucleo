@@ -16,4 +16,6 @@ export const enPortal = {
   pTotal: "Total", pConfirmPayment: "Confirm payment", pCancelOrder: "Cancel", pConfirmPaidQ: "Do you confirm you already paid?", pCancelQ: "Cancel this order?",
   pNoOrders: "You have no orders", pNoInvoices: "You have no invoices", pDueDate: "Due", pOverdue: "Overdue", pPaid: "Paid", pPending: "Pending",
   pPdfUnavailable: "PDF not available yet", pPaymentHistory: "Payment history", pNoPayments: "No payments recorded", pTotalOwed: "Total owed",
+  pService: "Service", pServicesNote: "Services linked to your phone number.", pNoServices: "No services recorded", pJoinCall: "Join the video call",
+  pReschedule: "Reschedule", pCancelAppt: "Cancel", pCancelApptQ: "Cancel this appointment?", pNoAppointments: "You have no appointments", pReorder: "Reorder", pReorderCreated: "New order created",
 } satisfies Partial<Record<TranslationKey, string>>;
