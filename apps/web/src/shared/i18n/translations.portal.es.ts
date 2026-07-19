@@ -26,4 +26,5 @@ export const esPortal = {
   pNotifEmail: "Email", pNotifPush: "Push", pNotifBoth: "Ambos", pNotifNone: "Ninguna", pDeactivated: "Cuenta desactivada", pDeactivatedMsg: "Tu cuenta fue desactivada. Contacta al negocio para reactivarla.",
   pStaffTitle: "Sesión de negocio", pStaffMsg: "Estás con una cuenta de negocio (staff). Este es el portal de clientes.", pGoAdmin: "Ir al panel",
   pLoginSubtitle: "Accede a tu cuenta", pForgot: "¿Olvidaste tu contraseña?",
+  sectionTienda: "Tienda", sectionServicios: "Servicios",
 } satisfies Partial<Record<TranslationKey, string>>;

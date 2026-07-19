@@ -1,8 +1,9 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { useI18n } from "@shared/i18n";
-import { PORTAL_NAV, BOTTOM_NAV } from "@shared/portal/portal.nav";
+import { PORTAL_HOME, PORTAL_SUPPORT, PORTAL_SECTIONS, BOTTOM_NAV, type PortalNavItem } from "@shared/portal/portal.nav";
+import { PortalSidebarSection } from "@shared/portal/PortalSidebarSection";
 
-// Navegación del portal: sidebar (side) con ítems próximamente deshabilitados, o barra inferior mobile (bottom).
+// Navegación del portal: sidebar acordeón (side: Inicio fijo → secciones → Soporte) o barra inferior mobile (bottom).
 export function PortalNav({ variant }: { variant: "side" | "bottom" }) {
   const { t } = useI18n();
   const { pathname } = useLocation();
@@ -14,20 +15,14 @@ export function PortalNav({ variant }: { variant: "side" | "bottom" }) {
         </Link>) : null)}
     </div>
   );
-  const cls = "flex items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-secondary";
+  const link = (n: PortalNavItem) => `flex items-center gap-3 rounded-lg px-3 py-2 text-sm ${pathname === n.to ? "bg-secondary font-medium" : "hover:bg-secondary"}`;
   return (
-    <div className="space-y-1">
-      {PORTAL_NAV.map((n) => n.to ? (
-        <Link key={n.key} to={n.to} className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm ${pathname === n.to ? "bg-secondary font-medium" : "hover:bg-secondary"}`}>
-          <n.icon className="h-4 w-4" />{t(n.key)}
-        </Link>
-      ) : n.href ? (
-        <a key={n.key} href={n.href} className={cls}><n.icon className="h-4 w-4" />{t(n.key)}</a>
-      ) : (
-        <span key={n.key} title={t("pComingSoon")} className="flex cursor-not-allowed items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground opacity-50">
-          <n.icon className="h-4 w-4" />{t(n.key)}
-        </span>
-      ))}
-    </div>
+    <nav className="flex flex-1 flex-col gap-1 overflow-y-auto p-2">
+      <Link to={PORTAL_HOME.to!} className={link(PORTAL_HOME)}><PORTAL_HOME.icon className="h-4 w-4" />{t(PORTAL_HOME.key)}</Link>
+      <div className="my-1 border-t border-border" />
+      {PORTAL_SECTIONS.map((s) => <PortalSidebarSection key={s.key} section={s} />)}
+      <div className="my-1 border-t border-border" />
+      <Link to={PORTAL_SUPPORT.to!} className={link(PORTAL_SUPPORT)}><PORTAL_SUPPORT.icon className="h-4 w-4" />{t(PORTAL_SUPPORT.key)}</Link>
+    </nav>
   );
 }

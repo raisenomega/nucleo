@@ -26,4 +26,5 @@ export const enPortal = {
   pNotifEmail: "Email", pNotifPush: "Push", pNotifBoth: "Both", pNotifNone: "None", pDeactivated: "Account deactivated", pDeactivatedMsg: "Your account was deactivated. Contact the business to reactivate it.",
   pStaffTitle: "Business session", pStaffMsg: "You're on a business (staff) account. This is the customer portal.", pGoAdmin: "Go to admin panel",
   pLoginSubtitle: "Access your account", pForgot: "Forgot your password?",
+  sectionTienda: "Store", sectionServicios: "Services",
 } satisfies Partial<Record<TranslationKey, string>>;
