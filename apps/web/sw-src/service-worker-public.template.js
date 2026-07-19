@@ -1,8 +1,9 @@
-// SW landing pública white-label — network-first para HTML/navegación, cache-first para assets. Scope '/'.
-// El id de build (constante CACHE) lo inyecta scripts/inject-sw-version.mjs en cada build → SW byte-distinto
-// por deploy → el browser detecta la actualización SIEMPRE → activate purga los caches viejos (mata chunks stale).
+// SW landing/portal white-label — MÍNIMO: solo cachea imágenes/fonts/CSS estáticos. HTML, JS/chunks y API
+// van SIEMPRE a la red → cero posibilidad de servir un shell o chunk viejo al cliente (fuente de los crashes
+// de PWA stale, #173/#177-D). Mantiene la instalabilidad (SW con fetch handler). Scope '/'.
+// El id de build (constante CACHE) lo inyecta scripts/inject-sw-version.mjs en cada build → SW byte-distinto.
 const CACHE = "landing-public-__BUILD_ID__";
-const ASSET_RE = /\.(?:js|css|woff2?|png|svg|ico|webp|jpg|jpeg)$/;
+const ASSET_RE = /\.(?:css|woff2?|png|svg|ico|webp|jpg|jpeg)$/;
 
 self.addEventListener("install", () => self.skipWaiting());
 
@@ -17,18 +18,10 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const { request } = event;
   const url = new URL(request.url);
-  if (request.method !== "GET" || url.origin !== self.location.origin) return;
-  if (ASSET_RE.test(url.pathname)) {
-    // cache-first: assets estáticos versionados por hash, seguros de cachear.
-    event.respondWith(caches.open(CACHE).then((cache) =>
-      cache.match(request).then((hit) => hit || fetch(request).then((res) => { if (res.ok) cache.put(request, res.clone()); return res; }))));
-    return;
-  }
-  // network-first: HTML/navegación siempre fresco; fallback al cache (o al shell '/') si no hay red.
-  event.respondWith(
-    fetch(request).then((res) => {
-      if (res.ok && request.mode === "navigate") { const c = res.clone(); void caches.open(CACHE).then((cache) => cache.put(request, c)); }
-      return res;
-    }).catch(() => caches.match(request).then((hit) => hit || caches.match("/"))),
-  );
+  // Deja pasar a la RED todo lo que no sea imagen/font/CSS del mismo origen: HTML/navegación, JS/chunks y API
+  // nunca se cachean → el cliente siempre recibe el shell y los chunks frescos del deploy actual.
+  if (request.method !== "GET" || url.origin !== self.location.origin || !ASSET_RE.test(url.pathname)) return;
+  // cache-first solo para estáticos versionados por hash (nombre = contenido → seguros de cachear).
+  event.respondWith(caches.open(CACHE).then((cache) =>
+    cache.match(request).then((hit) => hit || fetch(request).then((res) => { if (res.ok) cache.put(request, res.clone()); return res; }))));
 });
