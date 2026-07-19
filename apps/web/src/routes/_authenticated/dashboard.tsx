@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useSuperAdmin } from "@shared/hooks/useSuperAdmin";
+import { PlatformDashboard } from "@admin/presentation/PlatformDashboard";
 import { TrialBanner } from "@shared/components/TrialBanner";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
@@ -16,6 +18,8 @@ import { DashboardRecentLeads } from "@finance/presentation/DashboardRecentLeads
 export const Route = createFileRoute("/_authenticated/dashboard")({ component: Dashboard });
 
 function Dashboard() {
+  const { isSuperAdmin } = useSuperAdmin();
+  if (isSuperAdmin) return <PlatformDashboard />; // superadmin → dashboard de plataforma, no el financiero del tenant
   const { t } = useI18n();
   const { can } = useModuleAccess();
   const { session } = useSession();

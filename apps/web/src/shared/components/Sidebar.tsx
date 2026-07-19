@@ -4,7 +4,9 @@ import { LayoutDashboard, Check } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useBrand } from "@shared/providers/BrandProvider";
 import { useSession } from "@shared/providers/SessionProvider";
-import { SECTIONS, LANDING_SECTION } from "@shared/components/sidebar.nav";
+import { useSuperAdmin } from "@shared/hooks/useSuperAdmin";
+import { SECTIONS, LANDING_SECTION, type NavSection } from "@shared/components/sidebar.nav";
+import { SUPERADMIN_SECTIONS } from "@shared/components/sidebar.superadmin.nav";
 import { SidebarSection } from "@shared/components/SidebarSection";
 import { SidebarUser } from "@shared/components/SidebarUser";
 import { useUnseenWebLeads } from "@shared/hooks/useUnseenWebLeads.hook";
@@ -14,8 +16,8 @@ import { useLowStockCount } from "@shared/hooks/useLowStockCount.hook";
 import { useAssetsDueCount } from "@shared/hooks/useAssetsDueCount.hook";
 import { useNotifCount } from "@shared/hooks/useNotifCount.hook";
 
-function activeSection(pathname: string): string {
-  const s = SECTIONS.find((sec) => sec.items.some((i) => i.to && pathname.startsWith(i.to)));
+function activeSection(pathname: string, groups: NavSection[]): string {
+  const s = groups.find((sec) => sec.items.some((i) => i.to && pathname.startsWith(i.to)));
   return s ? s.title : "";
 }
 
@@ -23,12 +25,13 @@ export function Sidebar({ expanded, onClose, onToggle }: { expanded: boolean; on
   const { t } = useI18n();
   const brand = useBrand();
   const { session } = useSession();
+  const { isSuperAdmin } = useSuperAdmin();
   const { pathname } = useLocation();
-  // Landing solo si el tenant lo tiene activo Y el usuario es CEO/superadmin (coherente con RLS).
+  // Superadmin → grupos de PLATAFORMA (no tenant). Tenant → grupos de siempre (+ Landing si CEO/superadmin y activo).
   const isCeo = session?.role === "ceo" || session?.role === "superadmin";
-  const sections = brand.landingEnabled && isCeo ? [...SECTIONS, LANDING_SECTION] : SECTIONS;
-  const [openSection, setOpenSection] = useState<string>(() => activeSection(pathname));
-  useEffect(() => { const s = activeSection(pathname); if (s) setOpenSection(s); }, [pathname]);
+  const sections = isSuperAdmin ? SUPERADMIN_SECTIONS : brand.landingEnabled && isCeo ? [...SECTIONS, LANDING_SECTION] : SECTIONS;
+  const [openSection, setOpenSection] = useState<string>(() => activeSection(pathname, sections));
+  useEffect(() => { const s = activeSection(pathname, sections); if (s) setOpenSection(s); }, [pathname]);
   const { count: unseenWeb } = useUnseenWebLeads(pathname);
   const { count: upcomingApts } = useUpcomingAppointments(pathname);
   const { count: unseenOrders } = useOrdersUnseenCount(pathname);
@@ -49,12 +52,8 @@ export function Sidebar({ expanded, onClose, onToggle }: { expanded: boolean; on
           {expanded && <span className="font-display text-lg font-bold text-foreground">{brand.displayName || brand.legalName || "Mi Negocio"}</span>}
         </button>
         <nav className="no-scrollbar flex-1 space-y-1 overflow-y-auto p-2">
-          <Link to="/dashboard" onClick={onNavigate}
-            className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-body ${panelActive ? "font-medium" : "hover:bg-secondary"} ${expanded ? "" : "justify-center"}`}>
-            <LayoutDashboard className="h-5 w-5" />{expanded && <span>{t("panel")}</span>}
-            {expanded && panelActive && <Check className="ml-auto h-4 w-4 text-accent" />}
-          </Link>
-          <div className="my-1 border-b border-border" />
+          {!isSuperAdmin && <Link to="/dashboard" onClick={onNavigate} className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-body ${panelActive ? "font-medium" : "hover:bg-secondary"} ${expanded ? "" : "justify-center"}`}><LayoutDashboard className="h-5 w-5" />{expanded && <span>{t("panel")}</span>}{expanded && panelActive && <Check className="ml-auto h-4 w-4 text-accent" />}</Link>}
+          {!isSuperAdmin && <div className="my-1 border-b border-border" />}
           {sections.map((s) => (
             <SidebarSection key={s.title} section={s} expanded={expanded} badges={badges}
               isOpen={openSection === s.title} activePath={pathname}
