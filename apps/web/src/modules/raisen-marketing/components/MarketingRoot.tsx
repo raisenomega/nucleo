@@ -1,7 +1,8 @@
 import "@raisen-marketing/styles/marketing.css";
 import { useState } from "react";
 import { useMarketingLang } from "@raisen-marketing/hooks/useMarketingLang";
-import { HeroBackground } from "@raisen-marketing/components/hero-scene/HeroBackground";
+import { useMarketingHero } from "@raisen-marketing/hooks/useMarketingHero";
+import { HeroMediaBackground } from "@raisen-marketing/components/hero/HeroMediaBackground";
 import { MarketingNav } from "@raisen-marketing/components/nav/MarketingNav";
 import { MarketingHero } from "@raisen-marketing/components/hero/MarketingHero";
 import { MarketingFeatures } from "@raisen-marketing/components/features/MarketingFeatures";
@@ -16,15 +17,16 @@ import type { Audience } from "@raisen-marketing/data/solutions";
 // Root de la landing comercial (DNA dorado OMEGA). Fondo 3D fixed z-0 + contenido z-10. Default export → lazy.
 export default function MarketingRoot() {
   const { lang, toggleLang } = useMarketingLang();
+  const hero = useMarketingHero();
   const [audience, setAudience] = useState<Audience>("business");
   const onCta = (a: Audience) => { setAudience(a); document.getElementById("lead-form")?.scrollIntoView({ behavior: "smooth" }); };
   return (
     <div className="rm-root min-h-screen">
-      <HeroBackground />
+      <HeroMediaBackground hero={hero} />
       <div className="relative z-10">
         <MarketingNav lang={lang} toggleLang={toggleLang} />
         <main>
-          <MarketingHero lang={lang} />
+          <MarketingHero lang={lang} hero={hero} />
           <MarketingFeatures lang={lang} />
           <MarketingProcess lang={lang} />
           <MarketingSolutions lang={lang} onCta={onCta} />

@@ -86,7 +86,7 @@ section "8. Migraciones con tabla sin tenant_id:"
 NO_TENANT=""
 if [ -d "$MIG_DIR" ]; then
   while IFS= read -r f; do
-    if grep -qiE "create table[[:space:]]+(if not exists[[:space:]]+)?(public\.)?(tenants|categories|settings|tenant_order_counters|rate_limit_public)" "$f" || grep -qiE "partition of" "$f"; then
+    if grep -qiE "create table[[:space:]]+(if not exists[[:space:]]+)?(public\.)?(tenants|categories|settings|tenant_order_counters|rate_limit_public|marketing_[a-z_]+)" "$f" || grep -qiE "partition of" "$f"; then
       continue
     fi
     if grep -qiE "create table" "$f" && ! grep -qE "tenant_id[[:space:]]+uuid" "$f"; then
