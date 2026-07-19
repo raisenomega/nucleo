@@ -1,5 +1,5 @@
 // SW landing pública white-label — network-first para HTML/navegación, cache-first para assets. Scope '/'.
-const CACHE = "landing-public-v2";
+const CACHE = "landing-public-v3";
 const ASSET_RE = /\.(?:js|css|woff2?|png|svg|ico|webp|jpg|jpeg)$/;
 
 self.addEventListener("install", () => self.skipWaiting());
