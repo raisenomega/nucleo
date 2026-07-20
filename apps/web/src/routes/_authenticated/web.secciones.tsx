@@ -1,6 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PlatformPlaceholder } from "@admin/presentation/PlatformPlaceholder";
+import { SectionsManager } from "@raisen-marketing/admin/SectionsManager";
 
-export const Route = createFileRoute("/_authenticated/web/secciones")({
-  component: () => <PlatformPlaceholder titleKey="webSections" />,
-});
+export const Route = createFileRoute("/_authenticated/web/secciones")({ component: SectionsManager });
