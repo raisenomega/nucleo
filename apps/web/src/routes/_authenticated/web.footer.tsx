@@ -1,6 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PlatformPlaceholder } from "@admin/presentation/PlatformPlaceholder";
+import { FooterEditor } from "@raisen-marketing/admin/FooterEditor";
 
-export const Route = createFileRoute("/_authenticated/web/footer")({
-  component: () => <PlatformPlaceholder titleKey="webFooter" />,
-});
+export const Route = createFileRoute("/_authenticated/web/footer")({ component: FooterEditor });
