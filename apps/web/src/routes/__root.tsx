@@ -4,7 +4,6 @@ import { I18nProvider, useI18n } from "@shared/i18n";
 import { ThemeToggle } from "@shared/components/ThemeToggle";
 import { HostBrandProvider } from "@shared/providers/HostBrandProvider";
 import { useMounted } from "@shared/hooks/useMounted";
-import { isRaisenHost } from "@shared/lib/brand-host";
 import { ErrorBoundary } from "@shared/components/loading";
 import { ToastProvider } from "@shared/providers/ToastProvider";
 
@@ -48,7 +47,7 @@ function GlobalControls() {
   const { pathname } = useLocation();
   const mounted = useMounted();
   if (!PUBLIC.has(pathname)) return null;
-  if (mounted && pathname === "/" && !isRaisenHost() && !window.location.hostname.startsWith("app.")) return null; // landing: toggles en el nav
+  if (mounted && pathname === "/" && !window.location.hostname.startsWith("app.")) return null; // landing (tenant o Raisen): tiene sus propios toggles en el nav — sin sol/luna global
   return (
     <div className="fixed top-4 right-4 z-50 flex gap-2">
       <ThemeToggle />
