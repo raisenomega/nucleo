@@ -1,8 +1,16 @@
-// 3 testimonios placeholder (negocios de servicio PR ficticios pero creíbles).
-export type Testimonial = { quoteEs: string; quoteEn: string; name: string; company: string };
+import type { TestimonialRow, TestimonialsConfig } from "@raisen-marketing/data/testimonial.types";
 
-export const TESTIMONIALS: Testimonial[] = [
-  { quoteEs: "Antes llevaba las facturas en libretas. Con NÚCLEO cotizo, facturo y cobro desde el celular en minutos.", quoteEn: "I used to track invoices in notebooks. With NÚCLEO I quote, invoice and collect from my phone in minutes.", name: "Carlos Rivera", company: "Plomería Rivera" },
-  { quoteEs: "Mis rutas y la evidencia de cada trabajo quedan organizadas solas. El equipo completa todo desde el móvil.", quoteEn: "My routes and each job's evidence organize themselves. The team completes everything from mobile.", name: "María Santos", company: "Santos Landscaping" },
-  { quoteEs: "La parte fiscal de PR me quitaba el sueño. Ahora las alertas y deducciones salen automáticas.", quoteEn: "PR taxes kept me up at night. Now alerts and deductions happen automatically.", name: "Luis Méndez", company: "Méndez Electric" },
+// Fallback de la sección Testimonios (idéntico al seed de la migr 201). La landing lo usa hasta que la DB
+// responde, o si no hay testimonios activos. Así la landing nunca queda vacía si Supabase falla.
+export const TESTIMONIALS_CONFIG_FALLBACK: TestimonialsConfig = {
+  id: "", eyebrowEs: "Testimonios", eyebrowEn: "Testimonials",
+  titleEs: "Lo que dicen nuestros clientes", titleEn: "What our clients say",
+};
+
+const base = { avatarUrl: null, rating: 5, isActive: true };
+
+export const TESTIMONIALS_FALLBACK: TestimonialRow[] = [
+  { ...base, id: "f1", quoteEs: "NÚCLEO nos permitió digitalizar toda la operación en una semana. Facturación, rutas y nómina — todo bajo nuestra marca.", quoteEn: "NÚCLEO let us digitalize our whole operation in a week. Invoicing, routes and payroll — all under our brand.", clientName: "Carlos Rivera", clientCompany: "Plomería Rivera", clientRole: "Dueño", displayOrder: 1 },
+  { ...base, id: "f2", quoteEs: "Antes usábamos 4 apps diferentes. Ahora todo está en un solo lugar y mis técnicos completan servicios desde el celular.", quoteEn: "We used to juggle 4 different apps. Now everything is in one place and my techs complete jobs from their phone.", clientName: "María Santos", clientCompany: "Santos Landscaping", clientRole: "Gerente de operaciones", displayOrder: 2 },
+  { ...base, id: "f3", quoteEs: "El módulo fiscal nos ahorró horas de trabajo cada mes. Las alertas de informativas son un salvavidas.", quoteEn: "The tax module saves us hours of work every month. The filing alerts are a lifesaver.", clientName: "Luis Méndez", clientCompany: "Méndez Electric", clientRole: "Contador", displayOrder: 3 },
 ];
