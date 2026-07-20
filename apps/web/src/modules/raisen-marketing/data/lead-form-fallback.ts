@@ -11,4 +11,5 @@ export const LEAD_FORM_FALLBACK: LeadFormConfig = {
   successEs: "¡Gracias! Te contactaremos pronto.", successEn: "Thanks! We'll be in touch soon.",
   errorEs: "No pudimos enviar tu mensaje. Intenta de nuevo.", errorEn: "We couldn't send your message. Please try again.",
   consentEs: "Al enviar aceptas que te contactemos sobre tu solicitud.", consentEn: "By submitting you agree to be contacted about your request.",
+  companyLabelEs: "Empresa (opcional)", companyLabelEn: "Company (optional)",
 };

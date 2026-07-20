@@ -18,10 +18,13 @@ export function HeroTextFields({ form, patch }: { form: MarketingHeroRow; patch:
       {field("Título (EN)", "titleEn")}
       {field("Subtítulo (ES)", "subtitleEs", true)}
       {field("Subtítulo (EN)", "subtitleEn", true)}
-      {field("CTA (ES)", "ctaLabelEs")}
-      {field("CTA (EN)", "ctaLabelEn")}
-      {field("CTA destino (href · ej. #lead-form)", "ctaHref")}
+      {field("CTA hero (ES)", "ctaLabelEs")}
+      {field("CTA hero (EN)", "ctaLabelEn")}
+      {field("CTA hero destino (href · ej. #lead-form)", "ctaHref")}
       {field("Texto del indicador scroll", "scrollText")}
+      {field("CTA header (ES · ej. Solicitar demo)", "navCtaLabelEs")}
+      {field("CTA header (EN · ej. Book a demo)", "navCtaLabelEn")}
+      {field("CTA header destino (href · ej. /demo)", "navCtaHref")}
     </div>
   );
 }

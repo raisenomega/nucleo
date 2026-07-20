@@ -17,7 +17,7 @@ export function MarketingLeadForm({ lang, audience, setAudience }: { lang: Lang;
   const es = lang === "es";
   const c = useMarketingLeadForm() ?? LEAD_FORM_FALLBACK;
   const { ref, isVisible } = useScrollReveal();
-  const [form, setForm] = useState({ name: "", email: "", phone: "", message: "", website: "" });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", company: "", message: "", website: "" });
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const set = (k: keyof typeof form) => (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setForm((f) => ({ ...f, [k]: e.target.value }));
@@ -26,7 +26,7 @@ export function MarketingLeadForm({ lang, audience, setAudience }: { lang: Lang;
     if (form.website) return; // honeypot
     if (!schema.safeParse(form).success) { setErrorMsg(es ? c.errorEs : c.errorEn); return setStatus("error"); }
     setStatus("submitting");
-    const r = await submitLead({ customerName: form.name, customerEmail: form.email, customerPhone: form.phone, message: form.message, leadType: audience });
+    const r = await submitLead({ customerName: form.name, customerEmail: form.email, customerPhone: form.phone, company: form.company, message: form.message, leadType: audience });
     if (r.ok) setStatus("success");
     else { setErrorMsg(r.message || (es ? c.errorEs : c.errorEn)); setStatus("error"); }
   };
@@ -53,6 +53,7 @@ export function MarketingLeadForm({ lang, audience, setAudience }: { lang: Lang;
           <input className={INPUT} placeholder={COPY[lang].fName} value={form.name} onChange={set("name")} />
           <input className={INPUT} type="email" placeholder={COPY[lang].fEmail} value={form.email} onChange={set("email")} />
           <input className={INPUT} placeholder={COPY[lang].fPhone} value={form.phone} onChange={set("phone")} />
+          <input className={INPUT} placeholder={es ? c.companyLabelEs : c.companyLabelEn} value={form.company} onChange={set("company")} />
           <textarea className={`${INPUT} resize-none`} rows={4} placeholder={COPY[lang].fMessage} value={form.message} onChange={set("message")} />
           <input type="text" tabIndex={-1} autoComplete="off" aria-hidden className="hidden" value={form.website} onChange={set("website")} />
           {status === "error" && <p className="text-sm text-destructive">{errorMsg}</p>}

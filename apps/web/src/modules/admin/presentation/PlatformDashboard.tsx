@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react";
 import { Building2, Inbox, Globe, Package } from "lucide-react";
 import { useI18n } from "@shared/i18n";
-import { getNewLeadsCount } from "@raisen-marketing/infrastructure/marketing-leads.repository";
+import { getLeadCounts } from "@raisen-marketing/infrastructure/marketing-leads.repository";
 
-// Dashboard de plataforma del superadmin (no el financiero del tenant). Card "Leads comercial" = COUNT real
-// de marketing_leads con status 'new' (RLS: solo superadmin lee). Tenants aún placeholder.
+// Dashboard de plataforma del superadmin (no el financiero del tenant). Card "Leads comercial" = leads nuevos
+// (grande) + total y calientes (subtítulo), reales de marketing_leads (RLS: solo superadmin). Tenants placeholder.
 export function PlatformDashboard() {
   const { t } = useI18n();
-  const [newLeads, setNewLeads] = useState<number | null>(null);
-  useEffect(() => { void getNewLeadsCount().then(setNewLeads); }, []);
+  const [c, setC] = useState<{ total: number; new: number; hot: number } | null>(null);
+  useEffect(() => { void getLeadCounts().then(setC); }, []);
   const card = "rounded-xl border border-border bg-card p-5";
   const METRICS = [
     { icon: Building2, key: "saTenantsActive" as const, value: "1" },
-    { icon: Inbox, key: "saLeadsCommercial" as const, value: newLeads === null ? "…" : String(newLeads) },
   ];
   return (
     <div className="space-y-6 p-4 md:p-8">
@@ -28,6 +27,11 @@ export function PlatformDashboard() {
             <p className="text-xs text-muted-foreground">{t(m.key)}</p>
           </div>
         ))}
+        <div className={card}>
+          <Inbox className="h-5 w-5 text-muted-foreground" />
+          <p className="mt-3 text-2xl font-bold text-foreground">{c === null ? "…" : c.new}</p>
+          <p className="text-xs text-muted-foreground">{t("saLeadsCommercial")}{c && ` · ${c.total} total · ${c.hot} 🔥`}</p>
+        </div>
         <div className={card}>
           <Globe className="h-5 w-5 text-muted-foreground" />
           <p className="mt-3 text-2xl font-bold text-foreground">{t("saLandingActive")}</p>

@@ -19,11 +19,14 @@ export default function MarketingRoot() {
   const [audience, setAudience] = useState<Audience>("business");
   const list = (sections ?? SECTIONS_FALLBACK).filter((s) => s.isVisible).sort((a, b) => a.order - b.order);
   const ctx = { lang, hero, audience, setAudience };
+  const es = lang === "es";
+  const navCtaLabel = hero ? (es ? hero.navCtaLabelEs : hero.navCtaLabelEn) : (es ? "Solicitar demo" : "Book a demo");
+  const navCtaHref = hero?.navCtaHref ?? "/demo";
   return (
     <div className="rm-root min-h-screen">
       <HeroMediaBackground hero={hero} />
       <div className="relative z-10">
-        <MarketingNav lang={lang} toggleLang={toggleLang} />
+        <MarketingNav lang={lang} toggleLang={toggleLang} navCtaLabel={navCtaLabel} navCtaHref={navCtaHref} />
         <main>{list.map((s) => renderSection(s.key, ctx))}</main>
         <MarketingFooter lang={lang} />
       </div>

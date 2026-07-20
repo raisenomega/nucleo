@@ -5,6 +5,7 @@ export interface MarketingHeroRow {
   subtitleEs: string; subtitleEn: string;
   ctaLabelEs: string; ctaLabelEn: string;
   scrollText: string; ctaHref: string;
+  navCtaLabelEs: string; navCtaLabelEn: string; navCtaHref: string;
   backgroundVideoUrl: string | null;
   backgroundImageUrl: string | null;
   mediaOverlayOpacity: number;
