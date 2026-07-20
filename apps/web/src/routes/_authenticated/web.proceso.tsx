@@ -1,6 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PlatformPlaceholder } from "@admin/presentation/PlatformPlaceholder";
+import { ProcessManager } from "@raisen-marketing/admin/ProcessManager";
 
-export const Route = createFileRoute("/_authenticated/web/proceso")({
-  component: () => <PlatformPlaceholder titleKey="webProcess" />,
-});
+export const Route = createFileRoute("/_authenticated/web/proceso")({ component: ProcessManager });
