@@ -17,6 +17,7 @@ export function MarketingNav({ lang, toggleLang }: { lang: Lang; toggleLang: () 
         {links.map((l) => (
           <button key={l.id} type="button" onClick={() => scrollTo(l.id)} className="text-sm text-white/60 transition-colors hover:text-white">{l.label}</button>
         ))}
+        <a href="/demo" className="text-sm text-white/60 transition-colors hover:text-white">{lang === "es" ? "Agendar demo" : "Book a demo"}</a>
       </div>
       <div className="flex shrink-0 items-center gap-3">
         <button type="button" onClick={toggleLang} aria-label="idioma" className="shrink-0 rounded-full border border-white/20 px-3 py-1 text-xs font-semibold text-white/70 transition-colors hover:text-white">{lang === "es" ? "EN" : "ES"}</button>
