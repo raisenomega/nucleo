@@ -1,6 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PlatformPlaceholder } from "@admin/presentation/PlatformPlaceholder";
+import { PricingManager } from "@raisen-marketing/admin/PricingManager";
 
-export const Route = createFileRoute("/_authenticated/web/precios")({
-  component: () => <PlatformPlaceholder titleKey="webPricing" />,
-});
+export const Route = createFileRoute("/_authenticated/web/precios")({ component: PricingManager });
