@@ -19,7 +19,6 @@ export default function MarketingRoot() {
   const { lang, toggleLang } = useMarketingLang();
   const hero = useMarketingHero();
   const [audience, setAudience] = useState<Audience>("business");
-  const onCta = (a: Audience) => { setAudience(a); document.getElementById("lead-form")?.scrollIntoView({ behavior: "smooth" }); };
   return (
     <div className="rm-root min-h-screen">
       <HeroMediaBackground hero={hero} />
@@ -29,7 +28,7 @@ export default function MarketingRoot() {
           <MarketingHero lang={lang} hero={hero} />
           <MarketingFeatures lang={lang} />
           <MarketingProcess lang={lang} />
-          <MarketingSolutions lang={lang} onCta={onCta} />
+          <MarketingSolutions lang={lang} setAudience={setAudience} />
           <MarketingPricing lang={lang} />
           <MarketingTestimonials lang={lang} />
           <MarketingLeadForm lang={lang} audience={audience} setAudience={setAudience} />

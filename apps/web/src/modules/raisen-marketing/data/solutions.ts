@@ -1,27 +1,20 @@
-// Bloques de "Soluciones" (audience business/partner → pre-marca la pill del lead form). `highlight` destaca
-// el card (borde/glow dorado + badge), reservado para el agente contable multi-país.
-export type Audience = "business" | "partner";
-export type Solution = { audience: Audience; highlight?: boolean; eyebrowEs: string; eyebrowEn: string; titleEs: string; titleEn: string; subtitleEs: string; subtitleEn: string; bulletsEs: string[]; bulletsEn: string[]; ctaEs: string; ctaEn: string };
+import type { SolutionRow, SolutionsConfig, PillPreset } from "@raisen-marketing/data/solution.types";
 
-export const SOLUTIONS: Solution[] = [
-  { audience: "business", highlight: true, eyebrowEs: "Agente contable IA", eyebrowEn: "AI accountant",
-    titleEs: "Contabilidad que cumple en PR, México y Colombia", titleEn: "Accounting compliant in PR, Mexico and Colombia",
-    subtitleEs: "Un agente entrenado en las reglas fiscales de cada país: registra, concilia y te avisa antes de cada vencimiento.", subtitleEn: "An agent trained on each country's tax rules: it records, reconciles and alerts you before every deadline.",
-    bulletsEs: ["Reglas fiscales de PR, México y Colombia", "Informativas y deducciones automáticas", "Concilia y alerta antes de vencer"], bulletsEn: ["Tax rules for PR, Mexico and Colombia", "Automatic filings and deductions", "Reconciles and alerts before deadlines"],
-    ctaEs: "Solicitar acceso", ctaEn: "Request access" },
-  { audience: "business", eyebrowEs: "Plataforma completa", eyebrowEn: "Full platform",
-    titleEs: "Un solo sistema para toda tu operación", titleEn: "One system for your whole operation",
-    subtitleEs: "Más allá de facturación y rutas: nómina, reportes, documentos y tu propia landing white-label.", subtitleEn: "Beyond billing and routes: payroll, reports, documents and your own white-label landing.",
-    bulletsEs: ["Nómina y equipo con deducciones", "Reportes y analytics de 4 pilares", "Documentos, contratos y landing propia"], bulletsEn: ["Payroll and team with deductions", "4-pillar reports and analytics", "Documents, contracts and your own landing"],
-    ctaEs: "Solicitar acceso", ctaEn: "Request access" },
-  { audience: "business", eyebrowEs: "Para tu negocio", eyebrowEn: "For your business",
-    titleEs: "Opera todo bajo tu propia marca", titleEn: "Run everything under your own brand",
-    subtitleEs: "Facturación, rutas, equipo, fiscal y landing — un solo sistema en tu dominio.", subtitleEn: "Billing, routes, team, taxes and landing — one system on your domain.",
-    bulletsEs: ["Panel completo white-label", "Landing y catálogo propios", "Cumplimiento fiscal de PR"], bulletsEn: ["Full white-label dashboard", "Your own landing and catalog", "PR tax compliance"],
-    ctaEs: "Solicitar acceso", ctaEn: "Request access" },
-  { audience: "partner", eyebrowEs: "Para agencias y partners", eyebrowEn: "For agencies and partners",
-    titleEs: "Revende NÚCLEO como tu producto", titleEn: "Resell NÚCLEO as your product",
-    subtitleEs: "Ofrece la plataforma a tus clientes bajo tu agencia, con tu marca y tu margen.", subtitleEn: "Offer the platform to your clients under your agency, your brand and your margin.",
-    bulletsEs: ["Multi-tenant bajo tu agencia", "Marca y dominio por cliente", "Margen recurrente"], bulletsEn: ["Multi-tenant under your agency", "Brand and domain per client", "Recurring margin"],
-    ctaEs: "Quiero ser partner", ctaEn: "I want to be a partner" },
+// `Audience` = pill del lead form (business/partner). Se re-exporta aquí para MarketingRoot/MarketingLeadForm.
+export type Audience = PillPreset;
+
+// Fallback de la sección Soluciones (idéntico al seed de la migr 202). La landing lo usa hasta que la DB
+// responde, o si no hay bloques activos. Así la landing nunca queda vacía si Supabase falla.
+export const SOLUTIONS_CONFIG_FALLBACK: SolutionsConfig = {
+  id: "", eyebrowEs: "Soluciones", eyebrowEn: "Solutions",
+  titleEs: "Soluciones que escalan contigo", titleEn: "Solutions that scale with you",
+};
+
+const base = { ctaHref: "#lead-form", isActive: true };
+
+export const SOLUTIONS_FALLBACK: SolutionRow[] = [
+  { ...base, id: "f1", iconName: "Calculator", titleEs: "Agente contable IA", titleEn: "AI accountant", descEs: "Un agente entrenado en las reglas fiscales de PR, México y Colombia: registra, concilia y te avisa antes de cada vencimiento.", descEn: "An agent trained on the tax rules of PR, Mexico and Colombia: it records, reconciles and alerts you before every deadline.", bulletsEs: ["Reglas fiscales de PR, México y Colombia", "Informativas y deducciones automáticas", "Concilia y alerta antes de vencer"], bulletsEn: ["Tax rules for PR, Mexico and Colombia", "Automatic filings and deductions", "Reconciles and alerts before deadlines"], ctaLabelEs: "Conocer más", ctaLabelEn: "Learn more", pillPreset: null, isHighlighted: true, badgeEs: "Destacado", badgeEn: "Featured", displayOrder: 1 },
+  { ...base, id: "f2", iconName: "LayoutGrid", titleEs: "Plataforma completa", titleEn: "Full platform", descEs: "Un solo sistema para toda tu operación: nómina, reportes, documentos y tu propia landing white-label.", descEn: "One system for your whole operation: payroll, reports, documents and your own white-label landing.", bulletsEs: ["Nómina y equipo con deducciones", "Reportes y analytics de 4 pilares", "Documentos, contratos y landing propia"], bulletsEn: ["Payroll and team with deductions", "4-pillar reports and analytics", "Documents, contracts and your own landing"], ctaLabelEs: "Ver módulos", ctaLabelEn: "See modules", pillPreset: null, isHighlighted: false, badgeEs: null, badgeEn: null, displayOrder: 2 },
+  { ...base, id: "f3", iconName: "Building2", titleEs: "Para tu negocio", titleEn: "For your business", descEs: "Opera todo bajo tu propia marca: facturación, rutas, equipo y fiscal en un solo sistema, en tu dominio.", descEn: "Run everything under your own brand: billing, routes, team and taxes in one system, on your domain.", bulletsEs: ["Opera bajo tu marca", "Todos los módulos incluidos", "Soporte directo"], bulletsEn: ["Run under your brand", "All modules included", "Direct support"], ctaLabelEs: "Solicitar acceso", ctaLabelEn: "Request access", pillPreset: "business", isHighlighted: false, badgeEs: null, badgeEn: null, displayOrder: 3 },
+  { ...base, id: "f4", iconName: "Handshake", titleEs: "Para agencias y partners", titleEn: "For agencies and partners", descEs: "Revende NÚCLEO como tu producto: ofrece la plataforma a tus clientes bajo tu marca y tu margen.", descEn: "Resell NÚCLEO as your product: offer the platform to your clients under your brand and your margin.", bulletsEs: ["Revende como tu producto", "Panel multi-tenant", "Comisiones recurrentes"], bulletsEn: ["Resell as your product", "Multi-tenant dashboard", "Recurring commissions"], ctaLabelEs: "Ser partner", ctaLabelEn: "Become a partner", pillPreset: "partner", isHighlighted: false, badgeEs: null, badgeEn: null, displayOrder: 4 },
 ];
