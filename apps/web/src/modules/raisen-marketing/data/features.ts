@@ -1,19 +1,11 @@
-import { FileText, Route, BarChart3, Bot, type LucideIcon } from "lucide-react";
+import type { MarketingFeatureRow, FeaturesConfig } from "@raisen-marketing/data/feature.types";
 
-// 4 features del grid de servicios (Facturación/Rutas/Fiscal/IA). icon = componente Lucide directo.
-export type Feature = { icon: LucideIcon; titleEs: string; titleEn: string; descEs: string; descEn: string; benefitsEs: string[]; benefitsEn: string[] };
+// Fallback mientras carga la DB (mismo contenido que el seed de la migr 198 → sin flash). Fuente real: marketing_features.
+export const FALLBACK_CONFIG: FeaturesConfig = { id: "", eyebrowEs: "Plataforma", eyebrowEn: "Platform", titleEs: "Todo lo que NÚCLEO hace por tu negocio", titleEn: "Everything NÚCLEO does for your business" };
 
-export const FEATURES: Feature[] = [
-  { icon: FileText, titleEs: "Facturación inteligente", titleEn: "Smart billing",
-    descEs: "Cotizaciones → facturas → cobro, con aprobación pública y PDFs bajo tu marca.", descEn: "Quotes → invoices → collection, with public approval and PDFs under your brand.",
-    benefitsEs: ["Aprobación pública del cliente", "Auto-facturación", "PDFs profesionales"], benefitsEn: ["Public client approval", "Auto-invoicing", "Professional PDFs"] },
-  { icon: Route, titleEs: "Rutas y campo", titleEn: "Routes & field",
-    descEs: "Paradas asignadas, evidencia fotográfica y servicios completados desde el móvil.", descEn: "Assigned stops, photo evidence and services completed from mobile.",
-    benefitsEs: ["Paradas asignadas", "Evidencia antes/después", "Completar desde el móvil"], benefitsEn: ["Assigned stops", "Before/after evidence", "Complete from mobile"] },
-  { icon: BarChart3, titleEs: "Fiscal Puerto Rico", titleEn: "PR tax compliance",
-    descEs: "Motor de contribución con reglas versionadas, alertas de informativas y optimización.", descEn: "Tax engine with versioned rules, filing alerts and optimization.",
-    benefitsEs: ["Reglas versionadas", "Alertas de informativas", "Optimización fiscal"], benefitsEn: ["Versioned rules", "Filing alerts", "Tax optimization"] },
-  { icon: Bot, titleEs: "Agentes IA", titleEn: "AI agents",
-    descEs: "Asistentes entrenados en tu negocio, integrados con voz, chat y tus datos reales.", descEn: "Assistants trained on your business, integrated with voice, chat and your real data.",
-    benefitsEs: ["Voz y chat", "Entrenados en tu negocio", "Datos reales"], benefitsEn: ["Voice and chat", "Trained on your business", "Real data"] },
+export const FALLBACK_FEATURES: MarketingFeatureRow[] = [
+  { id: "1", iconName: "FileText", titleEs: "Facturación inteligente", titleEn: "Smart billing", descEs: "Cotizaciones → facturas → cobro, con aprobación pública y PDFs bajo tu marca.", descEn: "Quotes → invoices → collection, with public approval and PDFs under your brand.", bulletsEs: ["Cotizaciones con aprobación pública", "Auto-facturación", "PDFs white-label"], bulletsEn: ["Quotes with public approval", "Auto-invoicing", "White-label PDFs"], displayOrder: 1, colSpan: 1, isActive: true },
+  { id: "2", iconName: "Route", titleEs: "Rutas y operaciones", titleEn: "Routes & operations", descEs: "Paradas asignadas, evidencia fotográfica y servicios completados desde el móvil.", descEn: "Assigned stops, photo evidence and services completed from mobile.", bulletsEs: ["Paradas asignadas", "Evidencia fotográfica", "Completar desde el móvil"], bulletsEn: ["Assigned stops", "Photo evidence", "Complete from mobile"], displayOrder: 2, colSpan: 1, isActive: true },
+  { id: "3", iconName: "BarChart3", titleEs: "Fiscal y reportes", titleEn: "Tax & reports", descEs: "Motor fiscal de PR versionado, alertas de informativas y 4 pilares de reportes.", descEn: "Versioned PR tax engine, filing alerts and 4-pillar reporting.", bulletsEs: ["Motor fiscal PR versionado", "Alertas de informativas", "4 pilares de reportes"], bulletsEn: ["Versioned PR tax engine", "Filing alerts", "4-pillar reports"], displayOrder: 3, colSpan: 1, isActive: true },
+  { id: "4", iconName: "Bot", titleEs: "IA y landing", titleEn: "AI & landing", descEs: "Agentes entrenados en tu negocio y tu propia landing white-label con SEO y PWA.", descEn: "Agents trained on your business and your own white-label landing with SEO and PWA.", bulletsEs: ["Agentes entrenados en tu negocio", "Landing white-label", "SEO + PWA"], bulletsEn: ["Agents trained on your business", "White-label landing", "SEO + PWA"], displayOrder: 4, colSpan: 1, isActive: true },
 ];

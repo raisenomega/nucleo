@@ -1,6 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PlatformPlaceholder } from "@admin/presentation/PlatformPlaceholder";
+import { FeaturesManager } from "@raisen-marketing/admin/FeaturesManager";
 
-export const Route = createFileRoute("/_authenticated/web/features")({
-  component: () => <PlatformPlaceholder titleKey="webFeatures" />,
-});
+export const Route = createFileRoute("/_authenticated/web/features")({ component: FeaturesManager });
