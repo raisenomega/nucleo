@@ -1,15 +1,19 @@
-import { Building2, Inbox, Globe, Package, type LucideIcon } from "lucide-react";
-import { useI18n, type TranslationKey } from "@shared/i18n";
+import { useEffect, useState } from "react";
+import { Building2, Inbox, Globe, Package } from "lucide-react";
+import { useI18n } from "@shared/i18n";
+import { getNewLeadsCount } from "@raisen-marketing/infrastructure/marketing-leads.repository";
 
-const METRICS: { icon: LucideIcon; key: TranslationKey; value: string }[] = [
-  { icon: Building2, key: "saTenantsActive", value: "1" },
-  { icon: Inbox, key: "saLeadsCommercial", value: "0" },
-];
-
-// Dashboard de plataforma del superadmin (no el financiero del tenant). Métricas placeholder — DB en S3+.
+// Dashboard de plataforma del superadmin (no el financiero del tenant). Card "Leads comercial" = COUNT real
+// de marketing_leads con status 'new' (RLS: solo superadmin lee). Tenants aún placeholder.
 export function PlatformDashboard() {
   const { t } = useI18n();
+  const [newLeads, setNewLeads] = useState<number | null>(null);
+  useEffect(() => { void getNewLeadsCount().then(setNewLeads); }, []);
   const card = "rounded-xl border border-border bg-card p-5";
+  const METRICS = [
+    { icon: Building2, key: "saTenantsActive" as const, value: "1" },
+    { icon: Inbox, key: "saLeadsCommercial" as const, value: newLeads === null ? "…" : String(newLeads) },
+  ];
   return (
     <div className="space-y-6 p-4 md:p-8">
       <div>

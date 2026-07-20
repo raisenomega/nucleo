@@ -1,6 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PlatformPlaceholder } from "@admin/presentation/PlatformPlaceholder";
+import { LeadsInbox } from "@raisen-marketing/admin/LeadsInbox";
 
-export const Route = createFileRoute("/_authenticated/web/leads")({
-  component: () => <PlatformPlaceholder titleKey="saLeadsCommercial" />,
-});
+export const Route = createFileRoute("/_authenticated/web/leads")({ component: LeadsInbox });
