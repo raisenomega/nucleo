@@ -1,15 +1,17 @@
 import { Mail, Phone } from "lucide-react";
 import { useMarketingFooter } from "@raisen-marketing/hooks/useMarketingFooter";
+import { useMarketingLegalLinks } from "@raisen-marketing/hooks/useMarketingLegalLinks";
 import { FOOTER_FALLBACK } from "@raisen-marketing/data/footer-fallback";
+import { LEGAL_LINKS_FALLBACK } from "@raisen-marketing/data/legal-fallback";
 import { SOCIAL_DEFS } from "@raisen-marketing/data/footer-socials";
-import { COPY, type Lang } from "@raisen-marketing/data/copy";
+import { type Lang } from "@raisen-marketing/data/copy";
 
 // Footer (réplica OMEGA): marca + tagline + contacto (email/phone si hay) · redes (solo las que tienen URL) ·
-// copyright con {year} → año actual · legales. Lee la fila única de la DB (editable en /web/footer) + fallback.
+// copyright con {year} → año actual · links legales dinámicos (páginas is_active → /legal/{slug}). Lee la DB + fallback.
 export function MarketingFooter({ lang }: { lang: Lang }) {
   const es = lang === "es";
-  const c = COPY[lang];
   const f = useMarketingFooter() ?? FOOTER_FALLBACK;
+  const legalLinks = useMarketingLegalLinks() ?? LEGAL_LINKS_FALLBACK;
   const socials = SOCIAL_DEFS.map((d) => ({ ...d, url: f[d.key] as string | null })).filter((d) => d.url);
   const copyright = (es ? f.copyrightEs : f.copyrightEn).replace("{year}", String(new Date().getFullYear()));
   return (
@@ -35,8 +37,7 @@ export function MarketingFooter({ lang }: { lang: Lang }) {
         <div className="mt-10 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-white/50 md:flex-row md:items-center md:justify-between">
           <span>{copyright}</span>
           <div className="flex flex-wrap gap-4">
-            <a href="#" className="transition-colors hover:text-primary">{c.footerPrivacy}</a>
-            <a href="#" className="transition-colors hover:text-primary">{c.footerTerms}</a>
+            {legalLinks.map((l) => <a key={l.slug} href={`/legal/${l.slug}`} className="transition-colors hover:text-primary">{es ? l.titleEs : l.titleEn}</a>)}
           </div>
         </div>
       </div>

@@ -39,7 +39,7 @@ export type TranslationKey =
   | "retentionFund" | "registerDeposit" | "required" | "deposited" | "pending" | "history"
   | "executiveSummary" | "operatingProfit" | "availableBalance" | "healthy" | "tight" | "atRisk"
   | "fiscalDisclaimer" | "bankName" | "accountLast4" | "accountType" | "isPrimary" | "notAuthorized"
-  | "fiscalSection" | "saPlatform" | "saSiteWeb" | "saConfig" | "saTenants" | "saLeadsCommercial" | "webSections" | "webHero" | "webFeatures" | "webProcess" | "webPricing" | "webTestimonials" | "webSolutions" | "webFooter" | "comingSoonCms" | "saPlatformSubtitle" | "saTenantsActive" | "saLandingActive"
+  | "fiscalSection" | "saPlatform" | "saSiteWeb" | "saConfig" | "saTenants" | "saLeadsCommercial" | "webSections" | "webHero" | "webFeatures" | "webProcess" | "webPricing" | "webTestimonials" | "webSolutions" | "webFooter" | "webLegal" | "comingSoonCms" | "saPlatformSubtitle" | "saTenantsActive" | "saLandingActive"
   | "deposit" | "deposits" | "egresos" | "registerBalance" | "openingBalance" | "realBalance" | "calculatedBalance"
   | "depositType" | "cash" | "check" | "transfer" | "other" | "referenceNumber"
   | "retentionAuto" | "retentionAutoNote" | "accumulated" | "operatingMargin"

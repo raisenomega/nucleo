@@ -1,4 +1,4 @@
-import { LayoutDashboard, Building2, Inbox, LayoutList, Target, Zap, ArrowRight, DollarSign, MessageSquare, Lightbulb, FileText, Settings } from "lucide-react";
+import { LayoutDashboard, Building2, Inbox, LayoutList, Target, Zap, ArrowRight, DollarSign, MessageSquare, Lightbulb, FileText, Scale, Settings } from "lucide-react";
 import type { NavSection } from "@shared/components/sidebar.nav";
 
 // Grupos del sidebar del SUPERADMIN (plataforma) — reemplazan los grupos de tenant. Solo se renderizan cuando
@@ -18,6 +18,7 @@ export const SUPERADMIN_SECTIONS: NavSection[] = [
     { key: "webTestimonials", icon: MessageSquare, to: "/web/testimonios" },
     { key: "webSolutions", icon: Lightbulb, to: "/web/soluciones" },
     { key: "webFooter", icon: FileText, to: "/web/footer" },
+    { key: "webLegal", icon: Scale, to: "/web/legales" },
   ] },
   { title: "saConfig", icon: Settings, items: [
     { key: "systemSettings", icon: Settings, to: "/settings" },
