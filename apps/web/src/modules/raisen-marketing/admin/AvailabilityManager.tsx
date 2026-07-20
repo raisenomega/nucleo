@@ -53,7 +53,7 @@ export function AvailabilityManager() {
         <input className={F} placeholder="Email confirmación cuerpo EN" value={c.confBodyEn} onChange={(e) => set({ confBodyEn: e.target.value })} />
       </div>
       <button type="button" onClick={() => void save()} className="rounded-lg bg-primary px-5 py-2 text-sm font-bold text-primary-foreground">Guardar configuración</button>
-      <BlockedDatesEditor blocked={blocked} onAdd={(d, r) => void addBlockedDate(d, r).then((e) => e ? toast.error(e) : reloadB())} onRemove={(id) => void deleteBlockedDate(id).then((e) => e ? toast.error(e) : reloadB())} />
+      <BlockedDatesEditor blocked={blocked} onAdd={(d, r, s, e2) => void addBlockedDate(d, r, s, e2).then((e) => e ? toast.error(e) : reloadB())} onRemove={(id) => void deleteBlockedDate(id).then((e) => e ? toast.error(e) : reloadB())} />
     </div>
   );
 }

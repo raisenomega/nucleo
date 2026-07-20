@@ -18,11 +18,12 @@ export async function saveAvailabilityConfig(c: AvailabilityConfig): Promise<str
   return error ? error.message : null;
 }
 export async function getBlockedDates(): Promise<BlockedDate[]> {
-  const { data } = await supabase.from("marketing_blocked_dates").select("id, blocked_date, reason").order("blocked_date");
-  return ((data ?? []) as Record<string, unknown>[]).map((o) => ({ id: o.id as string, blockedDate: o.blocked_date as string, reason: (o.reason as string) ?? "" }));
+  const { data } = await supabase.from("marketing_blocked_dates").select("id, blocked_date, reason, start_time, end_time").order("blocked_date");
+  return ((data ?? []) as Record<string, unknown>[]).map((o) => ({ id: o.id as string, blockedDate: o.blocked_date as string, reason: (o.reason as string) ?? "", startTime: o.start_time ? t5(o.start_time) : null, endTime: o.end_time ? t5(o.end_time) : null }));
 }
-export async function addBlockedDate(date: string, reason: string): Promise<string | null> {
-  const { error } = await supabase.from("marketing_blocked_dates").insert({ blocked_date: date, reason });
+// start/end null → bloquea el día completo; con valores → solo esa franja.
+export async function addBlockedDate(date: string, reason: string, start?: string, end?: string): Promise<string | null> {
+  const { error } = await supabase.from("marketing_blocked_dates").insert({ blocked_date: date, reason, start_time: start || null, end_time: end || null });
   return error ? error.message : null;
 }
 export async function deleteBlockedDate(id: string): Promise<string | null> {

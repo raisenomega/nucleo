@@ -1,7 +1,9 @@
 import { useScrollReveal } from "@raisen-marketing/hooks/useScrollReveal";
 import { useMarketingPricing } from "@raisen-marketing/hooks/useMarketingPricing";
 import { PRICING_TIERS_FALLBACK, PRICING_CONFIG_FALLBACK } from "@raisen-marketing/data/pricing-tiers";
+import { useMarketingAddons } from "@raisen-marketing/hooks/useMarketingAddons";
 import { PricingTierCard } from "@raisen-marketing/components/pricing/PricingTierCard";
+import { PricingAddonCard } from "@raisen-marketing/components/pricing/PricingAddonCard";
 import { COPY, type Lang } from "@raisen-marketing/data/copy";
 
 // Sección Precios (réplica OMEGA): divisor dorado, header reveal, grid de tiers. Lee config+tiers de la DB
@@ -10,6 +12,7 @@ export function MarketingPricing({ lang }: { lang: Lang }) {
   const es = lang === "es";
   const c = COPY[lang];
   const { config, tiers } = useMarketingPricing();
+  const addons = useMarketingAddons();
   const cfg = config ?? PRICING_CONFIG_FALLBACK;
   const items = tiers && tiers.length ? tiers : PRICING_TIERS_FALLBACK;
   const { ref, isVisible } = useScrollReveal();
@@ -24,6 +27,17 @@ export function MarketingPricing({ lang }: { lang: Lang }) {
         <div className="mx-auto grid max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((t) => <PricingTierCard key={t.id} tier={t} lang={lang} recommendedLabel={c.pricingRecommended} />)}
         </div>
+        {addons.length > 0 && (
+          <div className="mt-16">
+            <div className="mb-8 text-center">
+              <h3 className="font-display text-2xl font-bold text-foreground md:text-3xl">{es ? "Complementos" : "Add-ons"}</h3>
+              <p className="mx-auto mt-2 max-w-lg text-sm text-muted-foreground">{es ? "Suma capacidades a cualquier plan." : "Add capabilities to any plan."}</p>
+            </div>
+            <div className="mx-auto grid max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {addons.map((a) => <PricingAddonCard key={a.id} addon={a} lang={lang} />)}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

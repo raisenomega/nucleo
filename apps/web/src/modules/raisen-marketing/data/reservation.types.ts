@@ -6,7 +6,8 @@ export interface AvailabilityConfig {
   titleEs: string; titleEn: string; subtitleEs: string; subtitleEn: string; confirmEs: string; confirmEn: string;
   confSubjectEs: string; confSubjectEn: string; confBodyEs: string; confBodyEn: string;
 }
-export interface BlockedDate { id: string; blockedDate: string; reason: string }
+// startTime/endTime null = día completo bloqueado; con valores = solo esa franja [start, end).
+export interface BlockedDate { id: string; blockedDate: string; reason: string; startTime: string | null; endTime: string | null }
 export type ReservationStatus = "confirmed" | "cancelled" | "completed" | "no_show";
 export interface MarketingReservation {
   id: string; customerName: string; customerEmail: string; customerPhone: string | null;

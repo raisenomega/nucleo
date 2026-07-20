@@ -8,6 +8,7 @@ import type { PricingTierRow, PricingConfig, PricingTierDraft } from "@raisen-ma
 import { PricingDialog } from "@raisen-marketing/admin/PricingDialog";
 import { PricingConfigEditor } from "@raisen-marketing/admin/PricingConfigEditor";
 import { PricingListRow } from "@raisen-marketing/admin/PricingListRow";
+import { AddonsSection } from "@raisen-marketing/admin/AddonsSection";
 
 // Editor /web/precios (Super Admin): config de sección + CRUD de tiers con reorder ↑↓, toggle activo y
 // toggle recomendado EXCLUSIVO (solo 1; el repo desmarca los demás).
@@ -44,6 +45,7 @@ export function PricingManager() {
             onDelete={() => { if (window.confirm(`¿Eliminar "${t.nameEs}"?`)) void deletePricingTier(t.id).then(done); }} />
         ))}
       </div>
+      <AddonsSection />
       {edit.open && <PricingDialog initial={edit.initial} onClose={() => setEdit({ open: false, initial: null })} onSave={onSave} />}
     </div>
   );

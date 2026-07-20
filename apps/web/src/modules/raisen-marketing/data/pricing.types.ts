@@ -9,3 +9,10 @@ export interface PricingTierRow {
 }
 export interface PricingConfig { id: string; eyebrowEs: string; eyebrowEn: string; titleEs: string; titleEn: string }
 export type PricingTierDraft = Omit<PricingTierRow, "id"> & { id?: string };
+
+// Add-on (complemento) que se muestra debajo de los planes.
+export interface PricingAddonRow {
+  id: string; nameEs: string; nameEn: string; descEs: string; descEn: string;
+  price: number; currency: string; billingPeriod: string; isActive: boolean; displayOrder: number;
+}
+export type PricingAddonDraft = Omit<PricingAddonRow, "id"> & { id?: string };

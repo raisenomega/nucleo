@@ -2,10 +2,7 @@ import { Check } from "lucide-react";
 import type { PricingTierRow } from "@raisen-marketing/data/pricing.types";
 import type { Lang } from "@raisen-marketing/data/copy";
 
-const PERIOD_MONTH = { es: "/mes", en: "/mo" };
-const PERIOD: Record<string, { es: string; en: string }> = {
-  month: PERIOD_MONTH, year: { es: "/año", en: "/yr" }, one_time: { es: "", en: "" },
-};
+import { periodLabel } from "@raisen-marketing/data/billing-period";
 const goTo = (href: string) => document.getElementById(href.replace(/^#/, ""))?.scrollIntoView({ behavior: "smooth" });
 
 // Réplica del PricingTierCard de OMEGA: badge Recomendado, nombre, tagline, precio dorado + moneda/período,
@@ -13,7 +10,7 @@ const goTo = (href: string) => document.getElementById(href.replace(/^#/, ""))?.
 export function PricingTierCard({ tier, lang, recommendedLabel }: { tier: PricingTierRow; lang: Lang; recommendedLabel: string }) {
   const es = lang === "es";
   const features = es ? tier.featuresEs : tier.featuresEn;
-  const period = (PERIOD[tier.billingPeriod] ?? PERIOD_MONTH)[lang];
+  const period = periodLabel(tier.billingPeriod, lang);
   return (
     <div className={`relative flex flex-col rounded-xl border p-6 transition-all duration-300 ${tier.isRecommended ? "border-primary/40 bg-card shadow-lg shadow-primary/10" : "border-border bg-card hover:border-primary/20"}`}>
       {tier.isRecommended && <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-0.5 text-xs font-semibold text-primary-foreground">{recommendedLabel}</span>}

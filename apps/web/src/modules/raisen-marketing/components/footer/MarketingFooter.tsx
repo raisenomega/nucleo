@@ -3,7 +3,8 @@ import { useMarketingFooter } from "@raisen-marketing/hooks/useMarketingFooter";
 import { useMarketingLegalLinks } from "@raisen-marketing/hooks/useMarketingLegalLinks";
 import { FOOTER_FALLBACK } from "@raisen-marketing/data/footer-fallback";
 import { LEGAL_LINKS_FALLBACK } from "@raisen-marketing/data/legal-fallback";
-import { SOCIAL_DEFS } from "@raisen-marketing/data/footer-socials";
+import { useMarketingFooterSocials } from "@raisen-marketing/hooks/useMarketingFooterSocials";
+import { featureIcon } from "@raisen-marketing/data/feature-icons";
 import { type Lang } from "@raisen-marketing/data/copy";
 
 // Footer (réplica OMEGA): marca + tagline + contacto (email/phone si hay) · redes (solo las que tienen URL) ·
@@ -12,7 +13,7 @@ export function MarketingFooter({ lang }: { lang: Lang }) {
   const es = lang === "es";
   const f = useMarketingFooter() ?? FOOTER_FALLBACK;
   const legalLinks = useMarketingLegalLinks() ?? LEGAL_LINKS_FALLBACK;
-  const socials = SOCIAL_DEFS.map((d) => ({ ...d, url: f[d.key] as string | null })).filter((d) => d.url);
+  const socials = useMarketingFooterSocials();
   const copyright = (es ? f.copyrightEs : f.copyrightEn).replace("{year}", String(new Date().getFullYear()));
   return (
     <footer className="relative z-10 border-t border-white/10 bg-background/60 px-6 py-12">
@@ -28,9 +29,10 @@ export function MarketingFooter({ lang }: { lang: Lang }) {
           </div>
           {socials.length > 0 && (
             <div className="flex gap-4">
-              {socials.map(({ key, Icon, label, url }) => (
-                <a key={key} href={url!} target="_blank" rel="noopener noreferrer" aria-label={label} className="text-white/60 transition-colors hover:text-primary"><Icon size={20} /></a>
-              ))}
+              {socials.map((s) => {
+                const Icon = featureIcon(s.iconName);
+                return <a key={s.id} href={s.url} target="_blank" rel="noopener noreferrer" aria-label={s.platform} className="text-white/60 transition-colors hover:text-primary"><Icon size={20} /></a>;
+              })}
             </div>
           )}
         </div>

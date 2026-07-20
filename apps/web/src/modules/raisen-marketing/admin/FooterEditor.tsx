@@ -3,13 +3,13 @@ import { Navigate } from "@tanstack/react-router";
 import { useToast } from "@shared/providers/toast-context";
 import { useSuperAdmin } from "@shared/hooks/useSuperAdmin";
 import { getFooter, saveFooter } from "@raisen-marketing/infrastructure/marketing-footer.repository";
-import { SOCIAL_DEFS } from "@raisen-marketing/data/footer-socials";
+import { SocialLinksEditor } from "@raisen-marketing/admin/SocialLinksEditor";
 import type { FooterRow } from "@raisen-marketing/data/footer.types";
 
 const F = "w-full rounded-lg border border-border bg-background p-2 text-sm text-foreground";
 
-// Editor /web/footer (Super Admin): tagline + contacto + 6 redes (URL vacía → oculta en el footer) +
-// copyright con {year}. Fila única, un solo formulario (sin modal). Gate is_superadmin.
+// Editor /web/footer (Super Admin): tagline + contacto + copyright con {year} (form único) + redes sociales
+// en lista FLEXIBLE (tabla marketing_footer_social_links, CRUD propio). Gate is_superadmin.
 export function FooterEditor() {
   const { isSuperAdmin } = useSuperAdmin();
   const toast = useToast();
@@ -28,15 +28,7 @@ export function FooterEditor() {
         <input className={F} placeholder="Email de contacto" value={f.contactEmail ?? ""} onChange={(e) => set({ contactEmail: e.target.value })} />
         <input className={F} placeholder="Teléfono (opcional)" value={f.contactPhone ?? ""} onChange={(e) => set({ contactPhone: e.target.value })} />
       </div>
-      <div className="space-y-2 rounded-xl border border-border bg-card p-4">
-        <p className="text-sm font-medium text-foreground">Redes (URL vacía = oculta)</p>
-        {SOCIAL_DEFS.map(({ key, Icon, label }) => (
-          <div key={key} className="flex items-center gap-2">
-            <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
-            <input className={F} placeholder={`${label} URL`} value={(f[key] as string) ?? ""} onChange={(e) => set({ [key]: e.target.value } as Partial<FooterRow>)} />
-          </div>
-        ))}
-      </div>
+      <SocialLinksEditor />
       <p className="text-xs text-muted-foreground">Tip: usa <code>{"{year}"}</code> en el copyright — se reemplaza por el año actual.</p>
       <div className="grid grid-cols-2 gap-2">
         <input className={F} placeholder="Copyright ES" value={f.copyrightEs} onChange={(e) => set({ copyrightEs: e.target.value })} />
