@@ -7,6 +7,7 @@ export interface LeadFormConfig {
   ctaLabelEs: string; ctaLabelEn: string; successEs: string; successEn: string;
   errorEs: string; errorEn: string; consentEs: string; consentEn: string;
   companyLabelEs: string; companyLabelEn: string;
+  confSubjectEs: string; confSubjectEn: string; confBodyEs: string; confBodyEn: string;
 }
 export type LeadStatus = "new" | "contacted" | "qualified" | "converted" | "lost" | "archived";
 export type LeadTemperature = "cold" | "warm" | "hot" | "converted";
@@ -17,5 +18,5 @@ export interface MarketingLead {
   utmSource: string | null; utmMedium: string | null; utmCampaign: string | null;
   status: LeadStatus; temperature: LeadTemperature; notes: string | null; createdAt: string;
 }
-export interface LeadSubmit { customerName: string; customerEmail: string; customerPhone: string; company: string; message: string; leadType: "business" | "partner" }
+export interface LeadSubmit { customerName: string; customerEmail: string; customerPhone: string; company: string; message: string; leadType: "business" | "partner"; lang: string }
 export interface LeadEditFields { customerName: string; customerEmail: string; customerPhone: string; company: string; whatsappPhone: string }

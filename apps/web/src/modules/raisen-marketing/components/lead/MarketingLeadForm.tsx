@@ -26,7 +26,7 @@ export function MarketingLeadForm({ lang, audience, setAudience }: { lang: Lang;
     if (form.website) return; // honeypot
     if (!schema.safeParse(form).success) { setErrorMsg(es ? c.errorEs : c.errorEn); return setStatus("error"); }
     setStatus("submitting");
-    const r = await submitLead({ customerName: form.name, customerEmail: form.email, customerPhone: form.phone, company: form.company, message: form.message, leadType: audience });
+    const r = await submitLead({ customerName: form.name, customerEmail: form.email, customerPhone: form.phone, company: form.company, message: form.message, leadType: audience, lang });
     if (r.ok) setStatus("success");
     else { setErrorMsg(r.message || (es ? c.errorEs : c.errorEn)); setStatus("error"); }
   };

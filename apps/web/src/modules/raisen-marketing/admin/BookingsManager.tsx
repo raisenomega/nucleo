@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Navigate } from "@tanstack/react-router";
 import { useToast } from "@shared/providers/toast-context";
 import { useSuperAdmin } from "@shared/hooks/useSuperAdmin";
-import { getReservations, setReservationFields } from "@raisen-marketing/infrastructure/marketing-booking.repository";
+import { getReservations, setReservationFields, deleteReservation } from "@raisen-marketing/infrastructure/marketing-booking.repository";
 import type { MarketingReservation, ReservationStatus } from "@raisen-marketing/data/reservation.types";
 import { RES_STATUSES, RES_LABELS } from "@raisen-marketing/admin/reservation-constants";
 import { ReservationRow } from "@raisen-marketing/admin/ReservationRow";
@@ -36,7 +36,8 @@ export function BookingsManager() {
       <div className="space-y-2">
         {items.length === 0 && <p className="text-sm text-muted-foreground">Sin reservas en esta vista.</p>}
         {items.map((r) => (
-          <ReservationRow key={r.id} r={r} onStatus={(s) => void setReservationFields(r.id, { status: s }).then(done)} onView={() => setView(r)} />
+          <ReservationRow key={r.id} r={r} onStatus={(s) => void setReservationFields(r.id, { status: s }).then(done)} onView={() => setView(r)}
+            onDelete={() => { if (window.confirm(`¿Eliminar la reserva de "${r.customerName}"?`)) void deleteReservation(r.id).then(done); }} />
         ))}
       </div>
       {view && <ReservationDetailDialog r={view} onClose={() => setView(null)} onSave={saveDetail} />}

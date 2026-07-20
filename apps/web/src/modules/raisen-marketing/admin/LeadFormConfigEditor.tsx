@@ -11,6 +11,7 @@ const ROWS: [keyof LeadFormConfig, keyof LeadFormConfig, string][] = [
   ["ctaLabelEs", "ctaLabelEn", "Botón CTA"], ["successEs", "successEn", "Mensaje éxito"],
   ["errorEs", "errorEn", "Mensaje error"], ["consentEs", "consentEn", "Consentimiento"],
   ["companyLabelEs", "companyLabelEn", "Label Empresa"],
+  ["confSubjectEs", "confSubjectEn", "Email confirmación · asunto"], ["confBodyEs", "confBodyEn", "Email confirmación · cuerpo"],
 ];
 
 // Editor de los textos del formulario comercial (todos ES/EN). Guarda la config; la landing la refleja.

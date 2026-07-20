@@ -10,7 +10,7 @@ export async function getSlots(dateStr: string): Promise<string[]> {
   return (data as string[]) ?? [];
 }
 export async function submitReservation(s: ReservationSubmit): Promise<{ ok: boolean; message?: string }> {
-  const payload = { customer_name: s.customerName, customer_email: s.customerEmail, customer_phone: s.customerPhone, message: s.message, reservation_date: s.reservationDate, reservation_time: s.reservationTime };
+  const payload = { customer_name: s.customerName, customer_email: s.customerEmail, customer_phone: s.customerPhone, message: s.message, reservation_date: s.reservationDate, reservation_time: s.reservationTime, lang: s.lang };
   const { data, error } = await supabase.rpc("_marketing_create_reservation", { _payload: payload });
   if (error) return { ok: false, message: error.message };
   const r = data as { status: string; message?: string };
@@ -25,5 +25,9 @@ export async function getReservations(filter: { status?: string; from?: string }
 }
 export async function setReservationFields(id: string, patch: Partial<{ status: ReservationStatus; notes: string }>): Promise<string | null> {
   const { error } = await supabase.from("marketing_reservations").update(patch).eq("id", id);
+  return error ? error.message : null;
+}
+export async function deleteReservation(id: string): Promise<string | null> {
+  const { error } = await supabase.from("marketing_reservations").delete().eq("id", id);
   return error ? error.message : null;
 }

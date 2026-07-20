@@ -29,7 +29,7 @@ export default function MarketingDemoPage() {
   const book = async () => {
     if (form.website || !date || !time) return;
     setStatus("submitting");
-    const r = await submitReservation({ customerName: form.name, customerEmail: form.email, customerPhone: form.phone, message: form.message, reservationDate: date, reservationTime: time });
+    const r = await submitReservation({ customerName: form.name, customerEmail: form.email, customerPhone: form.phone, message: form.message, reservationDate: date, reservationTime: time, lang });
     if (r.ok) setStatus("success"); else { setErrorMsg(r.message || (es ? "No se pudo agendar." : "Could not book.")); setStatus("error"); }
   };
   return (

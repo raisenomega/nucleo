@@ -1,4 +1,4 @@
-import { Eye, Pencil, Mail, MessageCircle, Trash2 } from "lucide-react";
+import { Eye, Pencil, Mail, Phone, MessageCircle, Trash2 } from "lucide-react";
 import { BadgeSelect } from "@raisen-marketing/admin/BadgeSelect";
 import { LEAD_STATUSES, STATUS_LABELS, STATUS_COLORS, TEMPERATURES, TEMP_LABELS, TEMP_COLORS, waLink } from "@raisen-marketing/admin/lead-constants";
 import type { MarketingLead, LeadStatus, LeadTemperature } from "@raisen-marketing/data/lead-form.types";
@@ -22,6 +22,9 @@ export function LeadRow({ lead, onStatus, onTemp, onView, onEdit, onEmail, onDel
       <button type="button" onClick={onView} aria-label="ver" className={btn}><Eye className="h-4 w-4" /></button>
       <button type="button" onClick={onEdit} aria-label="editar" className={btn}><Pencil className="h-4 w-4" /></button>
       <button type="button" onClick={onEmail} aria-label="email" className={btn}><Mail className="h-4 w-4" /></button>
+      {lead.customerPhone
+        ? <a href={`tel:${lead.customerPhone.replace(/[^\d+]/g, "")}`} aria-label="llamar" className={btn}><Phone className="h-4 w-4" /></a>
+        : <span className="rounded p-1 text-muted-foreground/30"><Phone className="h-4 w-4" /></span>}
       {wa
         ? <a href={wa} target="_blank" rel="noreferrer" aria-label="WhatsApp" className="rounded p-1 text-green-500"><MessageCircle className="h-4 w-4" /></a>
         : <span className="rounded p-1 text-muted-foreground/30"><MessageCircle className="h-4 w-4" /></span>}
