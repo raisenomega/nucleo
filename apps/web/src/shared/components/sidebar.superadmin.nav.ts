@@ -7,7 +7,6 @@ export const SUPERADMIN_SECTIONS: NavSection[] = [
   { title: "saPlatform", icon: LayoutDashboard, items: [
     { key: "panel", icon: LayoutDashboard, to: "/dashboard" },
     { key: "saTenants", icon: Building2, to: "/tenants" },
-    { key: "saLeadsCommercial", icon: Inbox, to: "/web/leads" },
   ] },
   { title: "saSiteWeb", icon: FileText, items: [
     { key: "webSections", icon: LayoutList, to: "/web/secciones" },
@@ -19,6 +18,7 @@ export const SUPERADMIN_SECTIONS: NavSection[] = [
     { key: "webSolutions", icon: Lightbulb, to: "/web/soluciones" },
     { key: "webFooter", icon: FileText, to: "/web/footer" },
     { key: "webLegal", icon: Scale, to: "/web/legales" },
+    { key: "saLeadsCommercial", icon: Inbox, to: "/web/leads" },
     { key: "webReservations", icon: CalendarCheck, to: "/web/reservas" },
     { key: "webAvailability", icon: CalendarClock, to: "/web/disponibilidad" },
   ] },

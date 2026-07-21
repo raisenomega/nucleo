@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Plus, Pencil, Trash2, ArrowUp, ArrowDown } from "lucide-react";
 import { useToast } from "@shared/providers/toast-context";
 import { getSocialLinks, saveSocialLink, deleteSocialLink, setSocialFields } from "@raisen-marketing/infrastructure/marketing-social.repository";
-import { featureIcon } from "@raisen-marketing/data/feature-icons";
+import { socialIcon } from "@raisen-marketing/components/social-icons";
 import type { SocialLink, SocialLinkDraft } from "@raisen-marketing/data/footer.types";
 import { SocialLinkDialog } from "@raisen-marketing/admin/SocialLinkDialog";
 
@@ -28,7 +28,7 @@ export function SocialLinksEditor() {
       </div>
       {items.length === 0 && <p className="text-xs text-muted-foreground">Sin redes. Agrega la primera.</p>}
       {items.map((s, i) => {
-        const Icon = featureIcon(s.iconName);
+        const Icon = socialIcon(s.iconName, s.platform);
         return (
           <div key={s.id} className="flex items-center gap-3 rounded-lg border border-border p-2">
             <Icon className="h-4 w-4 shrink-0 text-primary" />

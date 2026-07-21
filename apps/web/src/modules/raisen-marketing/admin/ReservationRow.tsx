@@ -1,10 +1,10 @@
-import { Eye, Phone, MessageCircle, Trash2 } from "lucide-react";
+import { Eye, Mail, Phone, MessageCircle, Trash2 } from "lucide-react";
 import { RES_STATUSES, RES_LABELS, RES_COLORS } from "@raisen-marketing/admin/reservation-constants";
 import type { MarketingReservation, ReservationStatus } from "@raisen-marketing/data/reservation.types";
 
 // Fila de reserva: fecha+hora · nombre/email · status inline · ver · llamar (tel:) · WhatsApp (wa.me) · eliminar.
-export function ReservationRow({ r, onStatus, onView, onDelete }: {
-  r: MarketingReservation; onStatus: (s: ReservationStatus) => void; onView: () => void; onDelete: () => void;
+export function ReservationRow({ r, onStatus, onView, onEmail, onDelete }: {
+  r: MarketingReservation; onStatus: (s: ReservationStatus) => void; onView: () => void; onEmail: () => void; onDelete: () => void;
 }) {
   const digits = (r.customerPhone || "").replace(/\D/g, "");
   const btn = "rounded p-1 text-muted-foreground hover:text-foreground";
@@ -19,6 +19,7 @@ export function ReservationRow({ r, onStatus, onView, onDelete }: {
         {RES_STATUSES.map((s) => <option key={s} value={s} className="bg-card text-foreground">{RES_LABELS[s]}</option>)}
       </select>
       <button type="button" onClick={onView} aria-label="ver" className={btn}><Eye className="h-4 w-4" /></button>
+      <button type="button" onClick={onEmail} aria-label="email" className={btn}><Mail className="h-4 w-4" /></button>
       {r.customerPhone
         ? <a href={`tel:${r.customerPhone.replace(/[^\d+]/g, "")}`} aria-label="llamar" className={btn}><Phone className="h-4 w-4" /></a>
         : <span className="rounded p-1 text-muted-foreground/30"><Phone className="h-4 w-4" /></span>}

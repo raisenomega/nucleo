@@ -11,7 +11,7 @@ import { LeadsFilters, type LeadFilter } from "@raisen-marketing/admin/LeadsFilt
 import { LeadRow } from "@raisen-marketing/admin/LeadRow";
 import { LeadDetailDialog } from "@raisen-marketing/admin/LeadDetailDialog";
 import { LeadEditDialog } from "@raisen-marketing/admin/LeadEditDialog";
-import { LeadEmailDialog } from "@raisen-marketing/admin/LeadEmailDialog";
+import { EmailComposeDialog } from "@raisen-marketing/admin/EmailComposeDialog";
 
 const EMPTY_F: LeadFilter = { search: "", status: "", temperature: "", leadType: "", showArchived: false };
 
@@ -56,7 +56,7 @@ export function LeadsInbox() {
       </div>
       {dlg?.kind === "view" && <LeadDetailDialog lead={dlg.lead} onClose={() => setDlg(null)} onSave={(p) => saveDetail(dlg.lead.id, p)} />}
       {dlg?.kind === "edit" && <LeadEditDialog lead={dlg.lead} onClose={() => setDlg(null)} onSave={(ef) => saveEdit(dlg.lead.id, ef)} />}
-      {dlg?.kind === "email" && <LeadEmailDialog lead={dlg.lead} onClose={() => setDlg(null)} onSend={(s, b) => emailLead(dlg.lead.id, s, b)} />}
+      {dlg?.kind === "email" && <EmailComposeDialog toName={dlg.lead.customerName} toEmail={dlg.lead.customerEmail} defaultSubject="NÚCLEO — seguimiento de tu solicitud" onClose={() => setDlg(null)} onSend={(s, b, cc, bcc) => emailLead(dlg.lead.id, s, b, cc, bcc)} />}
     </div>
   );
 }

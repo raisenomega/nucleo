@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { Navigate } from "@tanstack/react-router";
 import { useToast } from "@shared/providers/toast-context";
 import { useSuperAdmin } from "@shared/hooks/useSuperAdmin";
-import { getReservations, setReservationFields, deleteReservation } from "@raisen-marketing/infrastructure/marketing-booking.repository";
+import { getReservations, setReservationFields, deleteReservation, emailReservation } from "@raisen-marketing/infrastructure/marketing-booking.repository";
 import type { MarketingReservation, ReservationStatus } from "@raisen-marketing/data/reservation.types";
 import { RES_STATUSES, RES_LABELS } from "@raisen-marketing/admin/reservation-constants";
 import { ReservationRow } from "@raisen-marketing/admin/ReservationRow";
 import { ReservationDetailDialog } from "@raisen-marketing/admin/ReservationDetailDialog";
+import { EmailComposeDialog } from "@raisen-marketing/admin/EmailComposeDialog";
 import { todayStr } from "@raisen-marketing/data/calendar-utils";
 
 const SEL = "rounded-lg border border-border bg-background p-2 text-sm text-foreground";
@@ -19,6 +20,7 @@ export function BookingsManager() {
   const [items, setItems] = useState<MarketingReservation[]>([]);
   const [f, setF] = useState<{ status: string; from: string }>({ status: "", from: "" });
   const [view, setView] = useState<MarketingReservation | null>(null);
+  const [emailFor, setEmailFor] = useState<MarketingReservation | null>(null);
   const reload = (nf = f) => { void getReservations(nf).then(setItems); };
   useEffect(() => { reload(); }, []);
   if (!isSuperAdmin) return <Navigate to="/dashboard" />;
@@ -36,11 +38,12 @@ export function BookingsManager() {
       <div className="space-y-2">
         {items.length === 0 && <p className="text-sm text-muted-foreground">Sin reservas en esta vista.</p>}
         {items.map((r) => (
-          <ReservationRow key={r.id} r={r} onStatus={(s) => void setReservationFields(r.id, { status: s }).then(done)} onView={() => setView(r)}
+          <ReservationRow key={r.id} r={r} onStatus={(s) => void setReservationFields(r.id, { status: s }).then(done)} onView={() => setView(r)} onEmail={() => setEmailFor(r)}
             onDelete={() => { if (window.confirm(`¿Eliminar la reserva de "${r.customerName}"?`)) void deleteReservation(r.id).then(done); }} />
         ))}
       </div>
       {view && <ReservationDetailDialog r={view} onClose={() => setView(null)} onSave={saveDetail} />}
+      {emailFor && <EmailComposeDialog toName={emailFor.customerName} toEmail={emailFor.customerEmail} defaultSubject="Tu demo en NÚCLEO" onClose={() => setEmailFor(null)} onSend={(s, b, cc, bcc) => emailReservation(emailFor.id, s, b, cc, bcc)} />}
     </div>
   );
 }

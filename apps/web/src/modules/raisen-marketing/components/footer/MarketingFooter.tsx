@@ -4,7 +4,7 @@ import { useMarketingLegalLinks } from "@raisen-marketing/hooks/useMarketingLega
 import { FOOTER_FALLBACK } from "@raisen-marketing/data/footer-fallback";
 import { LEGAL_LINKS_FALLBACK } from "@raisen-marketing/data/legal-fallback";
 import { useMarketingFooterSocials } from "@raisen-marketing/hooks/useMarketingFooterSocials";
-import { featureIcon } from "@raisen-marketing/data/feature-icons";
+import { socialIcon } from "@raisen-marketing/components/social-icons";
 import { type Lang } from "@raisen-marketing/data/copy";
 
 // Footer (réplica OMEGA): marca + tagline + contacto (email/phone si hay) · redes (solo las que tienen URL) ·
@@ -30,7 +30,7 @@ export function MarketingFooter({ lang }: { lang: Lang }) {
           {socials.length > 0 && (
             <div className="flex gap-4">
               {socials.map((s) => {
-                const Icon = featureIcon(s.iconName);
+                const Icon = socialIcon(s.iconName, s.platform);
                 return <a key={s.id} href={s.url} target="_blank" rel="noopener noreferrer" aria-label={s.platform} className="text-white/60 transition-colors hover:text-primary"><Icon size={20} /></a>;
               })}
             </div>

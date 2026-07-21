@@ -21,8 +21,8 @@ export async function deleteLead(id: string): Promise<string | null> {
   const { error } = await supabase.from("marketing_leads").delete().eq("id", id);
   return error ? error.message : null;
 }
-export async function emailLead(id: string, subject: string, body: string): Promise<{ ok: boolean; message?: string }> {
-  const { data, error } = await supabase.rpc("_marketing_email_lead", { _lead_id: id, _subject: subject, _body: body });
+export async function emailLead(id: string, subject: string, body: string, cc = "", bcc = ""): Promise<{ ok: boolean; message?: string }> {
+  const { data, error } = await supabase.rpc("_marketing_email_lead", { _lead_id: id, _subject: subject, _body: body, _cc: cc, _bcc: bcc });
   if (error) return { ok: false, message: error.message };
   const r = data as { status: string; message?: string };
   return r.status === "ok" ? { ok: true } : { ok: false, message: r.message };

@@ -27,6 +27,13 @@ export async function setReservationFields(id: string, patch: Partial<{ status: 
   const { error } = await supabase.from("marketing_reservations").update(patch).eq("id", id);
   return error ? error.message : null;
 }
+// Enviar email al cliente de la reserva (RPC solo superadmin · Resend · cc/bcc opcionales).
+export async function emailReservation(id: string, subject: string, body: string, cc = "", bcc = ""): Promise<{ ok: boolean; message?: string }> {
+  const { data, error } = await supabase.rpc("_marketing_email_reservation", { _res_id: id, _subject: subject, _body: body, _cc: cc, _bcc: bcc });
+  if (error) return { ok: false, message: error.message };
+  const r = data as { status: string; message?: string };
+  return r.status === "ok" ? { ok: true } : { ok: false, message: r.message };
+}
 export async function deleteReservation(id: string): Promise<string | null> {
   const { error } = await supabase.from("marketing_reservations").delete().eq("id", id);
   return error ? error.message : null;
