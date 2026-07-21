@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Hook pre-commit de NÚCLEO. Vive en .githooks/ (versionado) en vez de .git/hooks/ (local y no compartido).
+# Se activa con:  git config core.hooksPath .githooks
+# Bloquea el commit si entra un documento confidencial o un secreto. Bypass consciente: git commit --no-verify
+exec bash "$(git rev-parse --show-toplevel)/scripts/check-confidential.sh" staged

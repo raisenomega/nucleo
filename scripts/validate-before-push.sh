@@ -126,7 +126,7 @@ fi
 
 # 12. DOCUMENTOS PROTEGIDOS NO DEBEN ESTAR EN EL REPO
 section "12. Documentos protegidos fuera del ignore:"
-PROTECTED_REGEX='(^|/)(.*-NUCLEO|.*_NUCLEO|metodo-nucleo|PRD[_-]?nucleo|SOURCE_OF_TRUTH|Estado[_-]?Nucleo|CLAUDE|MAIN-PROTECTOR|TEMA-.*|PROTOCOLO-.*|SEGURIDAD-.*|ESQUEMA-.*|AGENT-TEAMS-.*|DDD-.*)\.md$|(^|/)\.claude/|(^|/)\.gitconfig-|(^|/)docs-nucleo/'
+PROTECTED_REGEX='(^|/)(.*-NUCLEO|.*_NUCLEO|metodo-nucleo|PRD[_-]?nucleo|SOURCE_OF_TRUTH|Estado[_-]?Nucleo|CLAUDE|MAIN-PROTECTOR|TEMA-.*|PROTOCOLO-.*|SEGURIDAD-.*|ESQUEMA-.*|AGENT-TEAMS-.*|DDD-.*|Trilogy.*|PACKAGE-.*|AUDITORIA-.*|SONDA-.*|LANDING-COMERCIAL.*)\.md$|(^|/)\.claude/|(^|/)\.gitconfig-|(^|/)docs-nucleo/'
 LEAKS="$(git ls-files 2>/dev/null | grep -iE "$PROTECTED_REGEX" || true)"
 if [ -n "$LEAKS" ]; then
   fail_block "$LEAKS"
@@ -156,6 +156,15 @@ if [ -n "$ADVISORY" ]; then
 else
   ok_line
 fi
+
+# 14. GUARDIÁN DE CONFIDENCIALES Y SECRETOS
+# Complementa a la 12 con lo que un .gitignore no puede resolver solo: archivos RASTREADOS pese a estar
+# ignorados (el ignore no destrackea nada) y secretos pegados por contenido en cualquier archivo de texto.
+# Mismo script que usa el hook pre-commit, para que CI valide lo mismo aunque el hook no esté instalado
+# (los hooks NO viajan en el clone: hay que activarlos con `git config core.hooksPath .githooks`).
+section "14. Confidenciales rastreados y secretos por contenido:"
+GUARD_OUT="$(bash scripts/check-confidential.sh tracked 2>&1)"
+if [ $? -ne 0 ]; then fail_block "$GUARD_OUT"; else ok_line; fi
 
 # RESULTADO
 echo ""

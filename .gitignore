@@ -29,6 +29,8 @@ SEGURIDAD-*.md
 ESQUEMA-*.md
 AGENT-TEAMS-*.md
 DDD-*.md
+Trilogy_Model_Price.md
+PACKAGE-*.md
 
 # --- Ecosistema Claude Code (revela reglas y acciones) -----------------------
 .claude/
