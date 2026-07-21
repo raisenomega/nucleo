@@ -13,6 +13,7 @@ import { ReconciliationTaxPanel } from "@finance/presentation/ReconciliationTaxP
 import { ReconciliationRetentionPanel } from "@finance/presentation/ReconciliationRetentionPanel";
 import { ReconciliationSummary } from "@finance/presentation/ReconciliationSummary";
 import { ReconciliationHealth } from "@finance/presentation/ReconciliationHealth";
+import { MonthClosurePanel } from "@finance/presentation/MonthClosurePanel"; // panel de cierre de mes (Ola 1.2a)
 import { BankAccountForm } from "@finance/presentation/BankAccountForm";
 import { BankDepositForm } from "@finance/presentation/BankDepositForm";
 import { BankBalanceForm } from "@finance/presentation/BankBalanceForm";
@@ -24,11 +25,9 @@ type Modal = "account" | "deposit" | "balance" | null;
 function ReconciliationPage() {
   const { t } = useI18n();
   const { can } = useModuleAccess();
-  const [month, setMonth] = useState(() => new Date().toISOString().slice(0, 7));
-  const [modal, setModal] = useState<Modal>(null);
+  const [month, setMonth] = useState(() => new Date().toISOString().slice(0, 7)); const [modal, setModal] = useState<Modal>(null);
   const m = useReconciliation(supabaseReconciliationRepository, supabaseBankAccountRepository, month);
-  const pdf = usePdf();
-  const close = () => setModal(null);
+  const pdf = usePdf(); const close = () => setModal(null);
   const submit = async (op: Promise<RepoResult>) => {
     try { const r = await op; if (!r.ok) { window.alert(r.error); return; } close(); }
     catch (e) { window.alert(e instanceof Error ? e.message : String(e)); }
@@ -57,14 +56,15 @@ function ReconciliationPage() {
             onDeposit={can("reconciliation", "create") ? () => setModal("deposit") : undefined}
             onRegisterBalance={can("reconciliation", "edit") ? () => setModal("balance") : undefined}
             onRemoveAccount={can("reconciliation", "delete") ? (id) => { if (window.confirm(`${t("delete")}?`)) void m.removeAccount(id); } : undefined} />
-          {can("reconciliation", "fiscal") && (
+          {can("reconciliation", "fiscal") && (<>
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
               <ReconciliationTaxPanel tax={m.snapshot.tax} />
               <ReconciliationSummary summary={m.snapshot.summary} />
             </div>
-          )}
-          {can("reconciliation", "fiscal") && <ReconciliationHealth health={m.snapshot.summary.health} />}
-          {can("reconciliation", "fiscal") && <ReconciliationRetentionPanel retention={m.snapshot.retention} />}
+            <ReconciliationHealth health={m.snapshot.summary.health} />
+            <ReconciliationRetentionPanel retention={m.snapshot.retention} />
+            <MonthClosurePanel />
+          </>)}
         </div>
       )}
       {modal === "account" && <BankAccountForm onCancel={close} onSubmit={(d) => void submit(m.addAccount(d))} />}
