@@ -1,4 +1,4 @@
-import { LayoutDashboard, Building2, Inbox, LayoutList, Target, Zap, ArrowRight, DollarSign, MessageSquare, Lightbulb, FileText, Scale, CalendarCheck, CalendarClock, Settings } from "lucide-react";
+import { LayoutDashboard, Building2, Inbox, LayoutList, Target, Zap, ArrowRight, DollarSign, MessageSquare, Lightbulb, FileText, Scale, CalendarCheck, CalendarClock } from "lucide-react";
 import type { NavSection } from "@shared/components/sidebar.nav";
 
 // Grupos del sidebar del SUPERADMIN (plataforma) — reemplazan los grupos de tenant. Solo se renderizan cuando
@@ -22,7 +22,6 @@ export const SUPERADMIN_SECTIONS: NavSection[] = [
     { key: "webReservations", icon: CalendarCheck, to: "/web/reservas" },
     { key: "webAvailability", icon: CalendarClock, to: "/web/disponibilidad" },
   ] },
-  { title: "saConfig", icon: Settings, items: [
-    { key: "systemSettings", icon: Settings, to: "/settings" },
-  ] },
+  // Sin grupo "Configuración": el acceso a /settings es el engranaje del footer del sidebar (SidebarUser),
+  // que ya existe. Tener ambos duplicaba la misma entrada.
 ];

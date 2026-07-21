@@ -11,7 +11,7 @@ export const esBrand = {
   // ── /settings/temas ──
   themesTab: "Temas", themesTitle: "Personaliza tu marca", themesSubtitle: "Los cambios afectan cómo se ve la plataforma para tu equipo.",
   identityHeader: "Identidad", shortNameLbl: "Nombre corto", shortNameHelp: "Aparece en el sidebar y title del navegador.",
-  faviconLbl: "Favicon", assetsHelp: "PNG, JPG, WebP o SVG. Máximo 500 KB.",
+  faviconLbl: "Favicon", assetsHelp: "PNG, JPG, WebP o SVG. Máximo 3 MB.",
   colorsHeader: "Colores", secondaryColor: "Color secundario",
   sidebarBg: "Fondo del sidebar", sidebarText: "Texto del sidebar", sidebarHover: "Hover del sidebar",
   dangerColor: "Color de error", successColor: "Color de éxito", warningColor: "Color de advertencia",
@@ -19,6 +19,6 @@ export const esBrand = {
   restoreSectionDefaults: "Restaurar defaults de esta sección", cancelBtn: "Cancelar", saveBtn: "Guardar cambios",
   saveSuccess: "Cambios guardados.", saveErrorFull: "No se pudieron guardar los cambios.",
   saveErrorPartial: "Los datos de identidad se guardaron, pero los colores no. Reintenta.",
-  fileTooLarge: "Archivo demasiado grande. Máximo 500 KB.",
+  fileTooLarge: "Archivo demasiado grande. Máximo 3 MB.",
   fileFormatUnsupported: "Formato no soportado. Usa PNG, JPG, WebP o SVG.",
 } satisfies Partial<Record<TranslationKey, string>>;

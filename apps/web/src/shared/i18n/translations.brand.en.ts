@@ -11,7 +11,7 @@ export const enBrand = {
   // ── /settings/themes ──
   themesTab: "Themes", themesTitle: "Customize your brand", themesSubtitle: "Changes affect how the platform looks for your team.",
   identityHeader: "Identity", shortNameLbl: "Short name", shortNameHelp: "Shown in the sidebar and browser tab title.",
-  faviconLbl: "Favicon", assetsHelp: "PNG, JPG, WebP or SVG. Max 500 KB.",
+  faviconLbl: "Favicon", assetsHelp: "PNG, JPG, WebP or SVG. Max 3 MB.",
   colorsHeader: "Colors", secondaryColor: "Secondary color",
   sidebarBg: "Sidebar background", sidebarText: "Sidebar text", sidebarHover: "Sidebar hover",
   dangerColor: "Error color", successColor: "Success color", warningColor: "Warning color",
@@ -19,6 +19,6 @@ export const enBrand = {
   restoreSectionDefaults: "Restore this section's defaults", cancelBtn: "Cancel", saveBtn: "Save changes",
   saveSuccess: "Changes saved.", saveErrorFull: "Could not save the changes.",
   saveErrorPartial: "Identity was saved, but colors were not. Retry.",
-  fileTooLarge: "File too large. Max 500 KB.",
+  fileTooLarge: "File too large. Max 3 MB.",
   fileFormatUnsupported: "Unsupported format. Use PNG, JPG, WebP or SVG.",
 } satisfies Partial<Record<TranslationKey, string>>;

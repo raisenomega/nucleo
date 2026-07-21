@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useToast } from "@shared/providers/toast-context";
 
 const F = "w-full rounded-lg border border-border bg-background p-2 text-sm text-foreground";
 
@@ -14,11 +15,15 @@ export function EmailComposeDialog({ toName, toEmail, defaultSubject, onClose, o
   const [bcc, setBcc] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
+  const toast = useToast();
+  // Al ÉXITO: toast + cierra el dialog (antes no pasaba nada visible aunque el email SÍ se enviaba).
   const send = async () => {
     setSending(true); setError("");
     const r = await onSend(subject, body, cc, bcc);
     setSending(false);
-    if (!r.ok) setError(r.message || "No se pudo enviar.");
+    if (r.ok) { toast.success("Email enviado ✓"); onClose(); return; }
+    const m = r.message || "No se pudo enviar.";
+    setError(m); toast.error(m);
   };
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-black/50 p-4" onClick={onClose}>
