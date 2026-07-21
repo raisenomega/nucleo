@@ -63,7 +63,7 @@ function PayrollPage() {
           {can("payroll", "create") && <button type="button" onClick={() => { setPrefill(undefined); setEditing("new"); }} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-body font-bold"><Plus className="h-4 w-4" /> {t("newPayroll")}</button>}
         </div>
       </div>
-      {editing !== null && <PayrollForm employees={emps} externals={externals} payCats={cats} preview={preview} initial={editing === "new" ? prefill : editRow} onSubmit={submit} onCancel={() => setEditing(null)} />}
+      {editing !== null && <PayrollForm employees={emps} externals={externals} payCats={cats} preview={preview} excludeId={editing && editing !== "new" ? editing : undefined} initial={editing === "new" ? prefill : editRow} onSubmit={submit} onCancel={() => setEditing(null)} />}
       <PayrollTable rows={items.filter((i) => !i.externalWorkerId)} onView={setViewing} onEdit={onEdit} onDelete={onDelete} />
       <ExternalWorkersTable rows={workers.items} paidOf={(id) => items.filter((i) => i.externalWorkerId === id).reduce((s, i) => s + (i.grossSalary || i.amount), 0)} onView={setViewing} onPay={payWorker} onEdit={(id) => setManaging(id)} onToggle={(w) => void workers.update(w.id, { ...w, active: !w.active })} />
       {viewItem && <PayrollDetail item={viewItem} onClose={() => setViewing(null)} />}

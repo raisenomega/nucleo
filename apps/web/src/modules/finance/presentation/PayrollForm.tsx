@@ -5,7 +5,7 @@ import { useSession } from "@shared/providers/SessionProvider";
 import { EvidenceUpload } from "@finance/presentation/EvidenceUpload";
 import { PayrollDeductionPreview } from "@finance/presentation/PayrollDeductionPreview";
 import { CategoryPicker } from "@shared/components/CategoryPicker";
-import type { PayrollFormData, PayrollCalc, WorkerType } from "@finance/domain/payroll.types";
+import type { PayrollFormData, PayrollCalc, WorkerType, PayrollPreviewCtx } from "@finance/domain/payroll.types";
 
 type Emp = { id: string; full_name: string };
 type Cat = { id: string; label: string };
@@ -15,9 +15,9 @@ const ONE_TIME_DEFAULT = new Set<WorkerType>(["helper", "speaker", "consultant",
 const EMPTY: PayrollFormData = { employeeId: "", externalWorkerId: "", amount: 0, period: "", paymentMethodId: "", date: "", notes: "", evidenceUrls: [], workerType: "employee", grossSalary: 0 };
 type Ext = { id: string; full_name: string; workerType: WorkerType; dailyRate: number | null; hourlyRate: number | null; specialty: string; department: string };
 
-export function PayrollForm({ employees, externals, payCats, initial, preview, onSubmit, onCancel }: {
+export function PayrollForm({ employees, externals, payCats, initial, excludeId, preview, onSubmit, onCancel }: {
   employees: Emp[]; externals: Ext[]; payCats: Cat[]; initial?: PayrollFormData;
-  preview: (gross: number, worker: WorkerType) => Promise<PayrollCalc | null>;
+  excludeId?: string; preview: (gross: number, worker: WorkerType, ctx?: PayrollPreviewCtx) => Promise<PayrollCalc | null>;
   onSubmit: (d: PayrollFormData) => void; onCancel: () => void;
 }) {
   const { t } = useI18n();
@@ -32,7 +32,9 @@ export function PayrollForm({ employees, externals, payCats, initial, preview, o
     else setF((c) => ({ ...c, employeeId: v.slice(4), externalWorkerId: "" }));
   };
   const selExt = externals.find((x) => x.id === f.externalWorkerId);
-  useEffect(() => { if (gross > 0) void preview(gross, worker).then(setCalc); else setCalc(null); }, [gross, worker, preview]);
+  useEffect(() => { // ctx → la RPC aplica el tope anual acumulado (YTD) del trabajador elegido
+    if (gross > 0) void preview(gross, worker, { employeeId: f.employeeId, externalWorkerId: f.externalWorkerId, date: f.date, excludeId }).then(setCalc); else setCalc(null);
+  }, [gross, worker, f.employeeId, f.externalWorkerId, f.date, excludeId, preview]);
   const field = "w-full rounded-lg border border-border bg-background p-2 font-body";
   const lbl = "text-xs font-bold text-muted-foreground";
   return (

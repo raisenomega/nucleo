@@ -63,5 +63,8 @@ export interface IPayrollRepository {
   create(data: PayrollFormData): Promise<Result<Payroll, string>>;
   update(id: string, data: PayrollFormData): Promise<Result<Payroll, string>>;
   remove(id: string): Promise<Result<null, string>>;
-  preview(gross: number, workerType: WorkerType): Promise<PayrollCalc | null>;
+  preview(gross: number, workerType: WorkerType, ctx?: PayrollPreviewCtx): Promise<PayrollCalc | null>;
 }
+
+// Contexto para el cálculo con tope anual (YTD): quién cobra, cuándo, y qué registro excluir al editar.
+export interface PayrollPreviewCtx { employeeId?: string; externalWorkerId?: string; date?: string; excludeId?: string }

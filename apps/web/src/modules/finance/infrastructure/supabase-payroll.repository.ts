@@ -1,6 +1,6 @@
 import { supabase } from "@shared/lib/supabase";
 import type {
-  Payroll, PayrollFormData, PayrollListResult, IPayrollRepository, Result, PayrollCalc, WorkerType,
+  Payroll, PayrollFormData, PayrollListResult, IPayrollRepository, Result, PayrollCalc, WorkerType, PayrollPreviewCtx,
 } from "@finance/domain/payroll.types";
 import { PAYROLL_SELECT as SELECT, toPayroll } from "@finance/infrastructure/payroll.mapper";
 
@@ -8,16 +8,19 @@ interface Calc { net_salary?: number; total_employer_cost?: number; total_employ
   total_employer_contributions?: number; employee_deductions?: unknown; employer_contributions?: unknown; }
 const arr = (v: unknown) => (Array.isArray(v) ? (v as PayrollCalc["employeeDeductions"]) : []);
 
-async function calc(gross: number, worker: WorkerType): Promise<Calc | null> {
-  const { data } = await supabase.rpc("calculate_payroll_deductions", { p_gross: gross, p_worker_type: worker });
+// ctx alimenta el tope anual (YTD): sin él la RPC usa ytd=0 (mismo cálculo de siempre).
+async function calc(gross: number, worker: WorkerType, ctx?: PayrollPreviewCtx): Promise<Calc | null> {
+  const { data } = await supabase.rpc("calculate_payroll_deductions", { p_gross: gross, p_worker_type: worker,
+    p_employee_id: ctx?.employeeId || null, p_external_worker_id: ctx?.externalWorkerId || null,
+    p_pay_date: ctx?.date || undefined, p_exclude_id: ctx?.excludeId || null });
   return data as Calc | null;
 }
 
 // Calcula deducciones vía RPC (tenant por default) y arma la fila con los jsonb + totales.
-async function buildRow(d: PayrollFormData) {
+async function buildRow(d: PayrollFormData, excludeId?: string) {
   const gross = d.grossSalary ?? d.amount;
   const worker = d.workerType ?? "employee";
-  const c = await calc(gross, worker);
+  const c = await calc(gross, worker, { employeeId: d.employeeId, externalWorkerId: d.externalWorkerId, date: d.date, excludeId });
   return {
     employee_id: d.employeeId || null, external_worker_id: d.externalWorkerId || null,
     amount: gross, period: d.period, payment_method_id: d.paymentMethodId,
@@ -39,7 +42,7 @@ export const supabasePayrollRepository: IPayrollRepository = {
     return { ok: true, value: toPayroll(data as unknown as Parameters<typeof toPayroll>[0]) };
   },
   async update(id, d): Promise<Result<Payroll, string>> {
-    const { data, error } = await supabase.from("payroll").update(await buildRow(d)).eq("id", id).select(SELECT).single();
+    const { data, error } = await supabase.from("payroll").update(await buildRow(d, id)).eq("id", id).select(SELECT).single();
     if (error || !data) return { ok: false, error: error?.message ?? "error" };
     return { ok: true, value: toPayroll(data as unknown as Parameters<typeof toPayroll>[0]) };
   },
@@ -48,8 +51,8 @@ export const supabasePayrollRepository: IPayrollRepository = {
     if (error) return { ok: false, error: error.message };
     return { ok: true, value: null };
   },
-  async preview(gross, worker): Promise<PayrollCalc | null> {
-    const c = await calc(gross, worker);
+  async preview(gross, worker, ctx): Promise<PayrollCalc | null> {
+    const c = await calc(gross, worker, ctx);
     if (!c) return null;
     return {
       gross, employeeDeductions: arr(c.employee_deductions), employerContributions: arr(c.employer_contributions),
