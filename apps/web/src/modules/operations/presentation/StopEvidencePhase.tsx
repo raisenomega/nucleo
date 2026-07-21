@@ -40,7 +40,7 @@ export function StopEvidencePhase({ tenantId, routeId, stopId, phase, value, onC
               <img src={urls[path] ?? ""} alt="" className="h-full w-full object-cover" />
             </button>
             <span className="pointer-events-none absolute bottom-0.5 left-0.5 rounded-full bg-green-600 p-0.5"><Check className="h-2.5 w-2.5 text-white" /></span>
-            <button type="button" onClick={() => void del(path)} aria-label={t("delete")} className="absolute right-0.5 top-0.5 flex h-11 w-11 items-center justify-center rounded-full bg-red-600/90"><X className="h-4 w-4 text-white" /></button>
+            <button type="button" onClick={() => void del(path)} aria-label={t("delete")} className="absolute right-0.5 top-0.5 rounded-full bg-red-600/90 p-0.5"><X className="h-2.5 w-2.5 text-white" /></button>
           </div>);
         return (
           <label key={slot} className="flex h-20 w-20 shrink-0 cursor-pointer items-center justify-center rounded-md border-2 border-dashed border-border bg-secondary/40">
