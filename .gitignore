@@ -9,6 +9,10 @@
 *-NUCLEO.md
 *_NUCLEO.md
 *.nucleo.md
+# NUCLEO en CUALQUIER posición del nombre, no solo como sufijo: ERP-NUCLEO-COMPLETO.md se colaba por las
+# tres reglas de arriba. Verificado que ningún .md rastreado encaja (solo hay 4 README).
+*NUCLEO*.md
+*nucleo*.md
 docs-nucleo/
 **/docs-nucleo/
 
@@ -90,5 +94,8 @@ __pycache__/
 apps/web/public/service-worker.js
 apps/web/public/service-worker-public.js
 
-# Documento maestro de la landing comercial (confidencial, no commitear)
+# Documentos maestros de la landing comercial (confidenciales, no commitear).
+# Ya los cubre la catch-all *-NUCLEO.md de arriba; se listan explícitos por claridad.
 LANDING-COMERCIAL-NUCLEO.md
+LANDING-PAGES-CAMPANA-NUCLEO.md
+ERP-NUCLEO-COMPLETO.md

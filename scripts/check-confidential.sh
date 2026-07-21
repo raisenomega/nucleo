@@ -14,7 +14,9 @@ ERRORS=0
 
 # Nombres de documentos confidenciales. Deliberadamente MÁS AMPLIO que .gitignore: aquí caen también los que
 # no siguen la convención de sufijo (-NUCLEO). Se evalúa sobre la ruta completa, sin distinguir mayúsculas.
-CONFIDENTIAL='(^|/)(docs-nucleo|\.claude)/|(-|_)nucleo\.md$|\.nucleo\.md$|(^|/)claude\.md$|source_of_truth|estado[-_]nucleo|main-protector|metodo-nucleo|prd[-_]nucleo|trilogy|landing-comercial|(^|/)(package|tema|protocolo|seguridad|esquema|agent-teams|ddd|auditoria|sonda)-[^/]*\.md$'
+# `nucleo.*\.md$` cubre NUCLEO en cualquier posicion del nombre: ERP-NUCLEO-COMPLETO.md se colaba por las
+# reglas de sufijo. Los README rastreados no llevan "nucleo" en el nombre, asi que no hay falsos positivos.
+CONFIDENTIAL='(^|/)(docs-nucleo|\.claude)/|nucleo[^/]*\.md$|(^|/)claude\.md$|source_of_truth|estado[-_]nucleo|main-protector|metodo-nucleo|prd[-_]nucleo|trilogy|landing-comercial|(^|/)(package|tema|protocolo|seguridad|esquema|agent-teams|ddd|auditoria|sonda)-[^/]*\.md$'
 
 # Secretos por forma del valor, no por nombre de variable: así se detectan aunque estén pegados en un .md.
 SECRETS='eyJhbGciOi[A-Za-z0-9_-]{20,}|sbp_[a-f0-9]{40}|re_[A-Za-z0-9_]{20,}|sk-[A-Za-z0-9]{20,}|BEGIN [A-Z ]*PRIVATE KEY'
