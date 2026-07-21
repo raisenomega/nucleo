@@ -40,7 +40,7 @@ export const esRecon = {
   assignPin: "Asignar PIN", reactivate: "Reactivar", lastAccess: "Último acceso", modulesVisible: "Módulos visibles",
   backToTeam: "Volver al equipo", phone: "Teléfono", position: "Posición",
   approvedDate: "Fecha de aprobación", registeredDate: "Fecha de registro",
-  landingCoupons: "Cupones",
+  landingPaymentMethods: "Métodos de pago", landingCoupons: "Cupones",
   couponNew: "Nuevo cupón",
   couponEdit: "Editar cupón",
   couponEmpty: "Aún no hay cupones.",

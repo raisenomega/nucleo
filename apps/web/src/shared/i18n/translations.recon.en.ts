@@ -40,7 +40,7 @@ export const enRecon = {
   assignPin: "Assign PIN", reactivate: "Reactivate", lastAccess: "Last access", modulesVisible: "Visible modules",
   backToTeam: "Back to team", phone: "Phone", position: "Position",
   approvedDate: "Approval date", registeredDate: "Registration date",
-  landingCoupons: "Coupons",
+  landingPaymentMethods: "Payment methods", landingCoupons: "Coupons",
   couponNew: "New coupon",
   couponEdit: "Edit coupon",
   couponEmpty: "No coupons yet.",

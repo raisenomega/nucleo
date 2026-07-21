@@ -13,6 +13,7 @@ import { payrollReportBody } from "@finance/presentation/finance-reports";
 import { PayrollForm } from "@finance/presentation/PayrollForm";
 import { PayrollTable } from "@finance/presentation/PayrollTable";
 import { PayrollDetail } from "@finance/presentation/PayrollDetail";
+import { DeductionRulesSection } from "@finance/presentation/DeductionRulesSection";
 import { ExternalWorkersModal } from "@finance/presentation/ExternalWorkersModal";
 import { ExternalWorkersTable } from "@finance/presentation/ExternalWorkersTable";
 import { ExternalWorkerDetail } from "@finance/presentation/ExternalWorkerDetail";
@@ -25,8 +26,7 @@ type Emp = { id: string; full_name: string };
 type Cat = { id: string; label: string; kind: string };
 
 function PayrollPage() {
-  const { t } = useI18n();
-  const { can } = useModuleAccess();
+  const { t } = useI18n(); const { can } = useModuleAccess();
   const { items, create, update, remove, preview } = usePayroll(supabasePayrollRepository);
   const workers = useExternalWorkers(supabaseExternalWorkerRepository);
   const [emps, setEmps] = useState<Emp[]>([]);
@@ -66,6 +66,7 @@ function PayrollPage() {
       {editing !== null && <PayrollForm employees={emps} externals={externals} payCats={cats} preview={preview} excludeId={editing && editing !== "new" ? editing : undefined} initial={editing === "new" ? prefill : editRow} onSubmit={submit} onCancel={() => setEditing(null)} />}
       <PayrollTable rows={items.filter((i) => !i.externalWorkerId)} onView={setViewing} onEdit={onEdit} onDelete={onDelete} />
       <ExternalWorkersTable rows={workers.items} paidOf={(id) => items.filter((i) => i.externalWorkerId === id).reduce((s, i) => s + (i.grossSalary || i.amount), 0)} onView={setViewing} onPay={payWorker} onEdit={(id) => setManaging(id)} onToggle={(w) => void workers.update(w.id, { ...w, active: !w.active })} />
+      {can("payroll", "edit") && <DeductionRulesSection />}
       {viewItem && <PayrollDetail item={viewItem} onClose={() => setViewing(null)} />}
       {viewWorker && <ExternalWorkerDetail worker={viewWorker} payments={items.filter((i) => i.externalWorkerId === viewWorker.id)} onClose={() => setViewing(null)} />}
       {managing && <ExternalWorkersModal editId={managing === "new" ? undefined : managing} initial={managing === "new" ? undefined : workers.items.find((w) => w.id === managing)} onClose={() => setManaging(null)} onSaved={() => { setManaging(null); void workers.refresh(); }} onWorkerCreated={onWorkerCreated} />}
