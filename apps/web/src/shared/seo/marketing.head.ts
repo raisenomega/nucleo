@@ -1,6 +1,6 @@
 import { isRaisenSeoHost } from "@shared/seo/host";
 import { seoHead } from "@shared/seo/seo-head";
-import { SEO_TITLE, SEO_DESCRIPTION, OG_TITLE, SEO_KEYWORDS } from "@shared/seo/site.constants";
+import { SEO_TITLE, SEO_DESCRIPTION, OG_TITLE, SEO_KEYWORDS, GOOGLE_SITE_VERIFICATION } from "@shared/seo/site.constants";
 import { ORG_LD, APP_LD } from "@shared/seo/jsonld.org";
 import { FAQ_LD } from "@shared/seo/jsonld.faq";
 
@@ -15,6 +15,7 @@ export function landingHead() {
     title: SEO_TITLE, description: SEO_DESCRIPTION, ogTitle: OG_TITLE,
     path: "/", hreflang: true, keywords: SEO_KEYWORDS,
   });
+  meta.push({ name: "google-site-verification", content: GOOGLE_SITE_VERIFICATION });
   return { meta, links, scripts: [ld(ORG_LD), ld(APP_LD), ld(FAQ_LD)] };
 }
 

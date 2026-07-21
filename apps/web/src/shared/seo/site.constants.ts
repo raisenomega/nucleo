@@ -6,6 +6,9 @@ export const SITE_NAME = "NÚCLEO by Raisen";
 export const LEGAL_NAME = "Raisen Agency LLC";
 export const SALES_EMAIL = "ventas@raisen.agency";
 export const OG_IMAGE = `${SITE_URL}/og-image.png`;
+// Verificación de propiedad en Google Search Console (método "etiqueta HTML"). Debe seguir presente DESPUÉS
+// de verificar: si se quita, Google revoca la propiedad. Solo se emite en los hosts de Raisen.
+export const GOOGLE_SITE_VERIFICATION = "PcvNzr3-5mJxO1XrNxj41nJeM1m0R9UYxBRFbo9QJ9c";
 
 export const SEO_TITLE = "NÚCLEO — Plataforma de gestión operacional para empresas | Puerto Rico y LATAM";
 export const SEO_DESCRIPTION =
