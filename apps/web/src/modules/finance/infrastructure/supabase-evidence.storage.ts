@@ -22,14 +22,14 @@ export async function uploadStopPhoto(tenantId: string, routeId: string, stopId:
   return error ? null : path;
 }
 
-// Firma URLs temporales (1h) para mostrar la evidencia sin exponer el bucket.
+// Firma URLs temporales (1h) para mostrar la evidencia sin exponer el bucket. El array vuelve ALINEADO
+// por índice con `paths` ("" si esa firma falló): antes se hacía push condicional y un solo fallo corría
+// todas las URLs siguientes → la miniatura N mostraba la foto N-1. En paralelo (campo = señal lenta).
 export async function signEvidence(paths: readonly string[]): Promise<string[]> {
-  const urls: string[] = [];
-  for (const p of paths) {
+  return Promise.all(paths.map(async (p) => {
     const { data } = await supabase.storage.from(BUCKET).createSignedUrl(p, 3600);
-    if (data?.signedUrl) urls.push(data.signedUrl);
-  }
-  return urls;
+    return data?.signedUrl ?? "";
+  }));
 }
 
 export async function removeEvidence(paths: readonly string[]): Promise<void> {

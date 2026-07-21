@@ -21,7 +21,8 @@ export function ItemPhotoUploader({ tenantId, itemId, value, onChange }: {
     const f = e.target.files?.[0]; e.target.value = "";
     if (!f) return;
     setBusy(slot);
-    const path = await uploadItemPhoto(tenantId, itemId, await compressImage(f));
+    const jpeg = await compressImage(f); // null = formato no procesable (p. ej. HEIC sin decoder) → aviso
+    const path = jpeg ? await uploadItemPhoto(tenantId, itemId, jpeg) : null;
     setBusy(null);
     if (!path) return void window.alert(t("uploadError"));
     const next = [...value, path]; await persistItemPhotos(itemId, next); onChange(next);

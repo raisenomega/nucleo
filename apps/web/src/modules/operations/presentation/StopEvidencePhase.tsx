@@ -2,17 +2,20 @@ import { useEffect, useState } from "react";
 import { Camera, Check, X, Loader2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { compressImage } from "@shared/lib/image-compress";
+import { ImageLightbox } from "@shared/components/ImageLightbox";
 import { uploadStopPhoto, signEvidence, removeEvidence } from "@finance/infrastructure/supabase-evidence.storage";
 
 const SLOTS = [0, 1, 2];
-// 3 slots de foto de una fase (antes/después). Cada foto: comprime → sube a Storage → persiste su ruta vía onChange
-// (UPDATE inmediato). Recarga miniaturas firmando las rutas guardadas. Persistente entre sesiones.
+// 3 slots de foto de una fase (antes/después). Cada foto: normaliza a JPEG (EXIF horneado, HEIC transcodificado
+// o rechazado con aviso — nunca se sube disfrazado) → sube a Storage → persiste su ruta vía onChange (UPDATE
+// inmediato). Tap en la miniatura = fullscreen con [X]. Miniaturas firmadas; persistente entre sesiones.
 export function StopEvidencePhase({ tenantId, routeId, stopId, phase, value, onChange }: {
   tenantId: string; routeId: string; stopId: string; phase: "before" | "after"; value: readonly string[]; onChange: (paths: string[]) => void;
 }) {
   const { t } = useI18n();
   const [urls, setUrls] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState<number | null>(null);
+  const [expanded, setExpanded] = useState<string | null>(null); // ruta de la foto abierta en fullscreen
   useEffect(() => {
     if (!value.length) return void setUrls({});
     void signEvidence(value).then((s) => setUrls(Object.fromEntries(value.map((p, i) => [p, s[i] ?? ""]))));
@@ -21,7 +24,8 @@ export function StopEvidencePhase({ tenantId, routeId, stopId, phase, value, onC
     const f = e.target.files?.[0]; e.target.value = "";
     if (!f) return;
     setBusy(slot);
-    const path = await uploadStopPhoto(tenantId, routeId, stopId, phase, await compressImage(f));
+    const jpeg = await compressImage(f); // null = formato no procesable en este navegador (p. ej. HEIC sin decoder)
+    const path = jpeg ? await uploadStopPhoto(tenantId, routeId, stopId, phase, jpeg) : null;
     setBusy(null);
     if (path) onChange([...value, path]); else window.alert(t("uploadError"));
   }
@@ -32,8 +36,10 @@ export function StopEvidencePhase({ tenantId, routeId, stopId, phase, value, onC
         const path = value[slot];
         if (path) return (
           <div key={slot} className="relative h-20 w-20 shrink-0 overflow-hidden rounded-md border border-border">
-            <img src={urls[path] ?? ""} alt="" className="h-full w-full object-cover" />
-            <span className="absolute bottom-0.5 left-0.5 rounded-full bg-green-600 p-0.5"><Check className="h-2.5 w-2.5 text-white" /></span>
+            <button type="button" onClick={() => setExpanded(path)} aria-label={t("viewDetail")} className="h-full w-full">
+              <img src={urls[path] ?? ""} alt="" className="h-full w-full object-cover" />
+            </button>
+            <span className="pointer-events-none absolute bottom-0.5 left-0.5 rounded-full bg-green-600 p-0.5"><Check className="h-2.5 w-2.5 text-white" /></span>
             <button type="button" onClick={() => void del(path)} aria-label={t("delete")} className="absolute right-0.5 top-0.5 flex h-11 w-11 items-center justify-center rounded-full bg-red-600/90"><X className="h-4 w-4 text-white" /></button>
           </div>);
         return (
@@ -42,6 +48,7 @@ export function StopEvidencePhase({ tenantId, routeId, stopId, phase, value, onC
             <input type="file" accept="image/*" capture="environment" className="sr-only" disabled={busy === slot} onChange={(e) => void pick(e, slot)} />
           </label>);
       })}
+      {expanded && urls[expanded] && <ImageLightbox src={urls[expanded]} onClose={() => setExpanded(null)} />}
     </div>
   );
 }
