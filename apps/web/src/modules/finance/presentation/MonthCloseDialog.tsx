@@ -29,7 +29,7 @@ export function MonthCloseDialog({ label, loadPreview, onConfirm, onClose }: {
           </div>
         )}
         <p className="rounded-lg bg-amber-500/10 p-2 text-xs text-amber-700 dark:text-amber-400">
-          Al cerrar se congelan estos totales. El bloqueo de edición de transacciones se activará en una actualización próxima.
+          Al cerrar, no se podrán crear, editar ni eliminar transacciones (ingresos, gastos, nómina, extraordinarios) con fecha en este mes. Podrás reabrirlo cuando necesites hacer ajustes.
         </p>
         <div className="flex gap-2">
           <button type="button" disabled={busy || !t} onClick={async () => { setBusy(true); await onConfirm(); }}

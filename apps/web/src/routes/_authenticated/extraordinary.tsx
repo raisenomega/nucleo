@@ -37,8 +37,8 @@ function ExtraordinaryPage() {
   }, [editing, items]);
 
   async function submit(d: ExtraPaymentFormData) {
-    if (editing && editing !== "new") await update(editing, d); else await create(d);
-    setEditing(null);
+    const r = editing && editing !== "new" ? await update(editing, d) : await create(d);
+    if (r.ok) setEditing(null); else window.alert(r.error);
   }
 
   if (!can("extraordinary", "view")) return <Navigate to="/dashboard" />;

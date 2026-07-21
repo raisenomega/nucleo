@@ -46,8 +46,8 @@ function ExpensePage() {
   }, [editing, expenses, category]);
 
   async function submit(d: ExpenseFormData) {
-    if (editing && editing !== "new") await update(editing, d); else await create(d);
-    setEditing(null);
+    const r = editing && editing !== "new" ? await update(editing, d) : await create(d);
+    if (r.ok) setEditing(null); else window.alert(r.error);
   }
 
   if (!can("expenses", "view")) return <Navigate to="/dashboard" />;

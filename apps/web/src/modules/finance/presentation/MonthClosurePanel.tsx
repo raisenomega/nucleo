@@ -43,7 +43,7 @@ export function MonthClosurePanel() {
   return (
     <div className="space-y-3 rounded-xl border border-border bg-card p-4">
       <div><h2 className="font-display text-lg font-bold text-foreground">Cierre de mes</h2>
-        <p className="text-xs text-muted-foreground">Congela los totales del período. El bloqueo de edición llega en una próxima actualización.</p></div>
+        <p className="text-xs text-muted-foreground">Congela los totales y bloquea la edición de transacciones del período. Reábrelo para ajustar.</p></div>
       {m.loading ? <p className="text-sm text-muted-foreground">Cargando…</p> : (
         <div className="space-y-2">
           {months.map((mm) => (

@@ -44,8 +44,8 @@ function PayrollPage() {
   const onWorkerCreated = (w: ExternalWorker) => { setManaging(null); payWorker(w); void workers.refresh(); };
 
   async function submit(d: PayrollFormData) {
-    if (editing && editing !== "new") await update(editing, d); else await create(d);
-    setEditing(null);
+    const r = editing && editing !== "new" ? await update(editing, d) : await create(d);
+    if (r.ok) setEditing(null); else window.alert(r.error);
   }
 
   if (!can("payroll", "view")) return <Navigate to="/dashboard" />;

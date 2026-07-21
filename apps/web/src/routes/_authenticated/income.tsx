@@ -38,8 +38,8 @@ function IncomePage() {
   }, [editing, incomes]);
 
   async function submit(d: IncomeFormData) {
-    if (editing && editing !== "new") await update(editing, d); else await create(d);
-    setEditing(null);
+    const r = editing && editing !== "new" ? await update(editing, d) : await create(d);
+    if (r.ok) setEditing(null); else window.alert(r.error);
   }
 
   if (!can("income", "view")) return <Navigate to="/dashboard" />;
