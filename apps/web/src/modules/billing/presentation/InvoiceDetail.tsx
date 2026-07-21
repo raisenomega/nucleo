@@ -3,6 +3,7 @@ import { useI18n } from "@shared/i18n";
 import { usePdf } from "@shared/hooks/usePdf";
 import { formatCurrency } from "@shared/lib/format";
 import { ScreenModal } from "@shared/components/ScreenModal";
+import { LinkedCustomerBadge } from "@shared/components/LinkedCustomerBadge";
 import { INV_ST_KEY, INV_ST_COLOR } from "@billing/presentation/billing-ui";
 import type { Invoice } from "@billing/domain/invoice.types";
 
@@ -27,6 +28,7 @@ export function InvoiceDetail({ inv, canManage, onPay, onCancel, onClose }: {
           <span className="font-mono text-xs">{inv.invoiceNumber ?? "—"}</span>
           <span className={`rounded px-2 py-0.5 text-xs font-bold ${INV_ST_COLOR[inv.status]}`}>{t(INV_ST_KEY[inv.status])}</span>
         </div>
+        <LinkedCustomerBadge customerId={inv.customerId} name={inv.clientName} className="text-sm" />
         <div className="rounded-lg border border-border">
           {inv.items.map((it, idx) => (
             <div key={idx} className="flex justify-between border-b border-border px-3 py-1 text-sm last:border-0">

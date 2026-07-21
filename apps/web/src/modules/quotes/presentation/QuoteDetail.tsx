@@ -3,6 +3,7 @@ import { useI18n } from "@shared/i18n";
 import { usePdf } from "@shared/hooks/usePdf";
 import { formatCurrency } from "@shared/lib/format";
 import { ScreenModal } from "@shared/components/ScreenModal";
+import { LinkedCustomerBadge } from "@shared/components/LinkedCustomerBadge";
 import { QUOTE_ST_KEY, QUOTE_ST_COLOR } from "@quotes/presentation/quote-ui";
 import type { Quote, QuoteStatus } from "@quotes/domain/quote.types";
 
@@ -27,6 +28,7 @@ export function QuoteDetail({ quote, canManage, onStatus, onConvert, onEdit, onS
           <span className="font-mono text-xs">{q.quoteNumber ?? "—"}</span>
           <span className={`rounded px-2 py-0.5 text-xs font-bold ${QUOTE_ST_COLOR[q.status]}`}>{t(QUOTE_ST_KEY[q.status])}</span>
         </div>
+        <LinkedCustomerBadge customerId={q.customerId} name={q.clientName} className="text-sm" />
         <div className="rounded-lg border border-border">
           {q.items.map((it, idx) => (
             <div key={idx} className="flex justify-between border-b border-border px-3 py-1 text-sm last:border-0">

@@ -7,7 +7,7 @@ export interface QuoteItem {
   readonly taxPct: number; readonly discountPct: number; readonly lineTotal: number;
 }
 export interface Quote {
-  readonly id: string; readonly quoteNumber: string | null; readonly clientName: string;
+  readonly id: string; readonly quoteNumber: string | null; readonly customerId: string | null; readonly clientName: string;
   readonly clientPhone: string | null; readonly clientEmail: string | null; readonly clientAddress: string | null;
   readonly items: QuoteItem[]; readonly subtotal: number; readonly taxTotal: number; readonly total: number;
   readonly status: QuoteStatus; readonly validUntil: string | null; readonly notes: string | null; readonly terms: string | null;
@@ -15,7 +15,7 @@ export interface Quote {
   readonly sentAt: string | null; readonly sentChannels: string[]; readonly updatedAt: string | null;
 }
 export interface QuoteInput {
-  clientName: string; clientPhone: string; clientEmail: string; clientAddress: string;
+  customerId: string | null; clientName: string; clientPhone: string; clientEmail: string; clientAddress: string;
   items: QuoteItem[]; subtotal: number; taxTotal: number; total: number;
   validUntil: string | null; notes: string; terms: string; status: QuoteStatus;
 }

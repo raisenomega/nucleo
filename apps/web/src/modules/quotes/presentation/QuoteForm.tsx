@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { UserCheck, X } from "lucide-react";
 import { useI18n } from "@shared/i18n";
+import { CustomerSelect, type PickedCustomer } from "@shared/customers/CustomerSelect";
 import { QuoteItemsEditor } from "@quotes/presentation/QuoteItemsEditor";
 import type { Quote, QuoteInput, QuoteItem, QuoteStatus, QuoteResult } from "@quotes/domain/quote.types";
 
@@ -12,6 +14,8 @@ export function QuoteForm({ initial, onSubmit, onCancel }: {
   const { t } = useI18n();
   const [clientName, setClientName] = useState(initial?.clientName ?? ""); const [clientPhone, setClientPhone] = useState(initial?.clientPhone ?? "");
   const [clientEmail, setClientEmail] = useState(initial?.clientEmail ?? ""); const [clientAddress, setClientAddress] = useState(initial?.clientAddress ?? "");
+  const [customerId, setCustomerId] = useState<string | null>(initial?.customerId ?? null);
+  const pick = (c: PickedCustomer) => { setCustomerId(c.id); setClientName(c.name); setClientPhone(c.phone); setClientEmail(c.email); setClientAddress(c.address); };
   const [items, setItems] = useState<QuoteItem[]>(initial ? [...initial.items] : [NEW]);
   const [notes, setNotes] = useState(initial?.notes ?? ""); const [terms, setTerms] = useState(initial?.terms ?? "");
   const [validUntil, setValidUntil] = useState(initial?.validUntil ?? ""); const [busy, setBusy] = useState(false);
@@ -19,13 +23,16 @@ export function QuoteForm({ initial, onSubmit, onCancel }: {
   const total = items.reduce((s, i) => s + i.lineTotal, 0);
   async function submit(status: QuoteStatus) {
     if (!clientName.trim()) return; setBusy(true);
-    const r = await onSubmit({ clientName: clientName.trim(), clientPhone, clientEmail, clientAddress, items,
+    const r = await onSubmit({ customerId, clientName: clientName.trim(), clientPhone, clientEmail, clientAddress, items,
       subtotal, taxTotal: total - subtotal, total, validUntil: validUntil || null, notes, terms, status });
     setBusy(false); if (!r.ok) window.alert(r.error); else onCancel();
   }
   const fld = "w-full rounded-lg border border-border bg-background p-2 text-sm";
   return (
     <form onSubmit={(e) => { e.preventDefault(); void submit("sent"); }} className="space-y-3 rounded-lg border border-border bg-card p-5">
+      <CustomerSelect onPick={pick} />
+      {customerId && <p className="flex items-center gap-2 text-xs font-bold text-green-600"><UserCheck className="h-3.5 w-3.5" />Cliente del maestro vinculado
+        <button type="button" onClick={() => setCustomerId(null)} className="inline-flex items-center gap-0.5 text-muted-foreground hover:text-foreground"><X className="h-3 w-3" />desvincular</button></p>}
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
         <input required value={clientName} onChange={(e) => setClientName(e.target.value)} placeholder={t("clientName")} className={fld} />
         <input value={clientPhone} onChange={(e) => setClientPhone(e.target.value)} placeholder={t("phone")} className={fld} />

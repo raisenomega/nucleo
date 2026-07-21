@@ -7,7 +7,7 @@ export interface InvoiceItem {
   readonly taxPct: number; readonly discountPct: number; readonly lineTotal: number;
 }
 export interface Invoice {
-  readonly id: string; readonly invoiceNumber: string | null; readonly clientName: string;
+  readonly id: string; readonly invoiceNumber: string | null; readonly customerId: string | null; readonly clientName: string;
   readonly phone: string | null; readonly email: string | null; readonly items: InvoiceItem[];
   readonly subtotal: number; readonly tax: number; readonly total: number; readonly status: InvoiceStatus;
   readonly dueDate: string | null; readonly paidAt: string | null;
