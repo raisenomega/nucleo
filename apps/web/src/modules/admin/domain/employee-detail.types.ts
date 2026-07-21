@@ -5,7 +5,7 @@ import type { ModuleAccess } from "@admin/domain/module-access";
 
 export interface EmployeeDetail {
   readonly id: string; readonly profile_id: string; readonly tenant_id: string;
-  readonly middle_name: string | null; readonly last_name: string | null; readonly ssn: string | null; readonly date_of_birth: string | null;
+  readonly middle_name: string | null; readonly last_name: string | null; readonly date_of_birth: string | null;
   readonly gender: string | null; readonly marital_status: string | null; readonly dependents: number | null;
   readonly address_line1: string | null; readonly address_line2: string | null; readonly city: string | null; readonly state_province: string | null; readonly zip_code: string | null; readonly country: string | null;
   readonly personal_phone: string | null; readonly alternate_phone: string | null; readonly personal_email: string | null; readonly photo_url: string | null;

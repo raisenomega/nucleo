@@ -8,11 +8,17 @@ const ok = (error: { message: string } | null): RepoResult => (error ? { ok: fal
 export const supabaseEmployeeDetailRepository: IEmployeeDetailRepository = {
   async get(profileId): Promise<EmployeeDetail | null> {
     const { data } = await supabase.from("employee_details").select("*").eq("profile_id", profileId).maybeSingle();
-    return (data as EmployeeDetail | null) ?? null;
+    if (!data) return null;
+    // El SSN ya no vive aquí (migr 221, tabla employee_ssn cifrada). Se descarta el campo legacy que aún
+    // devuelve `select *` en la fase expand, para que jamás re-entre al form ni al upsert.
+    const { ssn: _ssn, ssn_encrypted: _e, ...rest } = data as Record<string, unknown>;
+    return rest as unknown as EmployeeDetail;
   },
   async upsert(profileId, d: EmployeeDetailUpdate): Promise<RepoResult> {
-    // Normaliza "" -> null: inputs date/number vacíos romperían el upsert (invalid input syntax).
-    const clean = Object.fromEntries(Object.entries(d).map(([k, v]) => [k, v === "" ? null : v]));
+    // Normaliza "" -> null; y descarta ssn/ssn_encrypted por si algún caller los arrastra (contract-safe).
+    const clean = Object.fromEntries(Object.entries(d)
+      .filter(([k]) => k !== "ssn" && k !== "ssn_encrypted")
+      .map(([k, v]) => [k, v === "" ? null : v]));
     return ok((await supabase.from("employee_details")
       .upsert({ profile_id: profileId, ...clean }, { onConflict: "tenant_id,profile_id" })).error);
   },

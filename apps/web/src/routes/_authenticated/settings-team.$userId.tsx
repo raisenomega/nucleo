@@ -54,7 +54,7 @@ function MemberPage() {
       <div className="flex flex-wrap gap-2 border-b border-border">
         {TABS.map((x) => <button key={x.id} type="button" onClick={() => setTab(x.id)} className={`px-3 py-2 text-sm font-bold ${tab === x.id ? "border-b-2 border-foreground text-foreground" : "text-muted-foreground"}`}>{t(x.k)}</button>)}
       </div>
-      {tab === "personal" && <ProfilePersonalTab form={form} set={set} />}
+      {tab === "personal" && <ProfilePersonalTab form={form} set={set} profileId={userId} />}
       {tab === "professional" && <ProfileProfessionalTab form={form} set={set} />}
       {tab === "access" && <ProfileAccessTab role={m.role} onRole={(r) => void tm.changeRole(r)} onPin={(p) => void notify(tm.setPin(p))} form={form} set={set} />}
       {tab === "benefits" && <ProfileBenefitsTab form={form} set={set} />}

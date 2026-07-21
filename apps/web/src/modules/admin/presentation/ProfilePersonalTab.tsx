@@ -1,6 +1,7 @@
 import { useI18n } from "@shared/i18n";
 import type { TranslationKey } from "@shared/i18n";
 import type { EmployeeDetailUpdate } from "@admin/domain/employee-detail.types";
+import { SsnField } from "@admin/presentation/SsnField";
 
 type SetFn = <K extends keyof EmployeeDetailUpdate>(k: K, v: EmployeeDetailUpdate[K]) => void;
 type Opt = { v: string; l: string };
@@ -8,7 +9,7 @@ const GENDER: Opt[] = [{ v: "male", l: "Masculino" }, { v: "female", l: "Femenin
 const MARITAL: Opt[] = [{ v: "single", l: "Soltero" }, { v: "married", l: "Casado" }, { v: "divorced", l: "Divorciado" }, { v: "widowed", l: "Viudo" }];
 const RELATION: Opt[] = [{ v: "spouse", l: "Esposo/a" }, { v: "parent", l: "Padre/Madre" }, { v: "child", l: "Hijo/a" }, { v: "sibling", l: "Hermano/a" }, { v: "other", l: "Otro" }];
 
-export function ProfilePersonalTab({ form, set }: { form: EmployeeDetailUpdate; set: SetFn }) {
+export function ProfilePersonalTab({ form, set, profileId }: { form: EmployeeDetailUpdate; set: SetFn; profileId: string }) {
   const { t } = useI18n();
   const fld = "w-full rounded-lg border border-border bg-background p-2 text-sm";
   const lbl = "text-xs font-bold text-muted-foreground";
@@ -26,7 +27,7 @@ export function ProfilePersonalTab({ form, set }: { form: EmployeeDetailUpdate; 
       <div className="rounded-lg border border-border bg-card p-5">
         <h3 className="mb-3 font-body font-bold text-foreground">{t("personalInfo")}</h3>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-          {inp("middle_name", "middleName")}{inp("last_name", "lastName")}{inp("ssn", "ssn")}
+          {inp("middle_name", "middleName")}{inp("last_name", "lastName")}<SsnField profileId={profileId} label={t("ssn")} />
           {inp("date_of_birth", "dateOfBirth", "date")}{sel("gender", "gender", GENDER)}{sel("marital_status", "maritalStatus", MARITAL)}
           {inp("dependents", "dependents", "number")}{inp("personal_phone", "phone")}{inp("alternate_phone", "alternatePhone")}
           {inp("personal_email", "personalEmail")}{inp("address_line1", "addressLine1")}{inp("address_line2", "addressLine2")}
