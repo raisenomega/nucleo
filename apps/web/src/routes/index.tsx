@@ -5,12 +5,16 @@ import { useMounted } from "@shared/hooks/useMounted";
 import { PublicBrandProvider } from "@landing-public/presentation/PublicBrandProvider";
 import { PublicLandingRoot } from "@landing-public/presentation/PublicLandingRoot";
 import { landingHead } from "@shared/seo/marketing.head";
+import { getSeoData } from "@shared/seo/seo-data";
 
 // Landing comercial de Raisen (marketing) — lazy + aislada: no entra al bundle del panel ni de @landing-public.
 const MarketingLanding = lazy(() => import("@raisen-marketing"));
 
 export const Route = createFileRoute("/")({
-  head: landingHead, // meta + JSON-LD solo en hosts de Raisen; en dominio de tenant devuelve {}
+  // Precios y FAQs del JSON-LD salen de la DB. Se resuelve SOLO en servidor: es el HTML del SSR lo que leen
+  // los crawlers, y así la navegación en cliente no paga un fetch extra (cae al fallback estático).
+  loader: async () => (typeof window === "undefined" ? await getSeoData() : null),
+  head: ({ loaderData }) => landingHead(loaderData),
   component: Home,
 });
 

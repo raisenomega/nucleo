@@ -1,10 +1,12 @@
 import { defineHandler, getRequestHost } from "h3";
+import { getSeoData, type SeoData } from "@shared/seo/seo-data";
 
 const RAISEN = new Set(["nucleoraisen.com", "www.nucleoraisen.com", "nucleo-blush.vercel.app", "localhost"]);
 
-// /llms-full.txt — versión extendida de /llms.txt: proceso, soluciones y FAQs literales. El contenido refleja
-// lo que hay en la DB (marketing_process_steps, marketing_solutions, marketing_features) al 2026-07-20.
-const LLMS_FULL = `# NÚCLEO by Raisen — documentación extendida
+const per = (p: string) => (p === "one_time" ? " (pago único)" : p === "year" ? "/año" : "/mes");
+const money = (n: number) => `$${n.toLocaleString("en-US")}`;
+
+const HEAD = `# NÚCLEO by Raisen — documentación extendida
 
 > Plataforma de gestión operacional SaaS para PYMEs y empresas grandes en Puerto Rico y Latinoamérica.
 
@@ -20,13 +22,6 @@ finanzas, cumplimiento fiscal y presencia digital. El cliente opera bajo su prop
 2. Configura tu marca — Logo, colores, dominio propio: tu plataforma, tu identidad.
 3. Opera tu negocio — Factura, asigna rutas, gestiona empleados, todo desde un solo panel.
 4. Crece con datos — Reportes, fiscal, IA: decisiones informadas para escalar.
-
-## Capacidades destacadas
-
-- Facturación inteligente: cotizaciones → aprobación pública → auto-factura → cobro → PDFs white-label
-- Rutas y operaciones: paradas asignadas, evidencia fotográfica, completar desde móvil
-- Fiscal y reportes: motor de contribución con reglas versionadas y alertas de informativas
-- IA y landing: agentes entrenados en el negocio + landing white-label con APP nativa
 
 ## Soluciones
 
@@ -51,56 +46,9 @@ finanzas, cumplimiento fiscal y presencia digital. El cliente opera bajo su prop
 - Gestión documental: contratos, vencimientos, alertas automáticas
 - Auto-contabilidad: operaciones → registros financieros sin intervención
 
-## Precios
+`;
 
-Todos los planes incluyen usuarios ilimitados y un setup de implementación de $3,500 (una sola vez), que
-cubre configuración de marca, migración de datos, entrenamiento y acompañamiento post-lanzamiento.
-
-- Starter — $249/mes: facturación y cotizaciones, portal de clientes, landing white-label básica,
-  reportes básicos, soporte por email.
-- Pro — $449/mes (recomendado): todo lo de Starter + rutas y operaciones de campo, nómina y talento,
-  landing completa con SEO y PWA, reportes avanzados (4 pilares), gestión documental, auto-contabilidad,
-  CRM integrado y soporte por email + chat.
-- Enterprise — $649/mes: todo lo de Pro + módulo fiscal PR integrado, agentes IA base, multi-departamento,
-  acceso a API, soporte dedicado prioritario y onboarding personalizado.
-
-## Complementos
-
-- App nativa white-label — $6,500 pago único: apps iOS y Android bajo la marca y dominio del cliente,
-  incluido el build, el deploy en App Store y Google Play y la configuración de push notifications.
-- Agente fiscal y contable IA — $149/mes: cumplimiento fiscal para Puerto Rico, México y Colombia con
-  reglas versionadas, alertas de informativas y cálculo automático de deducciones.
-- Agente de ventas IA — $99/mes: califica leads, responde consultas y agenda reuniones por chat y WhatsApp.
-- Agente de soporte IA — $99/mes: atención al cliente 24/7, gestión de tickets y escalado a humano.
-- Agente de recursos humanos IA — $99/mes: onboarding automatizado, consultas de empleados, tracking de
-  evaluaciones y alertas de compliance laboral.
-
-## Preguntas frecuentes
-
-P: ¿Qué es NÚCLEO?
-R: Una plataforma de gestión operacional para PYMEs y empresas grandes. Integra facturación, operaciones,
-nómina, fiscal, landing white-label y agentes IA en un solo sistema bajo la marca del cliente. Se adapta a
-cualquier industria en Puerto Rico y Latinoamérica.
-
-P: ¿Para qué tipo de empresa es NÚCLEO?
-R: Para cualquier empresa que necesite estructura departamental y gestión integrada — desde PYMEs hasta
-empresas grandes, en cualquier industria y nicho.
-
-P: ¿Cuánto cuesta NÚCLEO?
-R: Tres planes mensuales: Starter $249, Pro $449 (recomendado) y Enterprise $649. Todos incluyen usuarios
-ilimitados y un setup de implementación de $3,500 (una sola vez). Aparte hay complementos opcionales: app
-nativa white-label por $6,500 pago único y agentes IA verticales desde $99/mes.
-
-P: ¿NÚCLEO cumple con la regulación fiscal de Puerto Rico?
-R: Sí. Incluye un motor de contribución con reglas versionadas, alertas de informativas y estrategias de
-optimización fiscal adaptadas a Puerto Rico.
-
-P: ¿Puedo usar NÚCLEO con mi propia marca?
-R: Sí. NÚCLEO es 100% white-label: el cliente final ve tu marca, tu dominio y tu logo.
-
-P: ¿En qué idiomas está disponible?
-R: Español e inglés, conmutables en toda la plataforma y en la landing.
-
+const TAIL = `
 ## Contacto
 
 - Web: https://www.nucleoraisen.com
@@ -109,11 +57,44 @@ R: Español e inglés, conmutables en toda la plataforma y en la landing.
 - Ubicación: San Juan, Puerto Rico
 `;
 
-export default defineHandler((event) => {
+// Precios y FAQs salen de la DB (marketing_pricing_* y marketing_faqs). Las FAQs son LAS MISMAS que se ven
+// en la landing y que se publican como FAQPage, así las tres superficies nunca se contradicen.
+function dynamicBody(seo: SeoData): string {
+  const tiers = seo.tiers.map((t) => `- ${t.nameEs} — ${money(t.price)}${per(t.period)}`).join("\n");
+  const addons = seo.addons.map((a) => `- ${a.nameEs} — ${money(a.price)}${per(a.period)}`).join("\n");
+  const faqs = seo.faqs.map((f) => `P: ${f.qEs}\nR: ${f.aEs}\n`).join("\n");
+  return `## Precios
+
+Todos los planes incluyen usuarios ilimitados y un setup de implementación de $3,500 (una sola vez), que
+cubre configuración de marca, migración de datos, entrenamiento y acompañamiento post-lanzamiento.
+
+${tiers}
+
+## Complementos
+
+${addons}
+
+## Preguntas frecuentes
+
+${faqs}`;
+}
+
+const FALLBACK = `## Precios
+
+- Starter — $249/mes
+- Pro — $449/mes (recomendado)
+- Enterprise — $649/mes
+
+Todos los planes incluyen usuarios ilimitados y un setup de implementación de $3,500 (una sola vez).
+`;
+
+export default defineHandler(async (event) => {
   const host = (getRequestHost(event) || "").split(":")[0]?.toLowerCase() ?? "";
   if (!RAISEN.has(host)) return new Response("Not found", { status: 404 });
-  return new Response(LLMS_FULL, {
+  const seo = await getSeoData();
+  const body = HEAD + (seo ? dynamicBody(seo) : FALLBACK) + TAIL;
+  return new Response(body, {
     status: 200,
-    headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "public, max-age=3600, s-maxage=86400" },
+    headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "public, max-age=300, s-maxage=300" },
   });
 });

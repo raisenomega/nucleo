@@ -6,6 +6,7 @@ import { MarketingSolutions } from "@raisen-marketing/components/solutions/Marke
 import { MarketingPricing } from "@raisen-marketing/components/pricing/MarketingPricing";
 import { MarketingTestimonials } from "@raisen-marketing/components/testimonials/MarketingTestimonials";
 import { MarketingLeadForm } from "@raisen-marketing/components/lead/MarketingLeadForm";
+import { MarketingFAQ } from "@raisen-marketing/components/faq/MarketingFAQ";
 import { useMarketingHero } from "@raisen-marketing/hooks/useMarketingHero";
 import type { Audience } from "@raisen-marketing/data/solutions";
 import type { Lang } from "@raisen-marketing/data/copy";
@@ -23,6 +24,7 @@ export function renderSection(key: string, ctx: SectionCtx): ReactNode {
     case "solutions": return <MarketingSolutions key={key} lang={lang} setAudience={setAudience} />;
     case "pricing": return <MarketingPricing key={key} lang={lang} />;
     case "testimonials": return <MarketingTestimonials key={key} lang={lang} />;
+    case "faq": return <MarketingFAQ key={key} lang={lang} />;
     case "lead_form": return <MarketingLeadForm key={key} lang={lang} audience={audience} setAudience={setAudience} />;
     default: return null;
   }

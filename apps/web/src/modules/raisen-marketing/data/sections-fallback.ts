@@ -9,5 +9,6 @@ export const SECTIONS_FALLBACK: SectionRow[] = [
   { id: "f4", key: "solutions", labelEs: "Soluciones", labelEn: "Solutions", isVisible: true, order: 4 },
   { id: "f5", key: "pricing", labelEs: "Precios", labelEn: "Pricing", isVisible: true, order: 5 },
   { id: "f6", key: "testimonials", labelEs: "Testimonios", labelEn: "Testimonials", isVisible: true, order: 6 },
-  { id: "f7", key: "lead_form", labelEs: "Formulario", labelEn: "Lead Form", isVisible: true, order: 7 },
+  { id: "f7", key: "faq", labelEs: "Preguntas frecuentes", labelEn: "FAQ", isVisible: true, order: 7 },
+  { id: "f8", key: "lead_form", labelEs: "Formulario", labelEn: "Lead Form", isVisible: true, order: 8 },
 ];

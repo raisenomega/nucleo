@@ -1,11 +1,29 @@
 import { defineHandler, getRequestHost } from "h3";
+import { getSeoData, type SeoTier, type SeoAddon } from "@shared/seo/seo-data";
 
 const RAISEN = new Set(["nucleoraisen.com", "www.nucleoraisen.com", "nucleo-blush.vercel.app", "localhost"]);
 
-// /llms.txt — estándar emergente para que los motores de respuesta (ChatGPT, Perplexity, Claude, Gemini) lean
-// el sitio sin ejecutar JS. Es CRÍTICO aquí: la landing se renderiza en cliente, así que el HTML que reciben
-// esos crawlers viene prácticamente vacío. Este fichero es su única fuente fiable sobre NÚCLEO.
-const LLMS = `# NÚCLEO by Raisen
+const per = (p: string) => (p === "one_time" ? " (pago único)" : p === "year" ? "/año" : "/mes");
+const money = (n: number) => `$${n.toLocaleString("en-US")}`;
+
+// Bloque de precios generado desde la DB: si el owner cambia una tarifa en /web/precios, este fichero la
+// refleja sin tocar código. Fallback estático solo si Supabase no responde.
+function pricing(tiers: SeoTier[], addons: SeoAddon[]): string {
+  const t = tiers.map((x) => `- ${x.nameEs}: ${money(x.price)}${per(x.period)}`).join("\n");
+  const a = addons.map((x) => `- ${x.nameEs}: ${money(x.price)}${per(x.period)}`).join("\n");
+  return `## Precios\n\n${t}\n\nTodos los planes incluyen usuarios ilimitados y un setup de implementación de $3,500 (una sola vez).\n\n## Complementos\n\n${a}\n`;
+}
+
+const FALLBACK_PRICING = `## Precios
+
+- Starter: $249/mes
+- Pro: $449/mes (recomendado)
+- Enterprise: $649/mes
+
+Todos los planes incluyen usuarios ilimitados y un setup de implementación de $3,500 (una sola vez).
+`;
+
+const HEAD = `# NÚCLEO by Raisen
 
 > Plataforma de gestión operacional SaaS para PYMEs y empresas grandes en Puerto Rico y Latinoamérica.
 > Simplifica sistemas empresariales complejos en soluciones accesibles y escalables.
@@ -30,17 +48,9 @@ accesible para cualquier empresa que necesite operar con estructura.
 - Gestión documental: contratos, vencimientos, alertas automáticas
 - Auto-contabilidad: operaciones → registros financieros sin intervención
 
-## Precios
+`;
 
-- Starter: $249/mes (facturación + landing + portal de clientes)
-- Pro: $449/mes (todos los módulos) — recomendado
-- Enterprise: $649/mes (fiscal PR + agentes IA base + soporte dedicado)
-- Setup de implementación: $3,500 (una sola vez, todos los planes)
-- App nativa white-label: $6,500 (una sola vez)
-- Agentes IA verticales: desde $99/mes por agente
-
-Todos los planes incluyen usuarios ilimitados.
-
+const TAIL = `
 ## Para quién
 
 PYMEs y empresas grandes de cualquier industria en Puerto Rico y Latinoamérica que necesitan estructura
@@ -59,11 +69,15 @@ sistemas empresariales tradicionales.
 San Juan, Puerto Rico
 `;
 
-export default defineHandler((event) => {
+// /llms.txt — canal principal para los motores de respuesta (ChatGPT, Perplexity, Claude, Gemini), que NO
+// ejecutan JS: el HTML de la landing les llega prácticamente vacío, así que este fichero es su fuente real.
+export default defineHandler(async (event) => {
   const host = (getRequestHost(event) || "").split(":")[0]?.toLowerCase() ?? "";
   if (!RAISEN.has(host)) return new Response("Not found", { status: 404 });
-  return new Response(LLMS, {
+  const seo = await getSeoData();
+  const body = HEAD + (seo ? pricing(seo.tiers, seo.addons) : FALLBACK_PRICING) + TAIL;
+  return new Response(body, {
     status: 200,
-    headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "public, max-age=3600, s-maxage=86400" },
+    headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "public, max-age=300, s-maxage=300" },
   });
 });
