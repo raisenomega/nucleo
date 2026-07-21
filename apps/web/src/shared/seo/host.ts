@@ -13,9 +13,20 @@ const currentHost = createIsomorphicFn()
   })
   .client((): string => window.location.hostname);
 
+const norm = (): string => (currentHost() || "").split(":")[0]?.toLowerCase() ?? "";
+
 // true solo en los dominios de la landing comercial. Ante duda (host vacío) devuelve false: es el lado seguro,
 // porque el fallo se degrada a "sin meta" en vez de a "meta de NÚCLEO en el dominio de un tenant".
 export function isRaisenSeoHost(): boolean {
-  const h = (currentHost() || "").split(":")[0]?.toLowerCase() ?? "";
-  return RAISEN_HOSTS.has(h);
+  return RAISEN_HOSTS.has(norm());
+}
+
+// Qué debe servir la ruta "/" según el host. Se resuelve en el LOADER para que servidor y primer render de
+// cliente coincidan: así la landing comercial puede renderizarse en SSR sin provocar hydration mismatch.
+//   raisen → landing comercial de NÚCLEO · panel → app.{tenant} (redirige a /login) · tenant → landing white-label
+export type HostKind = "raisen" | "panel" | "tenant";
+export function hostKind(): HostKind {
+  const h = norm();
+  if (RAISEN_HOSTS.has(h)) return "raisen";
+  return h.startsWith("app.") ? "panel" : "tenant";
 }

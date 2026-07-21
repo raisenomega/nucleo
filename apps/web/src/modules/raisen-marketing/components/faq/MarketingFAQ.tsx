@@ -3,14 +3,15 @@ import { useScrollReveal } from "@raisen-marketing/hooks/useScrollReveal";
 import { useMarketingFaqs } from "@raisen-marketing/hooks/useMarketingFaqs";
 import { FAQ_CONFIG_FALLBACK, FAQS_FALLBACK } from "@raisen-marketing/data/faqs-fallback";
 import { FaqItem } from "@raisen-marketing/components/faq/FaqItem";
+import type { FaqRow } from "@raisen-marketing/data/faq.types";
 import type { Lang } from "@raisen-marketing/data/copy";
 
 // Sección Preguntas frecuentes. Contenedor más estrecho que el resto (max-w-3xl): son bloques de texto, no
 // tarjetas. Es la MISMA fuente que alimenta el JSON-LD FAQPage, así el structured data siempre corresponde
 // a contenido visible (requisito de Google).
-export function MarketingFAQ({ lang }: { lang: Lang }) {
+export function MarketingFAQ({ lang, initialFaqs }: { lang: Lang; initialFaqs?: FaqRow[] | null }) {
   const es = lang === "es";
-  const { config, faqs } = useMarketingFaqs();
+  const { config, faqs } = useMarketingFaqs(initialFaqs);
   const cfg = config ?? FAQ_CONFIG_FALLBACK;
   const items = faqs && faqs.length ? faqs : FAQS_FALLBACK;
   const [open, setOpen] = useState<string | null>(null);
