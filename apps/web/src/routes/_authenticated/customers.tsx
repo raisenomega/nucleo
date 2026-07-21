@@ -15,7 +15,10 @@ import { SegmentsManager } from "@shared/customers/SegmentsManager";
 import type { AdminCustomer } from "@shared/customers/customers-agg";
 import type { CustomerPayload } from "@shared/customers/customer-crm.repository";
 
-export const Route = createFileRoute("/_authenticated/customers")({ component: CustomersPage });
+export const Route = createFileRoute("/_authenticated/customers")({
+  validateSearch: (s: Record<string, unknown>): { view?: string } => ({ view: typeof s.view === "string" ? s.view : undefined }),
+  component: CustomersPage,
+});
 const FILTERS = ["all", "active", "inactive", "debt"] as const;
 const LABEL: Record<(typeof FILTERS)[number], TranslationKey> = { all: "filterAll", active: "cActiveSt", inactive: "cInactiveSt", debt: "cWithDebt" };
 
@@ -24,7 +27,7 @@ function CustomersPage() {
   const tenantId = session?.tenantId ?? "";
   const crm = useCustomersCrm(tenantId); const segs = useCustomerSegments(tenantId);
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("all");
-  const [search, setSearch] = useState(""); const [segFilter, setSegFilter] = useState(""); const [viewing, setViewing] = useState<string | null>(null);
+  const [search, setSearch] = useState(""); const [segFilter, setSegFilter] = useState(""); const [viewing, setViewing] = useState<string | null>(Route.useSearch().view ?? null);
   const [managing, setManaging] = useState(false);
   const [editing, setEditing] = useState<AdminCustomer | null | undefined>(undefined); // undefined=cerrado · null=nuevo
   const save = async (id: string | undefined, p: CustomerPayload) => {

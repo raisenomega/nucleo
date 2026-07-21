@@ -8,7 +8,7 @@ export const ACTIVE_ORDER_STATUSES: OrderStatus[] = ["pending", "awaiting_paymen
 export interface OrderItem { kind?: string; name: string; qty: number; price: number; }
 
 export interface Order {
-  id: string; orderNumber: string | null; customerName: string; customerEmail: string; customerPhone: string;
+  id: string; orderNumber: string | null; customerId: string | null; customerName: string; customerEmail: string; customerPhone: string;
   items: OrderItem[]; customFields: Record<string, unknown>; formId: string | null;
   subtotal: number; tax: number; shipping: number; discount: number; total: number;
   currency: string; status: OrderStatus; sourceHostname: string | null;

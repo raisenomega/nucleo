@@ -2,7 +2,7 @@ import type { Order, OrderItem, OrderStatus } from "@orders/domain/order.types";
 import type { OrderHistoryEvent } from "@orders/domain/order-status-history.types";
 
 export interface OrderRow {
-  id: string; order_number: string | null; customer_name: string | null; customer_email: string | null;
+  id: string; order_number: string | null; customer_id: string | null; customer_name: string | null; customer_email: string | null;
   customer_phone: string | null; items: unknown; custom_fields: unknown; form_id: string | null; subtotal: number; tax: number; shipping: number; discount: number;
   total: number; currency: string | null; status: OrderStatus; source_hostname: string | null;
   utm_source: string | null; utm_medium: string | null; utm_campaign: string | null;
@@ -15,7 +15,7 @@ const toItems = (v: unknown): OrderItem[] => (Array.isArray(v) ? v.map((i) => ({
 })) : []);
 
 export const toOrder = (r: OrderRow): Order => ({
-  id: r.id, orderNumber: r.order_number, customerName: r.customer_name ?? "", customerEmail: r.customer_email ?? "",
+  id: r.id, orderNumber: r.order_number, customerId: r.customer_id, customerName: r.customer_name ?? "", customerEmail: r.customer_email ?? "",
   customerPhone: r.customer_phone ?? "", items: toItems(r.items),
   customFields: (r.custom_fields && typeof r.custom_fields === "object" ? r.custom_fields : {}) as Record<string, unknown>, formId: r.form_id,
   subtotal: num(r.subtotal), tax: num(r.tax),

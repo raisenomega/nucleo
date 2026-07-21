@@ -2,7 +2,7 @@ import { supabase } from "@shared/lib/supabase";
 import { toOrder, type OrderRow } from "@orders/infrastructure/order.mapper";
 import { ACTIVE_ORDER_STATUSES, type IOrdersRepository, type OrderFilters, type OrderStatus, type Result } from "@orders/domain/order.types";
 
-const SEL = "id,order_number,customer_name,customer_email,customer_phone,items,custom_fields,form_id,subtotal,tax,shipping,discount,total,currency,status,source_hostname,utm_source,utm_medium,utm_campaign,linked_lead_id,linked_invoice_id,created_at,paid_at,payment_method_key,client_confirmed_at";
+const SEL = "id,order_number,customer_id,customer_name,customer_email,customer_phone,items,custom_fields,form_id,subtotal,tax,shipping,discount,total,currency,status,source_hostname,utm_source,utm_medium,utm_campaign,linked_lead_id,linked_invoice_id,created_at,paid_at,payment_method_key,client_confirmed_at";
 const errMsg = (c?: string) => (c === "already_confirmed" ? "already_confirmed" : c === "forbidden" ? "forbidden" : c ?? "error");
 
 export const supabaseOrdersRepository: IOrdersRepository = {

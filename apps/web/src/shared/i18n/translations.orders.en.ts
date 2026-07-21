@@ -8,7 +8,7 @@ export const enOrders = {
   ordColOrder: "Order #", ordColCustomer: "Customer", ordColItems: "Items", ordColDate: "Date", ordItemsCount: "{n} items",
   ordEmptyTitle: "No web orders yet", ordEmptyDesc: "Orders placed from your landing page will show up here.",
   ordLoadMore: "Load more", ordErrGeneric: "Could not complete the action",
-  ordCustomerTitle: "Customer", ordSource: "Source", ordItemsTitle: "Items",
+  ordCustomerTitle: "Customer", ordLinkedCustomer: "Linked customer", ordSource: "Source", ordItemsTitle: "Items",
   ordTotSubtotal: "Subtotal", ordTotTax: "Tax", ordTotShipping: "Shipping", ordTotDiscount: "Discount", ordTotTotal: "Total",
   ordTimelineTitle: "History", ordTimelineCreated: "Order created", ordTimelineChanged: "Status changed to {status}",
   ordChangeTitle: "Change status", ordChangeNewStatus: "New status", ordChangeNote: "Note (optional)", ordChangeBtn: "Save", ordChangeSuccess: "Status updated",

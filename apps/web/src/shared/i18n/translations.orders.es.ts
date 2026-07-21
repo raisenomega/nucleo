@@ -8,7 +8,7 @@ export const esOrders = {
   ordColOrder: "Nº orden", ordColCustomer: "Cliente", ordColItems: "Ítems", ordColDate: "Fecha", ordItemsCount: "{n} ítems",
   ordEmptyTitle: "No hay órdenes web todavía", ordEmptyDesc: "Cuando entren órdenes desde tu landing aparecerán aquí.",
   ordLoadMore: "Cargar más", ordErrGeneric: "No se pudo completar la acción",
-  ordCustomerTitle: "Cliente", ordSource: "Origen", ordItemsTitle: "Ítems",
+  ordCustomerTitle: "Cliente", ordLinkedCustomer: "Cliente vinculado", ordSource: "Origen", ordItemsTitle: "Ítems",
   ordTotSubtotal: "Subtotal", ordTotTax: "Impuesto", ordTotShipping: "Envío", ordTotDiscount: "Descuento", ordTotTotal: "Total",
   ordTimelineTitle: "Historial", ordTimelineCreated: "Orden creada", ordTimelineChanged: "Estado cambiado a {status}",
   ordChangeTitle: "Cambiar estado", ordChangeNewStatus: "Nuevo estado", ordChangeNote: "Nota (opcional)", ordChangeBtn: "Guardar", ordChangeSuccess: "Estado actualizado",
