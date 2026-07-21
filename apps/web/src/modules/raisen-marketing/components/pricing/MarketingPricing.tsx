@@ -15,6 +15,7 @@ export function MarketingPricing({ lang }: { lang: Lang }) {
   const addons = useMarketingAddons();
   const cfg = config ?? PRICING_CONFIG_FALLBACK;
   const items = tiers && tiers.length ? tiers : PRICING_TIERS_FALLBACK;
+  const disclaimer = es ? cfg.disclaimerEs : cfg.disclaimerEn; // nota de setup — vacía = no se renderiza
   const { ref, isVisible } = useScrollReveal();
   return (
     <section id="pricing" aria-labelledby="pricing-title" ref={ref} className="relative overflow-hidden px-6 py-16 md:py-20">
@@ -27,10 +28,11 @@ export function MarketingPricing({ lang }: { lang: Lang }) {
         <div className="mx-auto grid max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((t) => <PricingTierCard key={t.id} tier={t} lang={lang} recommendedLabel={c.pricingRecommended} />)}
         </div>
+        {disclaimer && <p className="mx-auto mt-8 max-w-3xl text-center text-sm leading-relaxed text-muted-foreground">{disclaimer}</p>}
         {addons.length > 0 && (
           <div className="mt-16">
             <div className="mb-8 text-center">
-              <h3 className="font-display text-2xl font-bold text-foreground md:text-3xl">{es ? "Complementos" : "Add-ons"}</h3>
+              <h3 className="font-display text-2xl font-bold text-foreground md:text-3xl">{es ? "Potencia tu plataforma" : "Power up your platform"}</h3>
               <p className="mx-auto mt-2 max-w-lg text-sm text-muted-foreground">{es ? "Suma capacidades a cualquier plan." : "Add capabilities to any plan."}</p>
             </div>
             <div className="mx-auto grid max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-3">

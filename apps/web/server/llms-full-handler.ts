@@ -53,8 +53,27 @@ finanzas, cumplimiento fiscal y presencia digital. El cliente opera bajo su prop
 
 ## Precios
 
-- Pro: $749/mes — plataforma completa con gestión departamental
-- Enterprise: $14,995 pago único — máximo poder y soporte dedicado
+Todos los planes incluyen usuarios ilimitados y un setup de implementación de $3,500 (una sola vez), que
+cubre configuración de marca, migración de datos, entrenamiento y acompañamiento post-lanzamiento.
+
+- Starter — $249/mes: facturación y cotizaciones, portal de clientes, landing white-label básica,
+  reportes básicos, soporte por email.
+- Pro — $449/mes (recomendado): todo lo de Starter + rutas y operaciones de campo, nómina y talento,
+  landing completa con SEO y PWA, reportes avanzados (4 pilares), gestión documental, auto-contabilidad,
+  CRM integrado y soporte por email + chat.
+- Enterprise — $649/mes: todo lo de Pro + módulo fiscal PR integrado, agentes IA base, multi-departamento,
+  acceso a API, soporte dedicado prioritario y onboarding personalizado.
+
+## Complementos
+
+- App nativa white-label — $6,500 pago único: apps iOS y Android bajo la marca y dominio del cliente,
+  incluido el build, el deploy en App Store y Google Play y la configuración de push notifications.
+- Agente fiscal y contable IA — $149/mes: cumplimiento fiscal para Puerto Rico, México y Colombia con
+  reglas versionadas, alertas de informativas y cálculo automático de deducciones.
+- Agente de ventas IA — $99/mes: califica leads, responde consultas y agenda reuniones por chat y WhatsApp.
+- Agente de soporte IA — $99/mes: atención al cliente 24/7, gestión de tickets y escalado a humano.
+- Agente de recursos humanos IA — $99/mes: onboarding automatizado, consultas de empleados, tracking de
+  evaluaciones y alertas de compliance laboral.
 
 ## Preguntas frecuentes
 
@@ -68,8 +87,9 @@ R: Para cualquier empresa que necesite estructura departamental y gestión integ
 empresas grandes, en cualquier industria y nicho.
 
 P: ¿Cuánto cuesta NÚCLEO?
-R: Dos planes: Pro desde $749/mes y Enterprise con pago único de $14,995. Ambos incluyen la plataforma
-completa con gestión departamental.
+R: Tres planes mensuales: Starter $249, Pro $449 (recomendado) y Enterprise $649. Todos incluyen usuarios
+ilimitados y un setup de implementación de $3,500 (una sola vez). Aparte hay complementos opcionales: app
+nativa white-label por $6,500 pago único y agentes IA verticales desde $99/mes.
 
 P: ¿NÚCLEO cumple con la regulación fiscal de Puerto Rico?
 R: Sí. Incluye un motor de contribución con reglas versionadas, alertas de informativas y estrategias de

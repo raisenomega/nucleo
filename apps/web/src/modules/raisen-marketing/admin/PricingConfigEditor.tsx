@@ -20,6 +20,13 @@ export function PricingConfigEditor({ config }: { config: PricingConfig }) {
         <input className={F} placeholder="Título ES" value={c.titleEs} onChange={(e) => set({ titleEs: e.target.value })} />
         <input className={F} placeholder="Título EN" value={c.titleEn} onChange={(e) => set({ titleEn: e.target.value })} />
       </div>
+      <div>
+        <p className="mb-1 text-xs text-muted-foreground">Nota bajo los planes (setup de implementación) · vacío = no se muestra</p>
+        <div className="grid grid-cols-2 gap-2">
+          <textarea rows={4} className={F} placeholder="Nota ES" value={c.disclaimerEs} onChange={(e) => set({ disclaimerEs: e.target.value })} />
+          <textarea rows={4} className={F} placeholder="Nota EN" value={c.disclaimerEn} onChange={(e) => set({ disclaimerEn: e.target.value })} />
+        </div>
+      </div>
       <button type="button" onClick={() => void save()} className="rounded-lg bg-primary px-5 py-2 text-sm font-bold text-primary-foreground">Guardar config</button>
     </div>
   );

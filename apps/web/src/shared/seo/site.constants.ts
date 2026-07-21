@@ -25,9 +25,14 @@ export const SEO_KEYWORDS = [
   "software de gestión escalable", "automatización de operaciones",
 ].join(", ");
 
-// Precios vigentes (Starter descontinuado — NO exponer). Espejo de marketing_pricing_tiers activos.
-export const PRICE_PRO = "749";
-export const PRICE_ENTERPRISE = "14995";
+// Precios vigentes — espejo de los tiers/add-ons ACTIVOS en la DB (migr 214). Si cambian en /web/precios,
+// hay que actualizarlos aquí: el JSON-LD y el llms.txt no leen la DB (ver nota en jsonld.org.ts).
+export const PRICE_STARTER = "249";
+export const PRICE_PRO = "449";
+export const PRICE_ENTERPRISE = "649";
+export const PRICE_SETUP = "3,500";
+export const PRICE_APP_NATIVE = "6,500";
+export const PRICE_AGENT_FROM = "99";
 
 // Módulos — usados por llms.txt y por featureList del JSON-LD.
 export const MODULES: [string, string][] = [

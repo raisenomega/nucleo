@@ -1,4 +1,4 @@
-import { SITE_URL, SITE_NAME, LEGAL_NAME, SALES_EMAIL, MODULES, PRICE_PRO, PRICE_ENTERPRISE, SEO_DESCRIPTION } from "@shared/seo/site.constants";
+import { SITE_URL, SITE_NAME, LEGAL_NAME, SALES_EMAIL, MODULES, PRICE_STARTER, PRICE_ENTERPRISE, SEO_DESCRIPTION } from "@shared/seo/site.constants";
 
 // JSON-LD Organization — identifica la entidad ante Google (Knowledge Panel) y ante los motores de respuesta.
 export const ORG_LD = {
@@ -12,15 +12,17 @@ export const ORG_LD = {
   sameAs: ["https://instagram.com/nucleoraisen", "https://linkedin.com/company/raisen"],
 };
 
-// JSON-LD SoftwareApplication — precios REALES y vigentes (Starter descontinuado, no se expone).
-// AggregateOffer va de $749/mes (Pro) a $14,995 pago único (Enterprise): 2 ofertas.
+// JSON-LD SoftwareApplication — precios REALES y vigentes (espejo de los tiers activos, migr 214).
+// AggregateOffer va de $249/mes (Starter) a $649/mes (Enterprise): 3 planes. Los add-ons no entran aquí
+// (no son planes de la aplicación). NOTA: es un espejo en código, no lee la DB — al cambiar precios en
+// /web/precios hay que tocar site.constants.ts o el JSON-LD queda desincronizado del contenido visible.
 export const APP_LD = {
   "@context": "https://schema.org", "@type": "SoftwareApplication",
   name: "NÚCLEO", applicationCategory: "BusinessApplication", operatingSystem: "Web", url: SITE_URL,
   description: SEO_DESCRIPTION,
   offers: {
-    "@type": "AggregateOffer", lowPrice: PRICE_PRO, highPrice: PRICE_ENTERPRISE,
-    priceCurrency: "USD", offerCount: "2",
+    "@type": "AggregateOffer", lowPrice: PRICE_STARTER, highPrice: PRICE_ENTERPRISE,
+    priceCurrency: "USD", offerCount: "3",
   },
   creator: { "@type": "Organization", name: "Raisen Agency" },
   featureList: MODULES.map(([n]) => n).join(", "),

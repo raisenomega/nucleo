@@ -32,8 +32,14 @@ accesible para cualquier empresa que necesite operar con estructura.
 
 ## Precios
 
-- Pro: $749/mes (plataforma completa)
-- Enterprise: $14,995 pago único (máximo poder + soporte dedicado)
+- Starter: $249/mes (facturación + landing + portal de clientes)
+- Pro: $449/mes (todos los módulos) — recomendado
+- Enterprise: $649/mes (fiscal PR + agentes IA base + soporte dedicado)
+- Setup de implementación: $3,500 (una sola vez, todos los planes)
+- App nativa white-label: $6,500 (una sola vez)
+- Agentes IA verticales: desde $99/mes por agente
+
+Todos los planes incluyen usuarios ilimitados.
 
 ## Para quién
 

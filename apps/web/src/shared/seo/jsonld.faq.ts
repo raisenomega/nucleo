@@ -1,4 +1,4 @@
-import { PRICE_PRO, PRICE_ENTERPRISE } from "@shared/seo/site.constants";
+import { PRICE_STARTER, PRICE_PRO, PRICE_ENTERPRISE, PRICE_SETUP, PRICE_APP_NATIVE, PRICE_AGENT_FROM } from "@shared/seo/site.constants";
 
 const qa = (q: string, a: string) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } });
 
@@ -16,8 +16,11 @@ export const FAQ_LD = {
       "empresas grandes, en cualquier industria y nicho. NÚCLEO simplifica sistemas de gestión empresarial " +
       "complejos en soluciones accesibles y escalables."),
     qa("¿Cuánto cuesta NÚCLEO?",
-      `NÚCLEO tiene 2 planes: Pro desde $${PRICE_PRO}/mes y Enterprise con pago único de $${PRICE_ENTERPRISE}. ` +
-      "Ambos incluyen la plataforma completa con gestión departamental."),
+      `NÚCLEO tiene 3 planes: Starter desde $${PRICE_STARTER}/mes, Pro desde $${PRICE_PRO}/mes, y Enterprise ` +
+      `desde $${PRICE_ENTERPRISE}/mes. Todos incluyen usuarios ilimitados y un setup de implementación de $${PRICE_SETUP}.`),
+    qa("¿Qué complementos puedo añadir a NÚCLEO?",
+      `App nativa white-label para iOS y Android por $${PRICE_APP_NATIVE} (pago único), y agentes IA verticales ` +
+      `desde $${PRICE_AGENT_FROM}/mes: fiscal y contable, ventas, soporte y recursos humanos.`),
     qa("¿NÚCLEO cumple con la regulación fiscal de Puerto Rico?",
       "Sí. NÚCLEO incluye un motor de contribución con reglas versionadas, alertas de informativas y estrategias " +
       "de optimización fiscal adaptadas a Puerto Rico."),

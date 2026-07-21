@@ -7,7 +7,11 @@ export interface PricingTierRow {
   ctaLabelEs: string; ctaLabelEn: string; ctaHref: string;
   isRecommended: boolean; isActive: boolean; displayOrder: number;
 }
-export interface PricingConfig { id: string; eyebrowEs: string; eyebrowEn: string; titleEs: string; titleEn: string }
+// `disclaimer*` = nota bajo los tiers (hoy: setup de implementación). Editable en /web/precios.
+export interface PricingConfig {
+  id: string; eyebrowEs: string; eyebrowEn: string; titleEs: string; titleEn: string;
+  disclaimerEs: string; disclaimerEn: string;
+}
 export type PricingTierDraft = Omit<PricingTierRow, "id"> & { id?: string };
 
 // Add-on (complemento) que se muestra debajo de los planes.
