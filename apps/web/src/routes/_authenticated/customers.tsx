@@ -1,15 +1,17 @@
 import { useMemo, useState } from "react";
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { useI18n, type TranslationKey } from "@shared/i18n";
-import { Plus } from "lucide-react";
+import { Plus, Tag } from "lucide-react";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { useSession } from "@shared/providers/SessionProvider";
 import { useToast } from "@shared/providers/toast-context";
 import { useCustomersCrm } from "@shared/customers/useCustomersCrm.hook";
+import { useCustomerSegments } from "@shared/customers/useCustomerSegments.hook";
 import { CustomersKpis } from "@shared/customers/CustomersKpis";
 import { CustomersTable } from "@shared/customers/CustomersTable";
 import { CustomerDetail } from "@shared/customers/CustomerDetail";
 import { CustomerFormDialog } from "@shared/customers/CustomerFormDialog";
+import { SegmentsManager } from "@shared/customers/SegmentsManager";
 import type { AdminCustomer } from "@shared/customers/customers-agg";
 import type { CustomerPayload } from "@shared/customers/customer-crm.repository";
 
@@ -19,9 +21,11 @@ const LABEL: Record<(typeof FILTERS)[number], TranslationKey> = { all: "filterAl
 
 function CustomersPage() {
   const { t } = useI18n(); const { can } = useModuleAccess(); const { session } = useSession(); const toast = useToast();
-  const crm = useCustomersCrm(session?.tenantId ?? "");
+  const tenantId = session?.tenantId ?? "";
+  const crm = useCustomersCrm(tenantId); const segs = useCustomerSegments(tenantId);
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("all");
-  const [search, setSearch] = useState(""); const [viewing, setViewing] = useState<string | null>(null);
+  const [search, setSearch] = useState(""); const [segFilter, setSegFilter] = useState(""); const [viewing, setViewing] = useState<string | null>(null);
+  const [managing, setManaging] = useState(false);
   const [editing, setEditing] = useState<AdminCustomer | null | undefined>(undefined); // undefined=cerrado · null=nuevo
   const save = async (id: string | undefined, p: CustomerPayload) => {
     const e = id ? await crm.update(id, p) : await crm.create(p);
@@ -30,15 +34,18 @@ function CustomersPage() {
   const shown = useMemo(() => crm.rows.filter((c) => {
     const f = filter === "all" || (filter === "active" && c.isActive) || (filter === "inactive" && !c.isActive) || (filter === "debt" && c.debt > 0);
     const q = search.trim().toLowerCase();
-    return f && (!q || `${c.fullName} ${c.email} ${c.phone}`.toLowerCase().includes(q));
-  }), [crm.rows, filter, search]);
+    return f && (!segFilter || c.segmentId === segFilter) && (!q || `${c.fullName} ${c.email} ${c.phone}`.toLowerCase().includes(q));
+  }), [crm.rows, filter, search, segFilter]);
   const view = crm.rows.find((c) => c.id === viewing);
   if (!can("customers", "view")) return <Navigate to="/dashboard" />;
   return (
     <div className="space-y-6 p-4 md:p-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="font-display text-xl font-bold text-foreground md:text-3xl">{t("portal")}</h1>
-        {can("customers", "create") && <button type="button" onClick={() => setEditing(null)} className="inline-flex items-center gap-1 rounded-lg bg-primary px-3 py-2 text-sm font-bold text-primary-foreground"><Plus className="h-4 w-4" />Nuevo cliente</button>}
+        <div className="flex flex-wrap items-center gap-2">
+          {can("customers", "edit") && <button type="button" onClick={() => setManaging(true)} className="inline-flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-sm font-bold text-foreground"><Tag className="h-4 w-4" />Segmentos</button>}
+          {can("customers", "create") && <button type="button" onClick={() => setEditing(null)} className="inline-flex items-center gap-1 rounded-lg bg-primary px-3 py-2 text-sm font-bold text-primary-foreground"><Plus className="h-4 w-4" />Nuevo cliente</button>}
+        </div>
       </div>
       <CustomersKpis kpis={crm.kpis} />
       {crm.rows.length === 0
@@ -46,12 +53,14 @@ function CustomersPage() {
         : <>
           <div className="flex flex-wrap items-center gap-2">
             {FILTERS.map((f) => <button key={f} type="button" onClick={() => setFilter(f)} className={`rounded-lg px-3 py-1.5 text-sm font-bold ${filter === f ? "bg-primary text-primary-foreground" : "bg-secondary text-foreground"}`}>{t(LABEL[f])}</button>)}
+            {segs.segments.length > 0 && <select value={segFilter} onChange={(e) => setSegFilter(e.target.value)} className="rounded-lg border border-border bg-background p-2 text-sm"><option value="">Todos los segmentos</option>{segs.segments.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</select>}
             <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t("search")} className="ml-auto rounded-lg border border-border bg-background p-2 text-sm" />
           </div>
-          <CustomersTable rows={shown} onView={setViewing} onEdit={can("customers", "edit") ? setEditing : undefined} />
+          <CustomersTable rows={shown} segments={segs.segments} onView={setViewing} onEdit={can("customers", "edit") ? setEditing : undefined} />
         </>}
-      {view && <CustomerDetail c={view} tenantId={session?.tenantId ?? ""} onClose={() => setViewing(null)} onChanged={crm.refresh} />}
+      {view && <CustomerDetail c={view} tenantId={tenantId} segments={segs.segments} onClose={() => setViewing(null)} onChanged={crm.refresh} />}
       {editing !== undefined && <CustomerFormDialog initial={editing} onClose={() => setEditing(undefined)} onSave={save} />}
+      {managing && <SegmentsManager tenantId={tenantId} onClose={() => setManaging(false)} onChanged={crm.refresh} />}
     </div>
   );
 }

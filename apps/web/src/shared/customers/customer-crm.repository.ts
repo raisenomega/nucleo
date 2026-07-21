@@ -9,15 +9,17 @@ export interface CustomerBase {
   id: string; userId: string; fullName: string; email: string; phone: string; address: string; city: string; state: string; zipCode: string;
   contactPreference: string; notesForTeam: string; photoUrl: string; isActive: boolean; createdAt: string;
   source: string; displayName: string; companyName: string; taxId: string; customerType: string; creditLimit: number; paymentTerms: string;
+  segmentId: string; discountPct: number; onHold: boolean; holdReason: string;
 }
 export interface OrderLite { email: string; total: number; status: string; paidAt: string | null; createdAt: string }
 export interface ReviewLite { profileId: string; rating: number }
 export interface InvoiceLite { email: string; total: number; status: string }
 
 export async function fetchCustomers(tenantId: string): Promise<CustomerBase[]> {
-  const { data } = await supabase.from("customer_profiles").select("id, user_id, full_name, email, phone, address, city, state, zip_code, contact_preference, notes_for_team, photo_url, is_active, created_at, source, display_name, company_name, tax_id, customer_type, credit_limit, payment_terms").eq("tenant_id", tenantId).order("created_at", { ascending: false });
+  const { data } = await supabase.from("customer_profiles").select("id, user_id, full_name, email, phone, address, city, state, zip_code, contact_preference, notes_for_team, photo_url, is_active, created_at, source, display_name, company_name, tax_id, customer_type, credit_limit, payment_terms, segment_id, discount_pct, on_hold, hold_reason").eq("tenant_id", tenantId).order("created_at", { ascending: false });
   return ((data as Row[] | null) ?? []).map((r) => ({ id: r.id as string, userId: s(r.user_id), fullName: s(r.full_name), email: s(r.email), phone: s(r.phone), address: s(r.address), city: s(r.city), state: s(r.state), zipCode: s(r.zip_code), contactPreference: s(r.contact_preference), notesForTeam: s(r.notes_for_team), photoUrl: s(r.photo_url), isActive: r.is_active !== false, createdAt: s(r.created_at),
-    source: s(r.source) || "portal", displayName: s(r.display_name), companyName: s(r.company_name), taxId: s(r.tax_id), customerType: s(r.customer_type) || "individual", creditLimit: n(r.credit_limit), paymentTerms: s(r.payment_terms) || "immediate" }));
+    source: s(r.source) || "portal", displayName: s(r.display_name), companyName: s(r.company_name), taxId: s(r.tax_id), customerType: s(r.customer_type) || "individual", creditLimit: n(r.credit_limit), paymentTerms: s(r.payment_terms) || "immediate",
+    segmentId: s(r.segment_id), discountPct: n(r.discount_pct), onHold: r.on_hold === true, holdReason: s(r.hold_reason) }));
 }
 export async function fetchOrders(tenantId: string): Promise<OrderLite[]> {
   const { data } = await supabase.from("tenant_landing_orders").select("customer_email, total, status, paid_at, created_at").eq("tenant_id", tenantId);

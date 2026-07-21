@@ -1,19 +1,21 @@
 import { useState } from "react";
-import { Eye, MessageCircle, Mail, Pencil } from "lucide-react";
+import { Eye, MessageCircle, Mail, Pencil, Ban } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { formatCurrency } from "@shared/lib/format";
 import { Pagination } from "@shared/components/Pagination";
 import { StarRatingDisplay } from "@landing-public/presentation/StarRatingDisplay";
+import type { CustomerSegment } from "@shared/customers/customer-segments.repository";
 import type { AdminCustomer } from "@shared/customers/customers-agg";
 
 const wa = (p: string) => `https://wa.me/${p.replace(/\D/g, "")}`;
 // Badge de origen del cliente: portal (auto-registro), manual (alta desde el panel), landing (compró sin cuenta).
 const SRC: Record<string, string> = { portal: "Portal", manual: "Manual", landing_order: "Landing", import: "Import" };
 
-export function CustomersTable({ rows, onView, onEdit }: { rows: readonly AdminCustomer[]; onView: (id: string) => void; onEdit?: (c: AdminCustomer) => void }) {
+export function CustomersTable({ rows, segments = [], onView, onEdit }: { rows: readonly AdminCustomer[]; segments?: readonly CustomerSegment[]; onView: (id: string) => void; onEdit?: (c: AdminCustomer) => void }) {
   const { t } = useI18n();
   const [page, setPage] = useState(1);
   const visible = rows.slice((page - 1) * 12, page * 12);
+  const segOf = (id: string) => segments.find((s) => s.id === id);
   const th = "px-3 py-2 text-left font-bold";
   return (
     <>
@@ -21,7 +23,7 @@ export function CustomersTable({ rows, onView, onEdit }: { rows: readonly AdminC
         <thead className="bg-secondary text-xs uppercase text-muted-foreground"><tr><th className={th}>{t("name")}</th><th className={th}>{t("email")}</th><th className={th}>{t("pPhone")}</th><th className={`${th} text-right`}>{t("cOrders")}</th><th className={`${th} text-right`}>{t("cBilled")}</th><th className={th}>{t("cLastOrder")}</th><th className={th}>{t("cRating")}</th><th className={th}>{t("status")}</th><th className={`${th} text-right`}>{t("actions")}</th></tr></thead>
         <tbody>{visible.map((c) => (
           <tr key={c.id} onClick={() => onView(c.id)} className="cursor-pointer border-t border-border hover:bg-secondary">
-            <td className="px-3 py-2 font-medium">{c.fullName || "—"} <span className="ml-1 rounded bg-secondary px-1.5 py-0.5 text-[10px] font-bold uppercase text-muted-foreground">{SRC[c.source] ?? c.source}</span></td><td className="px-3 py-2 text-muted-foreground">{c.email}</td><td className="px-3 py-2 text-muted-foreground">{c.phone || "—"}</td>
+            <td className="px-3 py-2 font-medium">{c.fullName || "—"} <span className="ml-1 rounded bg-secondary px-1.5 py-0.5 text-[10px] font-bold uppercase text-muted-foreground">{SRC[c.source] ?? c.source}</span>{c.segmentId && segOf(c.segmentId) && <span className="ml-1 rounded px-1.5 py-0.5 text-[10px] font-bold text-white" style={{ backgroundColor: segOf(c.segmentId)!.color }}>{segOf(c.segmentId)!.name}</span>}{c.onHold && <Ban className="ml-1 inline h-3.5 w-3.5 text-red-500" />}</td><td className="px-3 py-2 text-muted-foreground">{c.email}</td><td className="px-3 py-2 text-muted-foreground">{c.phone || "—"}</td>
             <td className="px-3 py-2 text-right">{c.ordersCount}</td><td className="px-3 py-2 text-right font-semibold">{formatCurrency(c.totalBilled)}</td>
             <td className="px-3 py-2 text-muted-foreground">{c.lastOrderAt ? c.lastOrderAt.slice(0, 10) : "—"}</td>
             <td className="px-3 py-2">{c.avgRating ? <StarRatingDisplay value={Math.round(c.avgRating)} /> : "—"}</td>
