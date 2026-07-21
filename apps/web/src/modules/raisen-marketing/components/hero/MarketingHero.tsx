@@ -13,9 +13,9 @@ export function MarketingHero({ lang, hero }: { lang: Lang; hero: MarketingHeroR
   const href = hero?.ctaHref ?? "#lead-form";
   const onCta = () => { if (href.startsWith("#")) document.getElementById(href.slice(1))?.scrollIntoView({ behavior: "smooth" }); else window.location.assign(href); };
   return (
-    <section id="hero" className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 text-center">
+    <section id="hero" aria-labelledby="hero-title" className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 text-center">
       <div className="relative z-10 mx-auto max-w-4xl space-y-6">
-        <h1 className="animate-fade-up font-display text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl md:text-6xl">{title}</h1>
+        <h1 id="hero-title" className="animate-fade-up font-display text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl md:text-6xl">{title}</h1>
         <p className="mx-auto max-w-2xl animate-fade-up text-base leading-relaxed text-white/70 sm:text-lg" style={{ animationDelay: "150ms" }}>{subtitle}</p>
         <div className="animate-fade-up pt-2" style={{ animationDelay: "300ms" }}>
           <button type="button" onClick={onCta} className="inline-flex items-center justify-center rounded-full bg-primary px-8 py-3.5 font-display text-base font-semibold text-primary-foreground transition-transform hover:scale-105">{cta}</button>

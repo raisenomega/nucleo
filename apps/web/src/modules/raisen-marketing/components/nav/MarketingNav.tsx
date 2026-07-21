@@ -13,11 +13,11 @@ export function MarketingNav({ lang, toggleLang, navCtaLabel, navCtaHref }: { la
       <button type="button" onClick={() => scrollTo("hero")} className="shrink-0 font-display text-lg font-bold tracking-tight text-white">
         NÚCLEO<span className="text-primary">.</span>
       </button>
-      <div className="hidden gap-8 md:flex">
+      <nav aria-label={lang === "es" ? "Navegación principal" : "Main navigation"} className="hidden gap-8 md:flex">
         {links.map((l) => (
           <button key={l.id} type="button" onClick={() => scrollTo(l.id)} className="text-sm text-white/60 transition-colors hover:text-white">{l.label}</button>
         ))}
-      </div>
+      </nav>
       <div className="flex shrink-0 items-center gap-3">
         <button type="button" onClick={toggleLang} aria-label="idioma" className="shrink-0 rounded-full border border-white/20 px-3 py-1 text-xs font-semibold text-white/70 transition-colors hover:text-white">{lang === "es" ? "EN" : "ES"}</button>
         <a href={navCtaHref} className="shrink-0 whitespace-nowrap rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground transition-transform hover:scale-105">{navCtaLabel}</a>

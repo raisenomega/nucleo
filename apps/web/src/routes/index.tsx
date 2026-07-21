@@ -4,11 +4,13 @@ import { isRaisenHost } from "@shared/lib/brand-host";
 import { useMounted } from "@shared/hooks/useMounted";
 import { PublicBrandProvider } from "@landing-public/presentation/PublicBrandProvider";
 import { PublicLandingRoot } from "@landing-public/presentation/PublicLandingRoot";
+import { landingHead } from "@shared/seo/marketing.head";
 
 // Landing comercial de Raisen (marketing) — lazy + aislada: no entra al bundle del panel ni de @landing-public.
 const MarketingLanding = lazy(() => import("@raisen-marketing"));
 
 export const Route = createFileRoute("/")({
+  head: landingHead, // meta + JSON-LD solo en hosts de Raisen; en dominio de tenant devuelve {}
   component: Home,
 });
 

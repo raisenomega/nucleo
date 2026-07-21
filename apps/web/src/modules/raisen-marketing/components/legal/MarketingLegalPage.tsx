@@ -24,10 +24,10 @@ export default function MarketingLegalPage({ slug }: { slug: string }) {
       <main className="mx-auto min-h-[60vh] max-w-3xl px-6 py-12">
         <a href="/" className="mb-8 inline-flex items-center gap-2 text-sm text-white/60 transition-colors hover:text-primary"><ArrowLeft size={16} /> {es ? "Volver al inicio" : "Back to home"}</a>
         {loading ? <p className="text-white/50">…</p> : available ? (
-          <>
-            <h1 className="mb-8 font-display text-3xl font-bold text-white md:text-4xl">{es ? page!.titleEs : page!.titleEn}</h1>
+          <article aria-labelledby="legal-title">
+            <h1 id="legal-title" className="mb-8 font-display text-3xl font-bold text-white md:text-4xl">{es ? page!.titleEs : page!.titleEn}</h1>
             <div className={PROSE}><ReactMarkdown>{content}</ReactMarkdown></div>
-          </>
+          </article>
         ) : <p className="text-white/60">{es ? "Página no encontrada." : "Page not found."}</p>}
       </main>
       <MarketingFooter lang={lang} />

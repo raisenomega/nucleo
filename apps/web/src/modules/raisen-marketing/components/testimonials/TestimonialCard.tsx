@@ -20,7 +20,7 @@ export function TestimonialCard({ item, lang }: { item: TestimonialRow; lang: La
       <p className="flex-1 text-sm italic leading-relaxed text-white/80">{lang === "es" ? item.quoteEs : item.quoteEn}</p>
       <div className="mt-6 flex items-center gap-3">
         {showImg
-          ? <img src={item.avatarUrl!} alt={item.clientName} onError={() => setBroken(true)} className="h-10 w-10 shrink-0 rounded-full object-cover" />
+          ? <img src={item.avatarUrl!} alt={item.clientName} onError={() => setBroken(true)} loading="lazy" decoding="async" width={40} height={40} className="h-10 w-10 shrink-0 rounded-full object-cover" />
           : <div style={{ background: avatarHsl(item.clientName) }} className="grid h-10 w-10 shrink-0 place-items-center rounded-full text-xs font-bold text-white">{initials(item.clientName)}</div>}
         <div className="min-w-0">
           <p className="truncate font-display text-sm font-semibold text-white">{item.clientName}</p>

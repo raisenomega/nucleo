@@ -31,17 +31,17 @@ export function MarketingLeadForm({ lang, audience, setAudience }: { lang: Lang;
     else { setErrorMsg(r.message || (es ? c.errorEs : c.errorEn)); setStatus("error"); }
   };
   if (status === "success") return (
-    <section id="lead-form" className="px-6 py-16 md:py-20">
+    <section id="lead-form" aria-label={es ? "Solicitud enviada" : "Request sent"} className="px-6 py-16 md:py-20">
       <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 rounded-lg border border-primary/30 bg-card p-12 text-center">
         <CheckCircle size={48} className="text-primary" /><p className="text-lg font-medium text-foreground">{es ? c.successEs : c.successEn}</p>
       </div>
     </section>
   );
   return (
-    <section id="lead-form" ref={ref} className={`px-6 py-16 transition-all duration-700 md:py-20 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
+    <section id="lead-form" aria-labelledby="lead-form-title" ref={ref} className={`px-6 py-16 transition-all duration-700 md:py-20 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
       <div className="mx-auto max-w-2xl">
         <div className="mb-10 text-center">
-          <h2 className="mb-4 font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">{es ? c.titleEs : c.titleEn}</h2>
+          <h2 id="lead-form-title" className="mb-4 font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">{es ? c.titleEs : c.titleEn}</h2>
           <p className="text-muted-foreground">{es ? c.subtitleEs : c.subtitleEn}</p>
         </div>
         <div className="mb-6 flex gap-3">

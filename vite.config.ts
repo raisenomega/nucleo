@@ -10,7 +10,19 @@ const r = (p: string) => resolve(import.meta.dirname, p);
 // En Vercel: redirige el Build Output API (.vercel/output) a la RAÍZ del repo,
 // donde vive package.json. Local (node-server) mantiene apps/web/.output.
 const baseNitro = process.env.VERCEL ? { output: { dir: r(".vercel/output") } } : {};
-const nitroConfig = { ...baseNitro, handlers: [{ route: "/api/manifest.webmanifest", handler: r("apps/web/server/manifest-handler.ts") }] };
+// Handlers de servidor: manifest PWA + los 4 ficheros SEO/AEO. Van por Nitro (no por rutas de React) porque
+// deben servirse como texto plano/XML sin pasar por el render de la SPA, y resuelven el host de la request
+// para no exponer nunca datos de NÚCLEO en el dominio de un tenant.
+const nitroConfig = {
+  ...baseNitro,
+  handlers: [
+    { route: "/api/manifest.webmanifest", handler: r("apps/web/server/manifest-handler.ts") },
+    { route: "/robots.txt", handler: r("apps/web/server/robots-handler.ts") },
+    { route: "/sitemap.xml", handler: r("apps/web/server/sitemap-handler.ts") },
+    { route: "/llms.txt", handler: r("apps/web/server/llms-handler.ts") },
+    { route: "/llms-full.txt", handler: r("apps/web/server/llms-full-handler.ts") },
+  ],
+};
 
 export default defineConfig({
   root: "apps/web",
