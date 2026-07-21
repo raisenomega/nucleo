@@ -11,6 +11,9 @@ export const supabaseRouteRepository: IRouteRepository = {
       p_payment_method_id: p.paymentMethodId || null, p_received: p.received, p_change: p.change, p_evidence: p.evidence })).error);
   },
   async completeStop(stopId) { return ok((await supabase.rpc("complete_route_stop", { p_stop_id: stopId })).error); },
+  // Via RPC definer (guard: routes.edit O creador O asignado): el UPDATE directo lo bloqueaba RLS en
+  // silencio para empleados con override granular sin routes.edit (migr 216).
+  async saveStopEvidence(stopId, phase, paths) { return ok((await supabase.rpc("save_stop_evidence", { p_stop_id: stopId, p_phase: phase, p_paths: paths })).error); },
   async setNotAttended(stopId, reason) { return ok((await supabase.rpc("set_stop_not_attended", { p_stop_id: stopId, p_reason: reason })).error); },
   async listRoutes(date) {
     // Incluye anuladas (deleted_at != null) — se muestran tachadas en la tabla (auditoría).
@@ -47,7 +50,10 @@ export const supabaseRouteRepository: IRouteRepository = {
     return ok((await supabase.from("service_routes").delete().eq("id", id)).error);
   },
   async addStop(routeId, order, s) { return ok((await supabase.from("route_stops").insert(stopRow(routeId, order, s))).error); },
-  async updateStop(id, patch) { return ok((await supabase.from("route_stops").update(stopPatch(patch)).eq("id", id)).error); },
+  async updateStop(id, patch) { // .select() destapa el bloqueo silencioso de RLS (error=null y 0 filas)
+    const { data, error } = await supabase.from("route_stops").update(stopPatch(patch)).eq("id", id).select("id");
+    return error ? { ok: false, error: error.message } : data?.length ? { ok: true } : { ok: false, error: "Sin permiso para editar esta parada" };
+  },
   async removeStop(id) { return ok((await supabase.from("route_stops").delete().eq("id", id)).error); },
   async reorderStops(ids) {
     for (let i = 0; i < ids.length; i++) {

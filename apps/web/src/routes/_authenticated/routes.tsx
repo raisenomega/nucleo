@@ -40,7 +40,7 @@ function RoutesPage() {
   const doPay = (id: string, p: CompletePayload) => { captureCoords(id); void m.recordPayment(id, p).then((r) => { if (!r.ok) window.alert(r.error); }); };
   const doNotAttended = (id: string, reason: string) => void m.setNotAttended(id, reason).then((r) => { if (!r.ok) window.alert(r.error); });
   const doEvidence = (id: string, phase: "before" | "after", paths: string[]) =>
-    void m.updateStop(id, phase === "before" ? { evidenceBefore: paths } : { evidenceAfter: paths });
+    void m.saveStopEvidence(id, phase, paths).then((r) => { if (!r.ok) window.alert(r.error); });
   const doMarkDone = (id: string) => { captureCoords(id); void m.completeStop(id).then((r) => { if (!r.ok) window.alert(r.error); }); };
   if (!can("routes", "view")) return <Navigate to="/dashboard" />;
   const cur = m.routes.find((r) => r.id === editing);
