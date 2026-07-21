@@ -22,7 +22,7 @@ export const en = {
   leadError: "Please check your name and a valid email.",
   leadConsent: "By submitting you agree to be contacted about your request.",
   footerTagline: "Your service business, fully under control.",
-  footerEmail: "hola@raisen.agency",
+  footerEmail: "ventas@raisen.agency",
   footerCopyright: "A Raisen Agency platform. All rights reserved.",
   footerPrivacy: "Privacy", footerTerms: "Terms",
 };

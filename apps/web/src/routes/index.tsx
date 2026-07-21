@@ -5,6 +5,7 @@ import { PublicBrandProvider } from "@landing-public/presentation/PublicBrandPro
 import { PublicLandingRoot } from "@landing-public/presentation/PublicLandingRoot";
 import { landingHead } from "@shared/seo/marketing.head";
 import { getSeoData } from "@shared/seo/seo-data";
+import { fetchLandingData } from "@raisen-marketing/infrastructure/landing-ssr.repository";
 import { hostKind } from "@shared/seo/host";
 
 // Landing comercial de Raisen (marketing) — lazy: su chunk (marketing.css, three.js) no entra al bundle
@@ -18,26 +19,23 @@ export const Route = createFileRoute("/")({
   // que veían una página en blanco. Al decidirlo en el loader, servidor y cliente coinciden y "/" puede SSR-ear.
   loader: async () => {
     const kind = hostKind();
-    if (kind !== "raisen") return { kind, seo: null };
-    if (typeof window !== "undefined") return { kind, seo: null }; // en cliente basta el fallback estático
-    const [seo] = await Promise.all([getSeoData(), import("@raisen-marketing")]); // precarga el lazy para el SSR
-    return { kind, seo };
+    if (kind !== "raisen") return { kind, seo: null, landing: null };
+    if (typeof window !== "undefined") return { kind, seo: null, landing: null }; // en cliente los hooks fetchean solos
+    // getSeoData alimenta el JSON-LD; fetchLandingData siembra TODAS las secciones. El import precarga el
+    // módulo lazy para que el SSR salga con el árbol ya renderizado.
+    const [seo, landing] = await Promise.all([getSeoData(), fetchLandingData(), import("@raisen-marketing")]);
+    return { kind, seo, landing };
   },
   head: ({ loaderData }) => landingHead(loaderData?.seo),
   component: Home,
 });
 
 function Home() {
-  const { kind, seo } = Route.useLoaderData();
+  const { kind, landing } = Route.useLoaderData();
   if (kind !== "raisen") return <NonRaisen panel={kind === "panel"} />;
-  // Las FAQs del loader siembran el acordeón para que el HTML del servidor traiga las preguntas REALES,
-  // las mismas que declara el JSON-LD FAQPage. Sin esto el servidor emitiría el fallback y el structured
-  // data no correspondería a lo visible.
-  const faqs = seo?.faqs.map((f) => ({
-    id: f.id, questionEs: f.qEs, questionEn: f.qEn, answerEs: f.aEs, answerEn: f.aEn,
-    isActive: true, displayOrder: 0,
-  })) ?? null;
-  return <Suspense fallback={null}><MarketingLanding initialFaqs={faqs} /></Suspense>;
+  // El snapshot del loader siembra TODAS las secciones: sin él el servidor emitiría los fallbacks estáticos,
+  // que ya se desincronizaron dos veces de la DB (precios en la S21, FAQ en la S23).
+  return <Suspense fallback={null}><MarketingLanding ssr={landing} /></Suspense>;
 }
 
 // Ramas de tenant: se mantienen client-only a propósito. La landing white-label resuelve su marca por

@@ -9,15 +9,14 @@ import { MarketingLeadForm } from "@raisen-marketing/components/lead/MarketingLe
 import { MarketingFAQ } from "@raisen-marketing/components/faq/MarketingFAQ";
 import { useMarketingHero } from "@raisen-marketing/hooks/useMarketingHero";
 import type { Audience } from "@raisen-marketing/data/solutions";
-import type { FaqRow } from "@raisen-marketing/data/faq.types";
 import type { Lang } from "@raisen-marketing/data/copy";
 
-export interface SectionCtx { lang: Lang; hero: ReturnType<typeof useMarketingHero>; audience: Audience; setAudience: (a: Audience) => void; initialFaqs?: FaqRow[] | null }
+export interface SectionCtx { lang: Lang; hero: ReturnType<typeof useMarketingHero>; audience: Audience; setAudience: (a: Audience) => void }
 
 // Mapa section_key → componente con sus props reales (Hero/Solutions/LeadForm difieren del resto). MarketingRoot
 // renderiza solo las visibles en orden de display_order. Footer/Nav/fondo 3D van aparte (siempre presentes).
 export function renderSection(key: string, ctx: SectionCtx): ReactNode {
-  const { lang, hero, audience, setAudience, initialFaqs } = ctx;
+  const { lang, hero, audience, setAudience } = ctx;
   switch (key) {
     case "hero": return <MarketingHero key={key} lang={lang} hero={hero} />;
     case "features": return <MarketingFeatures key={key} lang={lang} />;
@@ -25,7 +24,7 @@ export function renderSection(key: string, ctx: SectionCtx): ReactNode {
     case "solutions": return <MarketingSolutions key={key} lang={lang} setAudience={setAudience} />;
     case "pricing": return <MarketingPricing key={key} lang={lang} />;
     case "testimonials": return <MarketingTestimonials key={key} lang={lang} />;
-    case "faq": return <MarketingFAQ key={key} lang={lang} initialFaqs={initialFaqs} />;
+    case "faq": return <MarketingFAQ key={key} lang={lang} />;
     case "lead_form": return <MarketingLeadForm key={key} lang={lang} audience={audience} setAudience={setAudience} />;
     default: return null;
   }
