@@ -2,6 +2,7 @@ import { useState } from "react";
 import { X, MessageCircle, Ban, FileDown, DollarSign } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { usePdf } from "@shared/hooks/usePdf";
+import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { formatCurrency } from "@shared/lib/format";
 import { ScreenModal } from "@shared/components/ScreenModal";
 import { LinkedCustomerBadge } from "@shared/components/LinkedCustomerBadge";
@@ -9,6 +10,8 @@ import { INV_ST_KEY, INV_ST_COLOR } from "@billing/presentation/billing-ui";
 import { useInvoicePayments } from "@billing/presentation/useInvoicePayments.hook";
 import { PaymentDialog } from "@billing/presentation/PaymentDialog";
 import { PaymentHistory } from "@billing/presentation/PaymentHistory";
+import { InvoiceLinesList } from "@billing/presentation/InvoiceLinesList";
+import { LineItemInventoryPanel } from "@fieldops/presentation/LineItemInventoryPanel";
 import type { Invoice, InvoiceStatus } from "@billing/domain/invoice.types";
 
 const wa = (i: Invoice, msg: string) => `https://wa.me/${(i.phone ?? "").replace(/\D/g, "")}?text=${encodeURIComponent(msg)}`;
@@ -17,8 +20,8 @@ const wa = (i: Invoice, msg: string) => `https://wa.me/${(i.phone ?? "").replace
 export function InvoiceDetail({ inv, canManage, onChanged, onCancel, onClose }: {
   inv: Invoice; canManage: boolean; onChanged: () => void; onCancel: () => void; onClose: () => void;
 }) {
-  const { t } = useI18n(); const pdf = usePdf();
-  const pay = useInvoicePayments(inv.id); const [paying, setPaying] = useState(false);
+  const { t } = useI18n(); const pdf = usePdf(); const { can } = useModuleAccess();
+  const pay = useInvoicePayments(inv.id); const [paying, setPaying] = useState(false); const [drillProduct, setDrillProduct] = useState<string | null>(null);
   const paid = pay.payments.reduce((s, p) => s + p.amount, 0);
   const balance = Math.round((inv.total - paid) * 100) / 100;
   const st: InvoiceStatus = inv.status === "cancelled" ? "cancelled" : balance <= 0.01 ? "paid" : paid > 0.01 ? "partially_paid" : inv.status;
@@ -37,6 +40,7 @@ export function InvoiceDetail({ inv, canManage, onChanged, onCancel, onClose }: 
           <span className={`rounded px-2 py-0.5 text-xs font-bold ${INV_ST_COLOR[st]}`}>{t(INV_ST_KEY[st])}</span>
         </div>
         <LinkedCustomerBadge customerId={inv.customerId} name={inv.clientName} className="text-sm" />
+        <InvoiceLinesList items={inv.items} canView={can("inventory", "view")} onLineClick={setDrillProduct} />
         <div className="rounded-lg border border-border p-3">
           <div className="flex justify-between text-sm"><span className="text-muted-foreground">{t("pTotal") || "Total"}</span><span className="font-semibold">{formatCurrency(inv.total)}</span></div>
           <div className="flex justify-between text-sm"><span className="text-muted-foreground">Pagado</span><span className="font-semibold text-green-600">{formatCurrency(paid)}</span></div>
@@ -52,6 +56,7 @@ export function InvoiceDetail({ inv, canManage, onChanged, onCancel, onClose }: 
         </div>
       </div>
       {paying && <PaymentDialog invoiceId={inv.id} balance={balance} onClose={() => setPaying(false)} onSave={(p) => { setPaying(false); void pay.record(p).then(after); }} />}
+      {drillProduct && <LineItemInventoryPanel productId={drillProduct} onClose={() => setDrillProduct(null)} />}
     </ScreenModal>
   );
 }
