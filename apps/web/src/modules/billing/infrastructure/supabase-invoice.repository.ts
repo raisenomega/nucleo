@@ -25,7 +25,7 @@ export const supabaseInvoiceRepository: IInvoiceRepository = {
   },
   async save(d): Promise<BillingResult> {
     return ok((await supabase.from("invoices").insert({
-      client_name: d.clientName, phone: d.phone || null, email: d.email || null, items: d.items.map(fromItem),
+      customer_id: d.customerId, client_name: d.clientName, phone: d.phone || null, email: d.email || null, items: d.items.map(fromItem),
       subtotal: d.subtotal, tax: d.tax, total: d.total, due_date: d.dueDate, status: d.status,
     })).error);
   },

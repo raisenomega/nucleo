@@ -14,7 +14,7 @@ export interface Invoice {
   readonly linkedLeadId: string | null; readonly linkedOrderId: string | null; readonly createdAt: string;
 }
 export interface InvoiceInput {
-  clientName: string; phone: string; email: string; items: InvoiceItem[];
+  customerId: string | null; clientName: string; phone: string; email: string; items: InvoiceItem[];
   subtotal: number; tax: number; total: number; dueDate: string | null; status: InvoiceStatus;
 }
 export interface BillingSummary {

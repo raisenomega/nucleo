@@ -3,7 +3,7 @@ import { Search, X } from "lucide-react";
 import { supabase } from "@shared/lib/supabase";
 import { useSession } from "@shared/providers/SessionProvider";
 
-export interface PickedCustomer { id: string; name: string; phone: string; email: string; address: string; }
+export interface PickedCustomer { id: string; name: string; phone: string; email: string; address: string; paymentTerms: string; paymentTermsCustomDays: number | null; }
 type Row = Record<string, unknown>;
 const s = (v: unknown) => (v as string | null) ?? "";
 
@@ -16,7 +16,7 @@ export function CustomerSelect({ onPick }: { onPick: (c: PickedCustomer) => void
     if (term.length < 2) { setRows([]); return; }
     const h = setTimeout(async () => {
       const { data } = await supabase.from("customer_profiles")
-        .select("id, full_name, company_name, email, phone, address, city, state")
+        .select("id, full_name, company_name, email, phone, address, city, state, payment_terms, payment_terms_custom_days")
         .eq("tenant_id", session?.tenantId ?? "")
         .or(`full_name.ilike.%${term}%,company_name.ilike.%${term}%,email.ilike.%${term}%`).limit(8);
       setRows((data as Row[] | null) ?? []); setOpen(true);
@@ -25,7 +25,8 @@ export function CustomerSelect({ onPick }: { onPick: (c: PickedCustomer) => void
   }, [q, session?.tenantId]);
   const pick = (r: Row) => {
     onPick({ id: r.id as string, name: s(r.full_name) || s(r.company_name) || s(r.email),
-      phone: s(r.phone), email: s(r.email), address: [s(r.address), s(r.city), s(r.state)].filter(Boolean).join(", ") });
+      phone: s(r.phone), email: s(r.email), address: [s(r.address), s(r.city), s(r.state)].filter(Boolean).join(", "),
+      paymentTerms: s(r.payment_terms) || "immediate", paymentTermsCustomDays: r.payment_terms_custom_days == null ? null : Number(r.payment_terms_custom_days) });
     setQ(""); setRows([]); setOpen(false);
   };
   return (

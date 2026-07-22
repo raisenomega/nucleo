@@ -5,17 +5,18 @@ import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { InvoicesTab } from "@billing/presentation/InvoicesTab";
 import { PlansTab } from "@billing/presentation/PlansTab";
+import { ArAgingPanel } from "@shared/customers/ArAgingPanel";
 
 export const Route = createFileRoute("/_authenticated/billing")({ component: BillingPage });
 
-type Tab = "invoices" | "plans" | "orders";
+type Tab = "invoices" | "receivables" | "plans" | "orders";
 
 function BillingPage() {
   const { t } = useI18n(); const { can } = useModuleAccess();
   const [tab, setTab] = useState<Tab>("invoices");
   if (!can("billing", "view")) return <Navigate to="/dashboard" />;
   const tabs: { k: Tab; label: string }[] = [
-    { k: "invoices", label: t("invoice") }, { k: "plans", label: t("recurringPlans") }, { k: "orders", label: t("orders") }];
+    { k: "invoices", label: t("invoice") }, { k: "receivables", label: "Cartera" }, { k: "plans", label: t("recurringPlans") }, { k: "orders", label: t("orders") }];
   return (
     <div className="space-y-6 p-4 md:p-8">
       <div className="space-y-2">
@@ -26,6 +27,7 @@ function BillingPage() {
         <button key={x.k} type="button" onClick={() => setTab(x.k)}
           className={`rounded-lg px-3 py-1.5 text-sm font-bold ${tab === x.k ? "bg-primary text-primary-foreground" : "bg-secondary"}`}>{x.label}</button>))}</div>
       {tab === "invoices" && <InvoicesTab />}
+      {tab === "receivables" && <ArAgingPanel />}
       {tab === "plans" && <PlansTab />}
       {tab === "orders" && (
         <div className="rounded-xl border border-dashed border-border bg-card p-8 text-center">

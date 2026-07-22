@@ -16,7 +16,7 @@ export function PlansTab() {
   const manage = can("billing", "edit");
   const runCycle = async () => { const n = await m.runCycle(); window.alert(`${n} · ${t("generateInvoices")}`); };
   const genOne = async (p: BillingPlan) => {
-    await supabaseInvoiceRepository.save({ clientName: p.clientName, phone: p.phone ?? "", email: p.email ?? "",
+    await supabaseInvoiceRepository.save({ customerId: null, clientName: p.clientName, phone: p.phone ?? "", email: p.email ?? "",
       items: [{ description: p.serviceDescription ?? t("serviceDescription"), quantity: 1, unitPrice: p.amount, taxPct: 0, discountPct: 0, lineTotal: p.amount }],
       subtotal: p.amount, tax: 0, total: p.amount, dueDate: null, status: "sent" });
     window.alert(t("invoiceSaved"));
