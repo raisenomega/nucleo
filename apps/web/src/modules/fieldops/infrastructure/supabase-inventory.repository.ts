@@ -1,12 +1,10 @@
 import { supabase } from "@shared/lib/supabase";
-import type {
-  InventoryItem, InventoryFormData, InventoryListResult, IInventoryRepository, Result,
-  InventoryMovement, RestockData, LandingProductRef,
-} from "@fieldops/domain/inventory.types";
+import type { InventoryItem, InventoryFormData, InventoryListResult, IInventoryRepository, Result, InventoryMovement, RestockData, LandingProductRef } from "@fieldops/domain/inventory.types";
 
 interface MovRow {
-  id: string; movement_type: string; quantity: number | string; movement_date: string;
-  notes: string | null; employee: string; client_name: string | null; service_type: string | null; route_date: string | null;
+  id: string; movement_type: string; quantity: number | string; movement_date: string; delta: number | string | null;
+  unit_cost: number | string | null; running_balance: number | string | null; notes: string | null; employee: string;
+  client_name: string | null; service_type: string | null; route_date: string | null;
 }
 
 interface Row {
@@ -65,6 +63,7 @@ export const supabaseInventoryRepository: IInventoryRepository = {
     const { data } = await supabase.rpc("list_item_movements", { p_item_id: itemId });
     return ((data as MovRow[] | null) ?? []).map((r) => ({
       id: r.id, type: r.movement_type, quantity: Number(r.quantity), date: r.movement_date,
+      delta: Number(r.delta ?? 0), unitCost: r.unit_cost == null ? null : Number(r.unit_cost), runningBalance: Number(r.running_balance ?? 0),
       notes: r.notes, employee: r.employee, clientName: r.client_name, serviceType: r.service_type, routeDate: r.route_date,
     }));
   },

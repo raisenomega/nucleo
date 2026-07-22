@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { ArrowDownCircle, ArrowUpCircle } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import type { TranslationKey } from "@shared/i18n";
+import { useModuleAccess } from "@shared/hooks/useModuleAccess";
+import { formatCurrency } from "@shared/lib/format";
 import { Pagination } from "@shared/components/Pagination";
 import { supabaseInventoryRepository } from "@fieldops/infrastructure/supabase-inventory.repository";
 import type { InventoryMovement } from "@fieldops/domain/inventory.types";
@@ -19,7 +21,8 @@ const FALLBACK = { key: "movAjuste" as TranslationKey, cls: "text-muted-foregrou
 
 // Historial de movimientos de un insumo: entrada/salida/venta_publica/ajuste/merma/devolución con empleado, contexto y fecha.
 export function InventoryMovements({ itemId }: { itemId: string }) {
-  const { t } = useI18n();
+  const { t } = useI18n(); const { can } = useModuleAccess();
+  const showCost = can("inventory", "cost");
   const [rows, setRows] = useState<InventoryMovement[]>([]);
   const [page, setPage] = useState(1);
   useEffect(() => { void supabaseInventoryRepository.listMovements(itemId).then(setRows); }, [itemId]);
@@ -39,6 +42,10 @@ export function InventoryMovements({ itemId }: { itemId: string }) {
               <div className="flex justify-between gap-2">
                 <span className="font-bold">{t(mv.key)} · <span className={mv.cls}>{mv.sign}{m.quantity}</span></span>
                 <span className="text-xs text-muted-foreground">{m.date}</span>
+              </div>
+              <div className="flex flex-wrap gap-x-3 text-xs text-muted-foreground">
+                <span>Saldo: <span className="font-semibold text-foreground">{m.runningBalance}</span></span>
+                {showCost && m.unitCost != null && m.unitCost > 0 && <span>Costo u.: {formatCurrency(m.unitCost)}</span>}
               </div>
               <p className="text-xs text-muted-foreground">{ctx}</p>
               {m.notes && <p className="text-xs text-muted-foreground">{m.notes}</p>}
