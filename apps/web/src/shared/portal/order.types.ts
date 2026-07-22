@@ -9,5 +9,6 @@ export interface CustomerOrder {
 
 export interface CustomerInvoice {
   readonly id: string; readonly invoiceNumber: string; readonly status: string; readonly total: number;
+  readonly amountPaid: number; readonly balance: number;
   readonly dueDate: string | null; readonly paidAt: string | null; readonly pdfUrl: string; readonly linkedOrderId: string | null;
 }

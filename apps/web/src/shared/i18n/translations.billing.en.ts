@@ -7,7 +7,7 @@ export const enBilling = {
   clientName: "Client", invoiceNumber: "Invoice #", dueDate: "Due", nextBilling: "Next billing",
   saveDraft: "Save draft", saveChanges: "Save changes", markPaid: "Mark paid", generateInvoices: "Generate month's invoices",
   generateInvoice: "Generate invoice", pause: "Pause", resume: "Resume",
-  isDraft: "Draft", isSent: "Sent", isPaid: "Paid", isOverdue: "Overdue", isCancelled: "Cancelled",
+  isDraft: "Draft", isSent: "Sent", isPartial: "Partial", isPaid: "Paid", isOverdue: "Overdue", isCancelled: "Cancelled",
   psActive: "Active", psPaused: "Paused", psCancelled: "Cancelled",
   freqQuarterly: "Quarterly", freqAnnual: "Annual",
   kpiPending: "Pending", kpiOverdue: "Overdue", kpiMrr: "MRR",

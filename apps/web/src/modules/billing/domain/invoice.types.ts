@@ -1,6 +1,6 @@
 // BC billing — facturas. Puro. items = snapshot inmutable, tax por-item.
 export type BillingResult = { ok: true } | { ok: false; error: string };
-export type InvoiceStatus = "draft" | "sent" | "paid" | "overdue" | "cancelled";
+export type InvoiceStatus = "draft" | "sent" | "partially_paid" | "paid" | "overdue" | "cancelled";
 
 export interface InvoiceItem {
   readonly description: string; readonly quantity: number; readonly unitPrice: number;
@@ -10,6 +10,7 @@ export interface Invoice {
   readonly id: string; readonly invoiceNumber: string | null; readonly customerId: string | null; readonly clientName: string;
   readonly phone: string | null; readonly email: string | null; readonly items: InvoiceItem[];
   readonly subtotal: number; readonly tax: number; readonly total: number; readonly status: InvoiceStatus;
+  readonly amountPaid: number; readonly balance: number;
   readonly dueDate: string | null; readonly paidAt: string | null;
   readonly linkedLeadId: string | null; readonly linkedOrderId: string | null; readonly createdAt: string;
 }

@@ -7,7 +7,7 @@ export const esBilling = {
   clientName: "Cliente", invoiceNumber: "N.º factura", dueDate: "Vence", nextBilling: "Próximo cobro",
   saveDraft: "Guardar borrador", saveChanges: "Guardar cambios", markPaid: "Marcar pagada", generateInvoices: "Generar facturas del mes",
   generateInvoice: "Generar factura", pause: "Pausar", resume: "Reactivar",
-  isDraft: "Borrador", isSent: "Enviada", isPaid: "Pagada", isOverdue: "Vencida", isCancelled: "Cancelada",
+  isDraft: "Borrador", isSent: "Enviada", isPartial: "Parcial", isPaid: "Pagada", isOverdue: "Vencida", isCancelled: "Cancelada",
   psActive: "Activo", psPaused: "Pausado", psCancelled: "Cancelado",
   freqQuarterly: "Trimestral", freqAnnual: "Anual",
   kpiPending: "Pendientes", kpiOverdue: "Vencidas", kpiMrr: "MRR",

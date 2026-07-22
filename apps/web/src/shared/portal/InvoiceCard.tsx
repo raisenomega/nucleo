@@ -13,6 +13,7 @@ export function InvoiceCard({ invoice }: { invoice: CustomerInvoice }) {
       <span>
         <span className="font-bold text-foreground">{invoice.invoiceNumber || "—"}</span>
         <span className="block text-xs text-muted-foreground">{invoice.dueDate ? `${t("pDueDate")}: ${invoice.dueDate}` : ""}</span>
+        {invoice.status !== "paid" && invoice.amountPaid > 0 && <span className="block text-xs font-bold text-amber-600">Pagado {formatCurrency(invoice.amountPaid)} · Balance {formatCurrency(invoice.balance)}</span>}
       </span>
       <span className="flex items-center gap-2">
         <span className="font-semibold text-foreground">{formatCurrency(invoice.total)}</span>
