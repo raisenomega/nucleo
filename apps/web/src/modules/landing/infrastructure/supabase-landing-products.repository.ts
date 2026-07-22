@@ -24,3 +24,11 @@ export const supabaseLandingProductsRepository: ILandingProductsRepository = {
     return ok((await supabase.from("tenant_landing_products").delete().eq("id", id)).error);
   },
 };
+
+// Crea/enlaza un inventory_item con SKU para el producto (idempotente). Devuelve {sku, alreadyLinked} o error.
+export async function linkProductToInventory(productId: string): Promise<{ sku: string; alreadyLinked: boolean } | { error: string }> {
+  const { data, error } = await supabase.rpc("link_product_to_inventory", { _product_id: productId });
+  if (error) return { error: error.message };
+  const d = (data ?? {}) as { sku?: string; already_linked?: boolean };
+  return { sku: d.sku ?? "", alreadyLinked: d.already_linked === true };
+}

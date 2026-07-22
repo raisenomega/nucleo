@@ -37,7 +37,7 @@ export function ProductModal({ initial, categories, onSave, onClose }: {
       <div className="space-y-4 p-4 text-foreground">
         <ProductBasicInfoSection form={form} set={set} categories={categories} />
         <ProductPricingSection form={form} set={set} />
-        <ProductInventorySection form={form} set={set} />
+        <ProductInventorySection form={form} set={set} productId={initial?.id} />
         <ProductImagesSection form={form} set={set} />
         <HighlightsEditor value={form.highlights} onChange={(v) => set("highlights", v)} />
         <ProductMetaSection form={form} set={set} />
