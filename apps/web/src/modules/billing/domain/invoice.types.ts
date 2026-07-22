@@ -5,6 +5,7 @@ export type InvoiceStatus = "draft" | "sent" | "partially_paid" | "paid" | "over
 export interface InvoiceItem {
   readonly description: string; readonly quantity: number; readonly unitPrice: number;
   readonly taxPct: number; readonly discountPct: number; readonly lineTotal: number;
+  readonly productId?: string | null; readonly sku?: string | null;  // línea vinculada a un producto del catálogo (opcional)
 }
 export interface Invoice {
   readonly id: string; readonly invoiceNumber: string | null; readonly customerId: string | null; readonly clientName: string;
