@@ -17,7 +17,7 @@ export const Route = createFileRoute("/_authenticated/leads")({ component: Leads
 
 type Cat = { id: string; label: string; kind: string };
 
-const toForm = (l: Lead): LeadFormData => ({ contactName: l.contactName, phone: l.phone, email: l.email, address: l.address, city: l.city, zipCode: l.zipCode, leadSourceId: l.leadSourceId, serviceTypeId: l.serviceTypeId, temperature: l.temperature, status: l.status, callDate: l.callDate, notes: l.notes, quotedPrice: l.quotedPrice, items: l.items, evidenceUrls: l.evidenceUrls });
+const toForm = (l: Lead): LeadFormData => ({ contactName: l.contactName, phone: l.phone, email: l.email, address: l.address, city: l.city, zipCode: l.zipCode, leadSourceId: l.leadSourceId, serviceTypeId: l.serviceTypeId, temperature: l.temperature, status: l.status, callDate: l.callDate, notes: l.notes, quotedPrice: l.quotedPrice, items: l.items, evidenceUrls: l.evidenceUrls, customerId: l.customerId });
 
 function LeadsPage() {
   const { t } = useI18n(); const { can } = useModuleAccess();

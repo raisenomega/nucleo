@@ -10,6 +10,7 @@ import { StatusBadge, TempBadge } from "@crm/presentation/LeadBadges";
 import { LeadDetailActions } from "@crm/presentation/LeadDetailActions";
 import { LeadServiceRequestBlock } from "@crm/presentation/LeadServiceRequestBlock";
 import { LeadActivityTimeline } from "@crm/presentation/LeadActivityTimeline";
+import { LinkedCustomerBadge } from "@shared/components/LinkedCustomerBadge";
 import { LeadSourceBadge } from "@shared/components/LeadSourceBadge";
 import type { Lead } from "@crm/domain/lead.types";
 
@@ -37,6 +38,7 @@ export function LeadDetail({ lead, onClose, onEdit, onDuplicate, onArchive }: {
         </div>
         <div className="space-y-3 p-4 md:p-6">
           <LeadDetailActions leadId={lead.id} onEdit={onEdit} onDuplicate={onDuplicate} onArchive={onArchive} />
+          {lead.customerId && <LinkedCustomerBadge customerId={lead.customerId} name="Cliente en el maestro ↗" className="text-sm font-bold text-green-600" />}
           <dl className="space-y-1 font-body text-sm">
             {row("phone", lead.phone)}{row("email", lead.email)}
             {row("serviceRequested", lead.serviceTypeLabel || lead.serviceRequested)}

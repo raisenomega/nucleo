@@ -13,7 +13,7 @@ import { CustomerReviewsAdmin } from "@shared/customers/CustomerReviewsAdmin";
 import type { CustomerSegment } from "@shared/customers/customer-segments.repository";
 import type { AdminCustomer } from "@shared/customers/customers-agg";
 
-const EMPTY: Dossier = { orders: [], invoices: [], services: [], tickets: [], reviews: [] };
+const EMPTY: Dossier = { orders: [], invoices: [], services: [], tickets: [], reviews: [], leads: [] };
 
 // Detalle CRM del cliente: perfil + comercial (segmento/descuento/bloqueo) + dossier + evaluaciones.
 export function CustomerDetail({ c, tenantId, segments, onClose, onChanged }: { c: AdminCustomer; tenantId: string; segments: CustomerSegment[]; onClose: () => void; onChanged: () => void }) {

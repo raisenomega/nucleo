@@ -19,6 +19,7 @@ export function CustomerDossierView({ d }: { d: Dossier }) {
       {sec(t("cInvoices"), t("pNoInvoices"), d.invoices.map((iv, i) => line(iv.invoiceNumber || "—", `${formatCurrency(iv.total)} · ${iv.status}`, i)))}
       {sec(t("cServices"), t("pNoServices"), d.services.map((sv, i) => line(`${sv.serviceType || "—"} · ${sv.completedAt ? sv.completedAt.slice(0, 10) : "—"}`, sv.status, i)))}
       {sec(t("cTickets"), t("pNoTickets"), d.tickets.map((tk, i) => line(tk.subject, `${tk.createdAt.slice(0, 10)} · ${tk.status}`, i)))}
+      {sec(t("leads"), t("noRecords"), d.leads.map((l, i) => line(`${l.contactName} · ${l.serviceRequested || "—"}`, `${formatCurrency(l.quotedPrice)} · ${l.status}`, i)))}
     </>
   );
 }

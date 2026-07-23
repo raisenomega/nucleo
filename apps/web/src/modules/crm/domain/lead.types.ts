@@ -36,6 +36,7 @@ export interface Lead {
   readonly evidenceUrls: readonly string[];
   readonly customFields: readonly { readonly label: string; readonly value: string }[];
   readonly items: readonly LeadItem[];
+  readonly customerId: string | null;   // 2.6d · enlace al maestro (solo enlaza, nunca crea)
 }
 
 export interface LeadFormData {
@@ -56,6 +57,7 @@ export interface LeadFormData {
   readonly quotedPrice?: number;
   readonly items?: readonly LeadItem[];
   readonly evidenceUrls?: readonly string[];
+  readonly customerId?: string | null;
 }
 
 export type LeadListResult = Result<Lead[], string>;

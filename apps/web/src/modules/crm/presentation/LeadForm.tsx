@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Check, MessageCircle } from "lucide-react";
+import { Check, MessageCircle, UserCheck, X } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { formatCurrency } from "@shared/lib/format";
+import { CustomerSelect, type PickedCustomer } from "@shared/customers/CustomerSelect";
 import { LeadFields } from "@crm/presentation/LeadFields";
 import { LeadItemsEditor } from "@crm/presentation/LeadItemsEditor";
 import type { LeadFormData, LeadItem } from "@crm/domain/lead.types";
@@ -21,6 +22,7 @@ export function LeadForm({ sources, services, initial, onSubmit, onCancel, canSu
   const [f, setF] = useState<LeadFormData>(initial ?? EMPTY);
   const [error, setError] = useState<string | null>(null);
   function set<K extends keyof LeadFormData>(k: K, v: LeadFormData[K]) { setF((p) => ({ ...p, [k]: v })); }
+  const pick = (c: PickedCustomer) => setF((p) => ({ ...p, customerId: c.id, contactName: c.name || p.contactName, phone: c.phone || p.phone, email: c.email || p.email }));
   const items = f.items ?? [];
   const total = items.reduce((s, i) => s + i.lineTotal, 0);
   // Cada acción PRIMERO guarda (onSubmit) y DESPUÉS ejecuta su efecto (mismo tick → sin bloqueo de popup).
@@ -34,6 +36,9 @@ export function LeadForm({ sources, services, initial, onSubmit, onCancel, canSu
   return (
     <div className="space-y-4 rounded-lg border border-border bg-card p-5">
       <h2 className="font-body font-bold">{t("newLead")}</h2>
+      <CustomerSelect onPick={pick} />
+      {f.customerId && <p className="flex items-center gap-1 text-xs font-bold text-green-600"><UserCheck className="h-3.5 w-3.5" />Cliente vinculado
+        <button type="button" onClick={() => set("customerId", null)} className="inline-flex text-muted-foreground hover:text-foreground"><X className="h-3 w-3" /></button></p>}
       <LeadFields f={f} set={set} sources={sources} services={services} />
       <LeadItemsEditor items={items} onChange={(it: LeadItem[]) => set("items", it)} />
       {error && <p className="text-sm text-destructive">{error}</p>}
