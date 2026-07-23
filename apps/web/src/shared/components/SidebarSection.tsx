@@ -12,10 +12,12 @@ export function SidebarSection({ section, expanded, isOpen, activePath, badges, 
   const { can } = useModuleAccess();
   const Icon = section.icon;
   const item = "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-body transition";
-  const isActive = (to: string) => activePath === to || activePath.startsWith(to + "/");
   // Ruteado -> can(mod,"view"); "próximamente" (sin to) -> solo roadmap (can settings.view = coo/ceo).
   const items = section.items.filter((n) => n.to ? (n.mod ? can(n.mod, "view") : true) : can("settings", "view"));
-  const hasActiveChild = items.some((n) => n.to && isActive(n.to));
+  // Activo = el `to` que prefija más largo la URL (así /inventory/suppliers no marca también /inventory).
+  const activeTo = items.reduce((best, n) => (n.to && (activePath === n.to || activePath.startsWith(n.to + "/")) && n.to.length > best.length ? n.to : best), "");
+  const isActive = (to: string) => to === activeTo;
+  const hasActiveChild = activeTo !== "";
   // Expandida -> título negro/fuerte; colapsada -> gris tenue. (isOpen, no hasActiveChild.)
   const titleTone = isOpen ? "font-semibold text-foreground" : "font-medium text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-400";
   const chevronTone = isOpen ? "text-foreground" : "text-gray-400";

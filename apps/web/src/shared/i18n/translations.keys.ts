@@ -5,7 +5,7 @@ export type TranslationKey =
   | "income" | "incomeList" | "newIncome" | "amount" | "category" | "description" | "date"
   | "paymentMethod" | "save" | "cancel" | "edit" | "delete" | "noRecords" | "createdBy"
   | "actions" | "total" | "dashboard" | "balance" | "expenses" | "monthSummary"
-  | "panel" | "payroll" | "routes" | "inventory" | "leads" | "marketing" | "reports"
+  | "panel" | "payroll" | "routes" | "inventory" | "inventoryItems" | "leads" | "marketing" | "reports"
   | "settings" | "comingSoon" | "operations" | "finance" | "salesCrm" | "management"
   | "agenda" | "extraordinary" | "reconciliation" | "orders" | "quotes" | "evaluations"
   | "training" | "support" | "incomeSubtitle"

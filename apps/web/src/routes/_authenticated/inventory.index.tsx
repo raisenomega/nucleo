@@ -15,13 +15,10 @@ import { InventoryItemsPanel } from "@fieldops/presentation/InventoryItemsPanel"
 import { InventoryKpis } from "@fieldops/presentation/InventoryKpis";
 import { InventoryDashboard } from "@fieldops/presentation/InventoryDashboard";
 import { InventoryFilters, type InvFilter } from "@fieldops/presentation/InventoryFilters";
-import { InventorySuppliers } from "@fieldops/presentation/InventorySuppliers";
-import { InventoryPurchaseOrders } from "@fieldops/presentation/InventoryPurchaseOrders";
 import { inventoryReportBody } from "@fieldops/presentation/inventory-report";
 import type { InventoryFormData, LandingProductRef } from "@fieldops/domain/inventory.types";
-import type { Supplier, SupplierFormData } from "@fieldops/domain/supplier.types";
 
-export const Route = createFileRoute("/_authenticated/inventory")({ component: InventoryPage });
+export const Route = createFileRoute("/_authenticated/inventory/")({ component: InventoryPage });
 
 function InventoryPage() {
   const { t } = useI18n();
@@ -45,7 +42,6 @@ function InventoryPage() {
   const editRow = useMemo<InventoryFormData | undefined>(() => { const i = items.find((x) => x.id === editing); return i ? { name: i.name, sku: i.sku, stock: i.stock, unitCost: i.unitCost, minStock: i.minStock, landingProductId: i.landingProductId, supplierId: i.supplierId, warehouseZone: i.warehouseZone, aisle: i.aisle, shelf: i.shelf, bin: i.bin, reorderPoint: i.reorderPoint, reorderQty: i.reorderQty } : undefined; }, [editing, items]);
   async function submit(d: InventoryFormData) { if (editing && editing !== "new") await inv.update(editing, d); else await inv.create(d); setEditing(null); }
   const onDelete = (id: string) => { if (window.confirm(`${t("delete")}?`)) void inv.remove(id); };
-  const saveSupplier = async (id: string | null, d: SupplierFormData) => (id ? await sup.update(id, d) : await sup.create(d)).ok;
 
   if (!can("inventory", "view")) return <Navigate to="/dashboard" />;
   return (
@@ -62,8 +58,6 @@ function InventoryPage() {
       <InventoryFilters filter={filter} search={search} onFilter={setFilter} onSearch={setSearch} />
       {editing !== null && <InventoryForm key={editing} initial={editRow} itemId={editing !== "new" ? editing : undefined} photoUrls={items.find((i) => i.id === editing)?.photoUrls} tenantId={session?.tenantId ?? ""} landingProducts={landing} suppliers={sup.items} onSubmit={submit} onCancel={() => setEditing(null)} />}
       <InventoryItemsPanel inv={inv} rows={shown} movs={movs} now={now} suppliers={sup.items} slow={slow} high={high} reorder={reorder} onEdit={setEditing} onDelete={onDelete} />
-      <InventorySuppliers items={sup.items} onSave={saveSupplier} onToggle={(s: Supplier) => void sup.update(s.id, { ...s, active: !s.active })} />
-      <InventoryPurchaseOrders suppliers={sup.items} items={items} onChanged={inv.refresh} />
     </div>
   );
 }
