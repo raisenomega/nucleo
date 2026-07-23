@@ -5,4 +5,4 @@ export interface AppNotification {
   readonly readAt: string | null; readonly createdAt: string;
 }
 
-export type NotifFilter = "all" | "unread" | "order" | "lead" | "appointment" | "system";
+export type NotifFilter = "all" | "unread" | "order" | "lead" | "appointment" | "management" | "system";

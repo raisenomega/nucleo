@@ -8,8 +8,8 @@ import { notifRoute, notifCategory } from "@shared/notifications/notif-format";
 import type { NotifFilter, AppNotification } from "@shared/notifications/notification.types";
 
 export const Route = createFileRoute("/_authenticated/notifications")({ component: NotificationsPage });
-const FILTERS: NotifFilter[] = ["all", "unread", "order", "lead", "appointment", "system"];
-const LABEL: Record<NotifFilter, TranslationKey> = { all: "filterAll", unread: "notifUnread", order: "orders", lead: "leads", appointment: "agenda", system: "system" };
+const FILTERS: NotifFilter[] = ["all", "unread", "order", "lead", "appointment", "management", "system"];
+const LABEL: Record<NotifFilter, TranslationKey> = { all: "filterAll", unread: "notifUnread", order: "orders", lead: "leads", appointment: "agenda", management: "management", system: "system" };
 
 function NotificationsPage() {
   const { t } = useI18n();
