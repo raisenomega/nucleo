@@ -5,7 +5,7 @@ export const ORDER_STATUSES: OrderStatus[] = ["pending", "awaiting_payment", "aw
 // Estados que cuentan como "activos" (default de la lista): excluye terminales.
 export const ACTIVE_ORDER_STATUSES: OrderStatus[] = ["pending", "awaiting_payment", "awaiting_confirmation", "paid", "processing", "shipped"];
 
-export interface OrderItem { kind?: string; name: string; qty: number; price: number; }
+export interface OrderItem { kind?: string; name: string; qty: number; price: number; productId?: string | null; }
 
 export interface Order {
   id: string; orderNumber: string | null; customerId: string | null; customerName: string; customerEmail: string; customerPhone: string;

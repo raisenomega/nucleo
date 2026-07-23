@@ -12,6 +12,7 @@ export interface OrderRow {
 const num = (v: unknown) => (typeof v === "number" ? v : Number(v) || 0);
 const toItems = (v: unknown): OrderItem[] => (Array.isArray(v) ? v.map((i) => ({
   kind: typeof i?.kind === "string" ? i.kind : undefined, name: String(i?.name ?? ""), qty: num(i?.qty), price: num(i?.price),
+  productId: i?.kind === "product" && typeof i?.id === "string" ? i.id : null,
 })) : []);
 
 export const toOrder = (r: OrderRow): Order => ({
