@@ -7,9 +7,9 @@ import type { TranslationKey } from "@shared/i18n";
 import { ASSET_TYPE, CONDITION, STATUS } from "@assets/presentation/asset-labels";
 import type { AssetFormData, ProfileRef, AssetType, AssetCondition, AssetStatus } from "@assets/domain/asset.types";
 
-const EMPTY: AssetFormData = { name: "", assetType: "equipment", category: "", serialNumber: "", model: "", brand: "", purchaseDate: null, purchasePrice: null, currentValue: null, depreciationMethod: "none", depreciationYears: null, warrantyExpires: null, condition: "good", status: "active", assignedTo: null, location: "", insurancePolicy: "", insuranceExpires: null, notes: "", imageUrl: "", active: true, gpsEnabled: false, gpsDeviceId: "", gpsProvider: "" };
+const EMPTY: AssetFormData = { name: "", assetType: "equipment", category: "", serialNumber: "", model: "", brand: "", purchaseDate: null, purchasePrice: null, currentValue: null, salvageValue: 0, depreciationMethod: "none", depreciationYears: null, warrantyExpires: null, condition: "good", status: "active", assignedTo: null, location: "", insurancePolicy: "", insuranceExpires: null, notes: "", imageUrl: "", active: true, gpsEnabled: false, gpsDeviceId: "", gpsProvider: "" };
 type StrKey = "category" | "serialNumber" | "model" | "brand" | "location" | "insurancePolicy" | "imageUrl";
-type NumKey = "purchasePrice" | "currentValue" | "depreciationYears";
+type NumKey = "purchasePrice" | "currentValue" | "salvageValue" | "depreciationYears";
 type DateKey = "purchaseDate" | "warrantyExpires" | "insuranceExpires";
 
 export function AssetForm({ initial, profiles, onSubmit, onCancel }: {
@@ -35,7 +35,7 @@ export function AssetForm({ initial, profiles, onSubmit, onCancel }: {
         <CategoryPicker kind="asset_type" value={f.category} onChange={(v) => set({ category: v })} label="category" byLabel />
         {txt("brand", "brand")}{txt("model", "model")}{txt("serialNumber", "serialNumber")}
         <p className={sec}>{t("secPurchase")}</p>
-        {dt("purchaseDate", "purchaseDate")}{can("assets", "cost") && num("purchasePrice", "purchasePrice")}{can("assets", "cost") && num("currentValue", "currentValue")}
+        {dt("purchaseDate", "purchaseDate")}{can("assets", "cost") && num("purchasePrice", "purchasePrice")}{can("assets", "cost") && num("currentValue", "currentValue")}{can("assets", "cost") && num("salvageValue", "salvageValue")}
         <label className="space-y-1"><span className={lbl}>{t("depMethod")}</span><select value={f.depreciationMethod} onChange={(e) => set({ depreciationMethod: e.target.value })} className={fld}><option value="none">{t("depNone")}</option><option value="straight_line">{t("depStraight")}</option></select></label>
         {num("depreciationYears", "depYears")}
         <p className={sec}>{t("secAssignment")}</p>

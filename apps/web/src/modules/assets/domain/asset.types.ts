@@ -10,6 +10,7 @@ export interface Asset {
   readonly id: string; readonly name: string; readonly assetType: AssetType; readonly category: string;
   readonly serialNumber: string; readonly model: string; readonly brand: string;
   readonly purchaseDate: string | null; readonly purchasePrice: number | null; readonly currentValue: number | null;
+  readonly salvageValue: number | null;   // 2.7a · valor residual estimado (default 0)
   readonly depreciationMethod: string; readonly depreciationYears: number | null; readonly warrantyExpires: string | null;
   readonly condition: AssetCondition; readonly status: AssetStatus;
   readonly assignedTo: string | null; readonly assignedToName: string;
@@ -18,6 +19,10 @@ export interface Asset {
   readonly gpsEnabled: boolean; readonly gpsDeviceId: string; readonly gpsProvider: string;
 }
 export type AssetFormData = Omit<Asset, "id" | "assignedToName">;
+
+// 2.7a · depreciación
+export interface AssetBookValue { assetId: string; purchasePrice: number; salvageValue: number; accumulated: number; bookValue: number; currentValue: number | null; monthly: number; monthsRemaining: number }
+export interface DepreciationEntry { periodYear: number; periodMonth: number; amount: number; bookValueAfter: number }
 export interface ProfileRef { readonly id: string; readonly name: string; }
 export interface AssetRoute { readonly id: string; readonly routeDate: string; readonly status: string; readonly stopsCount: number; }
 export interface GpsLog { readonly latitude: number; readonly longitude: number; readonly speed: number | null; readonly accuracy: number | null; readonly recordedAt: string; readonly custodyLogId: string | null; }

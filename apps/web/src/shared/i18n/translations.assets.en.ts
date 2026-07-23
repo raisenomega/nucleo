@@ -6,7 +6,7 @@ export const enAssets = {
   atVehicle: "Vehicle", atEquipment: "Equipment", atTool: "Tool", atFurniture: "Furniture", atTechnology: "Technology", atProperty: "Property", atOther: "Other",
   condition: "Condition", cNew: "New", cGood: "Good", cFair: "Fair", cPoor: "Poor", cOutOfService: "Out of service",
   stActive: "Active", stInUse: "In use", stMaintenance: "Maintenance", stRetired: "Retired", stSold: "Sold", stLost: "Lost",
-  serialNumber: "Serial number", model: "Model", brand: "Brand", purchaseDate: "Purchase date", purchasePrice: "Purchase price", currentValue: "Current value",
+  serialNumber: "Serial number", model: "Model", brand: "Brand", purchaseDate: "Purchase date", purchasePrice: "Purchase price", currentValue: "Current value", salvageValue: "Salvage value",
   depMethod: "Depreciation method", depNone: "None", depStraight: "Straight line", depYears: "Depreciation years", warrantyExpires: "Warranty expires",
   insurancePolicy: "Insurance policy", insuranceExpires: "Insurance expires", imageUrl: "Image (URL)",
   totalAssets: "Total assets", assetsValue: "Total value", inMaintenance: "In maintenance",

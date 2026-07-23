@@ -1,14 +1,14 @@
 import { supabase } from "@shared/lib/supabase";
 import type { Asset, AssetFormData, AssetRoute, GpsLog, MaintenanceLog, MaintenanceFormData, CustodyLog, CheckoutData, CheckinData, CustodyType, IAssetRepository, Result, AssetType, AssetCondition, AssetStatus, MaintenanceType } from "@assets/domain/asset.types";
 
-const SELECT = "id, name, asset_type, category, serial_number, model, brand, purchase_date, purchase_price, current_value, depreciation_method, depreciation_years, warranty_expires, condition, status, assigned_to, location, insurance_policy, insurance_expires, notes, image_url, is_active, gps_enabled, gps_device_id, gps_provider, assignee:profiles!tenant_assets_assigned_to_fkey(full_name)";
+const SELECT = "id, name, asset_type, category, serial_number, model, brand, purchase_date, purchase_price, current_value, salvage_value, depreciation_method, depreciation_years, warranty_expires, condition, status, assigned_to, location, insurance_policy, insurance_expires, notes, image_url, is_active, gps_enabled, gps_device_id, gps_provider, assignee:profiles!tenant_assets_assigned_to_fkey(full_name)";
 type Row = Record<string, unknown>;
 const s = (v: unknown) => (v as string | null) ?? "";
 const n = (v: unknown) => (v == null || v === "" ? null : Number(v));
 const toAsset = (r: Row): Asset => ({
   id: r.id as string, name: s(r.name), assetType: r.asset_type as AssetType, category: s(r.category),
   serialNumber: s(r.serial_number), model: s(r.model), brand: s(r.brand),
-  purchaseDate: (r.purchase_date as string) ?? null, purchasePrice: n(r.purchase_price), currentValue: n(r.current_value),
+  purchaseDate: (r.purchase_date as string) ?? null, purchasePrice: n(r.purchase_price), currentValue: n(r.current_value), salvageValue: n(r.salvage_value),
   depreciationMethod: s(r.depreciation_method) || "none", depreciationYears: n(r.depreciation_years), warrantyExpires: (r.warranty_expires as string) ?? null,
   condition: r.condition as AssetCondition, status: r.status as AssetStatus,
   assignedTo: (r.assigned_to as string) ?? null, assignedToName: ((r.assignee as { full_name?: string } | null)?.full_name) ?? "",
@@ -18,7 +18,7 @@ const toAsset = (r: Row): Asset => ({
 });
 const toRow = (d: AssetFormData) => ({
   name: d.name, asset_type: d.assetType, category: d.category || null, serial_number: d.serialNumber || null, model: d.model || null, brand: d.brand || null,
-  purchase_date: d.purchaseDate || null, purchase_price: d.purchasePrice, current_value: d.currentValue,
+  purchase_date: d.purchaseDate || null, purchase_price: d.purchasePrice, current_value: d.currentValue, salvage_value: d.salvageValue ?? 0,
   depreciation_method: d.depreciationMethod, depreciation_years: d.depreciationYears, warranty_expires: d.warrantyExpires || null,
   condition: d.condition, status: d.status, assigned_to: d.assignedTo, location: d.location || null,
   insurance_policy: d.insurancePolicy || null, insurance_expires: d.insuranceExpires || null, notes: d.notes || null, image_url: d.imageUrl || null, is_active: d.active,
