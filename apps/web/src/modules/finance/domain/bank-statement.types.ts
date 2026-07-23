@@ -23,3 +23,9 @@ export interface StatementLine {
 }
 export interface ImportBatch { id: string; fileName: string; rowCount: number; dateFrom: string | null; dateTo: string | null; createdAt: string }
 export interface StatementLineFilters { bankAccountId?: string; month?: string; status?: MatchStatus | "all" }
+
+// Ola 2.5b · matching
+export interface MatchCandidate { entryType: "income" | "expense"; entryId: string; amount: number; date: string; description: string; score: number }
+export interface Suggestion { lineId: string; line: { txnDate: string; description: string; amount: number }; candidates: MatchCandidate[] }
+export interface UnmatchedEntry { entryId: string; amount: number; date: string; description: string }
+export interface MatchEntry { entryType: "income" | "expense"; entryId: string; amount: number }

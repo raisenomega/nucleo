@@ -55,7 +55,7 @@ function ReconciliationPage() {
             onDeposit={can("reconciliation", "create") ? () => setModal("deposit") : undefined}
             onRegisterBalance={can("reconciliation", "edit") ? () => setModal("balance") : undefined}
             onRemoveAccount={can("reconciliation", "delete") ? (id) => { if (window.confirm(`${t("delete")}?`)) void m.removeAccount(id); } : undefined} />
-          <BankImportSection accounts={m.bankAccounts} canWrite={can("reconciliation", "create")} />
+          <BankImportSection accounts={m.bankAccounts} canWrite={can("reconciliation", "create")} month={month} />
           {can("reconciliation", "fiscal") && (<>
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
               <ReconciliationTaxPanel tax={m.snapshot.tax} />
