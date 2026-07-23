@@ -4,10 +4,10 @@ import type { IInvoiceRepository, Invoice, InvoiceItem, InvoiceStatus, BillingRe
 interface IRow { description: string; quantity: number; unit_price: number; tax_pct: number; discount_pct: number; line_total: number; product_id?: string | null; sku?: string | null; }
 interface Row {
   id: string; invoice_number: string | null; customer_id: string | null; client_name: string; phone: string | null; email: string | null;
-  items: IRow[] | null; subtotal: number; tax: number; total: number; status: string; amount_paid: number; balance: number;
+  items: IRow[] | null; subtotal: number; tax: number; total: number; status: string; amount_paid: number; balance: number; stock_deducted_at: string | null;
   due_date: string | null; paid_at: string | null; linked_lead_id: string | null; linked_order_id: string | null; created_at: string;
 }
-const SEL = "id,invoice_number,customer_id,client_name,phone,email,items,subtotal,tax,total,status,amount_paid,balance,due_date,paid_at,linked_lead_id,linked_order_id,created_at";
+const SEL = "id,invoice_number,customer_id,client_name,phone,email,items,subtotal,tax,total,status,amount_paid,balance,stock_deducted_at,due_date,paid_at,linked_lead_id,linked_order_id,created_at";
 const EMPTY: BillingSummary = { invoices_pending: 0, invoices_overdue: 0, orders_pending: 0, mrr: 0 };
 const ok = (e: { message: string } | null): BillingResult => (e ? { ok: false, error: e.message } : { ok: true });
 const toItem = (r: IRow): InvoiceItem => ({ description: r.description, quantity: r.quantity, unitPrice: r.unit_price, taxPct: r.tax_pct, discountPct: r.discount_pct, lineTotal: r.line_total, productId: r.product_id ?? null, sku: r.sku ?? null });
@@ -15,7 +15,7 @@ const fromItem = (i: InvoiceItem) => ({ description: i.description, quantity: i.
 const toInv = (r: Row): Invoice => ({
   id: r.id, invoiceNumber: r.invoice_number, customerId: r.customer_id, clientName: r.client_name, phone: r.phone, email: r.email,
   items: (r.items ?? []).map(toItem), subtotal: r.subtotal, tax: r.tax, total: r.total, status: r.status as InvoiceStatus,
-  amountPaid: Number(r.amount_paid ?? 0), balance: Number(r.balance ?? r.total),
+  amountPaid: Number(r.amount_paid ?? 0), balance: Number(r.balance ?? r.total), stockDeductedAt: r.stock_deducted_at,
   dueDate: r.due_date, paidAt: r.paid_at, linkedLeadId: r.linked_lead_id, linkedOrderId: r.linked_order_id, createdAt: r.created_at,
 });
 

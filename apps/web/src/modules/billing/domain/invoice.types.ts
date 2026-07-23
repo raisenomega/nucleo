@@ -11,7 +11,7 @@ export interface Invoice {
   readonly id: string; readonly invoiceNumber: string | null; readonly customerId: string | null; readonly clientName: string;
   readonly phone: string | null; readonly email: string | null; readonly items: InvoiceItem[];
   readonly subtotal: number; readonly tax: number; readonly total: number; readonly status: InvoiceStatus;
-  readonly amountPaid: number; readonly balance: number;
+  readonly amountPaid: number; readonly balance: number; readonly stockDeductedAt: string | null;
   readonly dueDate: string | null; readonly paidAt: string | null;
   readonly linkedLeadId: string | null; readonly linkedOrderId: string | null; readonly createdAt: string;
 }

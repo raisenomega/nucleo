@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, MessageCircle, Ban, FileDown, DollarSign } from "lucide-react";
+import { X, MessageCircle, Ban, FileDown, DollarSign, Boxes } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { usePdf } from "@shared/hooks/usePdf";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
@@ -38,6 +38,7 @@ export function InvoiceDetail({ inv, canManage, onChanged, onCancel, onClose }: 
         <div className="flex flex-wrap items-center gap-2">
           <span className="font-mono text-xs">{inv.invoiceNumber ?? "—"}</span>
           <span className={`rounded px-2 py-0.5 text-xs font-bold ${INV_ST_COLOR[st]}`}>{t(INV_ST_KEY[st])}</span>
+          {inv.stockDeductedAt && <span className="inline-flex items-center gap-1 rounded bg-green-500/10 px-1.5 py-0.5 text-[10px] font-bold text-green-600"><Boxes className="h-3 w-3" />Stock descontado {inv.stockDeductedAt.slice(0, 10)}</span>}
         </div>
         <LinkedCustomerBadge customerId={inv.customerId} name={inv.clientName} className="text-sm" />
         <SaleLinesList items={inv.items} canView={can("inventory", "view")} onLineClick={setDrillProduct} />
