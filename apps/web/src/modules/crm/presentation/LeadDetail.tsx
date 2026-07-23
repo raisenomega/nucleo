@@ -9,6 +9,7 @@ import { useMarkLeadViewed } from "@shared/hooks/useMarkLeadViewed.hook";
 import { StatusBadge, TempBadge } from "@crm/presentation/LeadBadges";
 import { LeadDetailActions } from "@crm/presentation/LeadDetailActions";
 import { LeadServiceRequestBlock } from "@crm/presentation/LeadServiceRequestBlock";
+import { LeadActivityTimeline } from "@crm/presentation/LeadActivityTimeline";
 import { LeadSourceBadge } from "@shared/components/LeadSourceBadge";
 import type { Lead } from "@crm/domain/lead.types";
 
@@ -58,6 +59,7 @@ export function LeadDetail({ lead, onClose, onEdit, onDuplicate, onArchive }: {
               {urls.map((src, i) => <img key={i} src={src} alt="" onClick={() => setPhoto(src)} className="h-20 w-20 cursor-pointer rounded object-cover" />)}
             </div>
           )}
+          <LeadActivityTimeline leadId={lead.id} phone={lead.phone} email={lead.email} />
         </div>
       </ScreenModal>
       {photo && <PhotoLightbox src={photo} onClose={() => setPhoto(null)} />}

@@ -9,18 +9,15 @@ import { supabaseLeadRepository } from "@crm/infrastructure/supabase-lead.reposi
 import { LeadForm } from "@crm/presentation/LeadForm";
 import { LeadTable } from "@crm/presentation/LeadTable";
 import { LeadDetail } from "@crm/presentation/LeadDetail";
+import { LeadFollowupsWidget } from "@crm/presentation/LeadFollowupsWidget";
+import { supabaseLeadActivityRepository as actRepo } from "@crm/infrastructure/supabase-lead-activity.repository";
 import type { Lead, LeadFormData } from "@crm/domain/lead.types";
 
 export const Route = createFileRoute("/_authenticated/leads")({ component: LeadsPage });
 
 type Cat = { id: string; label: string; kind: string };
 
-function toForm(l: Lead): LeadFormData {
-  return { contactName: l.contactName, phone: l.phone, email: l.email, address: l.address, city: l.city,
-    zipCode: l.zipCode, leadSourceId: l.leadSourceId, serviceTypeId: l.serviceTypeId, temperature: l.temperature,
-    status: l.status, callDate: l.callDate, notes: l.notes, quotedPrice: l.quotedPrice, items: l.items,
-    evidenceUrls: l.evidenceUrls };
-}
+const toForm = (l: Lead): LeadFormData => ({ contactName: l.contactName, phone: l.phone, email: l.email, address: l.address, city: l.city, zipCode: l.zipCode, leadSourceId: l.leadSourceId, serviceTypeId: l.serviceTypeId, temperature: l.temperature, status: l.status, callDate: l.callDate, notes: l.notes, quotedPrice: l.quotedPrice, items: l.items, evidenceUrls: l.evidenceUrls });
 
 function LeadsPage() {
   const { t } = useI18n(); const { can } = useModuleAccess();
@@ -40,7 +37,9 @@ function LeadsPage() {
   }, [editing, leads]);
 
   async function submit(d: LeadFormData) {
+    const prev = editing && editing !== "new" ? leads.find((x) => x.id === editing) : null;
     if (editing && editing !== "new") await update(editing, d); else await create(d);
+    if (prev && prev.status !== d.status) void actRepo.logSilently(prev.id, "note", `Estado: ${prev.status} → ${d.status}`);  // auto-log best-effort
     setEditing(null);
   }
 
@@ -60,13 +59,14 @@ function LeadsPage() {
           initial={editRow} onSubmit={submit} onCancel={() => setEditing(null)}
           canSubmit={editing === "new" ? can("leads", "create") : can("leads", "edit")} />
       )}
+      <LeadFollowupsWidget onOpenLead={setViewing} />
       <LeadTable rows={leads} onView={setViewing} onEdit={can("leads", "edit") ? setEditing : undefined}
         onDelete={can("leads", "delete") ? (id) => { if (window.confirm(`${t("delete")}?`)) void remove(id); } : undefined} />
       {viewLead && (
         <LeadDetail lead={viewLead} onClose={() => setViewing(null)}
           onEdit={() => { setEditing(viewLead.id); setViewing(null); }}
           onDuplicate={() => { void create(toForm(viewLead)); setViewing(null); }}
-          onArchive={() => { void update(viewLead.id, { ...toForm(viewLead), status: "lost" }); setViewing(null); }} />
+          onArchive={() => { void update(viewLead.id, { ...toForm(viewLead), status: "lost" }); if (viewLead.status !== "lost") void actRepo.logSilently(viewLead.id, "note", `Estado: ${viewLead.status} → lost`); setViewing(null); }} />
       )}
     </div>
   );
