@@ -1,6 +1,6 @@
 // BC finance — tipos de reportes (/reports). Puro.
 export type MonthPoint = {
-  month: string; income: number; expense: number; payroll: number; extraordinary: number;
+  month: string; income: number; expense: number; payroll: number; extraordinary: number; cogs: number;
   marketing_spent: number; marketing_budget: number; leads_new: number; leads_converted: number;
   leads_quoted: number; routes_completed: number; routes_not_attended: number; balance: number; margin_pct: number;
 };
