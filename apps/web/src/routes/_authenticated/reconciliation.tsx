@@ -17,6 +17,7 @@ import { MonthClosurePanel } from "@finance/presentation/MonthClosurePanel"; // 
 import { BankAccountForm } from "@finance/presentation/BankAccountForm";
 import { BankDepositForm } from "@finance/presentation/BankDepositForm";
 import { BankBalanceForm } from "@finance/presentation/BankBalanceForm";
+import { BankImportSection } from "@finance/presentation/BankImportSection";
 import type { RepoResult } from "@finance/domain/bank-account.types";
 
 export const Route = createFileRoute("/_authenticated/reconciliation")({ component: ReconciliationPage });
@@ -41,9 +42,7 @@ function ReconciliationPage() {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <h1 className="font-display text-xl font-bold text-foreground md:text-3xl">{t("reconciliation")}</h1>
           <div className="flex items-center gap-2">
-            {can("reconciliation", "fiscal") && (
-              <button type="button" disabled={pdf.generating || !m.snapshot} onClick={() => { if (m.snapshot) void pdf.generatePdf("reconciliation", null, buildFiscalBody(month, m.snapshot)); }}
-                className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold disabled:opacity-50"><FileText className="h-4 w-4" /> {pdf.generating ? t("generatingPdf") : t("fiscalReport")}</button>)}
+            {can("reconciliation", "fiscal") && (<button type="button" disabled={pdf.generating || !m.snapshot} onClick={() => { if (m.snapshot) void pdf.generatePdf("reconciliation", null, buildFiscalBody(month, m.snapshot)); }} className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold disabled:opacity-50"><FileText className="h-4 w-4" /> {pdf.generating ? t("generatingPdf") : t("fiscalReport")}</button>)}
             <input type="month" value={month} onChange={(e) => setMonth(e.target.value)} className="rounded-lg border border-border bg-background p-2 text-sm" />
           </div>
         </div>
@@ -56,6 +55,7 @@ function ReconciliationPage() {
             onDeposit={can("reconciliation", "create") ? () => setModal("deposit") : undefined}
             onRegisterBalance={can("reconciliation", "edit") ? () => setModal("balance") : undefined}
             onRemoveAccount={can("reconciliation", "delete") ? (id) => { if (window.confirm(`${t("delete")}?`)) void m.removeAccount(id); } : undefined} />
+          <BankImportSection accounts={m.bankAccounts} canWrite={can("reconciliation", "create")} />
           {can("reconciliation", "fiscal") && (<>
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
               <ReconciliationTaxPanel tax={m.snapshot.tax} />
