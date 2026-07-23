@@ -12,7 +12,11 @@ import { RouteTable } from "@operations/presentation/RouteTable";
 import { RouteDetail } from "@operations/presentation/RouteDetail";
 import type { RouteFormData, EditableStop, CompletePayload } from "@operations/domain/route.types";
 
-export const Route = createFileRoute("/_authenticated/routes")({ component: RoutesPage });
+export const Route = createFileRoute("/_authenticated/routes")({
+  component: RoutesPage,
+  // 2.4b: "Agendar servicio" desde el dossier navega con ?customer=… para pre-llenar la 1ª parada.
+  validateSearch: (s: Record<string, unknown>) => ({ customer: typeof s.customer === "string" ? s.customer : undefined, cname: typeof s.cname === "string" ? s.cname : undefined, cphone: typeof s.cphone === "string" ? s.cphone : undefined, caddr: typeof s.caddr === "string" ? s.caddr : undefined }),
+});
 type Emp = { id: string; full_name: string };
 type Vehicle = { id: string; name: string };
 
@@ -26,6 +30,9 @@ function RoutesPage() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [editing, setEditing] = useState<string | null>(null);
   const [viewing, setViewing] = useState<string | null>(null);
+  const search = Route.useSearch();
+  const prefillStops: EditableStop[] | undefined = search.customer ? [{ clientName: search.cname ?? "", address: search.caddr ?? "", city: "", serviceType: "", scheduledTime: "", estimatedAmount: 0, notes: "", phone: search.cphone ?? "", customerId: search.customer }] : undefined;
+  useEffect(() => { if (search.customer) setEditing("new"); }, [search.customer]);
   useEffect(() => { void supabase.from("profiles").select("id, full_name").then(({ data }) => setEmps((data as Emp[] | null) ?? [])); }, []);
   useEffect(() => { void supabase.from("tenant_assets").select("id, name").eq("asset_type", "vehicle").eq("is_active", true).in("status", ["active", "in_use"]).order("name").then(({ data }) => setVehicles((data as Vehicle[] | null) ?? [])); }, []);
 
@@ -55,8 +62,8 @@ function RoutesPage() {
           {can("routes", "create") && <button type="button" onClick={() => setEditing("new")} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-body font-bold"><Plus className="h-4 w-4" /> {t("newRoute")}</button>}
         </div>
       </div>
-      {editing !== null && <RouteForm key={editing} employees={emps} vehicles={vehicles} initial={initial}
-        initialStops={editing !== "new" ? m.stops : undefined} onSubmit={submit} onCancel={() => setEditing(null)} />}
+      {editing !== null && <RouteForm key={editing === "new" ? (search.customer ?? "new") : editing} employees={emps} vehicles={vehicles} initial={initial}
+        initialStops={editing !== "new" ? m.stops : undefined} prefillStops={editing === "new" ? prefillStops : undefined} onSubmit={submit} onCancel={() => setEditing(null)} />}
       <RouteTable rows={m.routes} employees={emps} onView={(id) => { setViewing(id); m.setActive(id); }}
         onEdit={can("routes", "edit") ? (id) => { setEditing(id); m.setActive(id); } : undefined}
         onVoid={m.voidRow} onDeleteForever={m.remove} />

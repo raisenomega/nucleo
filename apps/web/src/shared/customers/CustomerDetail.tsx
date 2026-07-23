@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { X } from "lucide-react";
+import { X, CalendarPlus } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { useI18n } from "@shared/i18n";
 import { ScreenModal } from "@shared/components/ScreenModal";
 import { loadDossier, type Dossier } from "@shared/customers/customer-dossier";
@@ -24,7 +25,11 @@ export function CustomerDetail({ c, tenantId, segments, onClose, onChanged }: { 
     <ScreenModal onClose={onClose}>
       <div className="flex items-center justify-between border-b border-border p-4 md:p-6">
         <h2 className="font-display text-lg font-bold text-foreground">{c.fullName || c.email}</h2>
-        <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button>
+        <div className="flex items-center gap-3">
+          <Link to="/routes" search={{ customer: c.id, cname: c.fullName, cphone: c.phone, caddr: c.address }}
+            className="flex items-center gap-1 rounded-lg bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground"><CalendarPlus className="h-4 w-4" />Agendar servicio</Link>
+          <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button>
+        </div>
       </div>
       <div className="space-y-3 p-4 md:p-6">
         <CustomerProfileCard c={c} onChanged={onChanged} />

@@ -13,7 +13,10 @@ export function ArAgingPanel() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 className="font-display text-lg font-bold text-foreground">Cartera por cobrar</h2>
-        <p className="text-sm text-muted-foreground">Total: <span className="font-bold text-foreground">{formatCurrency(ag.totalOutstanding)}</span></p>
+        <div className="text-right text-sm">
+          <p className="text-muted-foreground">Total: <span className="font-bold text-foreground">{formatCurrency(ag.totalDue)}</span></p>
+          {ag.fieldDebtTotal > 0 && <p className="text-[11px] text-muted-foreground">Facturas {formatCurrency(ag.totalOutstanding)} · Servicios de campo {formatCurrency(ag.fieldDebtTotal)}</p>}
+        </div>
       </div>
       <div className="grid grid-cols-2 gap-2 md:grid-cols-5">
         {AR_BUCKETS.map(([key, label, color]) => (

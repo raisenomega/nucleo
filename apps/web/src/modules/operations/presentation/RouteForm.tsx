@@ -9,8 +9,8 @@ type Emp = { id: string; full_name: string };
 type Vehicle = { id: string; name: string };
 const toEditable = (s: RouteStop): EditableStop => ({ id: s.id, clientName: s.clientName, address: s.address, city: s.city ?? "", serviceType: s.serviceType, scheduledTime: s.scheduledTime, estimatedAmount: s.estimatedAmount, notes: s.notes ?? "", phone: s.phone ?? "", customerId: s.customerId });
 
-export function RouteForm({ employees, vehicles, initial, initialStops, onSubmit, onCancel }: {
-  employees: Emp[]; vehicles: Vehicle[]; initial?: RouteFormData; initialStops?: readonly RouteStop[];
+export function RouteForm({ employees, vehicles, initial, initialStops, prefillStops, onSubmit, onCancel }: {
+  employees: Emp[]; vehicles: Vehicle[]; initial?: RouteFormData; initialStops?: readonly RouteStop[]; prefillStops?: EditableStop[];
   onSubmit: (d: RouteFormData, stops: EditableStop[]) => void; onCancel: () => void;
 }) {
   const { t } = useI18n();
@@ -19,7 +19,7 @@ export function RouteForm({ employees, vehicles, initial, initialStops, onSubmit
   const uid = session?.userId ?? "";
   const ownName = employees.find((e) => e.id === uid)?.full_name || session?.email || uid;
   const [f, setF] = useState<RouteFormData>(initial ?? { routeDate: "", assignedTo: "", notes: "", assetId: "" });
-  const [stops, setStops] = useState<EditableStop[]>(initial ? [] : [emptyStop()]);
+  const [stops, setStops] = useState<EditableStop[]>(initial ? [] : (prefillStops ?? [emptyStop()]));
   useEffect(() => { if (initialStops && initialStops.length) setStops(initialStops.map(toEditable)); }, [initialStops]);
   const fld = "w-full rounded-lg border border-border bg-background p-2 text-sm";
   const lbl = "text-xs font-bold text-muted-foreground";
