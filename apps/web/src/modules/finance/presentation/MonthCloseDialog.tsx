@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { formatCurrency } from "@shared/lib/format";
-import type { MonthTotals } from "@finance/domain/month-closure.types";
+import type { MonthRecStatus, MonthTotals } from "@finance/domain/month-closure.types";
 
 const Row = ({ label, value }: { label: string; value: number }) => (
   <div className="flex justify-between text-sm"><span className="text-muted-foreground">{label}</span><span className="font-medium text-foreground">{formatCurrency(value)}</span></div>
@@ -9,8 +9,8 @@ const Row = ({ label, value }: { label: string; value: number }) => (
 
 // Dialog de confirmación de cierre. Muestra los totales EXACTOS que se congelan (preview_month_close, la misma
 // agregación que close_month) antes de confirmar. Advierte que el bloqueo de edición aún no está activo (1.2b).
-export function MonthCloseDialog({ label, loadPreview, onConfirm, onClose }: {
-  label: string; loadPreview: () => Promise<MonthTotals | null>; onConfirm: () => Promise<void>; onClose: () => void;
+export function MonthCloseDialog({ label, status, loadPreview, onConfirm, onClose }: {
+  label: string; status?: MonthRecStatus; loadPreview: () => Promise<MonthTotals | null>; onConfirm: () => Promise<void>; onClose: () => void;
 }) {
   const [t, setT] = useState<MonthTotals | null>(null);
   const [busy, setBusy] = useState(false);
@@ -28,6 +28,10 @@ export function MonthCloseDialog({ label, loadPreview, onConfirm, onClose }: {
             <div className="border-t border-border pt-2"><Row label="Balance neto" value={t.netBalance} /></div>
           </div>
         )}
+        {status && status.unmatched > 0 && (
+          <p className="rounded-lg bg-amber-500/10 p-2 text-xs font-medium text-amber-700 dark:text-amber-400">
+            ⚠️ Hay {status.unmatched} línea(s) bancaria(s) sin conciliar en este mes ({formatCurrency(status.unmatchedAmount)}). Podés cerrar igualmente; la diferencia quedará registrada en el cierre.
+          </p>)}
         <p className="rounded-lg bg-amber-500/10 p-2 text-xs text-amber-700 dark:text-amber-400">
           Al cerrar, no se podrán crear, editar ni eliminar transacciones (ingresos, gastos, nómina, extraordinarios) con fecha en este mes. Podrás reabrirlo cuando necesites hacer ajustes.
         </p>

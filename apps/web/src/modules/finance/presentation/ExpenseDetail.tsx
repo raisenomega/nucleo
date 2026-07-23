@@ -6,6 +6,7 @@ import { usePdf } from "@shared/hooks/usePdf";
 import { formatCurrency } from "@shared/lib/format";
 import { ScreenModal } from "@shared/components/ScreenModal";
 import { signEvidence } from "@finance/infrastructure/supabase-evidence.storage";
+import { EntryReconciliationBadge } from "@finance/presentation/EntryReconciliationBadge";
 import type { Expense } from "@finance/domain/expense.types";
 
 type Emp = { id: string; full_name: string };
@@ -36,6 +37,7 @@ export function ExpenseDetail({ expense, employees, onClose }: {
             {row("paymentMethod", expense.paymentMethodLabel)}{row("description", expense.description)}
             {row("paidBy", paidByName)}
           </dl>
+          <EntryReconciliationBadge entryType="expense" entryId={expense.id} />
           <button type="button" disabled={pdf.generating} onClick={() => void pdf.generatePdf("expense", expense.id)} className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-sm font-bold disabled:opacity-50"><FileDown className="h-4 w-4" /> {pdf.generating ? t("generatingPdf") : t("receiptPdf")}</button>
           {urls.length > 0 && (
             <div className="flex flex-wrap gap-2">

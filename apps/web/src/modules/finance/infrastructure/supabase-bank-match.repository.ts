@@ -1,5 +1,5 @@
 import { supabase } from "@shared/lib/supabase";
-import type { MatchEntry, Suggestion, UnmatchedEntry } from "@finance/domain/bank-statement.types";
+import type { EntryRecon, LineMatchDetail, MatchEntry, Suggestion, UnmatchedEntry } from "@finance/domain/bank-statement.types";
 
 type Res = { ok: true } | { ok: false; error: string };
 type J = Record<string, unknown>;
@@ -24,6 +24,16 @@ export const supabaseBankMatchRepository = {
   async listUnmatchedEntries(month: string, type: "income" | "expense"): Promise<UnmatchedEntry[]> {
     const { data } = await supabase.rpc("list_unmatched_entries", { _month: `${month}-01`, _type: type });
     return jarr(data).map((r) => ({ entryId: r.entry_id as string, amount: Number(r.amount), date: r.date as string, description: (r.description as string) ?? "" }));
+  },
+  async listLineMatches(lineId: string): Promise<LineMatchDetail[]> {
+    const { data } = await supabase.rpc("list_line_matches", { _line_id: lineId });
+    return jarr(data).map((r) => ({ entryType: r.entry_type as "income" | "expense", entryId: r.entry_id as string, amount: Number(r.amount), date: r.date as string, description: (r.description as string) ?? "" }));
+  },
+  async getEntryReconciliation(entryType: "income" | "expense", entryId: string): Promise<EntryRecon | null> {
+    const { data } = await supabase.rpc("get_entry_reconciliation", { _entry_type: entryType, _entry_id: entryId });
+    if (!data) return null;
+    const d = data as J;
+    return { lineId: d.line_id as string, txnDate: d.txn_date as string, description: (d.description as string) ?? "", amount: Number(d.amount), bankName: (d.bank_name as string) ?? "" };
   },
   confirm: (lineId: string, entries: MatchEntry[]): Promise<Res> => rpc("confirm_match", { _line_id: lineId, _entries: entries.map((e) => ({ entry_type: e.entryType, entry_id: e.entryId, amount: e.amount })) }),
   unmatch: (lineId: string): Promise<Res> => rpc("unmatch_line", { _line_id: lineId }),

@@ -26,6 +26,7 @@ export function MonthClosurePanel() {
     });
   }, [locale]);
   const closureOf = (y: number, mo: number) => m.closures.find((c) => c.periodYear === y && c.periodMonth === mo);
+  const recOf = (y: number, mo: number) => m.recStatus.find((s) => s.periodYear === y && s.periodMonth === mo);
 
   const doReopen = async (y: number, mo: number) => {
     const reason = window.prompt("Motivo de la reapertura (mínimo 5 caracteres):");
@@ -48,13 +49,13 @@ export function MonthClosurePanel() {
         <div className="space-y-2">
           {months.map((mm) => (
             <MonthClosureRow key={`${mm.y}-${mm.mo}`} label={mm.label} current={mm.current}
-              closure={closureOf(mm.y, mm.mo)} canManage={canManage}
+              closure={closureOf(mm.y, mm.mo)} status={recOf(mm.y, mm.mo)} canManage={canManage}
               onClose={() => setDialog({ y: mm.y, mo: mm.mo, label: mm.label })}
               onReopen={() => void doReopen(mm.y, mm.mo)} />
           ))}
         </div>
       )}
-      {dialog && <MonthCloseDialog label={dialog.label} loadPreview={() => m.preview(dialog.y, dialog.mo)}
+      {dialog && <MonthCloseDialog label={dialog.label} status={recOf(dialog.y, dialog.mo)} loadPreview={() => m.preview(dialog.y, dialog.mo)}
         onConfirm={doConfirm} onClose={() => setDialog(null)} />}
     </div>
   );

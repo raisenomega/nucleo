@@ -1,12 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
-import type { IMonthClosureRepository, MonthClosure } from "@finance/domain/month-closure.types";
+import type { IMonthClosureRepository, MonthClosure, MonthRecStatus } from "@finance/domain/month-closure.types";
 
 // Carga los cierres del tenant + expone close/reopen (recargan la lista al éxito). La lista de meses a mostrar
 // la arma el panel (últimos N meses); este hook solo aporta cuáles están cerrados y las acciones.
 export function useMonthClosures(repo: IMonthClosureRepository) {
   const [closures, setClosures] = useState<MonthClosure[]>([]);
+  const [recStatus, setRecStatus] = useState<MonthRecStatus[]>([]);
   const [loading, setLoading] = useState(true);
-  const reload = useCallback(async () => { setClosures(await repo.listClosures()); setLoading(false); }, [repo]);
+  const reload = useCallback(async () => {
+    const [c, s] = await Promise.all([repo.listClosures(), repo.recStatus()]);
+    setClosures(c); setRecStatus(s); setLoading(false);
+  }, [repo]);
   useEffect(() => { void reload(); }, [reload]);
 
   const close = useCallback(async (y: number, m: number) => {
@@ -16,5 +20,5 @@ export function useMonthClosures(repo: IMonthClosureRepository) {
     const r = await repo.reopen(y, m, reason); if (r.ok) await reload(); return r;
   }, [repo, reload]);
 
-  return { closures, loading, reload, close, reopen, preview: repo.preview.bind(repo) };
+  return { closures, recStatus, loading, reload, close, reopen, preview: repo.preview.bind(repo) };
 }

@@ -5,6 +5,7 @@ import { formatCurrency } from "@shared/lib/format";
 import { supabaseBankStatementRepository as lineRepo } from "@finance/infrastructure/supabase-bank-statement.repository";
 import { supabaseBankMatchRepository as repo } from "@finance/infrastructure/supabase-bank-match.repository";
 import { MatchLineRow } from "@finance/presentation/MatchLineRow";
+import { MatchedLineRow } from "@finance/presentation/MatchedLineRow";
 import { ManualMatchModal } from "@finance/presentation/ManualMatchModal";
 import { CreateEntryModal } from "@finance/presentation/CreateEntryModal";
 import type { MatchEntry, StatementLine, Suggestion } from "@finance/domain/bank-statement.types";
@@ -42,10 +43,7 @@ export function BankMatchPanel({ accounts, canWrite, month }: { accounts: readon
           onManual={() => setManual(l)} onCreate={() => setCreate(l)}
           onIgnore={() => { if (window.confirm("¿Ignorar esta línea?")) void act(repo.ignore(l.id, "Ignorada manualmente"), "Ignorada"); }} />))}
       {matched.length > 0 && <div className="space-y-1 border-t border-border pt-2">
-        {matched.map((l) => (<div key={l.id} className="flex items-center justify-between gap-2 text-xs">
-          <span className="min-w-0 truncate text-muted-foreground">{l.txnDate} · {l.description}</span>
-          <span className="flex shrink-0 items-center gap-2"><span className="font-semibold text-green-600">{formatCurrency(l.amount)}</span>
-            {canWrite && <button type="button" onClick={() => void act(repo.unmatch(l.id), "Desvinculada")} className="font-bold text-destructive">Desvincular</button>}</span></div>))}</div>}
+        {matched.map((l) => <MatchedLineRow key={l.id} line={l} canWrite={canWrite} onUnmatch={() => void act(repo.unmatch(l.id), "Desvinculada")} />)}</div>}
       {manual && <ManualMatchModal line={manual} month={month} onClose={() => setManual(null)} onConfirm={(e) => confirm(manual, e)} />}
       {create && <CreateEntryModal line={create} onClose={() => setCreate(null)} onConfirm={(c, p) => { setCreate(null); void act(repo.createEntry(create.id, c, p), "Entrada creada y conciliada"); }} />}
     </div>

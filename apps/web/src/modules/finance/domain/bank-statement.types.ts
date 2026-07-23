@@ -29,3 +29,7 @@ export interface MatchCandidate { entryType: "income" | "expense"; entryId: stri
 export interface Suggestion { lineId: string; line: { txnDate: string; description: string; amount: number }; candidates: MatchCandidate[] }
 export interface UnmatchedEntry { entryId: string; amount: number; date: string; description: string }
 export interface MatchEntry { entryType: "income" | "expense"; entryId: string; amount: number }
+
+// Ola 2.5d · trazabilidad
+export interface LineMatchDetail { entryType: "income" | "expense"; entryId: string; amount: number; date: string; description: string }
+export interface EntryRecon { lineId: string; txnDate: string; description: string; amount: number; bankName: string }
