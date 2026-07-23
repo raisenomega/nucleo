@@ -10,7 +10,7 @@ import { INV_ST_KEY, INV_ST_COLOR } from "@billing/presentation/billing-ui";
 import { useInvoicePayments } from "@billing/presentation/useInvoicePayments.hook";
 import { PaymentDialog } from "@billing/presentation/PaymentDialog";
 import { PaymentHistory } from "@billing/presentation/PaymentHistory";
-import { InvoiceLinesList } from "@billing/presentation/InvoiceLinesList";
+import { SaleLinesList } from "@shared/components/SaleLinesList";
 import { LineItemInventoryPanel } from "@fieldops/presentation/LineItemInventoryPanel";
 import type { Invoice, InvoiceStatus } from "@billing/domain/invoice.types";
 
@@ -40,7 +40,7 @@ export function InvoiceDetail({ inv, canManage, onChanged, onCancel, onClose }: 
           <span className={`rounded px-2 py-0.5 text-xs font-bold ${INV_ST_COLOR[st]}`}>{t(INV_ST_KEY[st])}</span>
         </div>
         <LinkedCustomerBadge customerId={inv.customerId} name={inv.clientName} className="text-sm" />
-        <InvoiceLinesList items={inv.items} canView={can("inventory", "view")} onLineClick={setDrillProduct} />
+        <SaleLinesList items={inv.items} canView={can("inventory", "view")} onLineClick={setDrillProduct} />
         <div className="rounded-lg border border-border p-3">
           <div className="flex justify-between text-sm"><span className="text-muted-foreground">{t("pTotal") || "Total"}</span><span className="font-semibold">{formatCurrency(inv.total)}</span></div>
           <div className="flex justify-between text-sm"><span className="text-muted-foreground">Pagado</span><span className="font-semibold text-green-600">{formatCurrency(paid)}</span></div>

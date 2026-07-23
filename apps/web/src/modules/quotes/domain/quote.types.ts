@@ -5,6 +5,7 @@ export type QuoteStatus = "draft" | "sent" | "viewed" | "accepted" | "rejected" 
 export interface QuoteItem {
   readonly description: string; readonly quantity: number; readonly unitPrice: number;
   readonly taxPct: number; readonly discountPct: number; readonly lineTotal: number;
+  readonly productId?: string | null; readonly sku?: string | null;  // línea vinculada a un producto del catálogo (opcional)
 }
 export interface Quote {
   readonly id: string; readonly quoteNumber: string | null; readonly customerId: string | null; readonly clientName: string;

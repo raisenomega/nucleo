@@ -1,7 +1,7 @@
 import { supabase } from "@shared/lib/supabase";
 import type { IQuoteRepository, Quote, QuoteItem, QuoteStatus, QuoteResult, QuotesSummary } from "@quotes/domain/quote.types";
 
-interface IRow { description: string; quantity: number; unit_price: number; tax_pct: number; discount_pct: number; line_total: number; }
+interface IRow { description: string; quantity: number; unit_price: number; tax_pct: number; discount_pct: number; line_total: number; product_id?: string | null; sku?: string | null; }
 interface Row {
   id: string; quote_number: string | null; customer_id: string | null; client_name: string; client_phone: string | null; client_email: string | null;
   client_address: string | null; items: IRow[] | null; subtotal: number; tax_total: number; total: number; status: string;
@@ -11,8 +11,8 @@ interface Row {
 const SEL = "id,quote_number,customer_id,client_name,client_phone,client_email,client_address,items,subtotal,tax_total,total,status,valid_until,notes,terms,linked_lead_id,linked_invoice_id,created_at,sent_at,sent_channels,updated_at";
 const EMPTY: QuotesSummary = { draft: 0, sent: 0, accepted: 0, rejected: 0, expired: 0, total_quoted: 0 };
 const ok = (e: { message: string } | null): QuoteResult => (e ? { ok: false, error: e.message } : { ok: true });
-const toItem = (r: IRow): QuoteItem => ({ description: r.description, quantity: r.quantity, unitPrice: r.unit_price, taxPct: r.tax_pct, discountPct: r.discount_pct, lineTotal: r.line_total });
-const fromItem = (i: QuoteItem) => ({ description: i.description, quantity: i.quantity, unit_price: i.unitPrice, tax_pct: i.taxPct, discount_pct: i.discountPct, line_total: i.lineTotal });
+const toItem = (r: IRow): QuoteItem => ({ description: r.description, quantity: r.quantity, unitPrice: r.unit_price, taxPct: r.tax_pct, discountPct: r.discount_pct, lineTotal: r.line_total, productId: r.product_id ?? null, sku: r.sku ?? null });
+const fromItem = (i: QuoteItem) => ({ description: i.description, quantity: i.quantity, unit_price: i.unitPrice, tax_pct: i.taxPct, discount_pct: i.discountPct, line_total: i.lineTotal, product_id: i.productId ?? null, sku: i.sku ?? null });
 const toQuote = (r: Row): Quote => ({
   id: r.id, quoteNumber: r.quote_number, customerId: r.customer_id, clientName: r.client_name, clientPhone: r.client_phone, clientEmail: r.client_email,
   clientAddress: r.client_address, items: (r.items ?? []).map(toItem), subtotal: r.subtotal, taxTotal: r.tax_total, total: r.total,

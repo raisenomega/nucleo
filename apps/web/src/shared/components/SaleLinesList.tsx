@@ -1,10 +1,11 @@
 import { Boxes, ChevronRight } from "lucide-react";
 import { formatCurrency } from "@shared/lib/format";
-import type { InvoiceItem } from "@billing/domain/invoice.types";
 
-// Líneas de la factura. Las de producto (product_id) son clicables → drill-down a inventario (si canView).
-export function InvoiceLinesList({ items, canView, onLineClick }: {
-  items: readonly InvoiceItem[]; canView: boolean; onLineClick: (productId: string) => void;
+// Línea de venta genérica (factura o cotización). Las de producto (productId) son clicables → drill-down a inventario.
+export interface SaleLine { description: string; quantity: number; unitPrice: number; lineTotal: number; productId?: string | null; sku?: string | null; }
+
+export function SaleLinesList({ items, canView, onLineClick }: {
+  items: readonly SaleLine[]; canView: boolean; onLineClick: (productId: string) => void;
 }) {
   if (items.length === 0) return null;
   return (

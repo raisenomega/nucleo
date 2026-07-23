@@ -1,6 +1,7 @@
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Boxes } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { formatCurrency } from "@shared/lib/format";
+import { ProductSelect, type PickedProduct } from "@shared/components/ProductSelect";
 import type { QuoteItem } from "@quotes/domain/quote.types";
 
 const NEW: QuoteItem = { description: "", quantity: 1, unitPrice: 0, taxPct: 0, discountPct: 0, lineTotal: 0 };
@@ -19,6 +20,10 @@ export function QuoteItemsEditor({ items, onChange }: {
       return { ...m, lineTotal: line(m) };
     }));
   }
+  const addProduct = (p: PickedProduct) => {
+    const m: QuoteItem = { description: p.name, quantity: 1, unitPrice: p.price, taxPct: 0, discountPct: 0, lineTotal: 0, productId: p.id, sku: p.sku };
+    onChange([...items, { ...m, lineTotal: line(m) }]);
+  };
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
@@ -26,9 +31,13 @@ export function QuoteItemsEditor({ items, onChange }: {
         <button type="button" onClick={() => onChange([...items, NEW])}
           className="flex items-center gap-1 rounded bg-secondary px-2 py-1 text-xs font-body"><Plus className="h-3 w-3" /> {t("addItem")}</button>
       </div>
+      <ProductSelect onPick={addProduct} />
       {items.map((it, idx) => (
         <div key={idx} className="grid grid-cols-12 items-center gap-1">
-          <input value={it.description} onChange={(e) => set(idx, "description", e.target.value)} placeholder={t("description")} className={`${inp} col-span-4`} />
+          <div className="col-span-4">
+            {it.productId && <span className="mb-0.5 inline-flex items-center gap-1 rounded bg-green-500/10 px-1 text-[10px] font-bold text-green-600"><Boxes className="h-3 w-3" />{it.sku || "Producto"}</span>}
+            <input value={it.description} onChange={(e) => set(idx, "description", e.target.value)} placeholder={t("description")} className={inp} />
+          </div>
           <input type="number" value={it.quantity || ""} onChange={(e) => set(idx, "quantity", e.target.value)} placeholder={t("quantity")} className={`${inp} col-span-2`} />
           <input type="number" value={it.unitPrice || ""} onChange={(e) => set(idx, "unitPrice", e.target.value)} placeholder={t("unitPrice")} className={`${inp} col-span-2`} />
           <input type="number" value={it.taxPct || ""} onChange={(e) => set(idx, "taxPct", e.target.value)} placeholder={t("taxPct")} className={`${inp} col-span-1`} />
