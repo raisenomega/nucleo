@@ -1,5 +1,5 @@
 import { supabase } from "@shared/lib/supabase";
-import type { ActivityKind, LeadActivity, PendingFollowup } from "@crm/domain/lead-activity.types";
+import type { ActivityKind, LeadActivity, LeadCardMeta, PendingFollowup } from "@crm/domain/lead-activity.types";
 
 type Res = { ok: true } | { ok: false; error: string };
 type J = Record<string, unknown>;
@@ -24,6 +24,21 @@ export const supabaseLeadActivityRepository = {
     const { data } = await supabase.rpc("get_pending_followups");
     return jarr(data).map((r) => ({ activityId: r.activity_id as string, leadId: r.lead_id as string,
       contactName: (r.contact_name as string) ?? "—", body: (r.body as string) ?? "", dueDate: r.due_date as string, bucket: r.bucket as PendingFollowup["bucket"] }));
+  },
+  // Resumen batch para las cards del Kanban: última actividad + próxima tarea pendiente por lead (1 query).
+  async cardMeta(leadIds: string[]): Promise<Record<string, LeadCardMeta>> {
+    if (!leadIds.length) return {};
+    const { data } = await supabase.from("lead_activities").select("lead_id, kind, due_date, done_at, created_at").in("lead_id", leadIds);
+    const map: Record<string, LeadCardMeta> = {};
+    for (const r of ((data as unknown as J[] | null) ?? [])) {
+      const lid = r.lead_id as string;
+      const m = map[lid] ?? (map[lid] = { lastKind: null, lastAt: null, nextTaskDue: null });
+      const ca = r.created_at as string;
+      if (!m.lastAt || ca > m.lastAt) { m.lastAt = ca; m.lastKind = r.kind as ActivityKind; }
+      const due = r.due_date as string | null;
+      if (r.kind === "task" && !r.done_at && due && (!m.nextTaskDue || due < m.nextTaskDue)) m.nextTaskDue = due;
+    }
+    return map;
   },
   // Registro automático best-effort: nunca lanza (no debe bloquear la acción principal — email/status/contacto).
   async logSilently(leadId: string, kind: ActivityKind, body: string): Promise<void> {

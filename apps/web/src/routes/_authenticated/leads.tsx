@@ -7,7 +7,7 @@ import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { useLead } from "@crm/application/useLead.hook";
 import { supabaseLeadRepository } from "@crm/infrastructure/supabase-lead.repository";
 import { LeadForm } from "@crm/presentation/LeadForm";
-import { LeadTable } from "@crm/presentation/LeadTable";
+import { LeadsBoard } from "@crm/presentation/LeadsBoard";
 import { LeadDetail } from "@crm/presentation/LeadDetail";
 import { LeadFollowupsWidget } from "@crm/presentation/LeadFollowupsWidget";
 import { supabaseLeadActivityRepository as actRepo } from "@crm/infrastructure/supabase-lead-activity.repository";
@@ -42,6 +42,7 @@ function LeadsPage() {
     if (prev && prev.status !== d.status) void actRepo.logSilently(prev.id, "note", `Estado: ${prev.status} → ${d.status}`);  // auto-log best-effort
     setEditing(null);
   }
+  const onMove = (l: Lead, status: string) => { void update(l.id, { ...toForm(l), status }); if (l.status !== status) void actRepo.logSilently(l.id, "note", `Estado: ${l.status} → ${status}`); };
 
   if (!can("leads", "view")) return <Navigate to="/dashboard" />;
   const viewLead = leads.find((l) => l.id === viewing);
@@ -60,8 +61,8 @@ function LeadsPage() {
           canSubmit={editing === "new" ? can("leads", "create") : can("leads", "edit")} />
       )}
       <LeadFollowupsWidget onOpenLead={setViewing} />
-      <LeadTable rows={leads} onView={setViewing} onEdit={can("leads", "edit") ? setEditing : undefined}
-        onDelete={can("leads", "delete") ? (id) => { if (window.confirm(`${t("delete")}?`)) void remove(id); } : undefined} />
+      <LeadsBoard leads={leads} onView={setViewing} onEdit={can("leads", "edit") ? setEditing : undefined}
+        onDelete={can("leads", "delete") ? (id) => { if (window.confirm(`${t("delete")}?`)) void remove(id); } : undefined} onMove={onMove} />
       {viewLead && (
         <LeadDetail lead={viewLead} onClose={() => setViewing(null)}
           onEdit={() => { setEditing(viewLead.id); setViewing(null); }}

@@ -10,3 +10,6 @@ export interface PendingFollowup {
   activityId: string; leadId: string; contactName: string; body: string;
   dueDate: string; bucket: "overdue" | "today" | "week";
 }
+
+// Ola 2.6a · resumen para la card del Kanban (última actividad + próxima tarea pendiente).
+export interface LeadCardMeta { lastKind: ActivityKind | null; lastAt: string | null; nextTaskDue: string | null }
