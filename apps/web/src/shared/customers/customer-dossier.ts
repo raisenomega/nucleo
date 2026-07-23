@@ -18,7 +18,7 @@ export async function loadDossier(tenantId: string, email: string, phone: string
   const [o, i, rs, rv] = await Promise.all([
     supabase.from("tenant_landing_orders").select("order_number, total, status, created_at").eq("tenant_id", tenantId).eq("customer_email", email).order("created_at", { ascending: false }).limit(10),
     supabase.from("invoices").select("invoice_number, total, status, due_date").eq("tenant_id", tenantId).eq("email", email).order("created_at", { ascending: false }),
-    supabase.from("route_stops").select("service_type, status, completed_at, phone").eq("tenant_id", tenantId).is("deleted_at", null),
+    supabase.from("route_stops").select("service_type, status, completed_at, phone, customer_id").eq("tenant_id", tenantId).is("deleted_at", null),
     supabase.from("customer_reviews").select("id, rating, comment, reply, created_at").eq("tenant_id", tenantId).eq("customer_profile_id", profileId).order("created_at", { ascending: false }),
   ]);
   const tk = userId ? await supabase.from("support_tickets").select("subject, status, created_at").eq("tenant_id", tenantId).eq("created_by", userId).order("created_at", { ascending: false }) : { data: [] as Row[] };
@@ -26,7 +26,7 @@ export async function loadDossier(tenantId: string, email: string, phone: string
   return {
     orders: rows(o).map((r) => ({ orderNumber: s(r.order_number), total: n(r.total), status: s(r.status), createdAt: s(r.created_at) })),
     invoices: rows(i).map((r) => ({ invoiceNumber: s(r.invoice_number), total: n(r.total), status: s(r.status), dueDate: (r.due_date as string) ?? null })),
-    services: rows(rs).filter((r) => dg && digitsOf(s(r.phone)) === dg).map((r) => ({ serviceType: s(r.service_type), status: s(r.status), completedAt: (r.completed_at as string) ?? null })),
+    services: rows(rs).filter((r) => r.customer_id === profileId || (!r.customer_id && dg && digitsOf(s(r.phone)) === dg)).map((r) => ({ serviceType: s(r.service_type), status: s(r.status), completedAt: (r.completed_at as string) ?? null })),
     tickets: rows(tk).map((r) => ({ subject: s(r.subject), status: s(r.status), createdAt: s(r.created_at) })),
     reviews: rows(rv).map((r) => ({ id: r.id as string, rating: n(r.rating), comment: s(r.comment), reply: s(r.reply), createdAt: s(r.created_at) })),
   };

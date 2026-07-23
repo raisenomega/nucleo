@@ -1,8 +1,9 @@
 import { useI18n } from "@shared/i18n";
 import { formatCurrency } from "@shared/lib/format";
+import { LinkedCustomerBadge } from "@shared/components/LinkedCustomerBadge";
 import type { RouteStop } from "@operations/domain/route.types";
 
-// Sección Cliente del detalle de parada: datos + monto destacado.
+// Sección Cliente del detalle de parada: datos + monto destacado. Link al maestro si la parada está vinculada.
 export function StopClientSection({ stop }: { stop: RouteStop }) {
   const { t } = useI18n();
   const row = (l: string, v: string) => (
@@ -10,7 +11,7 @@ export function StopClientSection({ stop }: { stop: RouteStop }) {
   );
   return (
     <div className="space-y-2 rounded-xl border border-border bg-card p-4 text-sm">
-      <p className="text-lg font-semibold">{stop.clientName}</p>
+      <LinkedCustomerBadge customerId={stop.customerId} name={stop.clientName} className="text-lg font-semibold" />
       {stop.phone && <div className="flex justify-between gap-2"><span className="text-muted-foreground">{t("phone")}</span>
         <a href={`tel:${stop.phone}`} className="font-bold text-foreground">{stop.phone}</a></div>}
       {row(t("address"), `${stop.address}${stop.city ? ", " + stop.city : ""}`)}

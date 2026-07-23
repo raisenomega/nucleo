@@ -1,22 +1,27 @@
-import { Trash2 } from "lucide-react";
+import { Trash2, UserCheck, X } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { CategoryPicker } from "@shared/components/CategoryPicker";
+import { CustomerSelect, type PickedCustomer } from "@shared/customers/CustomerSelect";
 import type { EditableStop } from "@operations/domain/route.types";
 
-export const emptyStop = (): EditableStop => ({ clientName: "", address: "", city: "", serviceType: "", scheduledTime: "", estimatedAmount: 0, notes: "", phone: "" });
+export const emptyStop = (): EditableStop => ({ clientName: "", address: "", city: "", serviceType: "", scheduledTime: "", estimatedAmount: 0, notes: "", phone: "", customerId: null });
 
-// Editor en memoria de paradas (crear o editar). Conserva el id de las existentes. service_type = categorías.
+// Editor en memoria de paradas. Selector de cliente del maestro (autocompleta + enlaza); texto libre de fallback.
 export function RouteStopsEditor({ stops, onChange }: { stops: EditableStop[]; onChange: (s: EditableStop[]) => void }) {
   const { t } = useI18n();
   const fld = "w-full rounded-lg border border-border bg-background p-2 text-sm";
   const lbl = "text-xs font-bold text-muted-foreground";
-  const set = (i: number, k: keyof EditableStop, v: string | number) => onChange(stops.map((s, idx) => idx === i ? { ...s, [k]: v } : s));
+  const set = (i: number, k: keyof EditableStop, v: string | number | null) => onChange(stops.map((s, idx) => idx === i ? { ...s, [k]: v } : s));
+  const pick = (i: number, c: PickedCustomer) => onChange(stops.map((s, idx) => idx === i ? { ...s, customerId: c.id, clientName: c.name, phone: c.phone, address: c.address } : s));
   return (
     <div className="space-y-2">
       {stops.map((s, i) => (
         <div key={i} className="space-y-2 rounded-lg border border-border bg-card p-3">
           <div className="flex items-center justify-between text-xs"><span className="font-bold text-foreground">#{i + 1}</span>
             <button type="button" onClick={() => onChange(stops.filter((_, x) => x !== i))} className="text-destructive"><Trash2 className="h-4 w-4" /></button></div>
+          <CustomerSelect onPick={(c) => pick(i, c)} />
+          {s.customerId && <p className="flex items-center gap-1 text-xs font-bold text-green-600"><UserCheck className="h-3.5 w-3.5" />Cliente vinculado
+            <button type="button" onClick={() => set(i, "customerId", null)} className="inline-flex items-center text-muted-foreground hover:text-foreground"><X className="h-3 w-3" /></button></p>}
           <div className="grid grid-cols-2 gap-2">
             <input value={s.clientName} onChange={(e) => set(i, "clientName", e.target.value)} placeholder={t("contactName")} className={fld} />
             <input value={s.phone} onChange={(e) => set(i, "phone", e.target.value)} placeholder={t("phone")} className={fld} />

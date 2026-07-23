@@ -32,7 +32,7 @@ export const supabaseRouteRepository: IRouteRepository = {
       p_date: d.routeDate, p_assigned_to: d.assignedTo, p_notes: d.notes,
       p_stops: stops.map((s) => ({
         client_name: s.clientName, address: s.address, city: s.city || null, service_type: s.serviceType,
-        scheduled_time: s.scheduledTime, estimated_amount: s.estimatedAmount, notes: s.notes || null, phone: s.phone || null,
+        scheduled_time: s.scheduledTime, estimated_amount: s.estimatedAmount, notes: s.notes || null, phone: s.phone || null, customer_id: s.customerId || null,
       })),
     })).error;
     // Vehículo asignado: update directo post-RPC (no toca upsert_route). Casa por día+empleado (unique index).

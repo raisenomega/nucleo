@@ -12,6 +12,7 @@ export interface RouteStop {
   readonly id: string; readonly routeId: string; readonly stopOrder: number;
   readonly clientName: string; readonly address: string; readonly city: string | null;
   readonly serviceType: string; readonly scheduledTime: string; readonly phone: string | null;
+  readonly customerId: string | null;
   readonly estimatedAmount: number; readonly actualAmount: number | null;
   readonly paymentMethodId: string | null; readonly status: string;
   readonly notes: string | null; readonly completedAt: string | null;
@@ -24,7 +25,7 @@ export interface RouteStop {
 export interface RouteFormData { routeDate: string; assignedTo: string; notes: string; assetId: string; }
 export interface StopFormData {
   clientName: string; address: string; city: string; serviceType: string;
-  scheduledTime: string; estimatedAmount: number; notes: string; phone: string;
+  scheduledTime: string; estimatedAmount: number; notes: string; phone: string; customerId: string | null;
 }
 export interface CompletePayload { amount: number; paymentMethodId: string; received: number | null; change: number | null; evidence: string[]; }
 export type EditableStop = StopFormData & { id?: string };
