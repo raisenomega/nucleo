@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { getCampaignAdmin, upsertPage, publishPage } from "@campaigns/infrastructure/campaigns-admin.repository";
 import { CampaignBlockList } from "@campaigns/presentation/CampaignBlockList";
+import { CampaignPerformance } from "@campaigns/presentation/CampaignPerformance";
 
 type Meta = { name: string; slug: string; seoTitle: string; seoDescription: string };
 const EMPTY: Meta = { name: "", slug: "", seoTitle: "", seoDescription: "" };
@@ -12,6 +13,7 @@ export function CampaignEditor({ id }: { id: string }) {
   const isNew = id === "new";
   const [pageId, setPageId] = useState<string | null>(isNew ? null : id);
   const [published, setPublished] = useState(false);
+  const [tab, setTab] = useState<"content" | "perf">("content");
   const [m, setM] = useState<Meta>(EMPTY);
   const load = useCallback(async () => {
     if (isNew) return;
@@ -42,7 +44,15 @@ export function CampaignEditor({ id }: { id: string }) {
         <label className="text-xs text-muted-foreground md:col-span-2">SEO descripción<input className={fld} value={m.seoDescription} onChange={(e) => setM({ ...m, seoDescription: e.target.value })} /></label>
         <button type="button" onClick={() => void save()} className="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground md:col-span-2">Guardar metadata</button>
       </div>
-      {pageId && <CampaignBlockList pageId={pageId} />}
+      {pageId && (
+        <>
+          <div className="flex gap-1">
+            <button type="button" onClick={() => setTab("content")} className={`rounded-lg px-3 py-1.5 text-sm font-bold ${tab === "content" ? "bg-primary text-primary-foreground" : "bg-secondary"}`}>Contenido</button>
+            <button type="button" onClick={() => setTab("perf")} className={`rounded-lg px-3 py-1.5 text-sm font-bold ${tab === "perf" ? "bg-primary text-primary-foreground" : "bg-secondary"}`}>Rendimiento</button>
+          </div>
+          {tab === "content" ? <CampaignBlockList pageId={pageId} /> : <CampaignPerformance pageId={pageId} />}
+        </>
+      )}
     </div>
   );
 }

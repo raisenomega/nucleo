@@ -9,6 +9,7 @@ export async function listCampaignPages(): Promise<CampaignListItem[]> {
   return (Array.isArray(data) ? (data as J[]) : []).map((p) => ({
     id: p.id as string, name: p.name as string, slug: p.slug as string,
     isPublished: p.is_published === true, updatedAt: p.updated_at as string, blocks: Number(p.blocks ?? 0),
+    visits: Number(p.visits ?? 0), leads: Number(p.leads ?? 0),
   }));
 }
 

@@ -48,4 +48,6 @@ export interface CampaignListItem {
   isPublished: boolean;
   updatedAt: string;
   blocks: number;
+  visits: number; // R4 · visitas últimos 30d
+  leads: number;  // R4 · leads totales de la campaña
 }

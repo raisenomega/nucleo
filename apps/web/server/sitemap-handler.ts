@@ -25,6 +25,20 @@ async function legalUrls(): Promise<string> {
   } catch { return ""; } // sin DB, el sitemap sigue siendo válido con las rutas estáticas
 }
 
+// Campañas publicadas del SENTINELA (…00a1 = plataforma). RLS pública de lectura solo para publicadas → anon key.
+// Sitemap por-tenant se difiere (el tráfico de ads llega por el anuncio, no por búsqueda) — solo el sentinela acá.
+async function campaignUrls(): Promise<string> {
+  const base = process.env.VITE_SUPABASE_URL, key = process.env.VITE_SUPABASE_ANON_KEY;
+  try {
+    const res = await fetch(`${base}/rest/v1/campaign_pages?select=slug,updated_at&tenant_id=eq.00000000-0000-0000-0000-0000000000a1&is_published=eq.true&order=slug`, {
+      headers: { apikey: key as string, authorization: `Bearer ${key}` },
+    });
+    const rows = await res.json() as { slug: string; updated_at: string | null }[];
+    if (!Array.isArray(rows)) return "";
+    return rows.map((r) => "\n" + url(`${BASE}/c/${r.slug}`, "monthly", "0.6", r.updated_at?.slice(0, 10))).join("");
+  } catch { return ""; }
+}
+
 // sitemap.xml solo para el dominio comercial. En un dominio de tenant devuelve 404 a propósito: su robots.txt
 // tampoco lo referencia, así que nadie lo pide — y así jamás se le atribuyen URLs de NÚCLEO a un tenant.
 export default defineHandler(async (event) => {
@@ -34,7 +48,7 @@ export default defineHandler(async (event) => {
   const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${url(`${BASE}/`, "weekly", "1.0", undefined, true)}
-${url(`${BASE}/demo`, "monthly", "0.8")}${await legalUrls()}
+${url(`${BASE}/demo`, "monthly", "0.8")}${await campaignUrls()}${await legalUrls()}
 </urlset>
 `;
   return new Response(body, {

@@ -4,30 +4,40 @@ import { getCampaignPage } from "@campaigns/infrastructure/campaigns-public.repo
 import { CampaignPageView } from "@campaigns/presentation/CampaignPageView";
 import type { CampaignPageData } from "@campaigns/domain/campaign.types";
 
-// Head white-label: se arma desde los seo_* de la página, SIN marca NÚCLEO (una campaña de tenant no debe emitir
-// nada de NÚCLEO en su dominio). Canonical/OG completos llegan en R4 (SEO); R1 entrega title+description+og básicos.
-function campaignHead(data: CampaignPageData | null) {
-  if (!data) return {};
-  const p = data.page; const title = p.seoTitle ?? p.name; const desc = p.seoDescription ?? "";
+type LD = { data: CampaignPageData | null; preview: boolean; slug: string; host: string };
+
+// og:image cae al fondo del hero si no hay og_image_url propio.
+function heroImage(d: CampaignPageData): string {
+  const bg = d.blocks.find((b) => b.blockType === "hero")?.contentEs?.background_image_url;
+  return typeof bg === "string" ? bg : "";
+}
+
+// Head white-label (SIN marca NÚCLEO). robots: publicada→index; preview o borrador→noindex (nunca indexar borradores).
+function campaignHead(ld: LD | undefined) {
+  if (!ld?.data) return {};
+  const p = ld.data.page; const title = p.seoTitle ?? p.name; const desc = p.seoDescription ?? "";
+  const canonical = `https://${ld.host}/c/${p.slug}`; const img = p.ogImageUrl || heroImage(ld.data);
+  const robots = ld.preview || !p.isPublished ? "noindex, nofollow" : "index, follow";
   const meta: Record<string, string>[] = [
-    { title }, { name: "description", content: desc },
+    { title }, { name: "description", content: desc }, { name: "robots", content: robots },
+    { property: "og:type", content: "website" }, { property: "og:url", content: canonical },
     { property: "og:title", content: title }, { property: "og:description", content: desc },
-    { property: "og:type", content: "website" }, { name: "robots", content: p.isPublished ? "index, follow" : "noindex" },
+    { name: "twitter:card", content: "summary_large_image" }, { name: "twitter:title", content: title }, { name: "twitter:description", content: desc },
   ];
-  if (p.ogImageUrl) meta.push({ property: "og:image", content: p.ogImageUrl });
-  return { meta };
+  if (img) { meta.push({ property: "og:image", content: img }); meta.push({ name: "twitter:image", content: img }); }
+  return { meta, links: [{ rel: "canonical", href: canonical }] };
 }
 
 // Ruta pública SSR ACOTADA: el loader corre server-side y solo lee page+blocks+tema (no toca PublicLandingRoot).
 export const Route = createFileRoute("/c/$slug")({
   validateSearch: (s: Record<string, unknown>): { preview: boolean } => ({ preview: s.preview === true || s.preview === "true" }),
   loaderDeps: ({ search }) => ({ preview: search.preview }),
-  loader: async ({ params, deps }) => {
+  loader: async ({ params, deps }): Promise<LD> => {
     const data = await getCampaignPage(currentHost(), params.slug, deps.preview);
-    if (!data && !deps.preview) throw notFound(); // publicada inexistente → 404 real (crawlers)
-    return { data, preview: deps.preview, slug: params.slug };
+    if (!data && !deps.preview) throw notFound();
+    return { data, preview: deps.preview, slug: params.slug, host: currentHost() };
   },
-  head: ({ loaderData }) => campaignHead(loaderData?.data ?? null),
+  head: ({ loaderData }) => campaignHead(loaderData),
   component: Page,
 });
 
