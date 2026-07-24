@@ -23,6 +23,16 @@ export type AssetFormData = Omit<Asset, "id" | "assignedToName">;
 // 2.7a · depreciación
 export interface AssetBookValue { assetId: string; purchasePrice: number; salvageValue: number; accumulated: number; bookValue: number; currentValue: number | null; monthly: number; monthsRemaining: number }
 export interface DepreciationEntry { periodYear: number; periodMonth: number; amount: number; bookValueAfter: number }
+
+// 2.7b · mantenimiento preventivo
+export interface MaintenancePlan {
+  id: string; assetId: string; name: string; recurrenceType: "time" | "meter";
+  intervalDays: number | null; intervalKm: number | null; lastDoneDate: string | null; lastDoneOdometer: number | null;
+  alertDaysBefore: number; alertKmBefore: number; isActive: boolean; notes: string;
+  nextDueDate: string | null; daysUntil: number | null; currentOdometer: number | null; kmUntil: number | null;
+  status: "ok" | "due_soon" | "overdue";
+}
+export type PlanFormData = Pick<MaintenancePlan, "id" | "assetId" | "name" | "recurrenceType" | "intervalDays" | "intervalKm" | "lastDoneDate" | "lastDoneOdometer" | "alertDaysBefore" | "alertKmBefore" | "isActive" | "notes">;
 export interface ProfileRef { readonly id: string; readonly name: string; }
 export interface AssetRoute { readonly id: string; readonly routeDate: string; readonly status: string; readonly stopsCount: number; }
 export interface GpsLog { readonly latitude: number; readonly longitude: number; readonly speed: number | null; readonly accuracy: number | null; readonly recordedAt: string; readonly custodyLogId: string | null; }
