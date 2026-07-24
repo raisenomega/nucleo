@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { createFileRoute, Navigate } from "@tanstack/react-router";
-import { Plus, FileText, Ruler, ScanBarcode } from "lucide-react";
+import { createFileRoute, Navigate, Link } from "@tanstack/react-router";
+import { Plus, FileText, Ruler, ScanBarcode, ClipboardCheck } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { useSession } from "@shared/providers/SessionProvider";
@@ -56,6 +56,7 @@ function InventoryPage() {
         <h1 className="font-display text-xl font-bold text-foreground md:text-3xl">{t("inventory")}</h1>
         <div className="flex items-center gap-2">
           <button type="button" onClick={() => { setScannedId(null); setScan(true); }} className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold" title={t("scanBarcode")}><ScanBarcode className="h-4 w-4" /> <span className="hidden md:inline">{t("scanBarcode")}</span></button>
+          <Link to="/inventory/counts" className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold" title={t("cyclicCount")}><ClipboardCheck className="h-4 w-4" /> <span className="hidden md:inline">{t("cyclicCount")}</span></Link>
           {can("inventory", "edit") && <button type="button" onClick={() => setManageUom(true)} className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold" title={t("manageUnits")}><Ruler className="h-4 w-4" /> <span className="hidden md:inline">{t("manageUnits")}</span></button>}
           <button type="button" disabled={pdf.generating || !items.length} onClick={() => void pdf.generatePdf("report", null, inventoryReportBody(items, movs, sup.items, now, t))} className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold disabled:opacity-50"><FileText className="h-4 w-4" /> {pdf.generating ? t("generatingPdf") : t("inventoryReport")}</button>
           {can("inventory", "create") && <button type="button" onClick={() => { setScanBc(undefined); setEditing("new"); }} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-body font-bold"><Plus className="h-4 w-4" /> {t("newItem")}</button>}

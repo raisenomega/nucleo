@@ -41,6 +41,10 @@ export const esInventory = {
   count: "Conteo", volume: "Volumen", weight: "Peso", length: "Longitud", area: "Área", time: "Tiempo",
   barcode: "Código de barras", scanBarcode: "Escanear código", generateBarcode: "Generar", scanOrEnterBarcode: "Escanea o ingresa el código de barras",
   cameraPermissionDenied: "No se pudo acceder a la cámara. Revisa los permisos o ingresa el código manualmente.", pointCameraAtBarcode: "Apunta la cámara al código de barras", noBarcode: "Sin código de barras",
+  cyclicCount: "Conteo cíclico", createCount: "Crear conteo", countNumber: "Número", countType: "Tipo de conteo", fullCount: "Completo", partialCount: "Selección manual", categoryCount: "Por categoría", lowStockCount: "Bajo stock",
+  assignTo: "Asignar a", blindCount: "Conteo ciego", blindCountExplain: "El contador no verá el stock esperado", expectedQty: "Esperado", countedQty: "Contado", variance: "Diferencia", financialImpact: "Impacto financiero",
+  itemsCounted: "Ítems contados", itemsWithVariance: "Con diferencia", countProgress: "Progreso", recordCount: "Registrar conteo", approveAll: "Aprobar todas", rejectAll: "Rechazar todas", approveSelected: "Aprobar seleccionadas", rejectSelected: "Rechazar seleccionadas", applyAdjustments: "Aplicar ajustes",
+  csDraft: "Borrador", csInProgress: "En progreso", csCompleted: "Completado", csApproved: "Aprobado", csApplied: "Aplicado", csCancelled: "Cancelado", view: "Ver",
   itemPhotos: "Fotos del artículo (máx 3)", savePhotoHint: "Guarda el artículo primero para agregar fotos.",
   inventoryItems: "Artículos",
 } satisfies Partial<Record<TranslationKey, string>>;

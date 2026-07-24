@@ -41,6 +41,10 @@ export const enInventory = {
   count: "Count", volume: "Volume", weight: "Weight", length: "Length", area: "Area", time: "Time",
   barcode: "Barcode", scanBarcode: "Scan code", generateBarcode: "Generate", scanOrEnterBarcode: "Scan or enter the barcode",
   cameraPermissionDenied: "Couldn't access the camera. Check permissions or enter the code manually.", pointCameraAtBarcode: "Point the camera at the barcode", noBarcode: "No barcode",
+  cyclicCount: "Cyclic count", createCount: "Create count", countNumber: "Number", countType: "Count type", fullCount: "Full", partialCount: "Manual selection", categoryCount: "By category", lowStockCount: "Low stock",
+  assignTo: "Assign to", blindCount: "Blind count", blindCountExplain: "The counter won't see the expected stock", expectedQty: "Expected", countedQty: "Counted", variance: "Variance", financialImpact: "Financial impact",
+  itemsCounted: "Items counted", itemsWithVariance: "With variance", countProgress: "Progress", recordCount: "Record count", approveAll: "Approve all", rejectAll: "Reject all", approveSelected: "Approve selected", rejectSelected: "Reject selected", applyAdjustments: "Apply adjustments",
+  csDraft: "Draft", csInProgress: "In progress", csCompleted: "Completed", csApproved: "Approved", csApplied: "Applied", csCancelled: "Cancelled", view: "View",
   itemPhotos: "Item photos (max 3)", savePhotoHint: "Save the item first to add photos.",
   inventoryItems: "Items",
 } satisfies Partial<Record<TranslationKey, string>>;
