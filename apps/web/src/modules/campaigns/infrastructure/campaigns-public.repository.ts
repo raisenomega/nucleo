@@ -32,3 +32,10 @@ export async function getCampaignPage(host: string, slug: string, preview: boole
   const { data } = await supabase.rpc("_public_get_campaign_page", { _host: host, _slug: slug, _preview: preview });
   return data ? mapPage(data as J) : null;
 }
+
+// R2 · submit del bloque Formulario. Ramifica por host en el RPC (tenant→leads / plataforma→marketing_leads).
+export async function createCampaignLead(host: string, payload: J): Promise<{ ok: boolean; code?: string }> {
+  const { data } = await supabase.rpc("_campaign_create_lead", { _host: host, _payload: payload });
+  const r = (data ?? {}) as J;
+  return r.status === "ok" ? { ok: true } : { ok: false, code: (r.code as string) ?? "error" };
+}

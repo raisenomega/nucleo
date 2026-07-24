@@ -37,6 +37,8 @@ export interface Lead {
   readonly customFields: readonly { readonly label: string; readonly value: string }[];
   readonly items: readonly LeadItem[];
   readonly customerId: string | null;   // 2.6d · enlace al maestro (solo enlaza, nunca crea)
+  readonly campaignPageId: string | null;               // R2 · si vino de una landing de campaña
+  readonly attribution: Record<string, string> | null;  // R2 · utm_* + fbclid/gclid + referrer del anuncio
 }
 
 export interface LeadFormData {

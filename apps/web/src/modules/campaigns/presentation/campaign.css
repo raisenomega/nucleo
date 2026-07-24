@@ -42,6 +42,20 @@
 .camp-cta-title { font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 700; color: var(--camp-fg); }
 .camp-cta-sec .camp-btn { background: var(--camp-accent); }
 
+.camp-form { max-width: 34rem; margin: 0 auto; padding: 3.5rem 1.5rem; }
+.camp-form-title { font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 700; color: var(--camp-fg); text-align: center; }
+.camp-form-sub { margin-top: 0.5rem; color: var(--camp-muted); text-align: center; }
+.camp-form-body { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.5rem; }
+.camp-input { width: 100%; padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1px solid var(--camp-muted);
+  background: var(--camp-surface); color: var(--camp-fg); font-size: 0.95rem; }
+.camp-input:focus { outline: 2px solid var(--camp-primary); outline-offset: 1px; }
+.camp-form-body .camp-btn { margin-top: 0.5rem; width: 100%; text-align: center; border: 0; cursor: pointer; }
+.camp-form-body .camp-btn:disabled { opacity: 0.6; cursor: default; }
+.camp-form-ok { text-align: center; font-size: 1.15rem; font-weight: 700; color: var(--camp-fg); }
+.camp-form-err { color: #dc2626; font-size: 0.85rem; text-align: center; }
+.camp-consent { color: var(--camp-muted); font-size: 0.72rem; text-align: center; }
+.camp-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+
 .camp-empty { display: flex; align-items: center; justify-content: center; padding: 6rem 1.5rem; color: var(--camp-muted); }
 .camp-preview-flag { position: sticky; top: 0; z-index: 10; text-align: center; padding: 0.5rem;
   background: var(--camp-accent); color: var(--camp-on-primary); font-size: 0.8rem; font-weight: 700; }

@@ -12,6 +12,7 @@ import { LeadServiceRequestBlock } from "@crm/presentation/LeadServiceRequestBlo
 import { LeadActivityTimeline } from "@crm/presentation/LeadActivityTimeline";
 import { LinkedCustomerBadge } from "@shared/components/LinkedCustomerBadge";
 import { LeadSourceBadge } from "@shared/components/LeadSourceBadge";
+import { AttributionSection } from "@campaigns/presentation/AttributionSection";
 import type { Lead } from "@crm/domain/lead.types";
 
 export function LeadDetail({ lead, onClose, onEdit, onDuplicate, onArchive }: {
@@ -39,6 +40,7 @@ export function LeadDetail({ lead, onClose, onEdit, onDuplicate, onArchive }: {
         <div className="space-y-3 p-4 md:p-6">
           <LeadDetailActions leadId={lead.id} onEdit={onEdit} onDuplicate={onDuplicate} onArchive={onArchive} />
           {lead.customerId && <LinkedCustomerBadge customerId={lead.customerId} name="Cliente en el maestro ↗" className="text-sm font-bold text-green-600" />}
+          <AttributionSection attribution={lead.attribution} fromCampaign={!!lead.campaignPageId} />
           <dl className="space-y-1 font-body text-sm">
             {row("phone", lead.phone)}{row("email", lead.email)}
             {row("serviceRequested", lead.serviceTypeLabel || lead.serviceRequested)}

@@ -17,6 +17,7 @@ export interface MarketingLead {
   businessType: string | null; message: string | null; sourceUrl: string | null;
   utmSource: string | null; utmMedium: string | null; utmCampaign: string | null;
   status: LeadStatus; temperature: LeadTemperature; notes: string | null; createdAt: string;
+  campaignPageId: string | null; attribution: Record<string, string> | null; // R2 · lead de landing de campaña
 }
 export interface LeadSubmit { customerName: string; customerEmail: string; customerPhone: string; company: string; message: string; leadType: "business" | "partner"; lang: string }
 export interface LeadEditFields { customerName: string; customerEmail: string; customerPhone: string; company: string; whatsappPhone: string }

@@ -5,7 +5,7 @@ import { BlockDialog } from "@campaigns/presentation/BlockDialog";
 import type { CampaignBlock, BlockType } from "@campaigns/domain/campaign.types";
 
 // R1: solo se pueden AGREGAR los 3 tipos implementados. Reorden con ↑↓ (mismo patrón del CMS comercial).
-const ADDABLE: { type: BlockType; label: string }[] = [{ type: "hero", label: "Hero" }, { type: "text", label: "Texto" }, { type: "cta_banner", label: "CTA" }];
+const ADDABLE: { type: BlockType; label: string }[] = [{ type: "hero", label: "Hero" }, { type: "text", label: "Texto" }, { type: "cta_banner", label: "CTA" }, { type: "form", label: "Formulario" }];
 
 export function CampaignBlockList({ pageId }: { pageId: string }) {
   const [blocks, setBlocks] = useState<CampaignBlock[]>([]);

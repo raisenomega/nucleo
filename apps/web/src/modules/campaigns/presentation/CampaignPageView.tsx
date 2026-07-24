@@ -19,7 +19,7 @@ export function CampaignPageView({ initial, preview, slug }: { initial: Campaign
   return (
     <div className="camp-root" style={vars} data-theme={variant}>
       {preview && !data.page.isPublished && <div className="camp-preview-flag">Vista previa · borrador</div>}
-      {data.blocks.map((blk) => <BlockRenderer key={blk.id} block={blk} lang={data.page.lang} />)}
+      {data.blocks.map((blk) => <BlockRenderer key={blk.id} block={blk} lang={data.page.lang} pageId={data.page.id} />)}
     </div>
   );
 }

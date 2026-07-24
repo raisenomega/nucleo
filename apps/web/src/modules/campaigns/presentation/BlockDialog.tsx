@@ -7,6 +7,7 @@ const FIELDS: Record<string, { key: string; label: string; area?: boolean }[]> =
   hero: [{ key: "headline", label: "Headline" }, { key: "subtitle", label: "Subtítulo" }, { key: "cta_label", label: "CTA texto" }, { key: "cta_action", label: "CTA acción (#form o URL)" }, { key: "background_image_url", label: "Imagen de fondo (URL)" }],
   text: [{ key: "content", label: "Texto (una línea = un párrafo)", area: true }],
   cta_banner: [{ key: "headline", label: "Headline" }, { key: "cta_label", label: "CTA texto" }, { key: "cta_action", label: "CTA acción" }],
+  form: [{ key: "title", label: "Título" }, { key: "subtitle", label: "Subtítulo" }, { key: "fields", label: "Campos (coma: name,email,phone,company,message)" }, { key: "cta_label", label: "Botón" }, { key: "success_message", label: "Mensaje de éxito" }, { key: "consent_text", label: "Consentimiento" }, { key: "redirect_url", label: "Redirect tras enviar (opcional)" }],
 };
 
 export function BlockDialog({ block, pageId, onClose, onSaved }: { block: CampaignBlock; pageId: string; onClose: () => void; onSaved: () => void }) {

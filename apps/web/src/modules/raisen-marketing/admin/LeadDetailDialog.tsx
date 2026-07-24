@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { LEAD_STATUSES, STATUS_LABELS, TEMPERATURES, TEMP_LABELS } from "@raisen-marketing/admin/lead-constants";
+import { AttributionSection } from "@campaigns/presentation/AttributionSection";
 import type { MarketingLead, LeadStatus, LeadTemperature } from "@raisen-marketing/data/lead-form.types";
 
 const F = "w-full rounded-lg border border-border bg-background p-2 text-sm text-foreground";
@@ -27,6 +28,7 @@ export function LeadDetailDialog({ lead, onClose, onSave }: { lead: MarketingLea
           <Field k="Origen" v={lead.sourceUrl} />
           <Field k="Fecha" v={lead.createdAt.replace("T", " ").slice(0, 16)} />
         </div>
+        <AttributionSection attribution={lead.attribution} fromCampaign={!!lead.campaignPageId} />
         <div className="grid grid-cols-2 gap-2">
           <label className="text-sm text-muted-foreground">Status<select value={status} onChange={(e) => setStatus(e.target.value as LeadStatus)} className={F}>{LEAD_STATUSES.map((s) => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}</select></label>
           <label className="text-sm text-muted-foreground">Temperatura<select value={temperature} onChange={(e) => setTemp(e.target.value as LeadTemperature)} className={F}>{TEMPERATURES.map((t) => <option key={t} value={t}>{TEMP_LABELS[t]}</option>)}</select></label>
