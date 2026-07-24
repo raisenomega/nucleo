@@ -4,23 +4,17 @@ export type Result<T, E> =
   | { readonly ok: false; readonly error: E };
 
 export interface InventoryItem {
-  readonly id: string;
-  readonly tenantId: string;
-  readonly name: string;
-  readonly stock: number;
-  readonly unitCost: number;
-  readonly minStock: number;
-  readonly sku: string;
-  readonly avgCost: number;
-  readonly supplierName: string;
-  readonly supplierId: string | null;
-  readonly landingProductId: string | null;
-  readonly lastRestockDate: string | null;
+  readonly id: string; readonly tenantId: string; readonly name: string;
+  readonly stock: number; readonly unitCost: number; readonly minStock: number;
+  readonly sku: string; readonly avgCost: number;
+  readonly supplierName: string; readonly supplierId: string | null;
+  readonly landingProductId: string | null; readonly lastRestockDate: string | null;
   readonly warehouseZone: string; readonly aisle: string;
   readonly shelf: string; readonly bin: string;
   readonly reorderPoint: number | null; readonly reorderQty: number | null;
   readonly photoUrls: readonly string[];
   readonly categoryId: string | null; readonly categoryName: string | null;
+  readonly unitOfMeasureId: string | null; readonly unitOfMeasureAbbreviation: string | null; readonly unitOfMeasureName: string | null;
 }
 
 export interface TransferData { readonly qty: number; readonly zone: string; readonly aisle: string; readonly shelf: string; readonly bin: string; readonly notes: string; }
@@ -38,7 +32,7 @@ export interface InventoryFormData {
   readonly shelf: string;
   readonly bin: string;
   readonly reorderPoint: number | null; readonly reorderQty: number | null;
-  readonly categoryId: string | null;
+  readonly categoryId: string | null; readonly unitOfMeasureId: string | null;
 }
 
 export interface RestockData {

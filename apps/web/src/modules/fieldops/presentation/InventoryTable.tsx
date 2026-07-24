@@ -42,7 +42,7 @@ export function InventoryTable({ rows, slow, high, reorder, onView, onEdit, onDe
               <td className="px-3 py-2 text-muted-foreground">{i.sku || "—"}</td>
               <td className="px-3 py-2">{i.categoryName ? <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-0.5 text-xs"><Tag className="h-3 w-3" />{i.categoryName}</span> : <span className="text-muted-foreground">—</span>}</td>
               <td className="px-3 py-2 text-muted-foreground">{loc(i)}</td>
-              <td className="px-3 py-2 text-right"><span className={`font-semibold ${isLow(i) ? "text-destructive" : ""}`}>{i.stock}</span>{isLow(i) && <AlertTriangle className="ml-1 inline h-3 w-3 text-destructive" />}</td>
+              <td className="px-3 py-2 text-right"><span className={`font-semibold ${isLow(i) ? "text-destructive" : ""}`}>{i.stock}{i.unitOfMeasureAbbreviation && <span className="ml-0.5 text-xs font-normal text-muted-foreground">{i.unitOfMeasureAbbreviation}</span>}</span>{isLow(i) && <AlertTriangle className="ml-1 inline h-3 w-3 text-destructive" />}</td>
               <td className="px-3 py-2 text-right">{i.minStock}</td>
               {cost && <><td className="px-3 py-2 text-right">{formatCurrency(i.unitCost)}</td><td className="px-3 py-2 text-right font-semibold">{formatCurrency(itemValue(i))}</td></>}
               <td className="px-3 py-2 text-muted-foreground">{i.supplierName || "—"}</td>
@@ -55,7 +55,7 @@ export function InventoryTable({ rows, slow, high, reorder, onView, onEdit, onDe
     </div>
     <div className="space-y-2 md:hidden">
       {visible.map((i) => <MobileCard key={i.id} title={i.name} amount={cost ? formatCurrency(itemValue(i)) : undefined}
-        lines={[`${t("stock")}: ${i.stock} · ${t("minStock")}: ${i.minStock}`, i.categoryName ? `${t("category")}: ${i.categoryName}` : "", i.supplierName || ""]}
+        lines={[`${t("stock")}: ${i.stock}${i.unitOfMeasureAbbreviation ? ` ${i.unitOfMeasureAbbreviation}` : ""} · ${t("minStock")}: ${i.minStock}`, i.categoryName ? `${t("category")}: ${i.categoryName}` : "", i.supplierName || ""]}
         extra={isLow(i) ? <span className="inline-flex items-center gap-1 text-xs text-destructive"><AlertTriangle className="h-3 w-3" /> {t("lowStock")}</span> : undefined}
         onView={() => onView(i.id)} onEdit={can("inventory", "edit") ? () => onEdit(i.id) : undefined} onDelete={can("inventory", "delete") ? () => onDelete(i.id) : undefined} />)}
     </div>

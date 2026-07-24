@@ -37,6 +37,8 @@ export const esInventory = {
   orderedQty: "Pedida", receivedQty: "Recibida", expectedDate: "Fecha esperada", reorderSuggestions: "Sugerencias de reorden", createPO: "Crear orden de compra",
   currentLocation: "Ubicación actual", destination: "Destino", relocate: "Reubicar", subtotal: "Subtotal",
   allCategories: "Todas las categorías", filterByCategory: "Filtrar por categoría", byCategory: "Por categoría",
+  unitOfMeasure: "Unidad de medida", abbreviation: "Abreviatura", uomGroup: "Grupo", createUnit: "Crear unidad", manageUnits: "Gestionar unidades",
+  count: "Conteo", volume: "Volumen", weight: "Peso", length: "Longitud", area: "Área", time: "Tiempo",
   itemPhotos: "Fotos del artículo (máx 3)", savePhotoHint: "Guarda el artículo primero para agregar fotos.",
   inventoryItems: "Artículos",
 } satisfies Partial<Record<TranslationKey, string>>;

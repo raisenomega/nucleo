@@ -37,6 +37,8 @@ export const enInventory = {
   orderedQty: "Ordered", receivedQty: "Received", expectedDate: "Expected date", reorderSuggestions: "Reorder suggestions", createPO: "Create PO",
   currentLocation: "Current location", destination: "Destination", relocate: "Relocate", subtotal: "Subtotal",
   allCategories: "All categories", filterByCategory: "Filter by category", byCategory: "By category",
+  unitOfMeasure: "Unit of measure", abbreviation: "Abbreviation", uomGroup: "Group", createUnit: "Create unit", manageUnits: "Manage units",
+  count: "Count", volume: "Volume", weight: "Weight", length: "Length", area: "Area", time: "Time",
   itemPhotos: "Item photos (max 3)", savePhotoHint: "Save the item first to add photos.",
   inventoryItems: "Items",
 } satisfies Partial<Record<TranslationKey, string>>;

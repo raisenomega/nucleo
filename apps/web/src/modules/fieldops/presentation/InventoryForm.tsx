@@ -3,6 +3,7 @@ import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { ItemPhotoUploader } from "@fieldops/presentation/ItemPhotoUploader";
 import { CategoryPicker } from "@shared/components/CategoryPicker";
+import { UomPicker } from "@fieldops/presentation/UomPicker";
 import type { InventoryFormData, LandingProductRef } from "@fieldops/domain/inventory.types";
 import type { SupplierRef } from "@fieldops/domain/supplier.types";
 
@@ -15,7 +16,7 @@ export function InventoryForm({ initial, itemId, photoUrls, tenantId, landingPro
   const { t } = useI18n();
   const { can } = useModuleAccess();
   const [photos, setPhotos] = useState<string[]>([...(photoUrls ?? [])]);
-  const [f, setF] = useState<InventoryFormData>(initial ?? { name: "", sku: "", stock: 0, unitCost: 0, minStock: 0, landingProductId: null, supplierId: null, warehouseZone: "", aisle: "", shelf: "", bin: "", reorderPoint: null, reorderQty: null, categoryId: null });
+  const [f, setF] = useState<InventoryFormData>(initial ?? { name: "", sku: "", stock: 0, unitCost: 0, minStock: 0, landingProductId: null, supplierId: null, warehouseZone: "", aisle: "", shelf: "", bin: "", reorderPoint: null, reorderQty: null, categoryId: null, unitOfMeasureId: null });
   const field = "w-full rounded-lg border border-border bg-background p-2 font-body";
   const lbl = "text-xs font-bold text-muted-foreground";
   const num = (k: "stock" | "unitCost" | "minStock", label: string) => (
@@ -49,6 +50,7 @@ export function InventoryForm({ initial, itemId, photoUrls, tenantId, landingPro
             <option value="">— {t("unlinked")} —</option>{suppliers.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
           </select></label>
         <CategoryPicker kind="inventory_category" label="category" value={f.categoryId ?? ""} onChange={(v) => setF({ ...f, categoryId: v || null })} />
+        <UomPicker value={f.unitOfMeasureId ?? ""} onChange={(v) => setF({ ...f, unitOfMeasureId: v || null })} />
         <p className="text-xs font-bold uppercase text-muted-foreground md:col-span-2">{t("warehouseLocation")}</p>
         {loc("warehouseZone", t("warehouseZone"))}{loc("aisle", t("aisle"))}{loc("shelf", t("shelf"))}{loc("bin", t("bin"))}
         <p className="text-xs font-bold uppercase text-muted-foreground md:col-span-2">{t("reorderSection")}</p>

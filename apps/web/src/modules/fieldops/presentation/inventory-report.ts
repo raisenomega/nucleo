@@ -35,7 +35,7 @@ export function inventoryReportBody(items: readonly InventoryItem[], movs: RawMo
       { title: t("activityMonth"), headers: [t("movementType"), t("quantity"), t("value")], rows: ACT.map(([k, ty]) => { const r = mth.filter((m) => m.type === ty); return [t(k), r.reduce((s, m) => s + m.quantity, 0), money(r.reduce((s, m) => s + m.quantity * m.unitCost, 0))]; }) },
       { title: t("suppliers"), headers: [t("name"), t("leadTime"), t("filterLow")], rows: suppliers.filter((s) => s.active).map((s) => [s.name, s.leadTimeDays != null ? `${s.leadTimeDays}d` : "—", String(low.filter((i) => i.supplierId === s.id).length)]) },
       { title: t("inventoryList"), headers: [t("itemName"), t("sku"), t("category"), t("location"), t("stock"), t("minStock"), t("value"), t("supplier"), t("status")],
-        rows: items.map((i) => [i.name, i.sku || "—", i.categoryName ?? "—", loc(i), i.stock, i.minStock, money(itemValue(i)), supName(i.supplierId), est(i)]) },
+        rows: items.map((i) => [i.name, i.sku || "—", i.categoryName ?? "—", loc(i), `${i.stock}${i.unitOfMeasureAbbreviation ? " " + i.unitOfMeasureAbbreviation : ""}`, i.minStock, money(itemValue(i)), supName(i.supplierId), est(i)]) },
     ],
   };
 }

@@ -31,14 +31,17 @@ export function PurchaseOrderForm({ suppliers, items, initialSupplier, initialLi
       <div className="space-y-3 p-4">
         <label className="block space-y-1"><span className="text-xs font-bold text-muted-foreground">{t("supplier")}</span>
           <select value={supplierId ?? ""} onChange={(e) => setSupplierId(e.target.value || null)} className={`w-full ${fld}`}><option value="">—</option>{suppliers.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</select></label>
-        {lines.map((l, i) => (
+        {lines.map((l, i) => {
+          const uom = items.find((x) => x.id === l.itemId)?.unitOfMeasureAbbreviation;
+          return (
           <div key={i} className="flex items-center gap-2">
             <select value={l.itemId} onChange={(e) => { const it = items.find((x) => x.id === e.target.value); setLine(i, { itemId: e.target.value, unitCost: it?.unitCost ?? l.unitCost }); }} className={`min-w-0 flex-1 ${fld}`}>{items.map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}</select>
             <input type="number" min="1" value={l.quantity || ""} onChange={(e) => setLine(i, { quantity: Number(e.target.value) })} className={`w-16 ${fld}`} />
+            {uom && <span className="shrink-0 text-xs text-muted-foreground">{uom}</span>}
             <input type="number" min="0" step="0.01" value={l.unitCost || ""} onChange={(e) => setLine(i, { unitCost: Number(e.target.value) })} className={`w-20 ${fld}`} />
             <button type="button" onClick={() => setLines((c) => c.filter((_, k) => k !== i))} aria-label={t("delete")} className="text-destructive"><Trash2 className="h-4 w-4" /></button>
           </div>
-        ))}
+        ); })}
         <button type="button" onClick={addLine} className="flex items-center gap-1 text-sm font-bold text-primary"><Plus className="h-4 w-4" /> {t("addItem")}</button>
         <div className="grid grid-cols-2 gap-2">
           <label className="space-y-1"><span className="text-xs font-bold text-muted-foreground">{t("expectedDate")}</span><input type="date" value={expectedAt} onChange={(e) => setExpectedAt(e.target.value)} className={`w-full ${fld}`} /></label>

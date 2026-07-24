@@ -23,7 +23,7 @@ export function RestockModal({ item, suppliers, onSubmit, onClose }: {
         <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button>
       </div>
       <form onSubmit={go} className="grid grid-cols-1 gap-3 p-4 md:grid-cols-2">
-        <label className="space-y-1"><span className={lbl}>{t("quantity")}</span>
+        <label className="space-y-1"><span className={lbl}>{t("quantity")}{item.unitOfMeasureAbbreviation ? ` (${item.unitOfMeasureAbbreviation})` : ""}</span>
           <input type="number" min="1" step="1" value={f.quantity || ""} onChange={(e) => setF({ ...f, quantity: Number(e.target.value) })} className={field} required /></label>
         <label className="space-y-1"><span className={lbl}>{t("unitCost")}</span>
           <input type="number" min="0.01" step="0.01" value={f.unitCost || ""} onChange={(e) => setF({ ...f, unitCost: Number(e.target.value) })} className={field} required /></label>

@@ -30,6 +30,7 @@ export function InventoryDetail({ item, movs, now, onClose }: { item: InventoryI
           {item.sku && row(t("sku"), item.sku)}
           {row(t("stock"), String(item.stock))}
           {row(t("minStock"), String(item.minStock))}
+          {item.unitOfMeasureName && row(t("unitOfMeasure"), `${item.unitOfMeasureName} (${item.unitOfMeasureAbbreviation})`)}
           {cost && row(t("unitCost"), formatCurrency(item.unitCost))}
           {cost && row(t("stockValue"), formatCurrency(itemValue(item)))}
           {item.supplierName && row(t("supplier"), item.supplierName)}

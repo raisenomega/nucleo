@@ -21,7 +21,7 @@ export function StockActionModal({ item, mode, onSubmit, onClose }: {
         <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button>
       </div>
       <form onSubmit={go} className="space-y-3 p-4">
-        <label className="block space-y-1"><span className={lbl}>{t(mode === "adjust" ? "newQuantity" : "lostQuantity")}</span>
+        <label className="block space-y-1"><span className={lbl}>{t(mode === "adjust" ? "newQuantity" : "lostQuantity")}{item.unitOfMeasureAbbreviation ? ` (${item.unitOfMeasureAbbreviation})` : ""}</span>
           <input type="number" min={mode === "shrink" ? "1" : "0"} step="1" value={qty || ""} onChange={(e) => setQty(Number(e.target.value))} className={field} required /></label>
         <label className="block space-y-1"><span className={lbl}>{t("reason")}</span>
           <input value={reason} onChange={(e) => setReason(e.target.value)} className={field} /></label>
