@@ -45,6 +45,7 @@
       "@order-forms/*": ["./apps/web/src/modules/order-forms/*"],
       "@raisen-marketing": ["./apps/web/src/modules/raisen-marketing/index.ts"],
       "@raisen-marketing/*": ["./apps/web/src/modules/raisen-marketing/*"],
+      "@campaigns/*": ["./apps/web/src/modules/campaigns/*"],
       "@shared/*":    ["./apps/web/src/shared/*"],
       "@brand/*":     ["./brand/*"]
     }

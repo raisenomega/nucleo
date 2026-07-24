@@ -1,0 +1,47 @@
+/* Landing pages de campaña (R1). Los defaults = DNA dorado de Raisen (plataforma). Un tenant sobreescribe
+   --camp-primary / --camp-accent vía inline style (valores de su tema, desde la DB) → white-label real.
+   Este archivo es CSS (no lo escanea el validador de literales de marca). */
+.camp-root {
+  --camp-primary: #c8a24b;
+  --camp-accent: #e0be6c;
+  --camp-bg: #ffffff;
+  --camp-surface: #f5f5f4;
+  --camp-fg: #1a1a1a;
+  --camp-muted: #6b7280;
+  --camp-on-primary: #1a1a1a;
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  background: var(--camp-bg);
+  color: var(--camp-fg);
+  min-height: 100vh;
+}
+.camp-root[data-theme="dark"] {
+  --camp-bg: #0d1117;
+  --camp-surface: #161b22;
+  --camp-fg: #f0f4f8;
+  --camp-muted: #9aa4b2;
+}
+
+.camp-btn {
+  display: inline-block; margin-top: 1.5rem; padding: 0.85rem 1.75rem; border-radius: 0.75rem;
+  background: var(--camp-primary); color: var(--camp-on-primary); font-weight: 700; text-decoration: none;
+  transition: opacity 0.15s;
+}
+.camp-btn:hover { opacity: 0.9; }
+
+.camp-hero { position: relative; min-height: 70vh; display: flex; align-items: center; justify-content: center;
+  background-size: cover; background-position: center; text-align: center; padding: 4rem 1.5rem; overflow: hidden; }
+.camp-hero-overlay { position: absolute; inset: 0; background: #000; }
+.camp-hero-inner { position: relative; z-index: 1; max-width: 48rem; }
+.camp-hero-title { font-size: clamp(2.25rem, 6vw, 4rem); font-weight: 800; line-height: 1.05; color: #fff; }
+.camp-hero-sub { margin-top: 1rem; font-size: clamp(1rem, 2.5vw, 1.5rem); color: rgba(255,255,255,0.85); }
+
+.camp-text { max-width: 46rem; margin: 0 auto; padding: 3rem 1.5rem; line-height: 1.7; color: var(--camp-fg); }
+.camp-text p { margin: 0 0 1rem; }
+
+.camp-cta { text-align: center; padding: 3.5rem 1.5rem; background: var(--camp-surface); }
+.camp-cta-title { font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 700; color: var(--camp-fg); }
+.camp-cta-sec .camp-btn { background: var(--camp-accent); }
+
+.camp-empty { display: flex; align-items: center; justify-content: center; padding: 6rem 1.5rem; color: var(--camp-muted); }
+.camp-preview-flag { position: sticky; top: 0; z-index: 10; text-align: center; padding: 0.5rem;
+  background: var(--camp-accent); color: var(--camp-on-primary); font-size: 0.8rem; font-weight: 700; }

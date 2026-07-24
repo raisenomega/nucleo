@@ -49,6 +49,7 @@ export default defineConfig({
       "@orders-public": r("apps/web/src/modules/orders-public"),
       "@order-forms": r("apps/web/src/modules/order-forms"),
       "@raisen-marketing": r("apps/web/src/modules/raisen-marketing"),
+      "@campaigns": r("apps/web/src/modules/campaigns"),
       "@shared": r("apps/web/src/shared"),
       "@brand": r("brand"),
     },

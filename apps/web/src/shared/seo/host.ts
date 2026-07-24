@@ -7,7 +7,7 @@ const RAISEN_HOSTS = new Set(["nucleoraisen.com", "www.nucleoraisen.com", "nucle
 
 // Host de la request. En SSR sale de la cabecera (x-forwarded-host en Vercel); en cliente, de location.
 // El branch .server() lo elimina el plugin de TanStack Start del bundle de cliente.
-const currentHost = createIsomorphicFn()
+export const currentHost = createIsomorphicFn()
   .server((): string => {
     try { return getRequestHost({ xForwardedHost: true }); } catch { return ""; }
   })
