@@ -15,7 +15,7 @@ export function InventoryRowActions({ id, onRestock, onAdjust, onShrink, onTrans
       {edit && <button type="button" onClick={() => onRestock(id)} aria-label={t("restock")} className="text-primary"><PackagePlus className="h-4 w-4" /></button>}
       {edit && <button type="button" onClick={() => onAdjust(id)} aria-label={t("adjustStock")} className="text-foreground"><SlidersHorizontal className="h-4 w-4" /></button>}
       {edit && <button type="button" onClick={() => onShrink(id)} aria-label={t("registerShrinkage")} className="text-amber-600"><PackageMinus className="h-4 w-4" /></button>}
-      {edit && <button type="button" onClick={() => onTransfer(id)} aria-label={t("transfer")} className="text-foreground"><ArrowLeftRight className="h-4 w-4" /></button>}
+      {edit && <button type="button" onClick={() => onTransfer(id)} aria-label={t("relocate")} className="text-foreground"><ArrowLeftRight className="h-4 w-4" /></button>}
       {edit && <button type="button" onClick={() => onEdit(id)} aria-label={t("edit")} className="text-foreground"><Pencil className="h-4 w-4" /></button>}
       {can("inventory", "delete") && <button type="button" onClick={() => onDelete(id)} aria-label={t("delete")} className="text-destructive"><Trash2 className="h-4 w-4" /></button>}
     </div>

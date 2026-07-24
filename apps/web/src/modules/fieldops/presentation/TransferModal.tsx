@@ -20,7 +20,7 @@ export function TransferModal({ item, onSubmit, onClose }: {
   return (
     <ScreenModal onClose={onClose}>
       <div className="flex items-center justify-between border-b border-border p-4">
-        <h2 className="font-display text-lg font-bold text-foreground">{t("transfer")} · {item.name}</h2>
+        <h2 className="font-display text-lg font-bold text-foreground">{t("relocate")} · {item.name}</h2>
         <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button>
       </div>
       <form onSubmit={go} className="grid grid-cols-1 gap-3 p-4 md:grid-cols-2">
