@@ -1,6 +1,7 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { currentHost } from "@shared/seo/host";
 import { getCampaignPage } from "@campaigns/infrastructure/campaigns-public.repository";
+import { campaignJsonLd } from "@campaigns/infrastructure/campaign-jsonld";
 import { CampaignPageView } from "@campaigns/presentation/CampaignPageView";
 import type { CampaignPageData } from "@campaigns/domain/campaign.types";
 
@@ -25,7 +26,9 @@ function campaignHead(ld: LD | undefined) {
     { name: "twitter:card", content: "summary_large_image" }, { name: "twitter:title", content: title }, { name: "twitter:description", content: desc },
   ];
   if (img) { meta.push({ property: "og:image", content: img }); meta.push({ name: "twitter:image", content: img }); }
-  return { meta, links: [{ rel: "canonical", href: canonical }] };
+  // JSON-LD (FAQPage + Service) para SEO/AEO/GEO — solo si la página está publicada (no filtrar borradores).
+  const scripts = p.isPublished ? campaignJsonLd(ld.data, ld.host).map((s) => ({ type: "application/ld+json", children: JSON.stringify(s) })) : [];
+  return { meta, links: [{ rel: "canonical", href: canonical }], scripts };
 }
 
 // Ruta pública SSR ACOTADA: el loader corre server-side y solo lee page+blocks+tema (no toca PublicLandingRoot).
