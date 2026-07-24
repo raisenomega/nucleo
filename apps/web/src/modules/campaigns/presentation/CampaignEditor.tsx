@@ -4,8 +4,8 @@ import { CampaignBlockList } from "@campaigns/presentation/CampaignBlockList";
 import { CampaignPerformance } from "@campaigns/presentation/CampaignPerformance";
 import type { CampaignNav } from "@campaigns/domain/campaign.types";
 
-type Meta = { name: string; slug: string; seoTitle: string; seoDescription: string };
-const EMPTY: Meta = { name: "", slug: "", seoTitle: "", seoDescription: "" };
+type Meta = { name: string; slug: string; seoTitle: string; seoDescription: string; confSubject: string; confBody: string };
+const EMPTY: Meta = { name: "", slug: "", seoTitle: "", seoDescription: "", confSubject: "", confBody: "" };
 
 // Editor de una campaña (superadmin o tenant, según `nav`). Metadata + vista previa + publicar + tabs contenido/rendimiento.
 export function CampaignEditor({ id, nav }: { id: string; nav: CampaignNav }) {
@@ -17,11 +17,11 @@ export function CampaignEditor({ id, nav }: { id: string; nav: CampaignNav }) {
   const load = useCallback(async () => {
     if (isNew) return;
     const d = await getCampaignAdmin(id);
-    if (d) { setPublished(d.page.isPublished); setM({ name: d.page.name, slug: d.page.slug, seoTitle: d.page.seoTitle ?? "", seoDescription: d.page.seoDescription ?? "" }); }
+    if (d) { setPublished(d.page.isPublished); setM({ name: d.page.name, slug: d.page.slug, seoTitle: d.page.seoTitle ?? "", seoDescription: d.page.seoDescription ?? "", confSubject: d.page.confirmationSubject ?? "", confBody: d.page.confirmationBody ?? "" }); }
   }, [id, isNew]);
   useEffect(() => { void load(); }, [load]);
   async function save() {
-    const r = await upsertPage({ id: pageId, name: m.name, slug: m.slug, seo_title: m.seoTitle, seo_description: m.seoDescription });
+    const r = await upsertPage({ id: pageId, name: m.name, slug: m.slug, seo_title: m.seoTitle, seo_description: m.seoDescription, confirmation_subject: m.confSubject, confirmation_body: m.confBody });
     if (r.error) { window.alert(`Error: ${r.error}`); return; }
     if (isNew && r.id) nav.toEditor(r.id); else setPageId(r.id ?? pageId);
   }
@@ -45,6 +45,8 @@ export function CampaignEditor({ id, nav }: { id: string; nav: CampaignNav }) {
         <label className="text-xs text-muted-foreground">Slug (minúsculas, guiones)<input className={fld} value={m.slug} onChange={(e) => setM({ ...m, slug: e.target.value })} /></label>
         <label className="text-xs text-muted-foreground md:col-span-2">SEO título<input className={fld} value={m.seoTitle} onChange={(e) => setM({ ...m, seoTitle: e.target.value })} /></label>
         <label className="text-xs text-muted-foreground md:col-span-2">SEO descripción<input className={fld} value={m.seoDescription} onChange={(e) => setM({ ...m, seoDescription: e.target.value })} /></label>
+        <label className="text-xs text-muted-foreground md:col-span-2">Email confirmación · asunto (opcional)<input className={fld} value={m.confSubject} onChange={(e) => setM({ ...m, confSubject: e.target.value })} /></label>
+        <label className="text-xs text-muted-foreground md:col-span-2">Email confirmación · cuerpo (opcional)<textarea className={fld} rows={2} value={m.confBody} onChange={(e) => setM({ ...m, confBody: e.target.value })} /></label>
         <button type="button" onClick={() => void save()} className="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground md:col-span-2">Guardar metadata</button>
       </div>
       {pageId && <><div className="flex gap-1">{tabBtn("content", "Contenido")}{tabBtn("perf", "Rendimiento")}</div>

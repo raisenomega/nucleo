@@ -17,6 +17,7 @@ export function mapPage(d: J): CampaignPageData {
       id: p.id as string, name: p.name as string, slug: p.slug as string, isPublished: p.is_published === true,
       seoTitle: (p.seo_title as string) ?? null, seoDescription: (p.seo_description as string) ?? null,
       ogImageUrl: (p.og_image_url as string) ?? null, lang: (p.lang as CampaignPageData["page"]["lang"]) ?? "es",
+      confirmationSubject: (p.confirmation_subject as string) ?? null, confirmationBody: (p.confirmation_body as string) ?? null,
     },
     blocks: (Array.isArray(d.blocks) ? (d.blocks as J[]) : []).map(mapBlock),
     brand: br ? {

@@ -24,6 +24,8 @@ export interface CampaignPage {
   seoDescription: string | null;
   ogImageUrl: string | null;
   lang: "es" | "en" | "both";
+  confirmationSubject: string | null; // R6 · email de confirmación al visitante (null → default)
+  confirmationBody: string | null;
 }
 
 // brand = null → página de plataforma (Raisen), usa el DNA dorado por defecto de campaign.css.
@@ -50,6 +52,7 @@ export interface CampaignListItem {
   blocks: number;
   visits: number; // R4 · visitas últimos 30d
   leads: number;  // R4 · leads totales de la campaña
+  isArchived: boolean; // R6
 }
 
 // R5 · scope de navegación: el mismo editor sirve al superadmin (nucleoraisen.com / /web/campanas) y al tenant

@@ -10,6 +10,7 @@ import { LeadForm } from "@crm/presentation/LeadForm";
 import { LeadsBoard } from "@crm/presentation/LeadsBoard";
 import { LeadDetail } from "@crm/presentation/LeadDetail";
 import { LeadFollowupsWidget } from "@crm/presentation/LeadFollowupsWidget";
+import { LeadsCsvButton } from "@crm/presentation/LeadsCsvButton";
 import { supabaseLeadActivityRepository as actRepo } from "@crm/infrastructure/supabase-lead-activity.repository";
 import type { Lead, LeadFormData } from "@crm/domain/lead.types";
 
@@ -43,7 +44,6 @@ function LeadsPage() {
     setEditing(null);
   }
   const onMove = (l: Lead, status: string) => { void update(l.id, { ...toForm(l), status }); if (l.status !== status) void actRepo.logSilently(l.id, "note", `Estado: ${l.status} → ${status}`); };
-
   if (!can("leads", "view")) return <Navigate to="/dashboard" />;
   const viewLead = leads.find((l) => l.id === viewing);
   return (
@@ -51,7 +51,7 @@ function LeadsPage() {
       <div className="space-y-2">
         <div className="flex items-center justify-between gap-4">
           <h1 className="font-display text-xl font-bold text-foreground md:text-3xl">{t("leads")}</h1>
-          {can("leads", "create") && <button type="button" onClick={() => setEditing("new")} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-body font-bold"><Plus className="h-4 w-4" /> {t("newLead")}</button>}
+          <div className="flex items-center gap-2"><LeadsCsvButton leads={leads} />{can("leads", "create") && <button type="button" onClick={() => setEditing("new")} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-body font-bold"><Plus className="h-4 w-4" /> {t("newLead")}</button>}</div>
         </div>
         <p className="text-xs text-muted-foreground">{t("leadSubtitle")}</p>
       </div>

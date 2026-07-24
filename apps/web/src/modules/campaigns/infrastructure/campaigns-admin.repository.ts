@@ -4,14 +4,16 @@ import type { CampaignListItem, CampaignPageData } from "@campaigns/domain/campa
 
 type J = Record<string, unknown>;
 
-export async function listCampaignPages(): Promise<CampaignListItem[]> {
-  const { data } = await supabase.rpc("list_campaign_pages");
+export async function listCampaignPages(includeArchived = false): Promise<CampaignListItem[]> {
+  const { data } = await supabase.rpc("list_campaign_pages", { _include_archived: includeArchived });
   return (Array.isArray(data) ? (data as J[]) : []).map((p) => ({
     id: p.id as string, name: p.name as string, slug: p.slug as string,
     isPublished: p.is_published === true, updatedAt: p.updated_at as string, blocks: Number(p.blocks ?? 0),
-    visits: Number(p.visits ?? 0), leads: Number(p.leads ?? 0),
+    visits: Number(p.visits ?? 0), leads: Number(p.leads ?? 0), isArchived: p.is_archived === true,
   }));
 }
+export async function duplicatePage(id: string): Promise<void> { await supabase.rpc("duplicate_campaign_page", { _id: id }); }
+export async function setArchived(id: string, archived: boolean): Promise<void> { await supabase.rpc("set_campaign_archived", { _id: id, _archived: archived }); }
 
 export async function getCampaignAdmin(id: string): Promise<CampaignPageData | null> {
   const { data } = await supabase.rpc("get_campaign_page_admin", { _id: id });

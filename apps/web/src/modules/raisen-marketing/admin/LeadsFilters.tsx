@@ -1,11 +1,11 @@
 import { Search } from "lucide-react";
 import { LEAD_STATUSES, STATUS_LABELS, TEMPERATURES, TEMP_LABELS } from "@raisen-marketing/admin/lead-constants";
 
-export interface LeadFilter { search: string; status: string; temperature: string; leadType: string; showArchived: boolean }
+export interface LeadFilter { search: string; status: string; temperature: string; leadType: string; showArchived: boolean; campaign: string }
 const SEL = "rounded-lg border border-border bg-background p-2 text-sm text-foreground";
 
-// Filtros del CRM: búsqueda (nombre/email/empresa) + status + temperatura + tipo + toggle archivados.
-export function LeadsFilters({ f, set }: { f: LeadFilter; set: (p: Partial<LeadFilter>) => void }) {
+// Filtros del CRM: búsqueda (nombre/email/empresa) + status + temperatura + tipo + campaña + toggle archivados.
+export function LeadsFilters({ f, set, campaigns = [] }: { f: LeadFilter; set: (p: Partial<LeadFilter>) => void; campaigns?: { id: string; name: string }[] }) {
   return (
     <div className="flex flex-wrap items-center gap-2">
       <div className="relative min-w-[180px] flex-1">
@@ -15,6 +15,7 @@ export function LeadsFilters({ f, set }: { f: LeadFilter; set: (p: Partial<LeadF
       <select className={SEL} value={f.status} onChange={(e) => set({ status: e.target.value })}><option value="">Todo estado</option>{LEAD_STATUSES.map((s) => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}</select>
       <select className={SEL} value={f.temperature} onChange={(e) => set({ temperature: e.target.value })}><option value="">Toda temp.</option>{TEMPERATURES.map((t) => <option key={t} value={t}>{TEMP_LABELS[t]}</option>)}</select>
       <select className={SEL} value={f.leadType} onChange={(e) => set({ leadType: e.target.value })}><option value="">Todo tipo</option><option value="business">Negocio</option><option value="partner">Partner</option></select>
+      {campaigns.length > 0 && <select className={SEL} value={f.campaign} onChange={(e) => set({ campaign: e.target.value })}><option value="">Toda campaña</option>{campaigns.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select>}
       <label className="flex items-center gap-1 text-xs text-muted-foreground"><input type="checkbox" checked={f.showArchived} onChange={(e) => set({ showArchived: e.target.checked })} />archivados</label>
     </div>
   );

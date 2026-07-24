@@ -24,7 +24,7 @@ export function FormBlock({ content, pageId }: { content: BlockContent; pageId: 
       page_id: pageId, customer_name: v.name ?? "", customer_email: v.email ?? "", customer_phone: v.phone ?? "",
       message: v.message ?? "", hp, custom_fields: cf, attribution: captureAttribution(),
     });
-    if (r.ok) { track("form_contact_submitted"); setSt("ok"); const url = s(content, "redirect_url"); if (url) window.location.href = url; } else setSt("error");
+    if (r.ok) { track("form_contact_submitted"); setSt("ok"); const url = s(content, "redirect_url"); if (url) window.setTimeout(() => { window.location.href = url; }, 2000); } else setSt("error");
   }
   if (st === "ok") return <section className="camp-form" id="form"><p className="camp-form-ok">{s(content, "success_message") || "¡Gracias! Te contactaremos pronto."}</p></section>;
   return (
