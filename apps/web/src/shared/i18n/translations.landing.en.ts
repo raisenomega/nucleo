@@ -6,7 +6,7 @@ export const enLanding = {
   uploadError: "Could not upload the image", saved: "Saved", selectIcon: "Pick icon",
   monday: "Monday", tuesday: "Tuesday", wednesday: "Wednesday", thursday: "Thursday", friday: "Friday", saturday: "Saturday", sunday: "Sunday",
   landing: "Landing", landingConfig: "Configuration", landingCategories: "Categories",
-  landingSiteSettings: "Site settings", landingAnalytics: "Analytics", systemSettings: "Settings",
+  landingSiteSettings: "Site settings", landingAnalytics: "Analytics", landingCampaigns: "Campaigns", systemSettings: "Settings",
   hero: "Hero", heroTitle: "Title", heroSubtitle: "Subtitle", heroCtaLabel: "Button text",
   heroCtaType: "Button action", heroCtaHref: "Custom link", heroImage: "Hero image",
   ctaQuote: "Request a quote", ctaOrder: "Buy", ctaContact: "Contact", ctaCustom: "Custom",

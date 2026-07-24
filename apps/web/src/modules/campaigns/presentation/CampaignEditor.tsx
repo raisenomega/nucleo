@@ -1,15 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
 import { getCampaignAdmin, upsertPage, publishPage } from "@campaigns/infrastructure/campaigns-admin.repository";
 import { CampaignBlockList } from "@campaigns/presentation/CampaignBlockList";
 import { CampaignPerformance } from "@campaigns/presentation/CampaignPerformance";
+import type { CampaignNav } from "@campaigns/domain/campaign.types";
 
 type Meta = { name: string; slug: string; seoTitle: string; seoDescription: string };
 const EMPTY: Meta = { name: "", slug: "", seoTitle: "", seoDescription: "" };
 
-// Editor de una campaña: metadata (nombre/slug/SEO) + vista previa + publicar + lista de bloques (aparece al guardar).
-export function CampaignEditor({ id }: { id: string }) {
-  const nav = useNavigate();
+// Editor de una campaña (superadmin o tenant, según `nav`). Metadata + vista previa + publicar + tabs contenido/rendimiento.
+export function CampaignEditor({ id, nav }: { id: string; nav: CampaignNav }) {
   const isNew = id === "new";
   const [pageId, setPageId] = useState<string | null>(isNew ? null : id);
   const [published, setPublished] = useState(false);
@@ -24,16 +23,20 @@ export function CampaignEditor({ id }: { id: string }) {
   async function save() {
     const r = await upsertPage({ id: pageId, name: m.name, slug: m.slug, seo_title: m.seoTitle, seo_description: m.seoDescription });
     if (r.error) { window.alert(`Error: ${r.error}`); return; }
-    if (isNew && r.id) void nav({ to: "/web/campanas/$id", params: { id: r.id } }); else setPageId(r.id ?? pageId);
+    if (isNew && r.id) nav.toEditor(r.id); else setPageId(r.id ?? pageId);
   }
   async function togglePub() { if (!pageId) return; await publishPage(pageId, !published); setPublished(!published); }
   const fld = "mt-1 w-full rounded-lg border border-border bg-background p-2 text-sm";
+  const tabBtn = (k: "content" | "perf", l: string) => <button type="button" onClick={() => setTab(k)} className={`rounded-lg px-3 py-1.5 text-sm font-bold ${tab === k ? "bg-primary text-primary-foreground" : "bg-secondary"}`}>{l}</button>;
   return (
     <div className="space-y-4 p-4 md:p-8">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h1 className="font-display text-xl font-bold text-foreground md:text-3xl">{isNew ? "Nueva campaña" : m.name || "Campaña"}</h1>
+        <div>
+          <h1 className="font-display text-xl font-bold text-foreground md:text-3xl">{isNew ? "Nueva campaña" : m.name || "Campaña"}</h1>
+          {pageId && <p className="text-xs text-muted-foreground">URL: {nav.host}/c/{m.slug}</p>}
+        </div>
         {pageId && <div className="flex gap-2">
-          <a href={`/c/${m.slug}?preview=true`} target="_blank" rel="noreferrer" className="rounded-lg border border-border px-3 py-1.5 text-sm">Vista previa</a>
+          <a href={`https://${nav.host}/c/${m.slug}?preview=true`} target="_blank" rel="noreferrer" className="rounded-lg border border-border px-3 py-1.5 text-sm">Vista previa</a>
           <button type="button" onClick={() => void togglePub()} className="rounded-lg border border-border px-3 py-1.5 text-sm font-bold">{published ? "Despublicar" : "Publicar"}</button>
         </div>}
       </div>
@@ -44,15 +47,8 @@ export function CampaignEditor({ id }: { id: string }) {
         <label className="text-xs text-muted-foreground md:col-span-2">SEO descripción<input className={fld} value={m.seoDescription} onChange={(e) => setM({ ...m, seoDescription: e.target.value })} /></label>
         <button type="button" onClick={() => void save()} className="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground md:col-span-2">Guardar metadata</button>
       </div>
-      {pageId && (
-        <>
-          <div className="flex gap-1">
-            <button type="button" onClick={() => setTab("content")} className={`rounded-lg px-3 py-1.5 text-sm font-bold ${tab === "content" ? "bg-primary text-primary-foreground" : "bg-secondary"}`}>Contenido</button>
-            <button type="button" onClick={() => setTab("perf")} className={`rounded-lg px-3 py-1.5 text-sm font-bold ${tab === "perf" ? "bg-primary text-primary-foreground" : "bg-secondary"}`}>Rendimiento</button>
-          </div>
-          {tab === "content" ? <CampaignBlockList pageId={pageId} /> : <CampaignPerformance pageId={pageId} />}
-        </>
-      )}
+      {pageId && <><div className="flex gap-1">{tabBtn("content", "Contenido")}{tabBtn("perf", "Rendimiento")}</div>
+        {tab === "content" ? <CampaignBlockList pageId={pageId} /> : <CampaignPerformance pageId={pageId} onViewLeads={nav.toLeads} />}</>}
     </div>
   );
 }

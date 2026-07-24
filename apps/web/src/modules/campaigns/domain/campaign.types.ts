@@ -51,3 +51,11 @@ export interface CampaignListItem {
   visits: number; // R4 · visitas últimos 30d
   leads: number;  // R4 · leads totales de la campaña
 }
+
+// R5 · scope de navegación: el mismo editor sirve al superadmin (nucleoraisen.com / /web/campanas) y al tenant
+// (su dominio / /campanas). El route wrapper provee host + los callbacks con las rutas literales (type-safe).
+export interface CampaignNav {
+  host: string;                   // dominio público a mostrar (nucleoraisen.com o el del tenant)
+  toEditor: (id: string) => void; // abrir el editor de una página (id real o "new")
+  toLeads: () => void;            // abrir el inbox de leads del scope
+}

@@ -1,13 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
-import { Link } from "@tanstack/react-router";
 import { BarChart, Bar, XAxis, ResponsiveContainer, Tooltip } from "recharts";
 import { getCampaignAnalytics, type CampaignAnalytics } from "@campaigns/infrastructure/campaign-analytics.repository";
 
 const PERIODS = [7, 30, 90];
 
 // Tab "Rendimiento" del editor: KPIs (visitas/leads/conversión) + gráfico visitas-por-día + fuentes, desde el
-// motor de 2.8 por path. Los leads viven en el inbox (/web/leads del superadmin) — link al final.
-export function CampaignPerformance({ pageId }: { pageId: string }) {
+// motor de 2.8 por path. `onViewLeads` abre el inbox del scope (/leads del tenant o /web/leads del superadmin).
+export function CampaignPerformance({ pageId, onViewLeads }: { pageId: string; onViewLeads: () => void }) {
   const [days, setDays] = useState(30);
   const [a, setA] = useState<CampaignAnalytics | null>(null);
   const load = useCallback(async () => setA(await getCampaignAnalytics(pageId, days)), [pageId, days]);
@@ -23,7 +22,7 @@ export function CampaignPerformance({ pageId }: { pageId: string }) {
           <ResponsiveContainer width="100%" height={180}><BarChart data={a.byDay}><XAxis dataKey="day" tick={{ fontSize: 10 }} /><Tooltip /><Bar dataKey="visits" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer></div>}
         <div className="rounded-lg border border-border bg-card p-4"><p className="mb-2 text-sm font-bold text-foreground">Fuentes de tráfico</p>
           {a.sources.length === 0 ? <p className="text-xs text-muted-foreground">Sin datos todavía.</p> : a.sources.map((s, i) => <div key={i} className="flex justify-between gap-2 border-t border-border py-1 text-sm"><span className="min-w-0 truncate text-muted-foreground">{s.source}</span><span className="shrink-0 font-bold">{s.count}</span></div>)}</div>
-        <Link to="/web/leads" className="inline-block text-sm font-bold text-primary hover:underline">Ver los {a.leads} leads en el inbox →</Link>
+        <button type="button" onClick={onViewLeads} className="text-sm font-bold text-primary hover:underline">Ver los {a.leads} leads en el inbox →</button>
       </>)}
     </div>
   );

@@ -12,7 +12,7 @@ import type { TranslationKey } from "@shared/i18n";
 // futuras (products/services/packages/faqs/…) se agregan acá cuando exista su archivo (Sesión 3.b+).
 type EnabledPath = "/dashboard" | "/routes" | "/income" | "/expenses" | "/extraordinary" | "/payroll" | "/inventory" | "/inventory/suppliers" | "/inventory/purchase-orders" | "/leads" | "/marketing" | "/reconciliation" | "/recurring" | "/accounts-receivable" | "/billing" | "/quotes" | "/reports" | "/evaluations" | "/observations" | "/training" | "/support" | "/documents" | "/settings" | "/settings/agenda" | "/agenda" | "/orders" | "/assets" | "/notifications" | "/customers"
   | "/tenants" | "/platform/analytics" | "/web/campanas" | "/web/leads" | "/web/secciones" | "/web/hero" | "/web/features" | "/web/proceso" | "/web/precios" | "/web/testimonios" | "/web/soluciones" | "/web/faq" | "/web/footer" | "/web/legales" | "/web/reservas" | "/web/disponibilidad"
-  | "/settings/landing/config" | "/settings/landing/categories" | "/settings/landing/products" | "/settings/landing/services" | "/settings/landing/packages" | "/settings/landing/testimonials" | "/settings/landing/faqs" | "/settings/landing/order-forms" | "/settings/landing/service-pages" | "/settings/landing/coupons" | "/settings/landing/payment-methods" | "/settings/landing/analytics";
+  | "/settings/landing/config" | "/settings/landing/categories" | "/settings/landing/products" | "/settings/landing/services" | "/settings/landing/packages" | "/settings/landing/testimonials" | "/settings/landing/faqs" | "/settings/landing/order-forms" | "/settings/landing/service-pages" | "/settings/landing/coupons" | "/settings/landing/payment-methods" | "/settings/landing/analytics" | "/campanas";
 // mod = clave de módulo para el gate (can(mod,"view")). Items sin mod = "próximamente" (solo roadmap coo/ceo).
 export type NavItem = { key: TranslationKey; icon: LucideIcon; to?: EnabledPath; mod?: string };
 export type NavSection = { title: TranslationKey; icon: LucideIcon; items: NavItem[] };
@@ -51,6 +51,7 @@ export const SECTIONS: NavSection[] = [
 export const LANDING_SECTION: NavSection = {
   title: "landing", icon: Palette, items: [
     { key: "landingSiteSettings", icon: SlidersHorizontal, to: "/settings/landing/config", mod: "settings" },
+    { key: "landingCampaigns", icon: Megaphone, to: "/campanas", mod: "settings" },
     { key: "landingAnalytics", icon: BarChart3, to: "/settings/landing/analytics", mod: "settings" },
     { key: "landingServicePages", icon: Layers, to: "/settings/landing/service-pages", mod: "settings" },
     { key: "landingCategories", icon: Tags, to: "/settings/landing/categories", mod: "settings" },
