@@ -36,6 +36,7 @@ export const enInventory = {
   markOrdered: "Mark as ordered", receiveGoods: "Receive goods", receiveRemaining: "Receive remaining",
   orderedQty: "Ordered", receivedQty: "Received", expectedDate: "Expected date", reorderSuggestions: "Reorder suggestions", createPO: "Create PO",
   currentLocation: "Current location", destination: "Destination", relocate: "Relocate", subtotal: "Subtotal",
+  allCategories: "All categories", filterByCategory: "Filter by category", byCategory: "By category",
   itemPhotos: "Item photos (max 3)", savePhotoHint: "Save the item first to add photos.",
   inventoryItems: "Items",
 } satisfies Partial<Record<TranslationKey, string>>;

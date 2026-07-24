@@ -11,22 +11,23 @@ interface Row {
   id: string; tenant_id: string; name: string;
   stock: number | string; unit_cost: number | string; min_stock: number | string;
   sku: string | null; avg_cost: number | string; supplier_name: string | null; supplier_id: string | null; landing_product_id: string | null; last_restock_date: string | null;
-  warehouse_zone: string | null; aisle: string | null; shelf: string | null; bin: string | null; reorder_point: number | null; reorder_qty: number | null; photo_urls: string[] | null;
+  warehouse_zone: string | null; aisle: string | null; shelf: string | null; bin: string | null; reorder_point: number | null; reorder_qty: number | null; photo_urls: string[] | null; category_id: string | null; category: { id: string; label: string } | null;
 }
 
-const SELECT = "id, tenant_id, name, stock, unit_cost, min_stock, sku, avg_cost, supplier_name, supplier_id, landing_product_id, last_restock_date, warehouse_zone, aisle, shelf, bin, reorder_point, reorder_qty, photo_urls";
+const SELECT = "id, tenant_id, name, stock, unit_cost, min_stock, sku, avg_cost, supplier_name, supplier_id, landing_product_id, last_restock_date, warehouse_zone, aisle, shelf, bin, reorder_point, reorder_qty, photo_urls, category_id, category:categories!category_id(id, label)";
 
 function toItem(r: Row): InventoryItem {
   return {
     id: r.id, tenantId: r.tenant_id, name: r.name,
     stock: Number(r.stock), unitCost: Number(r.unit_cost), minStock: Number(r.min_stock), sku: r.sku ?? "",
     avgCost: Number(r.avg_cost), supplierName: r.supplier_name ?? "", supplierId: r.supplier_id, landingProductId: r.landing_product_id, lastRestockDate: r.last_restock_date,
-    warehouseZone: r.warehouse_zone ?? "", aisle: r.aisle ?? "", shelf: r.shelf ?? "", bin: r.bin ?? "", reorderPoint: r.reorder_point, reorderQty: r.reorder_qty, photoUrls: r.photo_urls ?? [],
+    warehouseZone: r.warehouse_zone ?? "", aisle: r.aisle ?? "", shelf: r.shelf ?? "", bin: r.bin ?? "", reorderPoint: r.reorder_point, reorderQty: r.reorder_qty,
+    photoUrls: r.photo_urls ?? [], categoryId: r.category_id, categoryName: r.category?.label ?? null,
   };
 }
 
 function toRow(d: InventoryFormData) {
-  return { name: d.name, sku: d.sku || null, stock: d.stock, unit_cost: d.unitCost, min_stock: d.minStock, landing_product_id: d.landingProductId, supplier_id: d.supplierId, warehouse_zone: d.warehouseZone || null, aisle: d.aisle || null, shelf: d.shelf || null, bin: d.bin || null, reorder_point: d.reorderPoint, reorder_qty: d.reorderQty };
+  return { name: d.name, sku: d.sku || null, stock: d.stock, unit_cost: d.unitCost, min_stock: d.minStock, landing_product_id: d.landingProductId, supplier_id: d.supplierId, warehouse_zone: d.warehouseZone || null, aisle: d.aisle || null, shelf: d.shelf || null, bin: d.bin || null, reorder_point: d.reorderPoint, reorder_qty: d.reorderQty, category_id: d.categoryId };
 }
 
 async function rpcId(fn: string, args: object): Promise<Result<string | null, string>> {

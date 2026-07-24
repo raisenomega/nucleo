@@ -16,12 +16,11 @@ export interface InventoryItem {
   readonly supplierId: string | null;
   readonly landingProductId: string | null;
   readonly lastRestockDate: string | null;
-  readonly warehouseZone: string;
-  readonly aisle: string;
-  readonly shelf: string;
-  readonly bin: string;
+  readonly warehouseZone: string; readonly aisle: string;
+  readonly shelf: string; readonly bin: string;
   readonly reorderPoint: number | null; readonly reorderQty: number | null;
   readonly photoUrls: readonly string[];
+  readonly categoryId: string | null; readonly categoryName: string | null;
 }
 
 export interface TransferData { readonly qty: number; readonly zone: string; readonly aisle: string; readonly shelf: string; readonly bin: string; readonly notes: string; }
@@ -39,6 +38,7 @@ export interface InventoryFormData {
   readonly shelf: string;
   readonly bin: string;
   readonly reorderPoint: number | null; readonly reorderQty: number | null;
+  readonly categoryId: string | null;
 }
 
 export interface RestockData {

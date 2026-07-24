@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AlertTriangle, Globe } from "lucide-react";
+import { AlertTriangle, Globe, Tag } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { formatCurrency } from "@shared/lib/format";
@@ -30,16 +30,17 @@ export function InventoryTable({ rows, slow, high, reorder, onView, onEdit, onDe
     <div className="hidden overflow-hidden rounded-lg border border-border bg-card md:block">
       <div className="overflow-x-auto"><table className="w-full font-body text-sm">
         <thead className="bg-secondary text-xs uppercase text-muted-foreground"><tr>
-          <th className={th}>{t("itemName")}</th><th className={th}>{t("sku")}</th><th className={th}>{t("location")}</th><th className={`${th} text-right`}>{t("stock")}</th><th className={`${th} text-right`}>{t("minStock")}</th>
+          <th className={th}>{t("itemName")}</th><th className={th}>{t("sku")}</th><th className={th}>{t("category")}</th><th className={th}>{t("location")}</th><th className={`${th} text-right`}>{t("stock")}</th><th className={`${th} text-right`}>{t("minStock")}</th>
           {cost && <><th className={`${th} text-right`}>{t("unitCost")}</th><th className={`${th} text-right`}>{t("value")}</th></>}
           <th className={th}>{t("supplier")}</th><th className={th}>{t("lastRestock")}</th><th className={`${th} text-right`}>{t("actions")}</th>
         </tr></thead>
         <tbody>
-          {rows.length === 0 && <tr><td colSpan={cost ? 10 : 8} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>}
+          {rows.length === 0 && <tr><td colSpan={cost ? 11 : 9} className="py-8 text-center text-muted-foreground">{t("noRecords")}</td></tr>}
           {visible.map((i) => (
             <tr key={i.id} onClick={() => onView(i.id)} className={`cursor-pointer border-t border-border hover:bg-secondary ${isLow(i) ? "bg-destructive/5" : ""}`}>
               <td className="px-3 py-2"><span className="inline-flex flex-wrap items-center gap-1"><SignedPhotos paths={i.photoUrls.slice(0, 1)} />{i.name}{i.landingProductId && <span title={t("inCatalogTooltip")} className="text-primary"><Globe className="h-3.5 w-3.5" /></span>}{slow?.has(i.id) && <span className="rounded bg-amber-500/10 px-1 text-xs text-amber-600">{t("slowStock")}</span>}{high?.has(i.id) && <span className="rounded bg-destructive/10 px-1 text-xs text-destructive">{t("highConsumption")}</span>}{reorder?.has(i.id) && <span className="rounded bg-orange-500/10 px-1 text-xs text-orange-600">{t("reorderBadge")}</span>}</span></td>
               <td className="px-3 py-2 text-muted-foreground">{i.sku || "—"}</td>
+              <td className="px-3 py-2">{i.categoryName ? <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-0.5 text-xs"><Tag className="h-3 w-3" />{i.categoryName}</span> : <span className="text-muted-foreground">—</span>}</td>
               <td className="px-3 py-2 text-muted-foreground">{loc(i)}</td>
               <td className="px-3 py-2 text-right"><span className={`font-semibold ${isLow(i) ? "text-destructive" : ""}`}>{i.stock}</span>{isLow(i) && <AlertTriangle className="ml-1 inline h-3 w-3 text-destructive" />}</td>
               <td className="px-3 py-2 text-right">{i.minStock}</td>
@@ -54,7 +55,7 @@ export function InventoryTable({ rows, slow, high, reorder, onView, onEdit, onDe
     </div>
     <div className="space-y-2 md:hidden">
       {visible.map((i) => <MobileCard key={i.id} title={i.name} amount={cost ? formatCurrency(itemValue(i)) : undefined}
-        lines={[`${t("stock")}: ${i.stock} · ${t("minStock")}: ${i.minStock}`, i.supplierName || ""]}
+        lines={[`${t("stock")}: ${i.stock} · ${t("minStock")}: ${i.minStock}`, i.categoryName ? `${t("category")}: ${i.categoryName}` : "", i.supplierName || ""]}
         extra={isLow(i) ? <span className="inline-flex items-center gap-1 text-xs text-destructive"><AlertTriangle className="h-3 w-3" /> {t("lowStock")}</span> : undefined}
         onView={() => onView(i.id)} onEdit={can("inventory", "edit") ? () => onEdit(i.id) : undefined} onDelete={can("inventory", "delete") ? () => onDelete(i.id) : undefined} />)}
     </div>

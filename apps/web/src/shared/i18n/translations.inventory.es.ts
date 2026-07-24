@@ -36,6 +36,7 @@ export const esInventory = {
   markOrdered: "Marcar como ordenada", receiveGoods: "Recibir mercancía", receiveRemaining: "Recibir restante",
   orderedQty: "Pedida", receivedQty: "Recibida", expectedDate: "Fecha esperada", reorderSuggestions: "Sugerencias de reorden", createPO: "Crear orden de compra",
   currentLocation: "Ubicación actual", destination: "Destino", relocate: "Reubicar", subtotal: "Subtotal",
+  allCategories: "Todas las categorías", filterByCategory: "Filtrar por categoría", byCategory: "Por categoría",
   itemPhotos: "Fotos del artículo (máx 3)", savePhotoHint: "Guarda el artículo primero para agregar fotos.",
   inventoryItems: "Artículos",
 } satisfies Partial<Record<TranslationKey, string>>;
