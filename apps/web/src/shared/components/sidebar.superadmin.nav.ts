@@ -6,11 +6,9 @@ import type { NavSection } from "@shared/components/sidebar.nav";
 export const SUPERADMIN_SECTIONS: NavSection[] = [
   { title: "saPlatform", icon: LayoutDashboard, items: [
     { key: "panel", icon: LayoutDashboard, to: "/dashboard" },
-    { key: "saAnalytics", icon: BarChart3, to: "/platform/analytics" },
     { key: "saTenants", icon: Building2, to: "/tenants" },
   ] },
   { title: "saSiteWeb", icon: FileText, items: [
-    { key: "webCampaigns", icon: Megaphone, to: "/web/campanas" },
     { key: "webSections", icon: LayoutList, to: "/web/secciones" },
     { key: "webHero", icon: Target, to: "/web/hero" },
     { key: "webFeatures", icon: Zap, to: "/web/features" },
@@ -25,6 +23,8 @@ export const SUPERADMIN_SECTIONS: NavSection[] = [
     { key: "webReservations", icon: CalendarCheck, to: "/web/reservas" },
     { key: "webAvailability", icon: CalendarClock, to: "/web/disponibilidad" },
   ] },
+  { title: "webCampaigns", icon: Megaphone, items: [{ key: "webCampaigns", icon: Megaphone, to: "/web/campanas" }] },
+  { title: "saAnalytics", icon: BarChart3, items: [{ key: "saAnalytics", icon: BarChart3, to: "/platform/analytics" }] },
   // Sin grupo "Configuración": el acceso a /settings es el engranaje del footer del sidebar (SidebarUser),
   // que ya existe. Tener ambos duplicaba la misma entrada.
 ];

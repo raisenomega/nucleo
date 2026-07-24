@@ -5,7 +5,7 @@ import { useI18n } from "@shared/i18n";
 import { useBrand } from "@shared/providers/BrandProvider";
 import { useSession } from "@shared/providers/SessionProvider";
 import { useSuperAdmin } from "@shared/hooks/useSuperAdmin";
-import { SECTIONS, LANDING_SECTION, type NavSection } from "@shared/components/sidebar.nav";
+import { SECTIONS, LANDING_SECTION, CAMPAIGNS_SECTION, ANALYTICS_SECTION, type NavSection } from "@shared/components/sidebar.nav";
 import { SUPERADMIN_SECTIONS } from "@shared/components/sidebar.superadmin.nav";
 import { SidebarSection } from "@shared/components/SidebarSection";
 import { SidebarUser } from "@shared/components/SidebarUser";
@@ -29,7 +29,7 @@ export function Sidebar({ expanded, onClose, onToggle }: { expanded: boolean; on
   const { pathname } = useLocation();
   // Superadmin → grupos de PLATAFORMA (no tenant). Tenant → grupos de siempre (+ Landing si CEO/superadmin y activo).
   const isCeo = session?.role === "ceo" || session?.role === "superadmin";
-  const sections = isSuperAdmin ? SUPERADMIN_SECTIONS : brand.landingEnabled && isCeo ? [...SECTIONS, LANDING_SECTION] : SECTIONS;
+  const sections = isSuperAdmin ? SUPERADMIN_SECTIONS : brand.landingEnabled && isCeo ? [...SECTIONS, LANDING_SECTION, CAMPAIGNS_SECTION, ANALYTICS_SECTION] : SECTIONS;
   const [openSection, setOpenSection] = useState<string>(() => activeSection(pathname, sections));
   useEffect(() => { const s = activeSection(pathname, sections); if (s) setOpenSection(s); }, [pathname]);
   const { count: unseenWeb } = useUnseenWebLeads(pathname);

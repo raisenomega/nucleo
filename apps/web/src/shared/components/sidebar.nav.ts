@@ -51,8 +51,6 @@ export const SECTIONS: NavSection[] = [
 export const LANDING_SECTION: NavSection = {
   title: "landing", icon: Palette, items: [
     { key: "landingSiteSettings", icon: SlidersHorizontal, to: "/settings/landing/config", mod: "settings" },
-    { key: "landingCampaigns", icon: Megaphone, to: "/campanas", mod: "settings" },
-    { key: "landingAnalytics", icon: BarChart3, to: "/settings/landing/analytics", mod: "settings" },
     { key: "landingServicePages", icon: Layers, to: "/settings/landing/service-pages", mod: "settings" },
     { key: "landingCategories", icon: Tags, to: "/settings/landing/categories", mod: "settings" },
     { key: "products", icon: Package, to: "/settings/landing/products", mod: "settings" },
@@ -64,4 +62,14 @@ export const LANDING_SECTION: NavSection = {
     { key: "landingCoupons", icon: Ticket, to: "/settings/landing/coupons", mod: "settings" },
     { key: "landingPaymentMethods", icon: CreditCard, to: "/settings/landing/payment-methods", mod: "settings" },
   ],
+};
+
+// Campañas y Analytics: grupos propios (el sitio web ≠ las campañas ≠ la medición). Mismo gate que LANDING.
+export const CAMPAIGNS_SECTION: NavSection = {
+  title: "landingCampaigns", icon: Megaphone,
+  items: [{ key: "landingCampaigns", icon: Megaphone, to: "/campanas", mod: "settings" }],
+};
+export const ANALYTICS_SECTION: NavSection = {
+  title: "landingAnalytics", icon: BarChart3,
+  items: [{ key: "landingAnalytics", icon: BarChart3, to: "/settings/landing/analytics", mod: "settings" }],
 };
