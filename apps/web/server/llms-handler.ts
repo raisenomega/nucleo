@@ -1,5 +1,6 @@
-import { defineHandler, getRequestHost } from "h3";
+import { defineHandler, getRequestHost, getRequestHeader } from "h3";
 import { getSeoData, type SeoTier, type SeoAddon } from "@shared/seo/seo-data";
+import { trackAiCrawl } from "@shared/analytics/track-server";
 
 const RAISEN = new Set(["nucleoraisen.com", "www.nucleoraisen.com", "nucleo-blush.vercel.app", "localhost"]);
 
@@ -74,6 +75,7 @@ San Juan, Puerto Rico
 export default defineHandler(async (event) => {
   const host = (getRequestHost(event) || "").split(":")[0]?.toLowerCase() ?? "";
   if (!RAISEN.has(host)) return new Response("Not found", { status: 404 });
+  void trackAiCrawl({ user_agent: getRequestHeader(event, "user-agent"), host, path: "/llms.txt", resource: "llms" });
   const seo = await getSeoData();
   const body = HEAD + (seo ? pricing(seo.tiers, seo.addons) : FALLBACK_PRICING) + TAIL;
   return new Response(body, {

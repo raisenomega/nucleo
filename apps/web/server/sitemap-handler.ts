@@ -1,4 +1,5 @@
-import { defineHandler, getRequestHost } from "h3";
+import { defineHandler, getRequestHost, getRequestHeader } from "h3";
+import { trackAiCrawl } from "@shared/analytics/track-server";
 
 const RAISEN = new Set(["nucleoraisen.com", "www.nucleoraisen.com", "nucleo-blush.vercel.app", "localhost"]);
 const BASE = "https://www.nucleoraisen.com";
@@ -29,6 +30,7 @@ async function legalUrls(): Promise<string> {
 export default defineHandler(async (event) => {
   const host = (getRequestHost(event) || "").split(":")[0]?.toLowerCase() ?? "";
   if (!RAISEN.has(host)) return new Response("Not found", { status: 404 });
+  void trackAiCrawl({ user_agent: getRequestHeader(event, "user-agent"), host, path: "/sitemap.xml", resource: "sitemap" });
   const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${url(`${BASE}/`, "weekly", "1.0", undefined, true)}

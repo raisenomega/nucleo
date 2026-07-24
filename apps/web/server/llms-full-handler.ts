@@ -1,5 +1,6 @@
-import { defineHandler, getRequestHost } from "h3";
+import { defineHandler, getRequestHost, getRequestHeader } from "h3";
 import { getSeoData, type SeoData } from "@shared/seo/seo-data";
+import { trackAiCrawl } from "@shared/analytics/track-server";
 
 const RAISEN = new Set(["nucleoraisen.com", "www.nucleoraisen.com", "nucleo-blush.vercel.app", "localhost"]);
 
@@ -91,6 +92,7 @@ Todos los planes incluyen usuarios ilimitados y un setup de implementación de $
 export default defineHandler(async (event) => {
   const host = (getRequestHost(event) || "").split(":")[0]?.toLowerCase() ?? "";
   if (!RAISEN.has(host)) return new Response("Not found", { status: 404 });
+  void trackAiCrawl({ user_agent: getRequestHeader(event, "user-agent"), host, path: "/llms-full.txt", resource: "llms_full" });
   const seo = await getSeoData();
   const body = HEAD + (seo ? dynamicBody(seo) : FALLBACK) + TAIL;
   return new Response(body, {

@@ -1,4 +1,5 @@
-import { defineHandler, getRequestHost } from "h3";
+import { defineHandler, getRequestHost, getRequestHeader } from "h3";
+import { trackAiCrawl } from "@shared/analytics/track-server";
 
 const RAISEN = new Set(["nucleoraisen.com", "www.nucleoraisen.com", "nucleo-blush.vercel.app", "localhost"]);
 
@@ -20,6 +21,7 @@ const block = (paths: string[]) => paths.map((p) => `Disallow: ${p}`).join("\n")
 export default defineHandler((event) => {
   const host = (getRequestHost(event) || "").split(":")[0]?.toLowerCase() ?? "";
   const isRaisen = RAISEN.has(host);
+  void trackAiCrawl({ user_agent: getRequestHeader(event, "user-agent"), host, path: "/robots.txt", resource: "robots" });
   const body = isRaisen
     ? `User-agent: *\nAllow: /\n${block([...PANEL, ...TENANT_ONLY])}\n\nSitemap: https://www.nucleoraisen.com/sitemap.xml\n`
     : `User-agent: *\nAllow: /\n${block(PANEL)}\n`;

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { BarChart, Bar, XAxis, ResponsiveContainer, Tooltip } from "recharts";
 import { getLandingAnalytics, type LandingAnalytics } from "@shared/analytics/analytics.repository";
+import { AiVisibilityPanel } from "@shared/analytics/AiVisibilityPanel";
 
 const PERIODS = [7, 30, 90];
 
@@ -26,6 +27,7 @@ export function TenantAnalyticsPanel() {
           <div className="rounded-lg border border-border bg-card p-4"><p className="mb-2 text-sm font-bold text-foreground">Top páginas</p>{rows(a.topPages.map((p) => ({ label: p.path, n: p.views })))}</div>
           <div className="rounded-lg border border-border bg-card p-4"><p className="mb-2 text-sm font-bold text-foreground">Fuentes</p>{rows(a.sources.map((s) => ({ label: s.source, n: s.count })))}</div>
         </div>
+        <AiVisibilityPanel ai={a.ai} />
         <p className="rounded-lg border border-dashed border-border bg-secondary/40 p-3 text-center text-xs text-muted-foreground">¿Necesitas análisis avanzado de marketing? Conecta con <span className="font-bold text-foreground">OMEGA</span>.</p>
       </>)}
     </div>

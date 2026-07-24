@@ -3,7 +3,7 @@ import { useLocation } from "@tanstack/react-router";
 import { supabase } from "@shared/lib/supabase";
 
 // Ola 2.8a · tracker cliente (humanos). Fire-and-forget, NUNCA bloquea la UI. visitor_id anónimo (no PII).
-const VKEY = "_nr_vid"; const SKEY = "_nr_sid"; const SUTM = "_nr_utm";
+const VKEY = "_nr_vid"; const SKEY = "_nr_sid"; const SUTM = "_nr_utm"; const SAIR = "_nr_air";
 const uuid = () => (typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`);
 
 function visitorId(): string {
@@ -39,8 +39,32 @@ export function track(eventType: string, extras?: Record<string, unknown>): void
   } catch { /* nunca rompe la UI */ }
 }
 
+// Ola 2.8b · referral de IA: un humano que llega desde una respuesta de IA (chatgpt.com, perplexity.ai…). Es
+// la señal más valiosa (te están CITANDO, no solo leyendo). Se detecta por el referrer del pageview.
+function aiReferrer(ref: string): string | null {
+  const r = ref.toLowerCase();
+  if (r.includes("chatgpt.com") || r.includes("chat.openai.com")) return "chatgpt";
+  if (r.includes("perplexity.ai")) return "perplexity";
+  if (r.includes("claude.ai")) return "claude";
+  if (r.includes("gemini.google.com") || r.includes("bard.google.com")) return "gemini";
+  if (r.includes("copilot.microsoft.com") || r.includes("bing.com/chat")) return "copilot";
+  if (r.includes("you.com")) return "you";
+  if (r.includes("poe.com")) return "poe";
+  return null;
+}
+// document.referrer es el de ENTRADA a la sesión (estable entre navegaciones SPA) → se emite UNA vez por sesión.
+function maybeAiReferral(): void {
+  try {
+    if (typeof window === "undefined" || sessionStorage.getItem(SAIR)) return;
+    const src = aiReferrer(document.referrer || "");
+    if (!src) return;
+    sessionStorage.setItem(SAIR, "1");
+    track("ai_referral", { metadata: { source: src } });
+  } catch { /* nunca rompe la UI */ }
+}
+
 // Pageview automático en el montaje y en cada cambio de ruta (para los roots de landing).
 export function usePageview(): void {
   const { pathname } = useLocation();
-  useEffect(() => { track("page_view"); }, [pathname]);
+  useEffect(() => { track("page_view"); maybeAiReferral(); }, [pathname]);
 }
