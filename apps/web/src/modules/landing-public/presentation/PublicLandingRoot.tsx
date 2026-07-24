@@ -1,5 +1,6 @@
 import { useI18n } from "@shared/i18n";
 import { isReady } from "@shared/types/fetch-state.types";
+import { usePageview } from "@shared/analytics/track";
 import { usePublicBrand } from "@landing-public/presentation/usePublicBrand.hook";
 import { MotionProvider } from "@landing-public/motion/motion-loader";
 import { HeroContainer } from "@landing-public/primitives/HeroContainer";
@@ -16,6 +17,7 @@ import { PublicFooter } from "@landing-public/presentation/footer/PublicFooter";
 // Home pública (3.E.3): hero data-driven full-screen (config real vía _public_get_landing_home).
 export function PublicLandingRoot() {
   const { t } = useI18n();
+  usePageview();
   const s = usePublicBrand();
   const homeState = useLandingHome();
   const home = isReady(homeState) ? homeState.data : null;

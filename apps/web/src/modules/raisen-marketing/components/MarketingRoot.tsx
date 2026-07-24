@@ -1,5 +1,6 @@
 import "@raisen-marketing/styles/marketing.css";
 import { useState } from "react";
+import { usePageview } from "@shared/analytics/track";
 import { useMarketingLang } from "@raisen-marketing/hooks/useMarketingLang";
 import { useMarketingHero } from "@raisen-marketing/hooks/useMarketingHero";
 import { useMarketingSections } from "@raisen-marketing/hooks/useMarketingSections";
@@ -26,6 +27,7 @@ export default function MarketingRoot({ ssr }: { ssr?: LandingData | null } = {}
 // Contenido de la landing (DNA dorado OMEGA). Fondo 3D fixed z-0 + contenido z-10. Las secciones se
 // renderizan según marketing_sections (visibilidad + orden, editable en /web/secciones); fallback = orden real.
 function MarketingContent() {
+  usePageview();
   const { lang, toggleLang } = useMarketingLang();
   const hero = useMarketingHero();
   const sections = useMarketingSections();

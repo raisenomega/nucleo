@@ -1,13 +1,16 @@
+import { useEffect } from "react";
 import { GlassCard } from "@landing-public/primitives/GlassCard";
 import { ContactForm } from "@landing-public/presentation/contact/ContactForm";
 import { ContactSuccess } from "@landing-public/presentation/contact/ContactSuccess";
 import { useCreateLead } from "@landing-public/presentation/useCreateLead.hook";
+import { track } from "@shared/analytics/track";
 import type { InterestedItem } from "@landing-public/domain/interested-item.types";
 
 // Card con el form de contacto (crea lead vía _public_create_lead). Reusable: inline en detail pages (con
 // preselectedItem → lead 'quote') y dentro del ContactPopup del home. Extraído del antiguo ContactSection.
 export function ContactFormCard({ preselectedItem }: { preselectedItem?: InterestedItem }) {
   const lead = useCreateLead();
+  useEffect(() => { if (lead.status === "success") track(preselectedItem ? "form_quote_submitted" : "form_contact_submitted"); }, [lead.status, preselectedItem]);
   return (
     <GlassCard elevation="lg" padding="lg">
       {lead.status === "success"
