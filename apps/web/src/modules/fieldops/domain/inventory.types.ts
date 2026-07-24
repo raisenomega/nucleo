@@ -15,6 +15,7 @@ export interface InventoryItem {
   readonly photoUrls: readonly string[];
   readonly categoryId: string | null; readonly categoryName: string | null;
   readonly unitOfMeasureId: string | null; readonly unitOfMeasureAbbreviation: string | null; readonly unitOfMeasureName: string | null;
+  readonly barcode: string | null;
 }
 
 export interface TransferData { readonly qty: number; readonly zone: string; readonly aisle: string; readonly shelf: string; readonly bin: string; readonly notes: string; }
@@ -32,7 +33,7 @@ export interface InventoryFormData {
   readonly shelf: string;
   readonly bin: string;
   readonly reorderPoint: number | null; readonly reorderQty: number | null;
-  readonly categoryId: string | null; readonly unitOfMeasureId: string | null;
+  readonly categoryId: string | null; readonly unitOfMeasureId: string | null; readonly barcode: string | null;
 }
 
 export interface RestockData {
@@ -66,4 +67,5 @@ export interface IInventoryRepository {
   transfer(itemId: string, data: TransferData): Promise<Result<string | null, string>>;
   listMovements(itemId: string): Promise<InventoryMovement[]>;
   listLandingProducts(): Promise<LandingProductRef[]>;
+  findByBarcode(barcode: string): Promise<InventoryItem | null>;
 }

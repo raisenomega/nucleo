@@ -39,6 +39,8 @@ export const enInventory = {
   allCategories: "All categories", filterByCategory: "Filter by category", byCategory: "By category",
   unitOfMeasure: "Unit of measure", abbreviation: "Abbreviation", uomGroup: "Group", createUnit: "Create unit", manageUnits: "Manage units",
   count: "Count", volume: "Volume", weight: "Weight", length: "Length", area: "Area", time: "Time",
+  barcode: "Barcode", scanBarcode: "Scan code", generateBarcode: "Generate", scanOrEnterBarcode: "Scan or enter the barcode",
+  cameraPermissionDenied: "Couldn't access the camera. Check permissions or enter the code manually.", pointCameraAtBarcode: "Point the camera at the barcode", noBarcode: "No barcode",
   itemPhotos: "Item photos (max 3)", savePhotoHint: "Save the item first to add photos.",
   inventoryItems: "Items",
 } satisfies Partial<Record<TranslationKey, string>>;

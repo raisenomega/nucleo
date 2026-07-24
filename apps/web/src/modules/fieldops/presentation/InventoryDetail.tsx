@@ -6,6 +6,7 @@ import { ScreenModal } from "@shared/components/ScreenModal";
 import { InventoryMovements } from "@fieldops/presentation/InventoryMovements";
 import { InventoryItemCharts } from "@fieldops/presentation/InventoryItemCharts";
 import { SignedPhotos } from "@fieldops/presentation/SignedPhotos";
+import { BarcodeDisplay } from "@fieldops/presentation/BarcodeDisplay";
 import { consumption, itemValue, type RawMov } from "@fieldops/application/inventory-analytics";
 import type { InventoryItem } from "@fieldops/domain/inventory.types";
 
@@ -37,6 +38,7 @@ export function InventoryDetail({ item, movs, now, onClose }: { item: InventoryI
           {item.lastRestockDate && row(t("lastRestock"), item.lastRestockDate.slice(0, 10))}
           {(item.warehouseZone || item.aisle || item.shelf || item.bin) && row(t("location"), [item.warehouseZone, item.aisle, item.shelf, item.bin].filter(Boolean).join(" · "))}
         </dl>
+        {item.barcode ? <div className="border-t border-border pt-3"><BarcodeDisplay value={item.barcode} /></div> : <p className="text-xs text-muted-foreground">{t("noBarcode")}</p>}
         {cons.avg > 0 && <p className={`text-sm ${cons.high ? "font-bold text-destructive" : "text-muted-foreground"}`}>{t("consumeThisMonth")}: {cons.cur} ({t("average")}: {cons.avg.toFixed(1)}){cons.high && ` · ${t("highConsumption")}`}</p>}
         <InventoryItemCharts item={item} movs={movs} now={now} />
         <InventoryMovements itemId={item.id} />

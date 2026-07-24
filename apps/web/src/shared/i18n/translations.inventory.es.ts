@@ -39,6 +39,8 @@ export const esInventory = {
   allCategories: "Todas las categorías", filterByCategory: "Filtrar por categoría", byCategory: "Por categoría",
   unitOfMeasure: "Unidad de medida", abbreviation: "Abreviatura", uomGroup: "Grupo", createUnit: "Crear unidad", manageUnits: "Gestionar unidades",
   count: "Conteo", volume: "Volumen", weight: "Peso", length: "Longitud", area: "Área", time: "Tiempo",
+  barcode: "Código de barras", scanBarcode: "Escanear código", generateBarcode: "Generar", scanOrEnterBarcode: "Escanea o ingresa el código de barras",
+  cameraPermissionDenied: "No se pudo acceder a la cámara. Revisa los permisos o ingresa el código manualmente.", pointCameraAtBarcode: "Apunta la cámara al código de barras", noBarcode: "Sin código de barras",
   itemPhotos: "Fotos del artículo (máx 3)", savePhotoHint: "Guarda el artículo primero para agregar fotos.",
   inventoryItems: "Artículos",
 } satisfies Partial<Record<TranslationKey, string>>;

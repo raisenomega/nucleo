@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useI18n } from "@shared/i18n";
 import { useToast } from "@shared/providers/toast-context";
 import { InventoryTable } from "@fieldops/presentation/InventoryTable";
@@ -14,9 +14,9 @@ import type { SupplierRef } from "@fieldops/domain/supplier.types";
 type Inv = ReturnType<typeof useInventory>;
 
 // Bundle: tabla + modales de item (detalle/restock/ajuste-merma/transferencia). Mantiene la ruta liviana.
-export function InventoryItemsPanel({ inv, rows, movs, now, suppliers, slow, high, reorder, onEdit, onDelete }: {
+export function InventoryItemsPanel({ inv, rows, movs, now, suppliers, slow, high, reorder, focusId, onEdit, onDelete }: {
   inv: Inv; rows: readonly InventoryItem[]; movs: RawMov[]; now: Date; suppliers: readonly SupplierRef[];
-  slow: ReadonlySet<string>; high: ReadonlySet<string>; reorder: ReadonlySet<string>;
+  slow: ReadonlySet<string>; high: ReadonlySet<string>; reorder: ReadonlySet<string>; focusId?: string | null;
   onEdit: (id: string) => void; onDelete: (id: string) => void;
 }) {
   const { t } = useI18n();
@@ -25,6 +25,7 @@ export function InventoryItemsPanel({ inv, rows, movs, now, suppliers, slow, hig
   const [restocking, setRestocking] = useState<string | null>(null);
   const [action, setAction] = useState<{ id: string; mode: "adjust" | "shrink" } | null>(null);
   const [transferring, setTransferring] = useState<string | null>(null);
+  useEffect(() => { if (focusId) setViewing(focusId); }, [focusId]);
   const find = (id: string | null | undefined) => inv.items.find((i) => i.id === id);
   async function doRestock(d: RestockData) { if (!restocking) return; const r = await inv.restock(restocking, d); if (r.ok) { setRestocking(null); toast.success(t("entryRegistered")); } else toast.error(r.error); }
   async function doAction(qty: number, reason: string) { if (!action) return; const r = action.mode === "adjust" ? await inv.adjust(action.id, qty, reason) : await inv.shrink(action.id, qty, reason); if (r.ok) { setAction(null); toast.success(t("saved")); } else toast.error(r.error); }

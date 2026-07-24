@@ -7,16 +7,17 @@ import { UomPicker } from "@fieldops/presentation/UomPicker";
 import type { InventoryFormData, LandingProductRef } from "@fieldops/domain/inventory.types";
 import type { SupplierRef } from "@fieldops/domain/supplier.types";
 
-export function InventoryForm({ initial, itemId, photoUrls, tenantId, landingProducts, suppliers, onSubmit, onCancel }: {
+export function InventoryForm({ initial, itemId, photoUrls, tenantId, landingProducts, suppliers, prefillBarcode, onSubmit, onCancel }: {
   initial?: InventoryFormData; itemId?: string; photoUrls?: readonly string[]; tenantId: string;
-  landingProducts: readonly LandingProductRef[]; suppliers: readonly SupplierRef[];
+  landingProducts: readonly LandingProductRef[]; suppliers: readonly SupplierRef[]; prefillBarcode?: string;
   onSubmit: (d: InventoryFormData) => void;
   onCancel: () => void;
 }) {
   const { t } = useI18n();
   const { can } = useModuleAccess();
   const [photos, setPhotos] = useState<string[]>([...(photoUrls ?? [])]);
-  const [f, setF] = useState<InventoryFormData>(initial ?? { name: "", sku: "", stock: 0, unitCost: 0, minStock: 0, landingProductId: null, supplierId: null, warehouseZone: "", aisle: "", shelf: "", bin: "", reorderPoint: null, reorderQty: null, categoryId: null, unitOfMeasureId: null });
+  const [f, setF] = useState<InventoryFormData>(initial ?? { name: "", sku: "", stock: 0, unitCost: 0, minStock: 0, landingProductId: null, supplierId: null, warehouseZone: "", aisle: "", shelf: "", bin: "", reorderPoint: null, reorderQty: null, categoryId: null, unitOfMeasureId: null, barcode: prefillBarcode ?? null });
+  const genBarcode = () => setF((c) => ({ ...c, barcode: c.sku.trim() || `${(c.name.slice(0, 3) || "ITM").toUpperCase()}-${Date.now().toString().slice(-8)}` }));
   const field = "w-full rounded-lg border border-border bg-background p-2 font-body";
   const lbl = "text-xs font-bold text-muted-foreground";
   const num = (k: "stock" | "unitCost" | "minStock", label: string) => (
@@ -36,6 +37,9 @@ export function InventoryForm({ initial, itemId, photoUrls, tenantId, landingPro
           <input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} className={field} /></label>
         <label className="space-y-1"><span className={lbl}>{t("sku")}</span>
           <input value={f.sku} onChange={(e) => setF({ ...f, sku: e.target.value })} placeholder="ZAF-30GL-001" className={field} /></label>
+        <label className="space-y-1"><span className={lbl}>{t("barcode")}</span>
+          <div className="flex gap-1"><input value={f.barcode ?? ""} onChange={(e) => setF({ ...f, barcode: e.target.value || null })} placeholder={t("scanOrEnterBarcode")} className={field} />
+            <button type="button" onClick={genBarcode} className="shrink-0 rounded-lg border border-border px-2 text-xs font-bold text-foreground">{t("generateBarcode")}</button></div></label>
         <div className="space-y-1 md:col-span-2"><span className={lbl}>{t("itemPhotos")}</span>
           {itemId ? <ItemPhotoUploader tenantId={tenantId} itemId={itemId} value={photos} onChange={setPhotos} /> : <p className="text-xs text-muted-foreground">{t("savePhotoHint")}</p>}</div>
         {num("stock", t("stock"))}

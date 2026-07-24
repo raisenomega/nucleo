@@ -18,7 +18,7 @@ export async function getProductInventorySnapshot(productId: string): Promise<Pr
     landingProductId: (d.landing_product_id as string | null) ?? null, lastRestockDate: (d.last_restock_date as string | null) ?? null,
     warehouseZone: s(d.warehouse_zone), aisle: s(d.aisle), shelf: s(d.shelf), bin: s(d.bin),
     reorderPoint: d.reorder_point == null ? null : n(d.reorder_point), reorderQty: d.reorder_qty == null ? null : n(d.reorder_qty), photoUrls: [],
-    categoryId: null, categoryName: null, unitOfMeasureId: null, unitOfMeasureAbbreviation: null, unitOfMeasureName: null,
+    categoryId: null, categoryName: null, unitOfMeasureId: null, unitOfMeasureAbbreviation: null, unitOfMeasureName: null, barcode: null,
   };
   return { linked: true, item, isLow: d.is_low === true, stockValue: d.stock_value == null ? null : n(d.stock_value) };
 }

@@ -11,10 +11,10 @@ interface Row {
   id: string; tenant_id: string; name: string;
   stock: number | string; unit_cost: number | string; min_stock: number | string;
   sku: string | null; avg_cost: number | string; supplier_name: string | null; supplier_id: string | null; landing_product_id: string | null; last_restock_date: string | null;
-  warehouse_zone: string | null; aisle: string | null; shelf: string | null; bin: string | null; reorder_point: number | null; reorder_qty: number | null; photo_urls: string[] | null; category_id: string | null; category: { id: string; label: string } | null; unit_of_measure_id: string | null; unit_of_measure: { id: string; name: string; abbreviation: string } | null;
+  warehouse_zone: string | null; aisle: string | null; shelf: string | null; bin: string | null; reorder_point: number | null; reorder_qty: number | null; photo_urls: string[] | null; category_id: string | null; category: { id: string; label: string } | null; unit_of_measure_id: string | null; unit_of_measure: { id: string; name: string; abbreviation: string } | null; barcode: string | null;
 }
 
-const SELECT = "id, tenant_id, name, stock, unit_cost, min_stock, sku, avg_cost, supplier_name, supplier_id, landing_product_id, last_restock_date, warehouse_zone, aisle, shelf, bin, reorder_point, reorder_qty, photo_urls, category_id, category:categories!category_id(id, label), unit_of_measure_id, unit_of_measure:units_of_measure!unit_of_measure_id(id, name, abbreviation)";
+const SELECT = "id, tenant_id, name, stock, unit_cost, min_stock, sku, avg_cost, supplier_name, supplier_id, landing_product_id, last_restock_date, warehouse_zone, aisle, shelf, bin, reorder_point, reorder_qty, photo_urls, category_id, category:categories!category_id(id, label), unit_of_measure_id, unit_of_measure:units_of_measure!unit_of_measure_id(id, name, abbreviation), barcode";
 
 function toItem(r: Row): InventoryItem {
   return {
@@ -22,12 +22,12 @@ function toItem(r: Row): InventoryItem {
     stock: Number(r.stock), unitCost: Number(r.unit_cost), minStock: Number(r.min_stock), sku: r.sku ?? "",
     avgCost: Number(r.avg_cost), supplierName: r.supplier_name ?? "", supplierId: r.supplier_id, landingProductId: r.landing_product_id, lastRestockDate: r.last_restock_date,
     warehouseZone: r.warehouse_zone ?? "", aisle: r.aisle ?? "", shelf: r.shelf ?? "", bin: r.bin ?? "", reorderPoint: r.reorder_point, reorderQty: r.reorder_qty,
-    photoUrls: r.photo_urls ?? [], categoryId: r.category_id, categoryName: r.category?.label ?? null, unitOfMeasureId: r.unit_of_measure_id, unitOfMeasureAbbreviation: r.unit_of_measure?.abbreviation ?? null, unitOfMeasureName: r.unit_of_measure?.name ?? null,
+    photoUrls: r.photo_urls ?? [], categoryId: r.category_id, categoryName: r.category?.label ?? null, unitOfMeasureId: r.unit_of_measure_id, unitOfMeasureAbbreviation: r.unit_of_measure?.abbreviation ?? null, unitOfMeasureName: r.unit_of_measure?.name ?? null, barcode: r.barcode ?? null,
   };
 }
 
 function toRow(d: InventoryFormData) {
-  return { name: d.name, sku: d.sku || null, stock: d.stock, unit_cost: d.unitCost, min_stock: d.minStock, landing_product_id: d.landingProductId, supplier_id: d.supplierId, warehouse_zone: d.warehouseZone || null, aisle: d.aisle || null, shelf: d.shelf || null, bin: d.bin || null, reorder_point: d.reorderPoint, reorder_qty: d.reorderQty, category_id: d.categoryId, unit_of_measure_id: d.unitOfMeasureId };
+  return { name: d.name, sku: d.sku || null, stock: d.stock, unit_cost: d.unitCost, min_stock: d.minStock, landing_product_id: d.landingProductId, supplier_id: d.supplierId, warehouse_zone: d.warehouseZone || null, aisle: d.aisle || null, shelf: d.shelf || null, bin: d.bin || null, reorder_point: d.reorderPoint, reorder_qty: d.reorderQty, category_id: d.categoryId, unit_of_measure_id: d.unitOfMeasureId, barcode: d.barcode || null };
 }
 
 async function rpcId(fn: string, args: object): Promise<Result<string | null, string>> {
@@ -38,23 +38,24 @@ async function rpcId(fn: string, args: object): Promise<Result<string | null, st
 export const supabaseInventoryRepository: IInventoryRepository = {
   async list(): Promise<InventoryListResult> {
     const { data, error } = await supabase.from("inventory_items").select(SELECT).order("name");
-    if (error) return { ok: false, error: error.message };
-    return { ok: true, value: (data as unknown as Row[]).map(toItem) };
+    return error ? { ok: false, error: error.message } : { ok: true, value: (data as unknown as Row[]).map(toItem) };
   },
   async create(d): Promise<Result<InventoryItem, string>> {
     const { data, error } = await supabase.from("inventory_items").insert(toRow(d)).select(SELECT).single();
-    if (error || !data) return { ok: false, error: error?.message ?? "error" };
-    return { ok: true, value: toItem(data as unknown as Row) };
+    return error || !data ? { ok: false, error: error?.message ?? "error" } : { ok: true, value: toItem(data as unknown as Row) };
   },
   async update(id, d): Promise<Result<InventoryItem, string>> {
     const { data, error } = await supabase.from("inventory_items").update(toRow(d)).eq("id", id).select(SELECT).single();
-    if (error || !data) return { ok: false, error: error?.message ?? "error" };
-    return { ok: true, value: toItem(data as unknown as Row) };
+    return error || !data ? { ok: false, error: error?.message ?? "error" } : { ok: true, value: toItem(data as unknown as Row) };
   },
   async remove(id): Promise<Result<null, string>> {
     const { error } = await supabase.from("inventory_items").delete().eq("id", id);
-    if (error) return { ok: false, error: error.message };
-    return { ok: true, value: null };
+    return error ? { ok: false, error: error.message } : { ok: true, value: null };
+  },
+  async findByBarcode(barcode): Promise<InventoryItem | null> {
+    const { data: id } = await supabase.rpc("find_item_by_barcode", { p_barcode: barcode });
+    const { data } = id ? await supabase.from("inventory_items").select(SELECT).eq("id", id as string).single() : { data: null };
+    return data ? toItem(data as unknown as Row) : null;
   },
   restock(itemId, d) { return rpcId("record_restock", { p_item_id: itemId, p_quantity: d.quantity, p_unit_cost: d.unitCost, p_supplier: d.supplier || null, p_notes: d.notes || null, p_date: d.date || undefined, p_supplier_id: d.supplierId || null }); },
   adjust(itemId, newQty, reason) { return rpcId("record_adjustment", { p_item_id: itemId, p_new_qty: newQty, p_reason: reason || null }); },
@@ -63,8 +64,7 @@ export const supabaseInventoryRepository: IInventoryRepository = {
   async listMovements(itemId): Promise<InventoryMovement[]> {
     const { data } = await supabase.rpc("list_item_movements", { p_item_id: itemId });
     return ((data as MovRow[] | null) ?? []).map((r) => ({
-      id: r.id, type: r.movement_type, quantity: Number(r.quantity), date: r.movement_date,
-      delta: Number(r.delta ?? 0), unitCost: r.unit_cost == null ? null : Number(r.unit_cost), runningBalance: Number(r.running_balance ?? 0),
+      id: r.id, type: r.movement_type, quantity: Number(r.quantity), date: r.movement_date, delta: Number(r.delta ?? 0), unitCost: r.unit_cost == null ? null : Number(r.unit_cost), runningBalance: Number(r.running_balance ?? 0),
       notes: r.notes, employee: r.employee, clientName: r.client_name, serviceType: r.service_type, routeDate: r.route_date,
     }));
   },
