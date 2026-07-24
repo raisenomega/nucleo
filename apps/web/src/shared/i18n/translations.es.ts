@@ -54,7 +54,7 @@ export const es = {
   requiredFields: "Completa nombre y teléfono",
   crmSection: "CRM", totalLeads: "Leads del mes", totalQuoted: "Total cotizado",
   conversionRate: "Conversión", recentLeads: "Leads recientes",
-  marketingSubtitle: "Presupuestos y gastos por canal.", channel: "Canal",
+  marketingSubtitle: "Presupuestos y gastos por canal.", omegaTitle: "Potencia tu marketing con OMEGA", omegaMsg: "NÚCLEO gestiona tu operación. OMEGA gestiona tu marketing con IA. Juntos, tu negocio funciona y crece al mismo tiempo.", omegaMsgMarketing: "Estás midiendo tu inversión en marketing. OMEGA la ejecuta: crea el contenido, publica en tus redes y mide qué funciona — todo con IA.", omegaBullet1: "Contenido con IA", omegaBullet2: "Publicación automática", omegaBullet3: "Análisis de resultados", omegaCta: "Conocer OMEGA", channel: "Canal",
   budgetedAmount: "Presupuesto", budgetList: "Presupuestos", newBudget: "Nuevo presupuesto",
   campaignName: "Campaña", month: "Mes", mExpenseList: "Gastos de marketing", newMExpense: "Nuevo gasto",
   spent: "Gasto real", executed: "% Ejecutado", cac: "CAC", roi: "ROI",

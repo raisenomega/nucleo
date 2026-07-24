@@ -54,7 +54,7 @@ export const en = {
   requiredFields: "Fill in name and phone",
   crmSection: "CRM", totalLeads: "Leads this month", totalQuoted: "Total quoted",
   conversionRate: "Conversion", recentLeads: "Recent leads",
-  marketingSubtitle: "Budgets and spend by channel.", channel: "Channel",
+  marketingSubtitle: "Budgets and spend by channel.", omegaTitle: "Power your marketing with OMEGA", omegaMsg: "NÚCLEO runs your operation. OMEGA runs your marketing with AI. Together, your business works and grows at the same time.", omegaMsgMarketing: "You're tracking your marketing spend. OMEGA executes it: it creates the content, posts to your social channels and measures what works — all with AI.", omegaBullet1: "AI-powered content", omegaBullet2: "Automated posting", omegaBullet3: "Results analytics", omegaCta: "Discover OMEGA", channel: "Channel",
   budgetedAmount: "Budget", budgetList: "Budgets", newBudget: "New budget",
   campaignName: "Campaign", month: "Month", mExpenseList: "Marketing expenses", newMExpense: "New expense",
   spent: "Spent", executed: "% Executed", cac: "CAC", roi: "ROI",

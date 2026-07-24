@@ -29,7 +29,7 @@ export type TranslationKey =
   | "duplicate" | "archive" | "convertToInvoice" | "send"
   | "whatsappMessage" | "invoiceSaved" | "requiredFields"
   | "crmSection" | "totalLeads" | "totalQuoted" | "conversionRate" | "recentLeads"
-  | "marketingSubtitle" | "channel" | "budgetedAmount" | "budgetList" | "newBudget"
+  | "marketingSubtitle" | "omegaTitle" | "omegaMsg" | "omegaMsgMarketing" | "omegaBullet1" | "omegaBullet2" | "omegaBullet3" | "omegaCta" | "channel" | "budgetedAmount" | "budgetList" | "newBudget"
   | "campaignName" | "month" | "mExpenseList" | "newMExpense"
   | "spent" | "executed" | "cac" | "roi" | "leadsGenerated" | "registerExpense" | "marketingExecuted"
   | "reconciliationSubtitle" | "bankAccounts" | "addAccount" | "notRegistered" | "cutoff"

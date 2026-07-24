@@ -14,6 +14,7 @@ import { MarketingBudgetTable } from "@crm/presentation/MarketingBudgetTable";
 import { MarketingExpenseForm } from "@crm/presentation/MarketingExpenseForm";
 import { MarketingExpenseTable } from "@crm/presentation/MarketingExpenseTable";
 import { MarketingExpenseDetail } from "@crm/presentation/MarketingExpenseDetail";
+import { OmegaCrossSellCard } from "@shared/components/OmegaCrossSellCard";
 import type { MExpenseFormData } from "@crm/domain/marketing.types";
 
 export const Route = createFileRoute("/_authenticated/marketing")({ component: MarketingPage });
@@ -67,6 +68,7 @@ function MarketingPage() {
       <MarketingExpenseTable rows={expenses} onView={setViewE} onEdit={can("marketing", "edit") ? setEditE : undefined}
         onDelete={can("marketing", "delete") ? (id) => { if (window.confirm(`${t("delete")}?`)) void m.removeExpense(id); } : undefined} />
       {viewExpense && <MarketingExpenseDetail item={viewExpense} onClose={() => setViewE(null)} />}
+      <OmegaCrossSellCard variant="marketing" />
     </div>
   );
 }

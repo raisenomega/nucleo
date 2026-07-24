@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useSuperAdmin } from "@shared/hooks/useSuperAdmin";
 import { PlatformDashboard } from "@admin/presentation/PlatformDashboard";
 import { TrialBanner } from "@shared/components/TrialBanner";
+import { OmegaCrossSellCard } from "@shared/components/OmegaCrossSellCard";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { useSession } from "@shared/providers/SessionProvider";
@@ -48,6 +49,7 @@ function Dashboard() {
           </div>
         </div>
       ))}
+      <OmegaCrossSellCard />
     </div>
   );
 }

@@ -28,7 +28,7 @@ export function TenantAnalyticsPanel() {
           <div className="rounded-lg border border-border bg-card p-4"><p className="mb-2 text-sm font-bold text-foreground">Fuentes</p>{rows(a.sources.map((s) => ({ label: s.source, n: s.count })))}</div>
         </div>
         <AiVisibilityPanel ai={a.ai} />
-        <p className="rounded-lg border border-dashed border-border bg-secondary/40 p-3 text-center text-xs text-muted-foreground">¿Necesitas análisis avanzado de marketing? Conecta con <span className="font-bold text-foreground">OMEGA</span>.</p>
+        <p className="rounded-lg border border-dashed border-border bg-secondary/40 p-3 text-center text-xs text-muted-foreground">¿Necesitas análisis avanzado de marketing? Conecta con <a href="https://www.omegaraisen.agency" target="_blank" rel="noopener noreferrer" className="font-bold text-primary hover:underline">OMEGA</a>.</p>
       </>)}
     </div>
   );
