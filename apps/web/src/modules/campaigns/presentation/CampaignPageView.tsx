@@ -18,7 +18,7 @@ export function CampaignPageView({ initial, preview, slug }: { initial: Campaign
   const variant = b?.themeVariant === "light" || b?.themeVariant === "dark" ? b.themeVariant : undefined;
   return (
     <div className="camp-root" style={vars} data-theme={variant}>
-      {preview && !data.page.isPublished && <div className="camp-preview-flag">Vista previa · borrador</div>}
+      {preview && !data.page.isPublished && <div className="camp-preview-banner">MODO VISTA PREVIA — esta página no está publicada</div>}
       {data.blocks.map((blk) => <BlockRenderer key={blk.id} block={blk} lang={data.page.lang} pageId={data.page.id} />)}
     </div>
   );

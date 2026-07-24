@@ -56,6 +56,81 @@
 .camp-consent { color: var(--camp-muted); font-size: 0.72rem; text-align: center; }
 .camp-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
 
+/* ---- R3: bloques restantes ---- */
+.camp-sec-title { font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 700; color: var(--camp-fg); text-align: center; margin-bottom: 1.5rem; }
+.camp-benefit-ic { display: inline-block; width: 1.1rem; height: 1.1rem; flex-shrink: 0; color: var(--camp-primary); margin-top: 0.15rem; }
+
+.camp-benefits { max-width: 56rem; margin: 0 auto; padding: 3rem 1.5rem; }
+.camp-benefits-grid { display: grid; grid-template-columns: 1fr; gap: 0.75rem; list-style: none; padding: 0; }
+@media (min-width: 768px) { .camp-benefits-grid { grid-template-columns: 1fr 1fr; } }
+.camp-benefit { display: flex; gap: 0.6rem; color: var(--camp-fg); }
+
+.camp-image { margin: 2.5rem auto; padding: 0 1.5rem; text-align: center; }
+.camp-image-img { width: 100%; height: auto; border-radius: 0.75rem; margin: 0 auto; }
+.camp-image-cap { margin-top: 0.5rem; color: var(--camp-muted); font-size: 0.85rem; }
+
+.camp-video { max-width: 56rem; margin: 2.5rem auto; padding: 0 1.5rem; }
+.camp-video-frame { position: relative; aspect-ratio: 16 / 9; border-radius: 0.75rem; overflow: hidden; background: #000; }
+.camp-video-frame iframe, .camp-video-frame video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+.camp-tst { padding: 3rem 1.5rem; }
+.camp-tst-grid { max-width: 64rem; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 1rem; }
+@media (min-width: 768px) { .camp-tst-grid { grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); } }
+.camp-tst-card { background: var(--camp-surface); border-radius: 1rem; padding: 1.5rem; }
+.camp-stars { display: flex; gap: 0.1rem; margin-bottom: 0.5rem; }
+.camp-star { width: 1rem; height: 1rem; color: var(--camp-muted); opacity: 0.4; }
+.camp-star-on { color: #f5b301; fill: #f5b301; opacity: 1; }
+.camp-tst-quote { font-style: italic; color: var(--camp-fg); line-height: 1.5; }
+.camp-tst-who { display: flex; align-items: center; gap: 0.6rem; margin-top: 1rem; }
+.camp-tst-av, .camp-tst-ini { width: 2.25rem; height: 2.25rem; border-radius: 999px; object-fit: cover; }
+.camp-tst-ini { display: grid; place-items: center; background: var(--camp-primary); color: var(--camp-on-primary); font-weight: 700; }
+.camp-tst-name { font-weight: 700; color: var(--camp-fg); font-size: 0.9rem; }
+.camp-tst-role { color: var(--camp-muted); font-size: 0.8rem; }
+
+.camp-pricing { padding: 3rem 1.5rem; }
+.camp-pricing-grid { max-width: 64rem; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 1rem; }
+@media (min-width: 768px) { .camp-pricing-grid { grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); } }
+.camp-price-card { background: var(--camp-surface); border: 1px solid transparent; border-radius: 1rem; padding: 1.75rem; text-align: center; }
+.camp-price-hi { border-color: var(--camp-primary); }
+.camp-price-name { font-weight: 700; color: var(--camp-fg); }
+.camp-price-amt { font-size: 2.25rem; font-weight: 800; color: var(--camp-fg); margin: 0.5rem 0; }
+.camp-price-per { font-size: 0.9rem; font-weight: 400; color: var(--camp-muted); }
+.camp-price-feats { list-style: none; padding: 0; margin: 1rem 0; text-align: left; display: flex; flex-direction: column; gap: 0.5rem; }
+.camp-price-feats li { display: flex; gap: 0.5rem; color: var(--camp-fg); font-size: 0.9rem; }
+
+.camp-faq { max-width: 46rem; margin: 0 auto; padding: 3rem 1.5rem; }
+.camp-faq-item { border-bottom: 1px solid var(--camp-muted); }
+.camp-faq-q { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 0; background: none; border: 0; cursor: pointer; text-align: left; font-weight: 600; color: var(--camp-fg); font-size: 1rem; }
+.camp-faq-ic { width: 1.1rem; height: 1.1rem; flex-shrink: 0; transition: transform 0.2s; color: var(--camp-primary); }
+.camp-faq-ic-open { transform: rotate(180deg); }
+.camp-faq-a { padding: 0 0 1rem; color: var(--camp-muted); line-height: 1.6; }
+
+.camp-countdown { text-align: center; padding: 3rem 1.5rem; }
+.camp-cd-head { font-size: 1.25rem; font-weight: 700; color: var(--camp-fg); margin-bottom: 1rem; }
+.camp-cd-grid { display: flex; justify-content: center; gap: 0.75rem; }
+.camp-cd-box { background: var(--camp-primary); color: var(--camp-on-primary); border-radius: 0.75rem; padding: 0.75rem 0.5rem; min-width: 4rem; }
+.camp-cd-num { display: block; font-size: 1.75rem; font-weight: 800; line-height: 1; }
+.camp-cd-lbl { display: block; font-size: 0.7rem; text-transform: uppercase; opacity: 0.8; margin-top: 0.25rem; }
+.camp-cd-exp { font-size: 1.15rem; font-weight: 700; color: var(--camp-muted); }
+
+.camp-divider { max-width: 56rem; margin-left: auto; margin-right: auto; }
+.camp-divider-line { border-top: 1px solid var(--camp-muted); opacity: 0.4; }
+.camp-divider-gradient { height: 2px; background: linear-gradient(90deg, transparent, var(--camp-primary), transparent); }
+
+.camp-logos { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 2rem; padding: 2.5rem 1.5rem; }
+.camp-logo { height: 2.25rem; width: auto; filter: grayscale(1); opacity: 0.7; transition: filter 0.2s, opacity 0.2s; }
+.camp-logo:hover { filter: grayscale(0); opacity: 1; }
+
+.camp-fgrid { max-width: 64rem; margin: 0 auto; padding: 3rem 1.5rem; display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+@media (min-width: 640px) { .camp-fgrid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .camp-fgrid { grid-template-columns: repeat(var(--camp-cols, 3), 1fr); } }
+.camp-fcard { text-align: center; padding: 1rem; }
+.camp-fic { width: 2rem; height: 2rem; color: var(--camp-primary); margin: 0 auto 0.75rem; }
+.camp-fcard-title { font-weight: 700; color: var(--camp-fg); }
+.camp-fcard-desc { margin-top: 0.4rem; color: var(--camp-muted); font-size: 0.9rem; }
+
+.camp-preview-banner { position: sticky; top: 0; z-index: 20; text-align: center; padding: 0.6rem; background: var(--camp-accent); color: var(--camp-on-primary); font-size: 0.8rem; font-weight: 700; }
+
 .camp-empty { display: flex; align-items: center; justify-content: center; padding: 6rem 1.5rem; color: var(--camp-muted); }
 .camp-preview-flag { position: sticky; top: 0; z-index: 10; text-align: center; padding: 0.5rem;
   background: var(--camp-accent); color: var(--camp-on-primary); font-size: 0.8rem; font-weight: 700; }

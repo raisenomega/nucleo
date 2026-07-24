@@ -4,8 +4,14 @@ import { getCampaignAdmin, deleteBlock, reorderBlocks, upsertBlock } from "@camp
 import { BlockDialog } from "@campaigns/presentation/BlockDialog";
 import type { CampaignBlock, BlockType } from "@campaigns/domain/campaign.types";
 
-// R1: solo se pueden AGREGAR los 3 tipos implementados. Reorden con ↑↓ (mismo patrón del CMS comercial).
-const ADDABLE: { type: BlockType; label: string }[] = [{ type: "hero", label: "Hero" }, { type: "text", label: "Texto" }, { type: "cta_banner", label: "CTA" }, { type: "form", label: "Formulario" }];
+// R3: los 14 tipos son agregables. Reorden con ↑↓ (mismo patrón del CMS comercial).
+const ADDABLE: { type: BlockType; label: string }[] = [
+  { type: "hero", label: "Hero" }, { type: "text", label: "Texto" }, { type: "benefits", label: "Beneficios" },
+  { type: "image", label: "Imagen" }, { type: "video", label: "Video" }, { type: "testimonials", label: "Testimonios" },
+  { type: "pricing", label: "Precios" }, { type: "faq", label: "FAQ" }, { type: "form", label: "Formulario" },
+  { type: "cta_banner", label: "CTA" }, { type: "countdown", label: "Countdown" }, { type: "divider", label: "Divisor" },
+  { type: "logo_bar", label: "Logos" }, { type: "features_grid", label: "Features" },
+];
 
 export function CampaignBlockList({ pageId }: { pageId: string }) {
   const [blocks, setBlocks] = useState<CampaignBlock[]>([]);

@@ -5,7 +5,8 @@ const s = (c: BlockContent, k: string) => (typeof c[k] === "string" ? (c[k] as s
 // Bloque Hero: headline grande + subtítulo + CTA sobre imagen de fondo con overlay. Colores del tema (campaign.css).
 export function HeroBlock({ content }: { content: BlockContent }) {
   const bg = s(content, "background_image_url");
-  const overlay = typeof content.overlay_opacity === "number" ? (content.overlay_opacity as number) : 0.6;
+  const ov = content.overlay_opacity;
+  const overlay = ov == null || ov === "" ? 0.6 : Number(ov);
   return (
     <section className="camp-hero" style={bg ? { backgroundImage: `url(${bg})` } : undefined}>
       <div className="camp-hero-overlay" style={{ opacity: overlay }} />
