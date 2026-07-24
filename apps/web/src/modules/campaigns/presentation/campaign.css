@@ -20,6 +20,9 @@
   --camp-fg: #f0f4f8;
   --camp-muted: #9aa4b2;
 }
+/* Contraste del texto sobre el color interactivo (botones/badges), según su luminancia. */
+.camp-root[data-oncontrast="light"] { --camp-on-primary: #ffffff; }
+.camp-root[data-oncontrast="dark"] { --camp-on-primary: #0a0a0a; }
 
 .camp-btn {
   display: inline-block; margin-top: 1.5rem; padding: 0.85rem 1.75rem; border-radius: 0.75rem;
