@@ -20,11 +20,16 @@ export function CreateCountModal({ items, onSubmit, onClose }: { items: readonly
   const [notes, setNotes] = useState("");
   const [ids, setIds] = useState<string[]>([]);
   const [emps, setEmps] = useState<Emp[]>([]);
+  const [wh, setWh] = useState("");
+  const [whs, setWhs] = useState<{ id: string; name: string; code: string }[]>([]);
   const field = "w-full rounded-lg border border-border bg-background p-2 text-sm";
-  useEffect(() => { void supabase.from("profiles").select("id,full_name").order("full_name").then(({ data }) => setEmps((data as Emp[] | null) ?? [])); }, []);
+  useEffect(() => {
+    void supabase.from("profiles").select("id,full_name").order("full_name").then(({ data }) => setEmps((data as Emp[] | null) ?? []));
+    void supabase.from("warehouses").select("id,name,code").is("deleted_at", null).order("is_default", { ascending: false }).then(({ data }) => setWhs((data as typeof whs | null) ?? []));
+  }, []);
   const toggle = (id: string) => setIds((c) => (c.includes(id) ? c.filter((x) => x !== id) : [...c, id]));
   const disabled = (type === "category" && !categoryId) || (type === "partial" && ids.length === 0);
-  const go = () => onSubmit({ countType: type, categoryId: type === "category" ? categoryId || null : null, assignedTo: assignedTo || null, blindCount: blind, notes, itemIds: type === "partial" ? ids : [] });
+  const go = () => onSubmit({ countType: type, categoryId: type === "category" ? categoryId || null : null, assignedTo: assignedTo || null, blindCount: blind, notes, itemIds: type === "partial" ? ids : [], warehouseId: wh || null });
   return (
     <ScreenModal onClose={onClose}>
       <div className="flex items-center justify-between border-b border-border p-4">
@@ -38,6 +43,8 @@ export function CreateCountModal({ items, onSubmit, onClose }: { items: readonly
         {type === "partial" && <div className="max-h-48 space-y-1 overflow-y-auto rounded-lg border border-border p-2">
           {items.map((i) => <label key={i.id} className="flex items-center gap-2 text-sm"><input type="checkbox" checked={ids.includes(i.id)} onChange={() => toggle(i.id)} />{i.name}</label>)}
         </div>}
+        <label className="block space-y-1"><span className="text-xs font-bold text-muted-foreground">{t("warehouse")}</span>
+          <select value={wh} onChange={(e) => setWh(e.target.value)} className={field}><option value="">{t("allWarehouses")}</option>{whs.map((w) => <option key={w.id} value={w.id}>{w.name} ({w.code})</option>)}</select></label>
         <label className="block space-y-1"><span className="text-xs font-bold text-muted-foreground">{t("assignTo")}</span>
           <select value={assignedTo} onChange={(e) => setAssignedTo(e.target.value)} className={field}><option value="">—</option>{emps.map((e) => <option key={e.id} value={e.id}>{e.full_name ?? e.id}</option>)}</select></label>
         <label className="flex items-start gap-2 text-sm"><input type="checkbox" checked={blind} onChange={(e) => setBlind(e.target.checked)} className="mt-1" /><span><b>{t("blindCount")}</b> — {t("blindCountExplain")}</span></label>

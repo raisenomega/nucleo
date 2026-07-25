@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AlertTriangle, Globe, Tag } from "lucide-react";
+import { AlertTriangle, Globe, Tag, Layers } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { formatCurrency } from "@shared/lib/format";
@@ -12,6 +12,7 @@ import type { InventoryItem } from "@fieldops/domain/inventory.types";
 
 const isLow = (i: InventoryItem) => i.minStock > 0 && i.stock <= i.minStock;
 const loc = (i: InventoryItem) => [i.aisle, i.shelf, i.bin].filter(Boolean).join("-") || "—";
+const wbreak = (i: InventoryItem) => i.warehouseStock.map((e) => `${e.warehouseCode}: ${e.quantity}`).join(" · ");
 
 export function InventoryTable({ rows, slow, high, reorder, onView, onEdit, onDelete, onRestock, onAdjust, onShrink, onTransfer }: {
   rows: readonly InventoryItem[]; slow?: ReadonlySet<string>; high?: ReadonlySet<string>; reorder?: ReadonlySet<string>;
@@ -42,7 +43,7 @@ export function InventoryTable({ rows, slow, high, reorder, onView, onEdit, onDe
               <td className="px-3 py-2 text-muted-foreground">{i.sku || "—"}</td>
               <td className="px-3 py-2">{i.categoryName ? <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-0.5 text-xs"><Tag className="h-3 w-3" />{i.categoryName}</span> : <span className="text-muted-foreground">—</span>}</td>
               <td className="px-3 py-2 text-muted-foreground">{loc(i)}</td>
-              <td className="px-3 py-2 text-right"><span className={`font-semibold ${isLow(i) ? "text-destructive" : ""}`}>{i.stock}{i.unitOfMeasureAbbreviation && <span className="ml-0.5 text-xs font-normal text-muted-foreground">{i.unitOfMeasureAbbreviation}</span>}</span>{isLow(i) && <AlertTriangle className="ml-1 inline h-3 w-3 text-destructive" />}</td>
+              <td className="px-3 py-2 text-right"><span title={i.warehouseStock.length > 1 ? wbreak(i) : undefined} className={`font-semibold ${isLow(i) ? "text-destructive" : ""}`}>{i.stock}{i.unitOfMeasureAbbreviation && <span className="ml-0.5 text-xs font-normal text-muted-foreground">{i.unitOfMeasureAbbreviation}</span>}</span>{i.warehouseStock.length > 1 && <Layers className="ml-1 inline h-3 w-3 text-muted-foreground" />}{isLow(i) && <AlertTriangle className="ml-1 inline h-3 w-3 text-destructive" />}</td>
               <td className="px-3 py-2 text-right">{i.minStock}</td>
               {cost && <><td className="px-3 py-2 text-right">{formatCurrency(i.unitCost)}</td><td className="px-3 py-2 text-right font-semibold">{formatCurrency(itemValue(i))}</td></>}
               <td className="px-3 py-2 text-muted-foreground">{i.supplierName || "—"}</td>

@@ -10,10 +10,10 @@ export interface POItem {
 export interface PurchaseOrder {
   readonly id: string; readonly orderNumber: number; readonly supplierId: string | null; readonly supplierName: string;
   readonly status: POStatus; readonly expectedAt: string | null; readonly receivedAt: string | null;
-  readonly totalCost: number; readonly notes: string; readonly items: readonly POItem[];
+  readonly totalCost: number; readonly notes: string; readonly warehouseId: string | null; readonly warehouseName: string | null; readonly items: readonly POItem[];
 }
 export interface POLine { readonly itemId: string; readonly quantity: number; readonly unitCost: number; }
-export interface POCreateData { readonly supplierId: string | null; readonly expectedAt: string; readonly notes: string; readonly lines: readonly POLine[]; readonly markOrdered: boolean; }
+export interface POCreateData { readonly supplierId: string | null; readonly expectedAt: string; readonly notes: string; readonly warehouseId: string | null; readonly lines: readonly POLine[]; readonly markOrdered: boolean; }
 export interface ReorderSuggestion { readonly itemId: string; readonly name: string; readonly stock: number; readonly reorderPoint: number; readonly reorderQty: number; readonly supplierId: string | null; readonly supplierName: string; readonly unitCost: number; }
 
 export interface IPurchaseOrderRepository {

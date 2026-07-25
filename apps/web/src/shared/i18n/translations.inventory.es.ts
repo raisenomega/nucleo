@@ -48,6 +48,7 @@ export const esInventory = {
   warehouse: "Almacén", warehouses: "Almacenes", warehouseCode: "Código", mainWarehouse: "Principal", stockByWarehouse: "Stock por almacén", newWarehouse: "Nuevo almacén", warehouseManager: "Gestionar almacenes",
   transferBetweenWarehouses: "Transferir entre almacenes", fromWarehouse: "Desde almacén", toWarehouse: "Hacia almacén", stockInOrigin: "Stock en origen", stockInDestination: "Stock en destino",
   cannotDeleteWithStock: "No se puede eliminar un almacén con stock", stockModifiedViaOps: "Se modifica vía restock, ajuste o conteo",
+  allWarehouses: "Todos los almacenes", destinationWarehouse: "Almacén destino",
   itemPhotos: "Fotos del artículo (máx 3)", savePhotoHint: "Guarda el artículo primero para agregar fotos.",
   inventoryItems: "Artículos",
 } satisfies Partial<Record<TranslationKey, string>>;

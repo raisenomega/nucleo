@@ -48,6 +48,7 @@ export const enInventory = {
   warehouse: "Warehouse", warehouses: "Warehouses", warehouseCode: "Code", mainWarehouse: "Main", stockByWarehouse: "Stock by warehouse", newWarehouse: "New warehouse", warehouseManager: "Manage warehouses",
   transferBetweenWarehouses: "Transfer between warehouses", fromWarehouse: "From warehouse", toWarehouse: "To warehouse", stockInOrigin: "Stock in origin", stockInDestination: "Stock in destination",
   cannotDeleteWithStock: "Can't delete a warehouse with stock", stockModifiedViaOps: "Changed via restock, adjustment or count",
+  allWarehouses: "All warehouses", destinationWarehouse: "Destination warehouse",
   itemPhotos: "Item photos (max 3)", savePhotoHint: "Save the item first to add photos.",
   inventoryItems: "Items",
 } satisfies Partial<Record<TranslationKey, string>>;

@@ -15,7 +15,8 @@ export function PurchaseOrderDetail({ order, onStatus, onReceive, onClose }: {
     <ScreenModal onClose={onClose}>
       <div className="flex items-center justify-between border-b border-border p-4">
         <h2 className="flex flex-wrap items-center gap-2 font-display text-lg font-bold text-foreground">PO-{order.orderNumber} · {order.supplierName}
-          <span className={`rounded px-1.5 py-0.5 text-xs font-bold ${PO_STATUS[st].cls}`}>{t(PO_STATUS[st].key)}</span></h2>
+          <span className={`rounded px-1.5 py-0.5 text-xs font-bold ${PO_STATUS[st].cls}`}>{t(PO_STATUS[st].key)}</span>
+          {order.warehouseName && <span className="rounded-full bg-secondary px-2 py-0.5 text-xs font-normal text-muted-foreground">{order.warehouseName}</span>}</h2>
         <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button>
       </div>
       <div className="space-y-3 p-4">

@@ -11,6 +11,7 @@ export interface CountRow {
   id: string; count_number: string; status: string; count_type: string; category_id: string | null;
   assigned_to: string | null; notes: string | null; blind_count: boolean; created_at: string;
   started_at: string | null; completed_at: string | null; approved_at: string | null; applied_at: string | null;
+  warehouse_id: string | null; warehouse?: { name: string } | null;
   assigned?: ProfileRef; creator?: ProfileRef; lines?: LineRow[];
 }
 const num = (v: unknown) => (v == null ? null : Number(v));
@@ -33,6 +34,7 @@ export function toCount(r: CountRow, withLines: boolean): InventoryCount {
     startedAt: r.started_at, completedAt: r.completed_at, approvedAt: r.approved_at, appliedAt: r.applied_at,
     totalLines: ls.length, countedLines: ls.filter((l) => l.line_status !== "pending").length,
     varianceLines: ls.filter((l) => l.variance != null && Number(l.variance) !== 0).length,
+    warehouseId: r.warehouse_id, warehouseName: r.warehouse?.name ?? null,
     lines: withLines ? ls.map(toCountLine) : undefined,
   };
 }

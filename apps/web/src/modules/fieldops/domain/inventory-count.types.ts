@@ -19,12 +19,13 @@ export interface InventoryCount {
   readonly notes: string | null; readonly blindCount: boolean; readonly createdByName: string | null; readonly createdAt: string;
   readonly startedAt: string | null; readonly completedAt: string | null; readonly approvedAt: string | null; readonly appliedAt: string | null;
   readonly totalLines: number; readonly countedLines: number; readonly varianceLines: number;
+  readonly warehouseId: string | null; readonly warehouseName: string | null;
   readonly lines?: readonly InventoryCountLine[];
 }
 
 export interface CountFormData {
   readonly countType: CountType; readonly categoryId: string | null; readonly assignedTo: string | null;
-  readonly blindCount: boolean; readonly notes: string; readonly itemIds: string[];
+  readonly blindCount: boolean; readonly notes: string; readonly itemIds: string[]; readonly warehouseId: string | null;
 }
 
 export interface IInventoryCountRepository {

@@ -3,6 +3,7 @@ import { X, Plus, Trash2 } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { formatCurrency } from "@shared/lib/format";
 import { ScreenModal } from "@shared/components/ScreenModal";
+import { WarehousePicker } from "@fieldops/presentation/WarehousePicker";
 import type { POCreateData, POLine } from "@fieldops/domain/purchase-order.types";
 import type { InventoryItem } from "@fieldops/domain/inventory.types";
 import type { SupplierRef } from "@fieldops/domain/supplier.types";
@@ -17,11 +18,12 @@ export function PurchaseOrderForm({ suppliers, items, initialSupplier, initialLi
   const [lines, setLines] = useState<POLine[]>(initialLines);
   const [expectedAt, setExpectedAt] = useState("");
   const [notes, setNotes] = useState("");
+  const [wh, setWh] = useState("");
   const total = lines.reduce((s, l) => s + l.quantity * l.unitCost, 0);
   const fld = "rounded-lg border border-border bg-background p-2 text-sm";
   const addLine = () => setLines((c) => [...c, { itemId: items[0]?.id ?? "", quantity: 1, unitCost: items[0]?.unitCost ?? 0 }]);
   const setLine = (i: number, p: Partial<POLine>) => setLines((c) => c.map((l, k) => (k === i ? { ...l, ...p } : l)));
-  const submit = (markOrdered: boolean) => { const ls = lines.filter((l) => l.itemId && l.quantity > 0); if (!ls.length) return; onSubmit({ supplierId, expectedAt, notes, lines: ls, markOrdered }); };
+  const submit = (markOrdered: boolean) => { const ls = lines.filter((l) => l.itemId && l.quantity > 0); if (!ls.length) return; onSubmit({ supplierId, expectedAt, notes, warehouseId: wh || null, lines: ls, markOrdered }); };
   return (
     <ScreenModal onClose={onClose}>
       <div className="flex items-center justify-between border-b border-border p-4">
@@ -31,6 +33,7 @@ export function PurchaseOrderForm({ suppliers, items, initialSupplier, initialLi
       <div className="space-y-3 p-4">
         <label className="block space-y-1"><span className="text-xs font-bold text-muted-foreground">{t("supplier")}</span>
           <select value={supplierId ?? ""} onChange={(e) => setSupplierId(e.target.value || null)} className={`w-full ${fld}`}><option value="">—</option>{suppliers.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</select></label>
+        <WarehousePicker value={wh} onChange={setWh} label={t("destinationWarehouse")} hideIfSingle />
         {lines.map((l, i) => {
           const uom = items.find((x) => x.id === l.itemId)?.unitOfMeasureAbbreviation;
           return (

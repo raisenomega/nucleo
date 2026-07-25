@@ -30,7 +30,7 @@ export function CountDetail({ count, onRecord, onApprove, onApply, onClose }: {
   return (
     <ScreenModal onClose={onClose}>
       <div className="flex items-center justify-between border-b border-border p-4">
-        <h2 className="font-display text-lg font-bold text-foreground">{count.countNumber}{count.assignedToName && <span className="ml-2 text-sm font-normal text-muted-foreground">· {count.assignedToName}</span>}</h2>
+        <h2 className="font-display text-lg font-bold text-foreground">{count.countNumber}{count.warehouseName && <span className="ml-2 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-bold text-primary">{count.warehouseName}</span>}{count.assignedToName && <span className="ml-2 text-sm font-normal text-muted-foreground">· {count.assignedToName}</span>}</h2>
         <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button>
       </div>
       <div className="space-y-4 p-4">

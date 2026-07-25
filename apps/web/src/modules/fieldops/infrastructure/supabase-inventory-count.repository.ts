@@ -3,7 +3,7 @@ import { toCount, type CountRow } from "@fieldops/infrastructure/inventory-count
 import type { CountFormData, InventoryCount, IInventoryCountRepository } from "@fieldops/domain/inventory-count.types";
 import type { Result } from "@fieldops/domain/inventory.types";
 
-const NAMES = "assigned:profiles!assigned_to(full_name), creator:profiles!created_by(full_name)";
+const NAMES = "assigned:profiles!assigned_to(full_name), creator:profiles!created_by(full_name), warehouse:warehouses(name)";
 const LIST = `*, ${NAMES}, lines:inventory_count_lines(line_status, variance)`;
 const DETAIL = `*, ${NAMES}, lines:inventory_count_lines(*, item:inventory_items(name, sku), counter:profiles!counted_by(full_name))`;
 
@@ -22,7 +22,7 @@ export const supabaseInventoryCountRepository: IInventoryCountRepository = {
     return data ? toCount(data as unknown as CountRow, true) : null;
   },
   async create(d): Promise<Result<string, string>> {
-    const { data, error } = await supabase.rpc("create_inventory_count", { p_count_type: d.countType, p_category_id: d.categoryId, p_assigned_to: d.assignedTo, p_blind: d.blindCount, p_notes: d.notes || null, p_item_ids: d.itemIds.length ? d.itemIds : null });
+    const { data, error } = await supabase.rpc("create_inventory_count", { p_count_type: d.countType, p_category_id: d.categoryId, p_assigned_to: d.assignedTo, p_blind: d.blindCount, p_notes: d.notes || null, p_item_ids: d.itemIds.length ? d.itemIds : null, p_warehouse_id: d.warehouseId });
     return error ? { ok: false, error: error.message } : { ok: true, value: data as string };
   },
   recordLine(lineId, countedQty, notes) { return rpc("record_count_line", { p_line_id: lineId, p_counted_qty: countedQty, p_notes: notes || null }); },
