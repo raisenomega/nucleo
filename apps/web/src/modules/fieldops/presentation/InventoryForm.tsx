@@ -25,10 +25,6 @@ export function InventoryForm({ initial, itemId, photoUrls, tenantId, landingPro
       <input type="number" step="0.01" min="0" value={f[k] || ""}
         onChange={(e) => setF({ ...f, [k]: Number(e.target.value) })} className={field} /></label>
   );
-  const loc = (k: "warehouseZone" | "aisle" | "shelf" | "bin", label: string) => (
-    <label className="space-y-1"><span className={lbl}>{label}</span>
-      <input value={f[k]} onChange={(e) => setF({ ...f, [k]: e.target.value })} className={field} /></label>
-  );
   return (
     <form onSubmit={(e) => { e.preventDefault(); onSubmit(f); }} className="space-y-4 rounded-lg border border-border bg-card p-5">
       <h2 className="font-body font-bold">{t("newItem")}</h2>
@@ -42,7 +38,9 @@ export function InventoryForm({ initial, itemId, photoUrls, tenantId, landingPro
             <button type="button" onClick={genBarcode} className="shrink-0 rounded-lg border border-border px-2 text-xs font-bold text-foreground">{t("generateBarcode")}</button></div></label>
         <div className="space-y-1 md:col-span-2"><span className={lbl}>{t("itemPhotos")}</span>
           {itemId ? <ItemPhotoUploader tenantId={tenantId} itemId={itemId} value={photos} onChange={setPhotos} /> : <p className="text-xs text-muted-foreground">{t("savePhotoHint")}</p>}</div>
-        {num("stock", t("stock"))}
+        {itemId
+          ? <label className="space-y-1"><span className={lbl}>{t("stock")}</span><p className="rounded-lg border border-border bg-secondary p-2 text-sm text-muted-foreground" title={t("stockModifiedViaOps")}>{f.stock} · {t("stockModifiedViaOps")}</p></label>
+          : num("stock", t("stock"))}
         {can("inventory", "cost") && num("unitCost", t("unitCost"))}
         {num("minStock", t("minStock"))}
         <label className="space-y-1"><span className={lbl}>{t("catalogProduct")}</span>
@@ -55,8 +53,6 @@ export function InventoryForm({ initial, itemId, photoUrls, tenantId, landingPro
           </select></label>
         <CategoryPicker kind="inventory_category" label="category" value={f.categoryId ?? ""} onChange={(v) => setF({ ...f, categoryId: v || null })} />
         <UomPicker value={f.unitOfMeasureId ?? ""} onChange={(v) => setF({ ...f, unitOfMeasureId: v || null })} />
-        <p className="text-xs font-bold uppercase text-muted-foreground md:col-span-2">{t("warehouseLocation")}</p>
-        {loc("warehouseZone", t("warehouseZone"))}{loc("aisle", t("aisle"))}{loc("shelf", t("shelf"))}{loc("bin", t("bin"))}
         <p className="text-xs font-bold uppercase text-muted-foreground md:col-span-2">{t("reorderSection")}</p>
         <label className="space-y-1"><span className={lbl}>{t("reorderPoint")}</span><input type="number" min="0" value={f.reorderPoint ?? ""} onChange={(e) => setF({ ...f, reorderPoint: e.target.value ? Number(e.target.value) : null })} className={field} /></label>
         <label className="space-y-1"><span className={lbl}>{t("reorderQty")}</span><input type="number" min="0" value={f.reorderQty ?? ""} onChange={(e) => setF({ ...f, reorderQty: e.target.value ? Number(e.target.value) : null })} className={field} /></label>

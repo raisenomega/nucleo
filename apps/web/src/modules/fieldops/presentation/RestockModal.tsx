@@ -2,6 +2,7 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { ScreenModal } from "@shared/components/ScreenModal";
+import { WarehousePicker } from "@fieldops/presentation/WarehousePicker";
 import type { InventoryItem, RestockData } from "@fieldops/domain/inventory.types";
 import type { SupplierRef } from "@fieldops/domain/supplier.types";
 
@@ -12,7 +13,7 @@ export function RestockModal({ item, suppliers, onSubmit, onClose }: {
   item: InventoryItem; suppliers: readonly SupplierRef[]; onSubmit: (d: RestockData) => void; onClose: () => void;
 }) {
   const { t } = useI18n();
-  const [f, setF] = useState<RestockData>({ quantity: 1, unitCost: item.unitCost || 0, supplier: item.supplierName, supplierId: item.supplierId, notes: "", date: today() });
+  const [f, setF] = useState<RestockData>({ quantity: 1, unitCost: item.unitCost || 0, supplier: item.supplierName, supplierId: item.supplierId, notes: "", date: today(), warehouseId: null });
   const field = "w-full rounded-lg border border-border bg-background p-2 font-body";
   const lbl = "text-xs font-bold text-muted-foreground";
   const go = (e: React.FormEvent) => { e.preventDefault(); if (f.quantity < 1 || f.unitCost <= 0) return; onSubmit(f); };
@@ -33,6 +34,7 @@ export function RestockModal({ item, suppliers, onSubmit, onClose }: {
           </select></label>
         <label className="space-y-1"><span className={lbl}>{t("date")}</span>
           <input type="date" value={f.date} onChange={(e) => setF({ ...f, date: e.target.value })} className={field} /></label>
+        <WarehousePicker value={f.warehouseId ?? ""} onChange={(v) => setF({ ...f, warehouseId: v || null })} hideIfSingle />
         <label className="space-y-1 md:col-span-2"><span className={lbl}>{t("notes")}</span>
           <textarea value={f.notes} onChange={(e) => setF({ ...f, notes: e.target.value })} rows={2} className={field} /></label>
         <div className="flex gap-2 md:col-span-2">

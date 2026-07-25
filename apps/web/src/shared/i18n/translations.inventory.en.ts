@@ -45,6 +45,9 @@ export const enInventory = {
   assignTo: "Assign to", blindCount: "Blind count", blindCountExplain: "The counter won't see the expected stock", expectedQty: "Expected", countedQty: "Counted", variance: "Variance", financialImpact: "Financial impact",
   itemsCounted: "Items counted", itemsWithVariance: "With variance", countProgress: "Progress", recordCount: "Record count", approveAll: "Approve all", rejectAll: "Reject all", approveSelected: "Approve selected", rejectSelected: "Reject selected", applyAdjustments: "Apply adjustments",
   csDraft: "Draft", csInProgress: "In progress", csCompleted: "Completed", csApproved: "Approved", csApplied: "Applied", csCancelled: "Cancelled", view: "View",
+  warehouse: "Warehouse", warehouses: "Warehouses", warehouseCode: "Code", mainWarehouse: "Main", stockByWarehouse: "Stock by warehouse", newWarehouse: "New warehouse", warehouseManager: "Manage warehouses",
+  transferBetweenWarehouses: "Transfer between warehouses", fromWarehouse: "From warehouse", toWarehouse: "To warehouse", stockInOrigin: "Stock in origin", stockInDestination: "Stock in destination",
+  cannotDeleteWithStock: "Can't delete a warehouse with stock", stockModifiedViaOps: "Changed via restock, adjustment or count",
   itemPhotos: "Item photos (max 3)", savePhotoHint: "Save the item first to add photos.",
   inventoryItems: "Items",
 } satisfies Partial<Record<TranslationKey, string>>;

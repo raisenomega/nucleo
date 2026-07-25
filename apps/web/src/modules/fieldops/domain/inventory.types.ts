@@ -16,33 +16,30 @@ export interface InventoryItem {
   readonly categoryId: string | null; readonly categoryName: string | null;
   readonly unitOfMeasureId: string | null; readonly unitOfMeasureAbbreviation: string | null; readonly unitOfMeasureName: string | null;
   readonly barcode: string | null;
+  readonly warehouseStock: readonly WarehouseStockEntry[];
 }
 
-export interface TransferData { readonly qty: number; readonly zone: string; readonly aisle: string; readonly shelf: string; readonly bin: string; readonly notes: string; }
+// Saldo de un ítem en un almacén concreto (join a inventory_stock). La ubicación vive aquí, por almacén.
+export interface WarehouseStockEntry {
+  readonly warehouseId: string; readonly warehouseName: string; readonly warehouseCode: string; readonly quantity: number;
+  readonly minStock: number | null; readonly reorderPoint: number | null; readonly reorderQty: number | null;
+  readonly locationZone: string | null; readonly locationAisle: string | null; readonly locationShelf: string | null; readonly locationBin: string | null;
+}
+
+// Transferencia REAL entre almacenes (overload de 5-arg del backend).
+export interface TransferData { readonly qty: number; readonly fromWarehouseId: string; readonly toWarehouseId: string; readonly notes: string; }
 
 export interface InventoryFormData {
-  readonly name: string;
-  readonly sku: string;
-  readonly stock: number;
-  readonly unitCost: number;
-  readonly minStock: number;
-  readonly landingProductId: string | null;
-  readonly supplierId: string | null;
-  readonly warehouseZone: string;
-  readonly aisle: string;
-  readonly shelf: string;
-  readonly bin: string;
+  readonly name: string; readonly sku: string; readonly stock: number; readonly unitCost: number; readonly minStock: number;
+  readonly landingProductId: string | null; readonly supplierId: string | null;
+  readonly warehouseZone: string; readonly aisle: string; readonly shelf: string; readonly bin: string;
   readonly reorderPoint: number | null; readonly reorderQty: number | null;
   readonly categoryId: string | null; readonly unitOfMeasureId: string | null; readonly barcode: string | null;
 }
 
 export interface RestockData {
-  readonly quantity: number;
-  readonly unitCost: number;
-  readonly supplier: string;
-  readonly supplierId: string | null;
-  readonly notes: string;
-  readonly date: string;
+  readonly quantity: number; readonly unitCost: number; readonly supplier: string; readonly supplierId: string | null;
+  readonly notes: string; readonly date: string; readonly warehouseId: string | null;
 }
 
 export interface LandingProductRef { readonly id: string; readonly name: string; }
@@ -62,8 +59,8 @@ export interface IInventoryRepository {
   update(id: string, data: InventoryFormData): Promise<Result<InventoryItem, string>>;
   remove(id: string): Promise<Result<null, string>>;
   restock(itemId: string, data: RestockData): Promise<Result<string | null, string>>;
-  adjust(itemId: string, newQty: number, reason: string): Promise<Result<string | null, string>>;
-  shrink(itemId: string, qty: number, reason: string): Promise<Result<string | null, string>>;
+  adjust(itemId: string, newQty: number, reason: string, warehouseId?: string | null): Promise<Result<string | null, string>>;
+  shrink(itemId: string, qty: number, reason: string, warehouseId?: string | null): Promise<Result<string | null, string>>;
   transfer(itemId: string, data: TransferData): Promise<Result<string | null, string>>;
   listMovements(itemId: string): Promise<InventoryMovement[]>;
   listLandingProducts(): Promise<LandingProductRef[]>;

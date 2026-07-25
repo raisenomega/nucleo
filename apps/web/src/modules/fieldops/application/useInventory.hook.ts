@@ -41,8 +41,8 @@ export function useInventory(repo: IInventoryRepository) {
     return r;
   }, [repo, refresh]);
 
-  const adjust = useCallback(async (id: string, newQty: number, reason: string) => { const r = await repo.adjust(id, newQty, reason); if (r.ok) await refresh(); return r; }, [repo, refresh]);
-  const shrink = useCallback(async (id: string, qty: number, reason: string) => { const r = await repo.shrink(id, qty, reason); if (r.ok) await refresh(); return r; }, [repo, refresh]);
+  const adjust = useCallback(async (id: string, newQty: number, reason: string, warehouseId?: string | null) => { const r = await repo.adjust(id, newQty, reason, warehouseId); if (r.ok) await refresh(); return r; }, [repo, refresh]);
+  const shrink = useCallback(async (id: string, qty: number, reason: string, warehouseId?: string | null) => { const r = await repo.shrink(id, qty, reason, warehouseId); if (r.ok) await refresh(); return r; }, [repo, refresh]);
   const transfer = useCallback(async (id: string, d: TransferData) => { const r = await repo.transfer(id, d); if (r.ok) await refresh(); return r; }, [repo, refresh]);
   const findByBarcode = useCallback((barcode: string) => repo.findByBarcode(barcode), [repo]);
 

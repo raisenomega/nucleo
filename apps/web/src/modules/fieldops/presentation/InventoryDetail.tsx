@@ -36,8 +36,20 @@ export function InventoryDetail({ item, movs, now, onClose }: { item: InventoryI
           {cost && row(t("stockValue"), formatCurrency(itemValue(item)))}
           {item.supplierName && row(t("supplier"), item.supplierName)}
           {item.lastRestockDate && row(t("lastRestock"), item.lastRestockDate.slice(0, 10))}
-          {(item.warehouseZone || item.aisle || item.shelf || item.bin) && row(t("location"), [item.warehouseZone, item.aisle, item.shelf, item.bin].filter(Boolean).join(" · "))}
         </dl>
+        {item.warehouseStock.length > 0 && (
+          <div className="space-y-1">
+            <div className="text-xs font-bold uppercase text-muted-foreground">{t("stockByWarehouse")}</div>
+            <div className="overflow-x-auto rounded-lg border border-border"><table className="w-full text-sm">
+              <thead className="bg-secondary text-xs uppercase text-muted-foreground"><tr><th className="px-2 py-1 text-left font-bold">{t("warehouse")}</th><th className="px-2 py-1 text-left font-bold">{t("location")}</th><th className="px-2 py-1 text-right font-bold">{t("stock")}</th><th className="px-2 py-1 text-right font-bold">{t("minStock")}</th></tr></thead>
+              <tbody>{item.warehouseStock.map((e) => {
+                const loc = [e.locationZone, e.locationAisle, e.locationShelf, e.locationBin].filter(Boolean).join("-") || "—";
+                const cls = e.quantity <= 0 ? "text-destructive" : e.minStock && e.quantity <= e.minStock ? "text-amber-600" : "text-green-600";
+                return <tr key={e.warehouseId} className="border-t border-border"><td className="px-2 py-1">{e.warehouseName} <span className="text-xs text-muted-foreground">({e.warehouseCode})</span></td><td className="px-2 py-1 text-muted-foreground">{loc}</td><td className={`px-2 py-1 text-right font-semibold ${cls}`}>{e.quantity}</td><td className="px-2 py-1 text-right text-muted-foreground">{e.minStock ?? "—"}</td></tr>;
+              })}</tbody>
+            </table></div>
+          </div>
+        )}
         {item.barcode ? <div className="border-t border-border pt-3"><BarcodeDisplay value={item.barcode} /></div> : <p className="text-xs text-muted-foreground">{t("noBarcode")}</p>}
         {cons.avg > 0 && <p className={`text-sm ${cons.high ? "font-bold text-destructive" : "text-muted-foreground"}`}>{t("consumeThisMonth")}: {cons.cur} ({t("average")}: {cons.avg.toFixed(1)}){cons.high && ` · ${t("highConsumption")}`}</p>}
         <InventoryItemCharts item={item} movs={movs} now={now} />

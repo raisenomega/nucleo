@@ -45,6 +45,9 @@ export const esInventory = {
   assignTo: "Asignar a", blindCount: "Conteo ciego", blindCountExplain: "El contador no verá el stock esperado", expectedQty: "Esperado", countedQty: "Contado", variance: "Diferencia", financialImpact: "Impacto financiero",
   itemsCounted: "Ítems contados", itemsWithVariance: "Con diferencia", countProgress: "Progreso", recordCount: "Registrar conteo", approveAll: "Aprobar todas", rejectAll: "Rechazar todas", approveSelected: "Aprobar seleccionadas", rejectSelected: "Rechazar seleccionadas", applyAdjustments: "Aplicar ajustes",
   csDraft: "Borrador", csInProgress: "En progreso", csCompleted: "Completado", csApproved: "Aprobado", csApplied: "Aplicado", csCancelled: "Cancelado", view: "Ver",
+  warehouse: "Almacén", warehouses: "Almacenes", warehouseCode: "Código", mainWarehouse: "Principal", stockByWarehouse: "Stock por almacén", newWarehouse: "Nuevo almacén", warehouseManager: "Gestionar almacenes",
+  transferBetweenWarehouses: "Transferir entre almacenes", fromWarehouse: "Desde almacén", toWarehouse: "Hacia almacén", stockInOrigin: "Stock en origen", stockInDestination: "Stock en destino",
+  cannotDeleteWithStock: "No se puede eliminar un almacén con stock", stockModifiedViaOps: "Se modifica vía restock, ajuste o conteo",
   itemPhotos: "Fotos del artículo (máx 3)", savePhotoHint: "Guarda el artículo primero para agregar fotos.",
   inventoryItems: "Artículos",
 } satisfies Partial<Record<TranslationKey, string>>;

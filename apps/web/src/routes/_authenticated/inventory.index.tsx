@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, Navigate, Link } from "@tanstack/react-router";
-import { Plus, FileText, Ruler, ScanBarcode, ClipboardCheck } from "lucide-react";
+import { Plus, FileText, Ruler, ScanBarcode, ClipboardCheck, Warehouse } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { useSession } from "@shared/providers/SessionProvider";
@@ -17,6 +17,7 @@ import { InventoryDashboard } from "@fieldops/presentation/InventoryDashboard";
 import { InventoryFilters, type InvFilter } from "@fieldops/presentation/InventoryFilters";
 import { inventoryReportBody } from "@fieldops/presentation/inventory-report";
 import { UomManagerModal } from "@fieldops/presentation/UomManagerModal";
+import { WarehouseManagerModal } from "@fieldops/presentation/WarehouseManagerModal";
 import { BarcodeScanner } from "@fieldops/presentation/BarcodeScanner";
 import type { InventoryFormData, LandingProductRef } from "@fieldops/domain/inventory.types";
 
@@ -35,7 +36,7 @@ function InventoryPage() {
   const [filter, setFilter] = useState<InvFilter>("all");
   const [search, setSearch] = useState("");
   const [catFilter, setCatFilter] = useState("");
-  const [manageUom, setManageUom] = useState(false);
+  const [manageUom, setManageUom] = useState(false); const [manageWh, setManageWh] = useState(false);
   const [scan, setScan] = useState(false); const [scannedId, setScannedId] = useState<string | null>(null); const [scanBc, setScanBc] = useState<string | undefined>();
   const items = inv.items;
   useEffect(() => { void supabaseInventoryRepository.listLandingProducts().then(setLanding); }, []);
@@ -57,7 +58,7 @@ function InventoryPage() {
         <div className="flex items-center gap-2">
           <button type="button" onClick={() => { setScannedId(null); setScan(true); }} className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold" title={t("scanBarcode")}><ScanBarcode className="h-4 w-4" /> <span className="hidden md:inline">{t("scanBarcode")}</span></button>
           <Link to="/inventory/counts" className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold" title={t("cyclicCount")}><ClipboardCheck className="h-4 w-4" /> <span className="hidden md:inline">{t("cyclicCount")}</span></Link>
-          {can("inventory", "edit") && <button type="button" onClick={() => setManageUom(true)} className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold" title={t("manageUnits")}><Ruler className="h-4 w-4" /> <span className="hidden md:inline">{t("manageUnits")}</span></button>}
+          {can("inventory", "edit") && <button type="button" onClick={() => setManageWh(true)} className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold" title={t("warehouseManager")}><Warehouse className="h-4 w-4" /> <span className="hidden md:inline">{t("warehouses")}</span></button>}{can("inventory", "edit") && <button type="button" onClick={() => setManageUom(true)} className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold" title={t("manageUnits")}><Ruler className="h-4 w-4" /> <span className="hidden md:inline">{t("manageUnits")}</span></button>}
           <button type="button" disabled={pdf.generating || !items.length} onClick={() => void pdf.generatePdf("report", null, inventoryReportBody(items, movs, sup.items, now, t))} className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold disabled:opacity-50"><FileText className="h-4 w-4" /> {pdf.generating ? t("generatingPdf") : t("inventoryReport")}</button>
           {can("inventory", "create") && <button type="button" onClick={() => { setScanBc(undefined); setEditing("new"); }} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-body font-bold"><Plus className="h-4 w-4" /> {t("newItem")}</button>}
         </div>
@@ -67,7 +68,7 @@ function InventoryPage() {
       <InventoryFilters filter={filter} search={search} onFilter={setFilter} onSearch={setSearch} categories={categories} categoryFilter={catFilter} onCategoryFilter={setCatFilter} />
       {editing !== null && <InventoryForm key={editing} initial={editRow} itemId={editing !== "new" ? editing : undefined} photoUrls={items.find((i) => i.id === editing)?.photoUrls} tenantId={session?.tenantId ?? ""} landingProducts={landing} suppliers={sup.items} prefillBarcode={scanBc} onSubmit={submit} onCancel={() => { setEditing(null); setScanBc(undefined); }} />}
       <InventoryItemsPanel inv={inv} rows={shown} movs={movs} now={now} suppliers={sup.items} slow={slow} high={high} reorder={reorder} focusId={scannedId} onEdit={setEditing} onDelete={onDelete} />
-      {manageUom && <UomManagerModal items={items} onClose={() => setManageUom(false)} />}
+      {manageUom && <UomManagerModal items={items} onClose={() => setManageUom(false)} />}{manageWh && <WarehouseManagerModal onClose={() => setManageWh(false)} />}
       {scan && <BarcodeScanner onDetected={async (code) => { const it = await inv.findByBarcode(code); setScan(false); if (it) setScannedId(it.id); else { setScanBc(code); setEditing("new"); } }} onClose={() => setScan(false)} />}
     </div>
   );

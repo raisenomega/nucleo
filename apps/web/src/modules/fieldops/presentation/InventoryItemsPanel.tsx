@@ -28,7 +28,7 @@ export function InventoryItemsPanel({ inv, rows, movs, now, suppliers, slow, hig
   useEffect(() => { if (focusId) setViewing(focusId); }, [focusId]);
   const find = (id: string | null | undefined) => inv.items.find((i) => i.id === id);
   async function doRestock(d: RestockData) { if (!restocking) return; const r = await inv.restock(restocking, d); if (r.ok) { setRestocking(null); toast.success(t("entryRegistered")); } else toast.error(r.error); }
-  async function doAction(qty: number, reason: string) { if (!action) return; const r = action.mode === "adjust" ? await inv.adjust(action.id, qty, reason) : await inv.shrink(action.id, qty, reason); if (r.ok) { setAction(null); toast.success(t("saved")); } else toast.error(r.error); }
+  async function doAction(qty: number, reason: string, warehouseId: string | null) { if (!action) return; const r = action.mode === "adjust" ? await inv.adjust(action.id, qty, reason, warehouseId) : await inv.shrink(action.id, qty, reason, warehouseId); if (r.ok) { setAction(null); toast.success(t("saved")); } else toast.error(r.error); }
   async function doTransfer(d: TransferData) { if (!transferring) return; const r = await inv.transfer(transferring, d); if (r.ok) { setTransferring(null); toast.success(t("saved")); } else toast.error(r.error); }
   const view = find(viewing); const rs = find(restocking); const ac = find(action?.id); const tr = find(transferring);
   return (
