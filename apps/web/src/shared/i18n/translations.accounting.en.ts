@@ -22,4 +22,8 @@ export const enAccounting = {
   sExpense: "Expense", sIncome: "Income", sInvoice: "Invoice", sInvoicePayment: "Payment", sPayroll: "Payroll", sInventory: "Inventory", sBank: "Bank", sAdjustment: "Adjustment", sClosing: "Closing", sOpening: "Opening",
   stPosted: "Posted", stDraft: "Draft", stVoided: "Voided",
   categoryMapping: "Category mapping", useAuto: "Automatic", autoMapAll: "Auto-assign all", mappingComplete: "Mapping complete", catsMapped: "categories mapped",
+  incomeStatement: "Income Statement", costOfSales: "Cost of Sales", grossProfit: "Gross Profit",
+  operatingExpenses: "Operating Expenses", operatingIncome: "Operating Income", nonOperatingExpenses: "Non-Operating Expenses", netIncome: "Net Income",
+  totalRevenue: "TOTAL REVENUE", totalCogs: "TOTAL COST OF SALES", totalOpex: "TOTAL OPERATING EXPENSES", totalNonOp: "TOTAL NON-OPERATING",
+  fullYear: "Full year", yearToDate: "Year to date", noDataForPeriod: "No data for this period.",
 } satisfies Partial<Record<TranslationKey, string>>;

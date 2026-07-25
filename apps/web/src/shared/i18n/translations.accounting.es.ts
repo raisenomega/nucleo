@@ -22,4 +22,8 @@ export const esAccounting = {
   sExpense: "Gasto", sIncome: "Ingreso", sInvoice: "Factura", sInvoicePayment: "Cobro", sPayroll: "Nómina", sInventory: "Inventario", sBank: "Banco", sAdjustment: "Ajuste", sClosing: "Cierre", sOpening: "Apertura",
   stPosted: "Posteado", stDraft: "Borrador", stVoided: "Anulado",
   categoryMapping: "Mapeo de categorías", useAuto: "Automático", autoMapAll: "Auto-asignar todo", mappingComplete: "Mapeo completo", catsMapped: "categorías mapeadas",
+  incomeStatement: "Estado de Resultados", costOfSales: "Costo de Ventas", grossProfit: "Utilidad Bruta",
+  operatingExpenses: "Gastos Operativos", operatingIncome: "Utilidad Operativa", nonOperatingExpenses: "Gastos No Operativos", netIncome: "Utilidad Neta",
+  totalRevenue: "TOTAL INGRESOS", totalCogs: "TOTAL COSTO DE VENTAS", totalOpex: "TOTAL GASTOS OPERATIVOS", totalNonOp: "TOTAL NO OPERATIVOS",
+  fullYear: "Año completo", yearToDate: "Acumulado", noDataForPeriod: "No hay datos para este período.",
 } satisfies Partial<Record<TranslationKey, string>>;
