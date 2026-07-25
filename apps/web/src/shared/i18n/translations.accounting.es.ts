@@ -21,4 +21,5 @@ export const esAccounting = {
   allMonths: "Todo el año", allSources: "Todos", allStatuses: "Todos", allAccounts: "Todas las cuentas",
   sExpense: "Gasto", sIncome: "Ingreso", sInvoice: "Factura", sInvoicePayment: "Cobro", sPayroll: "Nómina", sInventory: "Inventario", sBank: "Banco", sAdjustment: "Ajuste", sClosing: "Cierre", sOpening: "Apertura",
   stPosted: "Posteado", stDraft: "Borrador", stVoided: "Anulado",
+  categoryMapping: "Mapeo de categorías", useAuto: "Automático", autoMapAll: "Auto-asignar todo", mappingComplete: "Mapeo completo", catsMapped: "categorías mapeadas",
 } satisfies Partial<Record<TranslationKey, string>>;
