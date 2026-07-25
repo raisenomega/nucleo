@@ -33,6 +33,7 @@ export const ACCESS_MODULES: { key: string; label: string; crud: Perm[]; note: s
   { key: "support", label: "Soporte", crud: ALL, note: "tickets internos" },
   { key: "documents", label: "Documentos", crud: ALL, note: "contratos (ceo/coo)" },
   { key: "settings", label: "Configuración", crud: ["view", "edit", "categories"], note: "categories = crear categorías" },
+  { key: "accounting", label: "Contabilidad", crud: [...ALL, "cost"], note: "GL / plan de cuentas / libro mayor (ceo/coo)" },
 ];
 
 const V = { view: true };

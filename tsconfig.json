@@ -25,6 +25,7 @@
     "paths": {
       "@sales/*":     ["./apps/web/src/modules/sales/*"],
       "@finance/*":   ["./apps/web/src/modules/finance/*"],
+      "@accounting/*": ["./apps/web/src/modules/accounting/*"],
       "@fieldops/*":  ["./apps/web/src/modules/fieldops/*"],
       "@assets/*":    ["./apps/web/src/modules/assets/*"],
       "@tenant/*":    ["./apps/web/src/modules/tenant/*"],

@@ -31,6 +31,7 @@ export default defineConfig({
     alias: {
       "@sales": r("apps/web/src/modules/sales"),
       "@finance": r("apps/web/src/modules/finance"),
+      "@accounting": r("apps/web/src/modules/accounting"),
       "@fieldops": r("apps/web/src/modules/fieldops"),
       "@assets": r("apps/web/src/modules/assets"),
       "@tenant": r("apps/web/src/modules/tenant"),

@@ -8,6 +8,7 @@ import { AdminTeamTab } from "@admin/presentation/AdminTeamTab";
 import { AdminCategoriesTab } from "@admin/presentation/AdminCategoriesTab";
 import { AdminSettingsTab } from "@admin/presentation/AdminSettingsTab";
 import { CostingMethodCard } from "@admin/presentation/CostingMethodCard";
+import { GlToggleCard } from "@admin/presentation/GlToggleCard";
 import { AdminBrandTab } from "@admin/presentation/AdminBrandTab";
 import { AdminThemesTab } from "@admin/presentation/AdminThemesTab";
 import { useSession } from "@shared/providers/SessionProvider";
@@ -44,7 +45,7 @@ function SettingsPage() {
       </div>
       {tab === "team" && isCeo && <AdminTeamTab team={m.team} onInvite={m.invite} onStatus={m.setStatus} onRole={m.changeRole} />}
       {tab === "categories" && <AdminCategoriesTab categories={m.categories} onSave={m.saveCategory} onToggle={m.toggleCategory} onCount={m.countCategoryUsage} onDelete={m.deleteCategory} />}
-      {tab === "general" && isCeo && <div className="space-y-4"><AdminSettingsTab settings={m.settings} onSave={m.upsertSetting} /><CostingMethodCard /></div>}
+      {tab === "general" && isCeo && <div className="space-y-4"><AdminSettingsTab settings={m.settings} onSave={m.upsertSetting} /><CostingMethodCard /><GlToggleCard /></div>}
       {tab === "brand" && isCeo && <AdminBrandTab tenantId={session?.tenantId ?? ""} settings={m.settings} onSaveSetting={m.upsertSetting} />}
       {tab === "themes" && isCeo && <AdminThemesTab tenantId={session?.tenantId ?? ""} />}
     </div>
