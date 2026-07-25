@@ -28,7 +28,7 @@ export interface WarehouseStockEntry {
 }
 
 // Transferencia REAL entre almacenes (overload de 5-arg del backend).
-export interface TransferData { readonly qty: number; readonly fromWarehouseId: string; readonly toWarehouseId: string; readonly notes: string; }
+export interface TransferData { readonly qty: number; readonly fromWarehouseId: string; readonly toWarehouseId: string; readonly notes: string; readonly lotTransfers?: readonly { readonly lotId: string; readonly qty: number }[]; }
 
 export interface InventoryFormData {
   readonly name: string; readonly sku: string; readonly stock: number; readonly unitCost: number; readonly minStock: number;

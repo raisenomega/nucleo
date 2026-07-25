@@ -5,8 +5,9 @@ export type POStatus = "draft" | "ordered" | "partial" | "received" | "cancelled
 
 export interface POItem {
   readonly id: string; readonly itemId: string; readonly itemName: string;
-  readonly quantity: number; readonly unitCost: number; readonly receivedQty: number;
+  readonly quantity: number; readonly unitCost: number; readonly receivedQty: number; readonly trackingType: "none" | "lot" | "serial";
 }
+export interface ReceiveLine { readonly itemId: string; readonly receivedQty: number; readonly lotNumber?: string; readonly expiryDate?: string; }
 export interface PurchaseOrder {
   readonly id: string; readonly orderNumber: number; readonly supplierId: string | null; readonly supplierName: string;
   readonly status: POStatus; readonly expectedAt: string | null; readonly receivedAt: string | null;
@@ -20,6 +21,6 @@ export interface IPurchaseOrderRepository {
   list(): Promise<Result<PurchaseOrder[], string>>;
   create(data: POCreateData): Promise<Result<string, string>>;
   setStatus(id: string, status: POStatus): Promise<Result<null, string>>;
-  receive(id: string, items: { itemId: string; receivedQty: number }[]): Promise<Result<null, string>>;
+  receive(id: string, items: ReceiveLine[]): Promise<Result<null, string>>;
   suggestions(): Promise<ReorderSuggestion[]>;
 }

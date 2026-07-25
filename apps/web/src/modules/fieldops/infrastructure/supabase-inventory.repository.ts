@@ -32,7 +32,7 @@ export const supabaseInventoryRepository: IInventoryRepository = {
   restock(itemId, d) { return rpcId("record_restock", { p_item_id: itemId, p_quantity: d.quantity, p_unit_cost: d.unitCost, p_supplier: d.supplier || null, p_notes: d.notes || null, p_date: d.date || undefined, p_supplier_id: d.supplierId || null, p_warehouse_id: d.warehouseId || null, p_lot_number: d.lotNumber || null, p_expiry_date: d.expiryDate || null, p_manufacture_date: d.manufactureDate || null }); },
   adjust(itemId, newQty, reason, warehouseId, lotId) { return rpcId("record_adjustment", { p_item_id: itemId, p_new_qty: newQty, p_reason: reason || null, p_warehouse_id: warehouseId || null, p_lot_id: lotId || null }); },
   shrink(itemId, qty, reason, warehouseId, lotId) { return rpcId("record_shrinkage", { p_item_id: itemId, p_qty: qty, p_reason: reason || null, p_warehouse_id: warehouseId || null, p_lot_id: lotId || null }); },
-  transfer(itemId, d) { return rpcId("transfer_stock", { p_item_id: itemId, p_qty: d.qty, p_from_warehouse_id: d.fromWarehouseId, p_to_warehouse_id: d.toWarehouseId, p_notes: d.notes || null }); },
+  transfer(itemId, d) { return rpcId("transfer_stock", { p_item_id: itemId, p_qty: d.qty, p_from_warehouse_id: d.fromWarehouseId, p_to_warehouse_id: d.toWarehouseId, p_notes: d.notes || null, p_lot_transfers: d.lotTransfers?.length ? d.lotTransfers.map((x) => ({ lot_id: x.lotId, qty: x.qty })) : null }); },
   async listMovements(itemId): Promise<InventoryMovement[]> {
     const { data } = await supabase.rpc("list_item_movements", { p_item_id: itemId });
     return ((data as MovRow[] | null) ?? []).map(toMovement);

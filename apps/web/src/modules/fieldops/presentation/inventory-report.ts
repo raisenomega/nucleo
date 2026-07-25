@@ -2,6 +2,7 @@ import type { TranslationKey } from "@shared/i18n";
 import type { InventoryItem } from "@fieldops/domain/inventory.types";
 import type { Supplier } from "@fieldops/domain/supplier.types";
 import { itemValue, slowIds, type RawMov } from "@fieldops/application/inventory-analytics";
+import { supabaseInventoryLotRepository } from "@fieldops/infrastructure/supabase-inventory-lot.repository";
 
 type T = (k: TranslationKey) => string;
 const money = (n: number) => `$${n.toFixed(2)}`;
@@ -10,7 +11,12 @@ const isLow = (i: InventoryItem) => i.minStock > 0 && i.stock > 0 && i.stock <= 
 const ACT: [TranslationKey, string][] = [["stockIn", "entrada"], ["stockOut", "salida"], ["movVentaPublica", "venta_publica"], ["movMerma", "merma"], ["movAjuste", "ajuste"]];
 
 // Reporte E2E de inventario (5 secciones) → body de /pdf/report (kpis + tablas). Sin charts (van en el dashboard).
-export function inventoryReportBody(items: readonly InventoryItem[], movs: RawMov[], suppliers: readonly Supplier[], now: Date, t: T) {
+export async function inventoryReportBody(items: readonly InventoryItem[], movs: RawMov[], suppliers: readonly Supplier[], now: Date, t: T) {
+  const hasTracking = items.some((i) => i.trackingType !== "none");
+  const exp = hasTracking ? await supabaseInventoryLotRepository.listExpiring(30) : [];
+  const iName = (id: string) => items.find((x) => x.id === id)?.name ?? "?";
+  const expTable = exp.length ? [{ title: t("expiringLots"), headers: [t("itemName"), t("lotNumber"), t("warehouse"), t("quantity"), t("expiryDate"), t("daysUntilExpiry")],
+    rows: exp.map((l) => [iName(l.itemId), l.lotNumber, l.warehouseName, l.quantity, l.expiryDate?.slice(0, 10) ?? "—", l.expiryDate ? Math.round((new Date(l.expiryDate).getTime() - now.getTime()) / 86400000) : "—"]) }] : [];
   const slow = slowIds(movs, items, now);
   const value = items.reduce((s, i) => s + itemValue(i), 0);
   const noStock = items.filter((i) => i.stock <= 0);
@@ -36,6 +42,7 @@ export function inventoryReportBody(items: readonly InventoryItem[], movs: RawMo
       { title: t("suppliers"), headers: [t("name"), t("leadTime"), t("filterLow")], rows: suppliers.filter((s) => s.active).map((s) => [s.name, s.leadTimeDays != null ? `${s.leadTimeDays}d` : "—", String(low.filter((i) => i.supplierId === s.id).length)]) },
       { title: t("inventoryList"), headers: [t("itemName"), t("sku"), t("category"), t("location"), t("stock"), t("minStock"), t("value"), t("supplier"), t("status")],
         rows: items.map((i) => [i.name, i.sku || "—", i.categoryName ?? "—", loc(i), `${i.stock}${i.unitOfMeasureAbbreviation ? " " + i.unitOfMeasureAbbreviation : ""}`, i.minStock, money(itemValue(i)), supName(i.supplierId), est(i)]) },
+      ...expTable,
     ],
   };
 }

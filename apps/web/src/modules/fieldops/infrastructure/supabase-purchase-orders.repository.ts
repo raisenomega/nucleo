@@ -2,7 +2,7 @@ import { supabase } from "@shared/lib/supabase";
 import type { PurchaseOrder, POCreateData, POStatus, ReorderSuggestion, IPurchaseOrderRepository } from "@fieldops/domain/purchase-order.types";
 import type { Result } from "@fieldops/domain/inventory.types";
 
-const SELECT = "id, order_number, supplier_id, status, expected_at, received_at, total_cost, notes, warehouse_id, warehouse:warehouses(name), supplier:inventory_suppliers(name), items:inventory_purchase_order_items(id, item_id, quantity, unit_cost, received_qty, item:inventory_items(name))";
+const SELECT = "id, order_number, supplier_id, status, expected_at, received_at, total_cost, notes, warehouse_id, warehouse:warehouses(name), supplier:inventory_suppliers(name), items:inventory_purchase_order_items(id, item_id, quantity, unit_cost, received_qty, item:inventory_items(name, tracking_type))";
 const toPO = (r: Record<string, unknown>): PurchaseOrder => ({
   id: r.id as string, orderNumber: Number(r.order_number), supplierId: (r.supplier_id as string) ?? null,
   supplierName: ((r.supplier as { name?: string } | null)?.name) ?? "—", status: r.status as POStatus,
@@ -12,6 +12,7 @@ const toPO = (r: Record<string, unknown>): PurchaseOrder => ({
   items: ((r.items as Record<string, unknown>[] | null) ?? []).map((x) => ({
     id: x.id as string, itemId: x.item_id as string, itemName: ((x.item as { name?: string } | null)?.name) ?? "?",
     quantity: Number(x.quantity), unitCost: Number(x.unit_cost), receivedQty: Number(x.received_qty ?? 0),
+    trackingType: ((x.item as { tracking_type?: "none" | "lot" | "serial" } | null)?.tracking_type) ?? "none",
   })),
 });
 
@@ -35,7 +36,7 @@ export const supabasePurchaseOrderRepository: IPurchaseOrderRepository = {
     return error ? { ok: false, error: error.message } : { ok: true, value: null };
   },
   async receive(id, items): Promise<Result<null, string>> {
-    const { error } = await supabase.rpc("receive_purchase_order", { p_order_id: id, p_items: items.map((x) => ({ item_id: x.itemId, received_qty: x.receivedQty })) });
+    const { error } = await supabase.rpc("receive_purchase_order", { p_order_id: id, p_items: items.map((x) => ({ item_id: x.itemId, received_qty: x.receivedQty, lot_number: x.lotNumber || null, expiry_date: x.expiryDate || null })) });
     return error ? { ok: false, error: error.message } : { ok: true, value: null };
   },
   async suggestions(): Promise<ReorderSuggestion[]> {
