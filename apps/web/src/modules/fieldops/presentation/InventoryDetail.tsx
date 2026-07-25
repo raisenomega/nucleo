@@ -1,12 +1,14 @@
 import { X, Globe } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
+import { useCostingMethod } from "@shared/hooks/useCostingMethod";
 import { formatCurrency } from "@shared/lib/format";
 import { ScreenModal } from "@shared/components/ScreenModal";
 import { InventoryMovements } from "@fieldops/presentation/InventoryMovements";
 import { InventoryItemCharts } from "@fieldops/presentation/InventoryItemCharts";
 import { SignedPhotos } from "@fieldops/presentation/SignedPhotos";
 import { ItemLotsPanel } from "@fieldops/presentation/ItemLotsPanel";
+import { CostLayersPanel } from "@fieldops/presentation/CostLayersPanel";
 import { BarcodeDisplay } from "@fieldops/presentation/BarcodeDisplay";
 import { consumption, itemValue, type RawMov } from "@fieldops/application/inventory-analytics";
 import type { InventoryItem } from "@fieldops/domain/inventory.types";
@@ -14,6 +16,7 @@ import type { InventoryItem } from "@fieldops/domain/inventory.types";
 export function InventoryDetail({ item, movs, now, onClose }: { item: InventoryItem; movs: RawMov[]; now: Date; onClose: () => void }) {
   const { t } = useI18n();
   const { can } = useModuleAccess();
+  const { method } = useCostingMethod();
   const cost = can("inventory", "cost");
   const cons = consumption(movs, item.id, now);
   const row = (label: string, v: string) => (
@@ -35,6 +38,7 @@ export function InventoryDetail({ item, movs, now, onClose }: { item: InventoryI
           {item.unitOfMeasureName && row(t("unitOfMeasure"), `${item.unitOfMeasureName} (${item.unitOfMeasureAbbreviation})`)}
           {cost && row(t("unitCost"), formatCurrency(item.unitCost))}
           {cost && row(t("stockValue"), formatCurrency(itemValue(item)))}
+          {cost && method && row(t("costingMethod"), method === "fifo" ? t("fifo") : t("weightedAverage"))}
           {item.supplierName && row(t("supplier"), item.supplierName)}
           {item.lastRestockDate && row(t("lastRestock"), item.lastRestockDate.slice(0, 10))}
         </dl>
@@ -52,6 +56,7 @@ export function InventoryDetail({ item, movs, now, onClose }: { item: InventoryI
           </div>
         )}
         {item.trackingType !== "none" && <ItemLotsPanel item={item.id} serial={item.trackingType === "serial"} />}
+        {item.trackingType === "none" && method === "fifo" && cost && <CostLayersPanel itemId={item.id} />}
         {item.barcode ? <div className="border-t border-border pt-3"><BarcodeDisplay value={item.barcode} /></div> : <p className="text-xs text-muted-foreground">{t("noBarcode")}</p>}
         {cons.avg > 0 && <p className={`text-sm ${cons.high ? "font-bold text-destructive" : "text-muted-foreground"}`}>{t("consumeThisMonth")}: {cons.cur} ({t("average")}: {cons.avg.toFixed(1)}){cons.high && ` · ${t("highConsumption")}`}</p>}
         <InventoryItemCharts item={item} movs={movs} now={now} />

@@ -55,4 +55,10 @@ export const enInventory = {
   lotsToTransfer: "Lots to transfer", daysUntilExpiry: "Days left",
   itemPhotos: "Item photos (max 3)", savePhotoHint: "Save the item first to add photos.",
   inventoryItems: "Items",
+  costingMethod: "Costing method", weightedAverage: "Weighted average cost", fifo: "FIFO", fifoFull: "FIFO (first in, first out)",
+  costingMethodHint: "Determines how the cost of goods sold is calculated. Switching to FIFO creates cost layers for existing inventory.",
+  switchToFifoWarning: "Switching to FIFO will create a base cost layer for all current inventory using the current average cost. This affects how COGS is reported. Continue?",
+  migrationComplete: "Migration complete", cogsTotal: "COGS", cogsUnit: "Unit cost", costOfGoodsSold: "Actual cost of consumed units",
+  costLayers: "Cost layers", costLayer: "Layer", showConsumedLayers: "Show consumed", receivedDate: "Received",
+  fifoValuation: "Inventory valuation (FIFO)", oldestCost: "Oldest cost", newestCost: "Newest cost", activeLayers: "Active layers", valueByFifo: "FIFO value", valueByAverage: "Average value (ref.)",
 } satisfies Partial<Record<TranslationKey, string>>;

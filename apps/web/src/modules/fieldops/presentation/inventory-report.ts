@@ -3,6 +3,7 @@ import type { InventoryItem } from "@fieldops/domain/inventory.types";
 import type { Supplier } from "@fieldops/domain/supplier.types";
 import { itemValue, slowIds, type RawMov } from "@fieldops/application/inventory-analytics";
 import { supabaseInventoryLotRepository } from "@fieldops/infrastructure/supabase-inventory-lot.repository";
+import { getCostingMethod } from "@shared/lib/costing";
 
 type T = (k: TranslationKey) => string;
 const money = (n: number) => `$${n.toFixed(2)}`;
@@ -27,12 +28,22 @@ export async function inventoryReportBody(items: readonly InventoryItem[], movs:
   const supName = (id: string | null) => suppliers.find((s) => s.id === id)?.name ?? "—";
   const est = (i: InventoryItem) => (i.stock <= 0 ? t("filterNoStock") : isLow(i) ? t("filterLow") : "OK");
   const lastR = items.map((i) => i.lastRestockDate).filter(Boolean).sort().at(-1);
+  // Valuación FIFO (solo si el tenant usa fifo): capas available agrupadas por ítem (received ASC = viejo→nuevo).
+  const method = await getCostingMethod();
+  const fifoLayers = method === "fifo" ? await supabaseInventoryLotRepository.listActiveCostLayers() : [];
+  const fg = new Map<string, { qty: number; val: number; costs: number[] }>();
+  fifoLayers.forEach((l) => { const g = fg.get(l.itemId) ?? { qty: 0, val: 0, costs: [] }; g.qty += l.quantity; g.val += l.quantity * (l.unitCost ?? 0); g.costs.push(l.unitCost ?? 0); fg.set(l.itemId, g); });
+  const fifoValue = [...fg.values()].reduce((s, g) => s + g.val, 0);
+  const fifoKpis = method === "fifo" ? [{ label: t("valueByFifo"), value: money(fifoValue) }, { label: t("valueByAverage"), value: money(value) }] : [];
+  const fifoTable = method === "fifo" ? [{ title: t("fifoValuation"), headers: [t("itemName"), t("activeLayers"), t("quantity"), t("oldestCost"), t("newestCost"), t("value")],
+    rows: [...fg.entries()].map(([id, g]) => [iName(id), g.costs.length, g.qty, money(g.costs[0] ?? 0), money(g.costs.at(-1) ?? 0), money(g.val)]) }] : [];
   return {
     title: t("inventoryReport"), date_from: "", date_to: "", charts: [] as never[],
     kpis: [
       { label: t("totalItems"), value: String(items.length) }, { label: t("stockValue"), value: money(value) },
       { label: t("lowStock"), value: String(low.length) }, { label: t("filterNoStock"), value: String(noStock.length) },
       { label: t("slowStock"), value: String(slowList.length) }, { label: t("lastRestock"), value: lastR ? lastR.slice(0, 10) : "—" },
+      ...fifoKpis,
     ],
     tables: [
       { title: t("filterNoStock"), headers: [t("itemName"), t("sku"), t("minStock")], rows: noStock.map((i) => [i.name, i.sku || "—", i.minStock]) },
@@ -43,6 +54,7 @@ export async function inventoryReportBody(items: readonly InventoryItem[], movs:
       { title: t("inventoryList"), headers: [t("itemName"), t("sku"), t("category"), t("location"), t("stock"), t("minStock"), t("value"), t("supplier"), t("status")],
         rows: items.map((i) => [i.name, i.sku || "—", i.categoryName ?? "—", loc(i), `${i.stock}${i.unitOfMeasureAbbreviation ? " " + i.unitOfMeasureAbbreviation : ""}`, i.minStock, money(itemValue(i)), supName(i.supplierId), est(i)]) },
       ...expTable,
+      ...fifoTable,
     ],
   };
 }

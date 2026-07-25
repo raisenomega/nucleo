@@ -10,7 +10,7 @@ export function LotPicker({ itemId, warehouseId, value, onChange, label }: {
   const { t } = useI18n();
   const [lots, setLots] = useState<Lot[]>([]);
   useEffect(() => {
-    let q = supabase.from("inventory_lots").select("id,lot_number,quantity,expiry_date,lot_type").eq("item_id", itemId).eq("status", "available").gt("quantity", 0).order("expiry_date", { ascending: true, nullsFirst: false });
+    let q = supabase.from("inventory_lots").select("id,lot_number,quantity,expiry_date,lot_type").eq("item_id", itemId).in("lot_type", ["lot", "serial"]).eq("status", "available").gt("quantity", 0).order("expiry_date", { ascending: true, nullsFirst: false });
     if (warehouseId) q = q.eq("warehouse_id", warehouseId);
     void q.then(({ data }) => setLots((data as Lot[] | null) ?? []));
   }, [itemId, warehouseId]);

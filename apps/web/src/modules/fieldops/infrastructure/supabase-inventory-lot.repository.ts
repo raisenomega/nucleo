@@ -8,7 +8,7 @@ const s = (v: unknown) => (v as string | null) ?? null;
 function toLot(r: Row): InventoryLot {
   return {
     id: r.id as string, itemId: r.item_id as string, warehouseId: r.warehouse_id as string, warehouseName: ((r.warehouse as { name?: string } | null)?.name) ?? "",
-    lotNumber: r.lot_number as string, lotType: r.lot_type as "lot" | "serial", quantity: Number(r.quantity),
+    lotNumber: r.lot_number as string, lotType: r.lot_type as "lot" | "serial" | "cost_layer", quantity: Number(r.quantity),
     expiryDate: s(r.expiry_date), manufactureDate: s(r.manufacture_date), receivedDate: s(r.received_date),
     supplierId: s(r.supplier_id), supplierName: ((r.supplier as { name?: string } | null)?.name) ?? null,
     unitCost: r.unit_cost == null ? null : Number(r.unit_cost), status: r.status as LotStatus, notes: s(r.notes), createdAt: r.created_at as string,
@@ -17,7 +17,15 @@ function toLot(r: Row): InventoryLot {
 
 export const supabaseInventoryLotRepository: IInventoryLotRepository = {
   async listByItem(itemId): Promise<InventoryLot[]> {
-    const { data } = await supabase.from("inventory_lots").select(SELECT).eq("item_id", itemId).order("expiry_date", { ascending: true, nullsFirst: false });
+    const { data } = await supabase.from("inventory_lots").select(SELECT).eq("item_id", itemId).in("lot_type", ["lot", "serial"]).order("expiry_date", { ascending: true, nullsFirst: false });
+    return ((data as Row[] | null) ?? []).map(toLot);
+  },
+  async listCostLayers(itemId): Promise<InventoryLot[]> {
+    const { data } = await supabase.from("inventory_lots").select(SELECT).eq("item_id", itemId).eq("lot_type", "cost_layer").order("received_date", { ascending: true, nullsFirst: true }).order("created_at", { ascending: true });
+    return ((data as Row[] | null) ?? []).map(toLot);
+  },
+  async listActiveCostLayers(): Promise<InventoryLot[]> {
+    const { data } = await supabase.from("inventory_lots").select(SELECT).eq("lot_type", "cost_layer").eq("status", "available").gt("quantity", 0).order("received_date", { ascending: true, nullsFirst: true });
     return ((data as Row[] | null) ?? []).map(toLot);
   },
   async listExpiring(daysAhead): Promise<InventoryLot[]> {

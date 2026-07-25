@@ -55,4 +55,10 @@ export const esInventory = {
   lotsToTransfer: "Lotes a transferir", daysUntilExpiry: "Días restantes",
   itemPhotos: "Fotos del artículo (máx 3)", savePhotoHint: "Guarda el artículo primero para agregar fotos.",
   inventoryItems: "Artículos",
+  costingMethod: "Método de costeo", weightedAverage: "Costo promedio ponderado", fifo: "FIFO", fifoFull: "FIFO (primero en entrar, primero en salir)",
+  costingMethodHint: "Determina cómo se calcula el costo de los productos vendidos. Cambiar a FIFO crea capas de costo para el inventario existente.",
+  switchToFifoWarning: "Al activar FIFO se creará una capa de costo base para todo el inventario actual usando el costo promedio actual. Este cambio afecta cómo se reporta el COGS. ¿Continuar?",
+  migrationComplete: "Migración completa", cogsTotal: "COGS", cogsUnit: "Costo unit.", costOfGoodsSold: "Costo real de las unidades consumidas",
+  costLayers: "Capas de costo", costLayer: "Capa", showConsumedLayers: "Mostrar consumidas", receivedDate: "Recibida",
+  fifoValuation: "Valuación de inventario (FIFO)", oldestCost: "Costo más antiguo", newestCost: "Costo más reciente", activeLayers: "Capas activas", valueByFifo: "Valor FIFO", valueByAverage: "Valor promedio (ref.)",
 } satisfies Partial<Record<TranslationKey, string>>;

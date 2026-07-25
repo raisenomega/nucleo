@@ -1,7 +1,8 @@
 import { useEffect, type ReactNode } from "react";
-import { Package, AlertTriangle, DollarSign, CalendarClock, Tag, CalendarX } from "lucide-react";
+import { Package, AlertTriangle, DollarSign, CalendarClock, Tag, CalendarX, Layers } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
+import { useCostingMethod } from "@shared/hooks/useCostingMethod";
 import { formatCurrency } from "@shared/lib/format";
 import { itemValue } from "@fieldops/application/inventory-analytics";
 import { useInventoryLots } from "@fieldops/application/useInventoryLots.hook";
@@ -12,6 +13,7 @@ import type { InventoryItem } from "@fieldops/domain/inventory.types";
 export function InventoryKpis({ items }: { items: readonly InventoryItem[] }) {
   const { t } = useI18n();
   const { can } = useModuleAccess();
+  const { method } = useCostingMethod();
   const lots = useInventoryLots(supabaseInventoryLotRepository);
   useEffect(() => { void lots.expireAll(); }, []);
   const hasTracking = items.some((i) => i.trackingType !== "none");
@@ -28,6 +30,11 @@ export function InventoryKpis({ items }: { items: readonly InventoryItem[] }) {
   );
   return (
     <div className="space-y-3">
+      {can("inventory", "cost") && method && (
+        <div className="flex justify-end">
+          <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-0.5 text-xs font-bold text-muted-foreground"><Layers className="h-3.5 w-3.5" />{t("costingMethod")}: {method === "fifo" ? t("fifo") : t("weightedAverage")}</span>
+        </div>
+      )}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         {card(<Package className="h-4 w-4" />, t("totalItems"), String(items.length))}
         {card(<AlertTriangle className="h-4 w-4" />, t("lowStock"), String(low), low > 0 ? "text-destructive" : "")}

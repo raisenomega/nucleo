@@ -46,6 +46,7 @@ export function InventoryMovements({ itemId }: { itemId: string }) {
               <div className="flex flex-wrap gap-x-3 text-xs text-muted-foreground">
                 <span>Saldo: <span className="font-semibold text-foreground">{m.runningBalance}</span></span>
                 {showCost && m.unitCost != null && m.unitCost > 0 && <span>Costo u.: {formatCurrency(m.unitCost)}</span>}
+                {showCost && m.cogsTotal != null && <span title={`${t("costOfGoodsSold")} · ${t("cogsUnit")}: ${formatCurrency(m.cogsUnit ?? 0)}`} className="font-semibold text-foreground">{t("cogsTotal")}: {formatCurrency(m.cogsTotal)}</span>}
               </div>
               <p className="text-xs text-muted-foreground">{ctx}</p>
               {m.notes && <p className="text-xs text-muted-foreground">{m.notes}</p>}

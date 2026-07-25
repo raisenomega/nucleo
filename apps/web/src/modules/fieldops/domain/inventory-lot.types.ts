@@ -5,14 +5,16 @@ export type LotStatus = "available" | "quarantine" | "expired" | "consumed" | "r
 
 export interface InventoryLot {
   readonly id: string; readonly itemId: string; readonly warehouseId: string; readonly warehouseName: string;
-  readonly lotNumber: string; readonly lotType: "lot" | "serial"; readonly quantity: number;
+  readonly lotNumber: string; readonly lotType: "lot" | "serial" | "cost_layer"; readonly quantity: number;
   readonly expiryDate: string | null; readonly manufactureDate: string | null; readonly receivedDate: string | null;
   readonly supplierId: string | null; readonly supplierName: string | null; readonly unitCost: number | null;
   readonly status: LotStatus; readonly notes: string | null; readonly createdAt: string;
 }
 
 export interface IInventoryLotRepository {
-  listByItem(itemId: string): Promise<InventoryLot[]>;
+  listByItem(itemId: string): Promise<InventoryLot[]>;            // solo lotes/series del usuario (excluye cost_layer)
+  listCostLayers(itemId: string): Promise<InventoryLot[]>;        // capas de costo FIFO de un ítem (received ASC)
+  listActiveCostLayers(): Promise<InventoryLot[]>;               // todas las capas available del tenant (valuación PDF)
   listExpiring(daysAhead: number): Promise<InventoryLot[]>;
   updateStatus(lotId: string, status: LotStatus): Promise<Result<null, string>>;
   expireAll(): Promise<number>;

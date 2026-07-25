@@ -50,6 +50,7 @@ export type InventoryListResult = Result<InventoryItem[], string>;
 
 export interface InventoryMovement {
   readonly id: string; readonly type: string; readonly quantity: number; readonly delta: number; readonly unitCost: number | null; readonly runningBalance: number;
+  readonly cogsTotal: number | null; readonly cogsUnit: number | null;
   readonly date: string; readonly notes: string | null; readonly employee: string;
   readonly clientName: string | null; readonly serviceType: string | null; readonly routeDate: string | null;
 }

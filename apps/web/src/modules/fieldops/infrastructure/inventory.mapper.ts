@@ -8,7 +8,7 @@ export interface Row {
   warehouse_zone: string | null; aisle: string | null; shelf: string | null; bin: string | null; reorder_point: number | null; reorder_qty: number | null; photo_urls: string[] | null;
   category_id: string | null; category: { id: string; label: string } | null; unit_of_measure_id: string | null; unit_of_measure: { id: string; name: string; abbreviation: string } | null; barcode: string | null; tracking_type: "none" | "lot" | "serial"; stock_entries: StockRow[] | null;
 }
-interface MovRow { id: string; movement_type: string; quantity: number | string; movement_date: string; delta: number | string | null; unit_cost: number | string | null; running_balance: number | string | null; notes: string | null; employee: string; client_name: string | null; service_type: string | null; route_date: string | null; }
+interface MovRow { id: string; movement_type: string; quantity: number | string; movement_date: string; delta: number | string | null; unit_cost: number | string | null; cogs_total: number | string | null; cogs_unit: number | string | null; running_balance: number | string | null; notes: string | null; employee: string; client_name: string | null; service_type: string | null; route_date: string | null; }
 const n = (v: Num) => (v == null ? null : Number(v));
 
 export const SELECT = "id, tenant_id, name, stock, unit_cost, min_stock, sku, avg_cost, supplier_name, supplier_id, landing_product_id, last_restock_date, warehouse_zone, aisle, shelf, bin, reorder_point, reorder_qty, photo_urls, category_id, category:categories!category_id(id, label), unit_of_measure_id, unit_of_measure:units_of_measure!unit_of_measure_id(id, name, abbreviation), barcode, tracking_type, stock_entries:inventory_stock(warehouse_id, quantity, min_stock, reorder_point, reorder_qty, location_zone, location_aisle, location_shelf, location_bin, warehouse:warehouses(id, name, code))";
@@ -28,6 +28,6 @@ export function toRow(d: InventoryFormData) {
 }
 
 export function toMovement(r: MovRow): InventoryMovement {
-  return { id: r.id, type: r.movement_type, quantity: Number(r.quantity), date: r.movement_date, delta: Number(r.delta ?? 0), unitCost: r.unit_cost == null ? null : Number(r.unit_cost), runningBalance: Number(r.running_balance ?? 0), notes: r.notes, employee: r.employee, clientName: r.client_name, serviceType: r.service_type, routeDate: r.route_date };
+  return { id: r.id, type: r.movement_type, quantity: Number(r.quantity), date: r.movement_date, delta: Number(r.delta ?? 0), unitCost: n(r.unit_cost), cogsTotal: n(r.cogs_total), cogsUnit: n(r.cogs_unit), runningBalance: Number(r.running_balance ?? 0), notes: r.notes, employee: r.employee, clientName: r.client_name, serviceType: r.service_type, routeDate: r.route_date };
 }
 export type { MovRow };
