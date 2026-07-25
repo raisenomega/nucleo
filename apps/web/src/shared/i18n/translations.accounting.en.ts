@@ -26,4 +26,9 @@ export const enAccounting = {
   operatingExpenses: "Operating Expenses", operatingIncome: "Operating Income", nonOperatingExpenses: "Non-Operating Expenses", netIncome: "Net Income",
   totalRevenue: "TOTAL REVENUE", totalCogs: "TOTAL COST OF SALES", totalOpex: "TOTAL OPERATING EXPENSES", totalNonOp: "TOTAL NON-OPERATING",
   fullYear: "Full year", yearToDate: "Year to date", noDataForPeriod: "No data for this period.",
+  balanceSheet: "Balance Sheet", asOfDate: "As of", liabilities: "Liabilities", unclosed: "unclosed",
+  currentAssets: "Current Assets", nonCurrentAssets: "Non-Current Assets",
+  currentLiabilities: "Current Liabilities", longTermLiabilities: "Long-Term Liabilities",
+  totalLiabilities: "TOTAL LIABILITIES", totalEquity: "TOTAL EQUITY", totalLiabilitiesEquity: "TOTAL LIABILITIES + EQUITY",
+  liquidityRatio: "Liquidity", debtRatio: "Debt ratio",
 } satisfies Partial<Record<TranslationKey, string>>;

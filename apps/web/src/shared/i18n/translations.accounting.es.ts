@@ -26,4 +26,9 @@ export const esAccounting = {
   operatingExpenses: "Gastos Operativos", operatingIncome: "Utilidad Operativa", nonOperatingExpenses: "Gastos No Operativos", netIncome: "Utilidad Neta",
   totalRevenue: "TOTAL INGRESOS", totalCogs: "TOTAL COSTO DE VENTAS", totalOpex: "TOTAL GASTOS OPERATIVOS", totalNonOp: "TOTAL NO OPERATIVOS",
   fullYear: "Año completo", yearToDate: "Acumulado", noDataForPeriod: "No hay datos para este período.",
+  balanceSheet: "Balance General", asOfDate: "Al", liabilities: "Pasivos", unclosed: "no cerrada",
+  currentAssets: "Activos Corrientes", nonCurrentAssets: "Activos No Corrientes",
+  currentLiabilities: "Pasivos Corrientes", longTermLiabilities: "Pasivos a Largo Plazo",
+  totalLiabilities: "TOTAL PASIVOS", totalEquity: "TOTAL CAPITAL", totalLiabilitiesEquity: "TOTAL PASIVOS + CAPITAL",
+  liquidityRatio: "Liquidez", debtRatio: "Endeudamiento",
 } satisfies Partial<Record<TranslationKey, string>>;
