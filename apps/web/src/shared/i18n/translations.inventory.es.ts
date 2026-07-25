@@ -49,6 +49,9 @@ export const esInventory = {
   transferBetweenWarehouses: "Transferir entre almacenes", fromWarehouse: "Desde almacén", toWarehouse: "Hacia almacén", stockInOrigin: "Stock en origen", stockInDestination: "Stock en destino",
   cannotDeleteWithStock: "No se puede eliminar un almacén con stock", stockModifiedViaOps: "Se modifica vía restock, ajuste o conteo",
   allWarehouses: "Todos los almacenes", destinationWarehouse: "Almacén destino",
+  trackingType: "Trazabilidad", noTracking: "Sin trazabilidad", lotTracking: "Por lote", serialTracking: "Por serie", trackingChangeBlocked: "Para cambiar el tipo, el stock debe ser 0",
+  lotNumber: "Número de lote", expiryDate: "Caducidad", selectLot: "Lote", lotStatus: "Estado", expiringLots: "Próximos a vencer", lotTransfer: "Transferencia de lotes",
+  quarantine: "Cuarentena", expired: "Vencido", consumed: "Consumido", recalled: "Retirado", setQuarantine: "Cuarentena", setAvailable: "Disponible", recall: "Retirar",
   itemPhotos: "Fotos del artículo (máx 3)", savePhotoHint: "Guarda el artículo primero para agregar fotos.",
   inventoryItems: "Artículos",
 } satisfies Partial<Record<TranslationKey, string>>;

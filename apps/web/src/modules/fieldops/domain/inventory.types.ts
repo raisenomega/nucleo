@@ -16,6 +16,7 @@ export interface InventoryItem {
   readonly categoryId: string | null; readonly categoryName: string | null;
   readonly unitOfMeasureId: string | null; readonly unitOfMeasureAbbreviation: string | null; readonly unitOfMeasureName: string | null;
   readonly barcode: string | null;
+  readonly trackingType: "none" | "lot" | "serial";
   readonly warehouseStock: readonly WarehouseStockEntry[];
 }
 
@@ -34,12 +35,13 @@ export interface InventoryFormData {
   readonly landingProductId: string | null; readonly supplierId: string | null;
   readonly warehouseZone: string; readonly aisle: string; readonly shelf: string; readonly bin: string;
   readonly reorderPoint: number | null; readonly reorderQty: number | null;
-  readonly categoryId: string | null; readonly unitOfMeasureId: string | null; readonly barcode: string | null;
+  readonly categoryId: string | null; readonly unitOfMeasureId: string | null; readonly barcode: string | null; readonly trackingType: "none" | "lot" | "serial";
 }
 
 export interface RestockData {
   readonly quantity: number; readonly unitCost: number; readonly supplier: string; readonly supplierId: string | null;
   readonly notes: string; readonly date: string; readonly warehouseId: string | null;
+  readonly lotNumber: string | null; readonly expiryDate: string | null; readonly manufactureDate: string | null;
 }
 
 export interface LandingProductRef { readonly id: string; readonly name: string; }
@@ -59,8 +61,8 @@ export interface IInventoryRepository {
   update(id: string, data: InventoryFormData): Promise<Result<InventoryItem, string>>;
   remove(id: string): Promise<Result<null, string>>;
   restock(itemId: string, data: RestockData): Promise<Result<string | null, string>>;
-  adjust(itemId: string, newQty: number, reason: string, warehouseId?: string | null): Promise<Result<string | null, string>>;
-  shrink(itemId: string, qty: number, reason: string, warehouseId?: string | null): Promise<Result<string | null, string>>;
+  adjust(itemId: string, newQty: number, reason: string, warehouseId?: string | null, lotId?: string | null): Promise<Result<string | null, string>>;
+  shrink(itemId: string, qty: number, reason: string, warehouseId?: string | null, lotId?: string | null): Promise<Result<string | null, string>>;
   transfer(itemId: string, data: TransferData): Promise<Result<string | null, string>>;
   listMovements(itemId: string): Promise<InventoryMovement[]>;
   listLandingProducts(): Promise<LandingProductRef[]>;

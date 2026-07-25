@@ -49,6 +49,9 @@ export const enInventory = {
   transferBetweenWarehouses: "Transfer between warehouses", fromWarehouse: "From warehouse", toWarehouse: "To warehouse", stockInOrigin: "Stock in origin", stockInDestination: "Stock in destination",
   cannotDeleteWithStock: "Can't delete a warehouse with stock", stockModifiedViaOps: "Changed via restock, adjustment or count",
   allWarehouses: "All warehouses", destinationWarehouse: "Destination warehouse",
+  trackingType: "Tracking", noTracking: "No tracking", lotTracking: "By lot", serialTracking: "By serial", trackingChangeBlocked: "To change the type, stock must be 0",
+  lotNumber: "Lot number", expiryDate: "Expiry", selectLot: "Lot", lotStatus: "Status", expiringLots: "Expiring soon", lotTransfer: "Lot transfer",
+  quarantine: "Quarantine", expired: "Expired", consumed: "Consumed", recalled: "Recalled", setQuarantine: "Quarantine", setAvailable: "Available", recall: "Recall",
   itemPhotos: "Item photos (max 3)", savePhotoHint: "Save the item first to add photos.",
   inventoryItems: "Items",
 } satisfies Partial<Record<TranslationKey, string>>;

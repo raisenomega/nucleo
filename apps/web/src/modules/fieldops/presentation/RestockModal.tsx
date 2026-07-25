@@ -13,10 +13,11 @@ export function RestockModal({ item, suppliers, onSubmit, onClose }: {
   item: InventoryItem; suppliers: readonly SupplierRef[]; onSubmit: (d: RestockData) => void; onClose: () => void;
 }) {
   const { t } = useI18n();
-  const [f, setF] = useState<RestockData>({ quantity: 1, unitCost: item.unitCost || 0, supplier: item.supplierName, supplierId: item.supplierId, notes: "", date: today(), warehouseId: null });
+  const tracking = item.trackingType;
+  const [f, setF] = useState<RestockData>({ quantity: 1, unitCost: item.unitCost || 0, supplier: item.supplierName, supplierId: item.supplierId, notes: "", date: today(), warehouseId: null, lotNumber: tracking === "lot" ? `LOT-${new Date().getFullYear()}-${Date.now().toString().slice(-3)}` : null, expiryDate: null, manufactureDate: null });
   const field = "w-full rounded-lg border border-border bg-background p-2 font-body";
   const lbl = "text-xs font-bold text-muted-foreground";
-  const go = (e: React.FormEvent) => { e.preventDefault(); if (f.quantity < 1 || f.unitCost <= 0) return; onSubmit(f); };
+  const go = (e: React.FormEvent) => { e.preventDefault(); if (f.quantity < 1 || f.unitCost <= 0) return; if (tracking !== "none" && !(f.lotNumber ?? "").trim()) return; onSubmit(tracking === "serial" ? { ...f, quantity: 1 } : f); };
   return (
     <ScreenModal onClose={onClose}>
       <div className="flex items-center justify-between border-b border-border p-4">
@@ -25,7 +26,7 @@ export function RestockModal({ item, suppliers, onSubmit, onClose }: {
       </div>
       <form onSubmit={go} className="grid grid-cols-1 gap-3 p-4 md:grid-cols-2">
         <label className="space-y-1"><span className={lbl}>{t("quantity")}{item.unitOfMeasureAbbreviation ? ` (${item.unitOfMeasureAbbreviation})` : ""}</span>
-          <input type="number" min="1" step="1" value={f.quantity || ""} onChange={(e) => setF({ ...f, quantity: Number(e.target.value) })} className={field} required /></label>
+          <input type="number" min="1" step="1" value={tracking === "serial" ? 1 : (f.quantity || "")} disabled={tracking === "serial"} onChange={(e) => setF({ ...f, quantity: Number(e.target.value) })} className={field} required /></label>
         <label className="space-y-1"><span className={lbl}>{t("unitCost")}</span>
           <input type="number" min="0.01" step="0.01" value={f.unitCost || ""} onChange={(e) => setF({ ...f, unitCost: Number(e.target.value) })} className={field} required /></label>
         <label className="space-y-1"><span className={lbl}>{t("supplier")}</span>
@@ -35,6 +36,10 @@ export function RestockModal({ item, suppliers, onSubmit, onClose }: {
         <label className="space-y-1"><span className={lbl}>{t("date")}</span>
           <input type="date" value={f.date} onChange={(e) => setF({ ...f, date: e.target.value })} className={field} /></label>
         <WarehousePicker value={f.warehouseId ?? ""} onChange={(v) => setF({ ...f, warehouseId: v || null })} hideIfSingle />
+        {tracking !== "none" && <label className="space-y-1"><span className={lbl}>{tracking === "serial" ? t("serialNumber") : t("lotNumber")}</span>
+          <input value={f.lotNumber ?? ""} onChange={(e) => setF({ ...f, lotNumber: e.target.value })} className={field} required /></label>}
+        {tracking === "lot" && <label className="space-y-1"><span className={lbl}>{t("expiryDate")}</span>
+          <input type="date" value={f.expiryDate ?? ""} onChange={(e) => setF({ ...f, expiryDate: e.target.value || null })} className={field} /></label>}
         <label className="space-y-1 md:col-span-2"><span className={lbl}>{t("notes")}</span>
           <textarea value={f.notes} onChange={(e) => setF({ ...f, notes: e.target.value })} rows={2} className={field} /></label>
         <div className="flex gap-2 md:col-span-2">

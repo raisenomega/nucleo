@@ -16,8 +16,9 @@ export function InventoryForm({ initial, itemId, photoUrls, tenantId, landingPro
   const { t } = useI18n();
   const { can } = useModuleAccess();
   const [photos, setPhotos] = useState<string[]>([...(photoUrls ?? [])]);
-  const [f, setF] = useState<InventoryFormData>(initial ?? { name: "", sku: "", stock: 0, unitCost: 0, minStock: 0, landingProductId: null, supplierId: null, warehouseZone: "", aisle: "", shelf: "", bin: "", reorderPoint: null, reorderQty: null, categoryId: null, unitOfMeasureId: null, barcode: prefillBarcode ?? null });
+  const [f, setF] = useState<InventoryFormData>(initial ?? { name: "", sku: "", stock: 0, unitCost: 0, minStock: 0, landingProductId: null, supplierId: null, warehouseZone: "", aisle: "", shelf: "", bin: "", reorderPoint: null, reorderQty: null, categoryId: null, unitOfMeasureId: null, barcode: prefillBarcode ?? null, trackingType: "none" });
   const genBarcode = () => setF((c) => ({ ...c, barcode: c.sku.trim() || `${(c.name.slice(0, 3) || "ITM").toUpperCase()}-${Date.now().toString().slice(-8)}` }));
+  const trackingLocked = !!itemId && f.stock > 0; // no cambiar tipo de trazabilidad si ya hay stock
   const field = "w-full rounded-lg border border-border bg-background p-2 font-body";
   const lbl = "text-xs font-bold text-muted-foreground";
   const num = (k: "stock" | "unitCost" | "minStock", label: string) => (
@@ -53,6 +54,10 @@ export function InventoryForm({ initial, itemId, photoUrls, tenantId, landingPro
           </select></label>
         <CategoryPicker kind="inventory_category" label="category" value={f.categoryId ?? ""} onChange={(v) => setF({ ...f, categoryId: v || null })} />
         <UomPicker value={f.unitOfMeasureId ?? ""} onChange={(v) => setF({ ...f, unitOfMeasureId: v || null })} />
+        <label className="space-y-1"><span className={lbl}>{t("trackingType")}</span>
+          <select value={f.trackingType} disabled={trackingLocked} onChange={(e) => setF({ ...f, trackingType: e.target.value as "none" | "lot" | "serial" })} className={field} title={trackingLocked ? t("trackingChangeBlocked") : undefined}>
+            <option value="none">{t("noTracking")}</option><option value="lot">{t("lotTracking")}</option><option value="serial">{t("serialTracking")}</option>
+          </select></label>
         <p className="text-xs font-bold uppercase text-muted-foreground md:col-span-2">{t("reorderSection")}</p>
         <label className="space-y-1"><span className={lbl}>{t("reorderPoint")}</span><input type="number" min="0" value={f.reorderPoint ?? ""} onChange={(e) => setF({ ...f, reorderPoint: e.target.value ? Number(e.target.value) : null })} className={field} /></label>
         <label className="space-y-1"><span className={lbl}>{t("reorderQty")}</span><input type="number" min="0" value={f.reorderQty ?? ""} onChange={(e) => setF({ ...f, reorderQty: e.target.value ? Number(e.target.value) : null })} className={field} /></label>

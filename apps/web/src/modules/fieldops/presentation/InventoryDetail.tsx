@@ -6,6 +6,7 @@ import { ScreenModal } from "@shared/components/ScreenModal";
 import { InventoryMovements } from "@fieldops/presentation/InventoryMovements";
 import { InventoryItemCharts } from "@fieldops/presentation/InventoryItemCharts";
 import { SignedPhotos } from "@fieldops/presentation/SignedPhotos";
+import { ItemLotsPanel } from "@fieldops/presentation/ItemLotsPanel";
 import { BarcodeDisplay } from "@fieldops/presentation/BarcodeDisplay";
 import { consumption, itemValue, type RawMov } from "@fieldops/application/inventory-analytics";
 import type { InventoryItem } from "@fieldops/domain/inventory.types";
@@ -50,6 +51,7 @@ export function InventoryDetail({ item, movs, now, onClose }: { item: InventoryI
             </table></div>
           </div>
         )}
+        {item.trackingType !== "none" && <ItemLotsPanel item={item.id} serial={item.trackingType === "serial"} />}
         {item.barcode ? <div className="border-t border-border pt-3"><BarcodeDisplay value={item.barcode} /></div> : <p className="text-xs text-muted-foreground">{t("noBarcode")}</p>}
         {cons.avg > 0 && <p className={`text-sm ${cons.high ? "font-bold text-destructive" : "text-muted-foreground"}`}>{t("consumeThisMonth")}: {cons.cur} ({t("average")}: {cons.avg.toFixed(1)}){cons.high && ` · ${t("highConsumption")}`}</p>}
         <InventoryItemCharts item={item} movs={movs} now={now} />

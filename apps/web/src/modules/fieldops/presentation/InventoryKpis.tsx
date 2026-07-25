@@ -1,15 +1,20 @@
-import type { ReactNode } from "react";
-import { Package, AlertTriangle, DollarSign, CalendarClock, Tag } from "lucide-react";
+import { useEffect, type ReactNode } from "react";
+import { Package, AlertTriangle, DollarSign, CalendarClock, Tag, CalendarX } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { formatCurrency } from "@shared/lib/format";
 import { itemValue } from "@fieldops/application/inventory-analytics";
+import { useInventoryLots } from "@fieldops/application/useInventoryLots.hook";
+import { supabaseInventoryLotRepository } from "@fieldops/infrastructure/supabase-inventory-lot.repository";
 import type { InventoryItem } from "@fieldops/domain/inventory.types";
 
-// FIX1 — KPIs: total items, stock bajo, valor total (stock×avg_cost, fallback unit_cost), último restock.
+// FIX1 — KPIs. Gap#7: al montar expira lotes vencidos + KPI "próximos a vencer" si hay ítems con trazabilidad.
 export function InventoryKpis({ items }: { items: readonly InventoryItem[] }) {
   const { t } = useI18n();
   const { can } = useModuleAccess();
+  const lots = useInventoryLots(supabaseInventoryLotRepository);
+  useEffect(() => { void lots.expireAll(); }, []);
+  const hasTracking = items.some((i) => i.trackingType !== "none");
   const low = items.filter((i) => i.minStock > 0 && i.stock <= i.minStock).length;
   const value = items.reduce((s, i) => s + itemValue(i), 0);
   const last = items.map((i) => i.lastRestockDate).filter(Boolean).sort().at(-1);
@@ -28,6 +33,7 @@ export function InventoryKpis({ items }: { items: readonly InventoryItem[] }) {
         {card(<AlertTriangle className="h-4 w-4" />, t("lowStock"), String(low), low > 0 ? "text-destructive" : "")}
         {can("inventory", "cost") && card(<DollarSign className="h-4 w-4" />, t("stockValue"), formatCurrency(value))}
         {card(<CalendarClock className="h-4 w-4" />, t("lastRestock"), last ? last.slice(0, 10) : "—")}
+        {hasTracking && card(<CalendarX className="h-4 w-4" />, t("expiringLots"), String(lots.expiringLots.length), lots.expiringLots.length > 0 ? "text-amber-600" : "")}
       </div>
       {byCat.size > 0 && (
         <div className="flex flex-wrap items-center gap-2">

@@ -16,7 +16,7 @@ export function TransferModal({ item, onSubmit, onClose }: { item: InventoryItem
   const uom = abbr ? ` ${abbr}` : "";
   const at = (id: string) => item.warehouseStock.find((e) => e.warehouseId === id)?.quantity ?? 0;
   const fromStock = at(from);
-  const invalid = !from || !to || from === to || qty <= 0 || qty > fromStock;
+  const invalid = item.trackingType !== "none" || !from || !to || from === to || qty <= 0 || qty > fromStock;
   const field = "w-full rounded-lg border border-border bg-background p-2 font-body";
   const go = (e: React.FormEvent) => { e.preventDefault(); if (invalid) return; onSubmit({ qty, fromWarehouseId: from, toWarehouseId: to, notes }); };
   return (
@@ -25,6 +25,7 @@ export function TransferModal({ item, onSubmit, onClose }: { item: InventoryItem
         <h2 className="font-display text-lg font-bold text-foreground">{t("transferBetweenWarehouses")} · {item.name}</h2>
         <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button>
       </div>
+      {item.trackingType !== "none" && <p className="border-b border-border bg-amber-500/10 p-3 text-center text-sm text-amber-600">{t("lotTransfer")}: {t("lpComingSoon")}</p>}
       <form onSubmit={go} className="space-y-3 p-4">
         <WarehousePicker value={from} onChange={setFrom} label={t("fromWarehouse")} />
         <WarehousePicker value={to} onChange={setTo} label={t("toWarehouse")} exclude={from} />
