@@ -5,7 +5,8 @@ import { useI18n } from "@shared/i18n";
 import { useBrand } from "@shared/providers/BrandProvider";
 import { useSession } from "@shared/providers/SessionProvider";
 import { useSuperAdmin } from "@shared/hooks/useSuperAdmin";
-import { SECTIONS, ACCOUNTING_SECTION, LANDING_SECTION, CAMPAIGNS_SECTION, ANALYTICS_SECTION, type NavSection } from "@shared/components/sidebar.nav";
+import { SECTIONS, ACCOUNTING_SECTION, LANDING_SECTION, CAMPAIGNS_SECTION, ANALYTICS_SECTION, REPORTS_SECTION, MANAGEMENT_SECTION, type NavSection } from "@shared/components/sidebar.nav";
+import { SidebarPinned } from "@shared/components/SidebarPinned";
 import { SUPERADMIN_SECTIONS } from "@shared/components/sidebar.superadmin.nav";
 import { SidebarSection } from "@shared/components/SidebarSection";
 import { SidebarUser } from "@shared/components/SidebarUser";
@@ -31,7 +32,8 @@ export function Sidebar({ expanded, onClose, onToggle }: { expanded: boolean; on
   const isCeo = session?.role === "ceo" || session?.role === "superadmin";
   const tenantSections = [...SECTIONS,
     ...(brand.glEnabled ? [ACCOUNTING_SECTION] : []),
-    ...(brand.landingEnabled && isCeo ? [LANDING_SECTION, CAMPAIGNS_SECTION, ANALYTICS_SECTION] : [])];
+    ...(brand.landingEnabled && isCeo ? [LANDING_SECTION, CAMPAIGNS_SECTION, ANALYTICS_SECTION] : []),
+    REPORTS_SECTION, MANAGEMENT_SECTION];
   const sections = isSuperAdmin ? SUPERADMIN_SECTIONS : tenantSections;
   const [openSection, setOpenSection] = useState<string>(() => activeSection(pathname, sections));
   useEffect(() => { const s = activeSection(pathname, sections); if (s) setOpenSection(s); }, [pathname]);
@@ -56,6 +58,7 @@ export function Sidebar({ expanded, onClose, onToggle }: { expanded: boolean; on
         </button>
         <nav className="no-scrollbar flex-1 space-y-1 overflow-y-auto p-2">
           {!isSuperAdmin && <Link to="/dashboard" onClick={onNavigate} className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-body ${panelActive ? "font-medium" : "hover:bg-secondary"} ${expanded ? "" : "justify-center"}`}><LayoutDashboard className="h-5 w-5" />{expanded && <span>{t("panel")}</span>}{expanded && panelActive && <Check className="ml-auto h-4 w-4 text-accent" />}</Link>}
+          {!isSuperAdmin && <SidebarPinned expanded={expanded} pathname={pathname} ordersBadge={unseenOrders} onNavigate={onNavigate} />}
           {!isSuperAdmin && <div className="my-1 border-b border-border" />}
           {sections.map((s) => (
             <SidebarSection key={s.title} section={s} expanded={expanded} badges={badges}

@@ -1,7 +1,7 @@
 import {
   Route as RouteIcon, Package, Calendar, Truck, DollarSign, CreditCard, Users,
   AlertCircle, Scale, Repeat, HandCoins, RefreshCw, BarChart3, UserPlus, Megaphone, ShoppingCart, FileText,
-  Home, FileCheck, ClipboardCheck, NotebookPen, GraduationCap, LifeBuoy, Bell, Settings,
+  ShoppingBag, FileCheck, ClipboardCheck, NotebookPen, GraduationCap, LifeBuoy, Bell, Settings,
   Cog, Wallet, Store, Briefcase, Palette, SlidersHorizontal, Tags, Wrench, Boxes, Quote, HelpCircle, FileInput, Layers, Ticket,
   BookOpen, BookMarked, ScrollText, TrendingUp, Lock, Receipt, Banknote,
 } from "lucide-react";
@@ -18,7 +18,17 @@ type EnabledPath = "/dashboard" | "/routes" | "/income" | "/expenses" | "/extrao
 export type NavItem = { key: TranslationKey; icon: LucideIcon; to?: EnabledPath; mod?: string };
 export type NavSection = { title: TranslationKey; icon: LucideIcon; items: NavItem[] };
 
+// Items fijos arriba (fuera de grupos colapsables), gated por su módulo. Órdenes Web lleva badge de órdenes sin ver.
+export const PINNED_ITEMS: NavItem[] = [
+  { key: "navClientes", icon: Users, to: "/customers", mod: "customers" },
+  { key: "navOrdersWeb", icon: ShoppingBag, to: "/orders", mod: "orders" },
+];
+
 export const SECTIONS: NavSection[] = [
+  { title: "salesCrm", icon: Store, items: [
+    { key: "leads", icon: UserPlus, to: "/leads", mod: "leads" }, { key: "marketing", icon: Megaphone, to: "/marketing", mod: "marketing" },
+    { key: "quotes", icon: FileText, to: "/quotes", mod: "quotes" }, { key: "documents", icon: FileCheck, to: "/documents", mod: "documents" },
+  ] },
   { title: "operations", icon: Cog, items: [
     { key: "routes", icon: RouteIcon, to: "/routes", mod: "routes" },
     { key: "agenda", icon: Calendar, to: "/agenda", mod: "settings" }, { key: "assets", icon: Truck, to: "/assets", mod: "assets" },
@@ -30,27 +40,15 @@ export const SECTIONS: NavSection[] = [
   ] },
   { title: "finance", icon: Wallet, items: [
     { key: "income", icon: DollarSign, to: "/income", mod: "income" },
-    { key: "expenses", icon: CreditCard, to: "/expenses", mod: "expenses" }, { key: "payroll", icon: Users, to: "/payroll", mod: "payroll" },
-    { key: "extraordinary", icon: AlertCircle, to: "/extraordinary", mod: "extraordinary" }, { key: "reconciliation", icon: Scale, to: "/reconciliation", mod: "reconciliation" },
-    { key: "recurringExpenses", icon: Repeat, to: "/recurring", mod: "recurring" },
-    { key: "accountsReceivable", icon: HandCoins, to: "/accounts-receivable", mod: "accounts_receivable" }, { key: "billing", icon: RefreshCw, to: "/billing", mod: "billing" }, { key: "reports", icon: BarChart3, to: "/reports", mod: "reports" },
-  ] },
-  { title: "salesCrm", icon: Store, items: [
-    { key: "leads", icon: UserPlus, to: "/leads", mod: "leads" }, { key: "marketing", icon: Megaphone, to: "/marketing", mod: "marketing" },
-    { key: "orders", icon: ShoppingCart, to: "/orders", mod: "orders" }, { key: "quotes", icon: FileText, to: "/quotes", mod: "quotes" },
-    { key: "portal", icon: Home, to: "/customers", mod: "customers" }, { key: "documents", icon: FileCheck, to: "/documents", mod: "documents" },
-  ] },
-  { title: "management", icon: Briefcase, items: [
-    { key: "evaluations", icon: ClipboardCheck, to: "/evaluations", mod: "evaluations" },
-    { key: "observations", icon: NotebookPen, to: "/observations", mod: "observations" },
-    { key: "training", icon: GraduationCap, to: "/training", mod: "training" },
-    { key: "support", icon: LifeBuoy, to: "/support", mod: "support" }, { key: "notifications", icon: Bell, to: "/notifications" },
+    { key: "expenses", icon: CreditCard, to: "/expenses", mod: "expenses" }, { key: "recurringExpenses", icon: Repeat, to: "/recurring", mod: "recurring" },
+    { key: "payroll", icon: Users, to: "/payroll", mod: "payroll" }, { key: "extraordinary", icon: AlertCircle, to: "/extraordinary", mod: "extraordinary" },
+    { key: "billing", icon: RefreshCw, to: "/billing", mod: "billing" }, { key: "reconciliation", icon: Scale, to: "/reconciliation", mod: "reconciliation" },
   ] },
 ];
 
-// Sección Contabilidad (GL) — inyectada por Sidebar solo si gl_enabled. Items gated por can("accounting","view").
+// Sección Contabilidad (GL) — inyectada por Sidebar solo si gl_enabled. Items gated por can(mod,"view").
 export const ACCOUNTING_SECTION: NavSection = { title: "accounting", icon: BookOpen, items: [
-  { key: "chartOfAccounts", icon: BookMarked, to: "/accounting/chart", mod: "accounting" }, { key: "generalLedger", icon: ScrollText, to: "/accounting/journal", mod: "accounting" }, { key: "accountsPayable", icon: Receipt, to: "/accounting/payables", mod: "accounting" }, { key: "incomeStatement", icon: TrendingUp, to: "/accounting/income-statement", mod: "accounting" }, { key: "balanceSheet", icon: Scale, to: "/accounting/balance-sheet", mod: "accounting" }, { key: "cashFlow", icon: Banknote, to: "/accounting/cash-flow", mod: "accounting" }, { key: "periodClose", icon: Lock, to: "/accounting/period-close", mod: "accounting" }] };
+  { key: "chartOfAccounts", icon: BookMarked, to: "/accounting/chart", mod: "accounting" }, { key: "generalLedger", icon: ScrollText, to: "/accounting/journal", mod: "accounting" }, { key: "accountsReceivable", icon: HandCoins, to: "/accounts-receivable", mod: "accounts_receivable" }, { key: "accountsPayable", icon: Receipt, to: "/accounting/payables", mod: "accounting" }, { key: "incomeStatement", icon: TrendingUp, to: "/accounting/income-statement", mod: "accounting" }, { key: "balanceSheet", icon: Scale, to: "/accounting/balance-sheet", mod: "accounting" }, { key: "cashFlow", icon: Banknote, to: "/accounting/cash-flow", mod: "accounting" }, { key: "periodClose", icon: Lock, to: "/accounting/period-close", mod: "accounting" }] };
 
 // Sección Landing — inyectada por Sidebar solo si landingEnabled && CEO. mod:"settings" pasa el filtro CEO.
 export const LANDING_SECTION: NavSection = { title: "landing", icon: Palette, items: [
@@ -68,3 +66,9 @@ export const ANALYTICS_SECTION: NavSection = {
   title: "landingAnalytics", icon: BarChart3,
   items: [{ key: "landingAnalytics", icon: BarChart3, to: "/settings/landing/analytics", mod: "settings" }],
 };
+
+// Reportes: grupo propio al final. Gestión: se conserva al final (evaluaciones/RRHH/soporte/notificaciones).
+export const REPORTS_SECTION: NavSection = { title: "reports", icon: FileText, items: [{ key: "reports", icon: BarChart3, to: "/reports", mod: "reports" }] };
+export const MANAGEMENT_SECTION: NavSection = { title: "management", icon: Briefcase, items: [
+  { key: "evaluations", icon: ClipboardCheck, to: "/evaluations", mod: "evaluations" }, { key: "observations", icon: NotebookPen, to: "/observations", mod: "observations" },
+  { key: "training", icon: GraduationCap, to: "/training", mod: "training" }, { key: "support", icon: LifeBuoy, to: "/support", mod: "support" }, { key: "notifications", icon: Bell, to: "/notifications" }] };

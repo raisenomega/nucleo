@@ -14,7 +14,7 @@ export const es = {
   expenses: "Gastos", monthSummary: "Resumen del mes", panel: "Panel", payroll: "Nómina",
   routes: "Rutas", inventory: "Inventario", leads: "Leads", marketing: "Marketing",
   reports: "Reportes", settings: "Configuración", comingSoon: "Próximamente",
-  operations: "Operaciones", finance: "Finanzas", salesCrm: "Ventas y CRM", management: "Gestión",
+  operations: "Operaciones", finance: "Finanzas", salesCrm: "Ventas y CRM", management: "Gestión", navClientes: "Clientes", navOrdersWeb: "Órdenes Web",
   agenda: "Agenda", extraordinary: "Extraordinarios", reconciliation: "Conciliación",
   orders: "Órdenes", quotes: "Cotizaciones", evaluations: "Evaluaciones",
   training: "Capacitación", support: "Soporte",
