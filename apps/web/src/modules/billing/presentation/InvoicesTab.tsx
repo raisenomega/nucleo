@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
@@ -10,10 +10,17 @@ import { InvoiceDetail } from "@billing/presentation/InvoiceDetail";
 import { BillingKpis } from "@billing/presentation/BillingKpis";
 import type { Invoice } from "@billing/domain/invoice.types";
 
-export function InvoicesTab() {
+export function InvoicesTab({ initialInvoiceId }: { initialInvoiceId?: string }) {
   const { t } = useI18n(); const { can } = useModuleAccess();
   const m = useInvoices(supabaseInvoiceRepository);
   const [creating, setCreating] = useState(false); const [viewing, setViewing] = useState<Invoice | null>(null);
+  const [openedId, setOpenedId] = useState<string | undefined>();
+  // Deep-link desde el detalle del cliente: abre la factura indicada una vez que la lista carga.
+  useEffect(() => {
+    if (!initialInvoiceId || initialInvoiceId === openedId || m.list.length === 0) return;
+    const inv = m.list.find((x) => x.id === initialInvoiceId);
+    if (inv) { setViewing(inv); setOpenedId(initialInvoiceId); }
+  }, [initialInvoiceId, openedId, m.list]);
   const cancel = () => { if (viewing) { void m.setStatus(viewing.id, "cancelled"); setViewing(null); } };
   return (
     <div className="space-y-4">

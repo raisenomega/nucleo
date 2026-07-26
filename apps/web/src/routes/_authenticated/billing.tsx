@@ -7,12 +7,16 @@ import { InvoicesTab } from "@billing/presentation/InvoicesTab";
 import { PlansTab } from "@billing/presentation/PlansTab";
 import { ArAgingPanel } from "@shared/customers/ArAgingPanel";
 
-export const Route = createFileRoute("/_authenticated/billing")({ component: BillingPage });
+export const Route = createFileRoute("/_authenticated/billing")({
+  component: BillingPage,
+  validateSearch: (s: Record<string, unknown>): { invoice?: string } => ({ invoice: typeof s.invoice === "string" ? s.invoice : undefined }),
+});
 
 type Tab = "invoices" | "receivables" | "plans" | "orders";
 
 function BillingPage() {
   const { t } = useI18n(); const { can } = useModuleAccess();
+  const { invoice } = Route.useSearch();
   const [tab, setTab] = useState<Tab>("invoices");
   if (!can("billing", "view")) return <Navigate to="/dashboard" />;
   const tabs: { k: Tab; label: string }[] = [
@@ -26,7 +30,7 @@ function BillingPage() {
       <div className="flex flex-wrap gap-2">{tabs.map((x) => (
         <button key={x.k} type="button" onClick={() => setTab(x.k)}
           className={`rounded-lg px-3 py-1.5 text-sm font-bold ${tab === x.k ? "bg-primary text-primary-foreground" : "bg-secondary"}`}>{x.label}</button>))}</div>
-      {tab === "invoices" && <InvoicesTab />}
+      {tab === "invoices" && <InvoicesTab initialInvoiceId={invoice} />}
       {tab === "receivables" && <ArAgingPanel />}
       {tab === "plans" && <PlansTab />}
       {tab === "orders" && (

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { Wallet, MapPin } from "lucide-react";
 import { formatCurrency } from "@shared/lib/format";
 import { getCustomerAr, type CustomerAr } from "@shared/customers/ar.repository";
@@ -25,7 +26,7 @@ export function CustomerStatement({ customerId }: { customerId: string }) {
             <thead className="bg-secondary text-[10px] uppercase text-muted-foreground"><tr><th className={th}>Factura</th><th className={th}>Emisión</th><th className={th}>Vence</th><th className={`${th} text-right`}>Total</th><th className={th}>Aging</th></tr></thead>
             <tbody>{ar.invoices.map((i) => (
               <tr key={i.id} className="border-t border-border">
-                <td className="px-2 py-1.5 font-mono">{i.invoiceNumber ?? "—"}</td>
+                <td className="px-2 py-1.5 font-mono"><Link to="/billing" search={{ invoice: i.id }} className="text-primary hover:underline">{i.invoiceNumber ?? "—"}</Link></td>
                 <td className="px-2 py-1.5 text-muted-foreground">{i.invoiceDate || "—"}</td>
                 <td className="px-2 py-1.5 text-muted-foreground">{i.dueDate ?? "—"}{i.daysOverdue > 0 && <span className="ml-1 font-bold text-red-600">(+{i.daysOverdue}d)</span>}</td>
                 <td className="px-2 py-1.5 text-right font-semibold">{formatCurrency(i.total)}</td>
