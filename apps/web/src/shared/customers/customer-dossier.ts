@@ -12,13 +12,15 @@ export interface DossierService { serviceType: string; status: string; completed
 export interface DossierTicket { subject: string; status: string; createdAt: string }
 export interface DossierReview { id: string; rating: number; comment: string; reply: string; createdAt: string }
 export interface DossierLead { contactName: string; serviceRequested: string; status: string; quotedPrice: number }
-export interface Dossier { orders: DossierOrder[]; invoices: DossierInvoice[]; services: DossierService[]; tickets: DossierTicket[]; reviews: DossierReview[]; leads: DossierLead[] }
+export interface DossierQuote { id: string; quoteNumber: string; total: number; status: string; createdAt: string; linkedInvoiceId: string | null }
+export interface Dossier { orders: DossierOrder[]; invoices: DossierInvoice[]; quotes: DossierQuote[]; services: DossierService[]; tickets: DossierTicket[]; reviews: DossierReview[]; leads: DossierLead[] }
 
 export async function loadDossier(tenantId: string, email: string, phone: string, userId: string, profileId: string): Promise<Dossier> {
   const dg = digitsOf(phone);
-  const [o, i, rs, rv, ld] = await Promise.all([
+  const [o, i, q, rs, rv, ld] = await Promise.all([
     supabase.from("tenant_landing_orders").select("id, order_number, total, status, created_at").eq("tenant_id", tenantId).or(email ? `customer_id.eq.${profileId},customer_email.eq.${email}` : `customer_id.eq.${profileId}`).order("created_at", { ascending: false }).limit(10),
     supabase.from("invoices").select("id, invoice_number, total, status, due_date").eq("tenant_id", tenantId).or(email ? `customer_id.eq.${profileId},email.eq.${email}` : `customer_id.eq.${profileId}`).order("created_at", { ascending: false }),
+    supabase.from("quotes").select("id, quote_number, total, status, created_at, linked_invoice_id").eq("tenant_id", tenantId).eq("customer_id", profileId).order("created_at", { ascending: false }),
     supabase.from("route_stops").select("service_type, status, completed_at, phone, customer_id").eq("tenant_id", tenantId).is("deleted_at", null),
     supabase.from("customer_reviews").select("id, rating, comment, reply, created_at").eq("tenant_id", tenantId).eq("customer_profile_id", profileId).order("created_at", { ascending: false }),
     supabase.from("leads").select("contact_name, service_requested, status, quoted_price").eq("tenant_id", tenantId).eq("customer_id", profileId).order("created_at", { ascending: false }),
@@ -28,6 +30,7 @@ export async function loadDossier(tenantId: string, email: string, phone: string
   return {
     orders: rows(o).map((r) => ({ id: s(r.id), orderNumber: s(r.order_number), total: n(r.total), status: s(r.status), createdAt: s(r.created_at) })),
     invoices: rows(i).map((r) => ({ id: s(r.id), invoiceNumber: s(r.invoice_number), total: n(r.total), status: s(r.status), dueDate: (r.due_date as string) ?? null })),
+    quotes: rows(q).map((r) => ({ id: s(r.id), quoteNumber: s(r.quote_number), total: n(r.total), status: s(r.status), createdAt: s(r.created_at), linkedInvoiceId: (r.linked_invoice_id as string) ?? null })),
     services: rows(rs).filter((r) => r.customer_id === profileId || (!r.customer_id && dg && digitsOf(s(r.phone)) === dg)).map((r) => ({ serviceType: s(r.service_type), status: s(r.status), completedAt: (r.completed_at as string) ?? null })),
     tickets: rows(tk).map((r) => ({ subject: s(r.subject), status: s(r.status), createdAt: s(r.created_at) })),
     reviews: rows(rv).map((r) => ({ id: r.id as string, rating: n(r.rating), comment: s(r.comment), reply: s(r.reply), createdAt: s(r.created_at) })),

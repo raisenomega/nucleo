@@ -23,4 +23,5 @@ export const enQuotes = {
   quotePdfUnavailable: "PDF unavailable. Contact {name} at {phone} to receive it another way.",
   quoteAcceptedThanks: "Quote accepted! Thank you.", quoteRejectedThanks: "Quote rejected. Thanks for your response.",
   pdfNotAvailable: "PDF temporarily unavailable. Contact", respondError: "Could not record your response. Try again.",
+  noQuotes: "No quotes",
 } satisfies Partial<Record<TranslationKey, string>>;

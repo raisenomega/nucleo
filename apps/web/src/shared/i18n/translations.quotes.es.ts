@@ -23,4 +23,5 @@ export const esQuotes = {
   quotePdfUnavailable: "PDF no disponible. Contactá a {name} al {phone} para recibirlo por otro medio.",
   quoteAcceptedThanks: "¡Cotización aceptada! Gracias.", quoteRejectedThanks: "Cotización rechazada. Gracias por tu respuesta.",
   pdfNotAvailable: "PDF no disponible temporalmente. Contacta a", respondError: "No se pudo registrar tu respuesta. Intenta de nuevo.",
+  noQuotes: "Sin cotizaciones",
 } satisfies Partial<Record<TranslationKey, string>>;
