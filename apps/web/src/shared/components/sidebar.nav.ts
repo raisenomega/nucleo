@@ -27,7 +27,7 @@ export const PINNED_ITEMS: NavItem[] = [
 export const SECTIONS: NavSection[] = [
   { title: "salesCrm", icon: Store, items: [
     { key: "leads", icon: UserPlus, to: "/leads", mod: "leads" }, { key: "marketing", icon: Megaphone, to: "/marketing", mod: "marketing" },
-    { key: "quotes", icon: FileText, to: "/quotes", mod: "quotes" }, { key: "documents", icon: FileCheck, to: "/documents", mod: "documents" },
+    { key: "quotes", icon: FileText, to: "/quotes", mod: "quotes" }, { key: "billing", icon: RefreshCw, to: "/billing", mod: "billing" },
   ] },
   { title: "operations", icon: Cog, items: [
     { key: "routes", icon: RouteIcon, to: "/routes", mod: "routes" },
@@ -42,7 +42,7 @@ export const SECTIONS: NavSection[] = [
     { key: "income", icon: DollarSign, to: "/income", mod: "income" },
     { key: "expenses", icon: CreditCard, to: "/expenses", mod: "expenses" }, { key: "recurringExpenses", icon: Repeat, to: "/recurring", mod: "recurring" },
     { key: "payroll", icon: Users, to: "/payroll", mod: "payroll" }, { key: "extraordinary", icon: AlertCircle, to: "/extraordinary", mod: "extraordinary" },
-    { key: "billing", icon: RefreshCw, to: "/billing", mod: "billing" }, { key: "reconciliation", icon: Scale, to: "/reconciliation", mod: "reconciliation" },
+    { key: "reconciliation", icon: Scale, to: "/reconciliation", mod: "reconciliation" },
   ] },
 ];
 
@@ -71,4 +71,5 @@ export const ANALYTICS_SECTION: NavSection = {
 export const REPORTS_SECTION: NavSection = { title: "reports", icon: FileText, items: [{ key: "reports", icon: BarChart3, to: "/reports", mod: "reports" }] };
 export const MANAGEMENT_SECTION: NavSection = { title: "management", icon: Briefcase, items: [
   { key: "evaluations", icon: ClipboardCheck, to: "/evaluations", mod: "evaluations" }, { key: "observations", icon: NotebookPen, to: "/observations", mod: "observations" },
-  { key: "training", icon: GraduationCap, to: "/training", mod: "training" }, { key: "support", icon: LifeBuoy, to: "/support", mod: "support" }, { key: "notifications", icon: Bell, to: "/notifications" }] };
+  { key: "training", icon: GraduationCap, to: "/training", mod: "training" }, { key: "support", icon: LifeBuoy, to: "/support", mod: "support" },
+  { key: "documents", icon: FileCheck, to: "/documents", mod: "documents" }, { key: "notifications", icon: Bell, to: "/notifications" }] };
