@@ -9,6 +9,7 @@ import { CustomerCommercial } from "@shared/customers/CustomerCommercial";
 import { CustomerStatement } from "@shared/customers/CustomerStatement";
 import { CustomerPayments } from "@shared/customers/CustomerPayments";
 import { CustomerOrders } from "@shared/customers/CustomerOrders";
+import { CustomerTimeline } from "@shared/customers/CustomerTimeline";
 import { CustomerSatellites } from "@shared/customers/CustomerSatellites";
 import { CustomerDossierView } from "@shared/customers/CustomerDossierView";
 import { CustomerReviewsAdmin } from "@shared/customers/CustomerReviewsAdmin";
@@ -20,6 +21,7 @@ const EMPTY: Dossier = { invoices: [], quotes: [], services: [], tickets: [], re
 // Detalle CRM del cliente: perfil + comercial (segmento/descuento/bloqueo) + dossier + evaluaciones.
 export function CustomerDetail({ c, tenantId, segments, onClose, onChanged }: { c: AdminCustomer; tenantId: string; segments: CustomerSegment[]; onClose: () => void; onChanged: () => void }) {
   const { t } = useI18n();
+  const [tab, setTab] = useState<"summary" | "activity">("summary");
   const [d, setD] = useState<Dossier>(EMPTY);
   const load = () => { void loadDossier(tenantId, c.email, c.phone, c.userId, c.id).then(setD); };
   useEffect(load, [c.id, tenantId]);
@@ -33,16 +35,22 @@ export function CustomerDetail({ c, tenantId, segments, onClose, onChanged }: { 
           <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button>
         </div>
       </div>
-      <div className="space-y-3 p-4 md:p-6">
-        <CustomerProfileCard c={c} onChanged={onChanged} />
-        <CustomerCommercial c={c} segments={segments} onChanged={onChanged} />
-        <CustomerStatement customerId={c.id} />
-        <CustomerPayments tenantId={tenantId} customerId={c.id} email={c.email} />
-        <CustomerOrders tenantId={tenantId} customerId={c.id} email={c.email} />
-        <CustomerSatellites customerId={c.id} />
-        <CustomerDossierView d={d} />
-        <CustomerReviewsAdmin reviews={d.reviews} onChanged={load} />
+      <div className="flex gap-1 border-b border-border px-4 md:px-6">
+        {(["summary", "activity"] as const).map((k) => (
+          <button key={k} type="button" onClick={() => setTab(k)}
+            className={`px-3 py-2 text-sm font-bold ${tab === k ? "border-b-2 border-foreground text-foreground" : "text-muted-foreground"}`}>{k === "summary" ? "Resumen" : "Actividad"}</button>))}
       </div>
+      {tab === "activity" ? <div className="p-4 md:p-6"><CustomerTimeline customerId={c.id} /></div> : (
+        <div className="space-y-3 p-4 md:p-6">
+          <CustomerProfileCard c={c} onChanged={onChanged} />
+          <CustomerCommercial c={c} segments={segments} onChanged={onChanged} />
+          <CustomerStatement customerId={c.id} />
+          <CustomerPayments tenantId={tenantId} customerId={c.id} email={c.email} />
+          <CustomerOrders tenantId={tenantId} customerId={c.id} email={c.email} />
+          <CustomerSatellites customerId={c.id} />
+          <CustomerDossierView d={d} />
+          <CustomerReviewsAdmin reviews={d.reviews} onChanged={load} />
+        </div>)}
     </ScreenModal>
   );
 }
