@@ -2,7 +2,7 @@ import {
   Route as RouteIcon, Package, Calendar, Truck, DollarSign, CreditCard, Users,
   AlertCircle, Scale, Repeat, HandCoins, RefreshCw, BarChart3, UserPlus, Megaphone, ShoppingCart, FileText,
   ShoppingBag, FileCheck, ClipboardCheck, NotebookPen, GraduationCap, LifeBuoy, Bell, Settings,
-  Cog, Wallet, Store, Briefcase, Palette, SlidersHorizontal, Tags, Wrench, Boxes, Quote, HelpCircle, FileInput, Layers, Ticket,
+  Cog, Wallet, Store, Briefcase, Palette, SlidersHorizontal, Tags, Wrench, Boxes, Quote, HelpCircle, FileInput, Layers, Ticket, MapPin,
   BookOpen, BookMarked, ScrollText, TrendingUp, Lock, Receipt, Banknote,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -11,7 +11,7 @@ import type { TranslationKey } from "@shared/i18n";
 // Solo las rutas ya construidas llevan `to`; el resto se renderiza deshabilitado.
 // Solo rutas con archivo real (TanStack <Link to> valida contra rutas generadas). Las rutas landing
 // futuras (products/services/packages/faqs/…) se agregan acá cuando exista su archivo (Sesión 3.b+).
-type EnabledPath = "/dashboard" | "/routes" | "/income" | "/expenses" | "/extraordinary" | "/payroll" | "/inventory" | "/inventory/suppliers" | "/inventory/purchase-orders" | "/inventory/counts" | "/leads" | "/marketing" | "/reconciliation" | "/recurring" | "/accounts-receivable" | "/billing" | "/quotes" | "/reports" | "/accounting/chart" | "/accounting/journal" | "/accounting/income-statement" | "/accounting/balance-sheet" | "/accounting/period-close" | "/accounting/payables" | "/accounting/cash-flow" | "/evaluations" | "/observations" | "/training" | "/support" | "/documents" | "/settings" | "/settings/agenda" | "/agenda" | "/orders" | "/assets" | "/notifications" | "/customers"
+type EnabledPath = "/dashboard" | "/routes" | "/income" | "/expenses" | "/extraordinary" | "/payroll" | "/inventory" | "/inventory/suppliers" | "/inventory/purchase-orders" | "/inventory/counts" | "/leads" | "/marketing" | "/reconciliation" | "/recurring" | "/accounts-receivable" | "/billing" | "/quotes" | "/reports" | "/accounting/chart" | "/accounting/journal" | "/accounting/income-statement" | "/accounting/balance-sheet" | "/accounting/period-close" | "/accounting/payables" | "/accounting/cash-flow" | "/evaluations" | "/observations" | "/training" | "/support" | "/documents" | "/settings" | "/settings/agenda" | "/agenda" | "/orders" | "/assets" | "/gps" | "/notifications" | "/customers"
   | "/tenants" | "/platform/analytics" | "/web/campanas" | "/web/leads" | "/web/secciones" | "/web/hero" | "/web/features" | "/web/proceso" | "/web/precios" | "/web/testimonios" | "/web/soluciones" | "/web/faq" | "/web/footer" | "/web/legales" | "/web/reservas" | "/web/disponibilidad"
   | "/settings/landing/config" | "/settings/landing/categories" | "/settings/landing/products" | "/settings/landing/services" | "/settings/landing/packages" | "/settings/landing/testimonials" | "/settings/landing/faqs" | "/settings/landing/order-forms" | "/settings/landing/service-pages" | "/settings/landing/coupons" | "/settings/landing/payment-methods" | "/settings/landing/analytics" | "/campanas";
 // mod = clave de módulo para el gate (can(mod,"view")). Items sin mod = "próximamente" (solo roadmap coo/ceo).
@@ -31,7 +31,7 @@ export const SECTIONS: NavSection[] = [
   ] },
   { title: "operations", icon: Cog, items: [
     { key: "routes", icon: RouteIcon, to: "/routes", mod: "routes" },
-    { key: "agenda", icon: Calendar, to: "/agenda", mod: "settings" }, { key: "assets", icon: Truck, to: "/assets", mod: "assets" },
+    { key: "agenda", icon: Calendar, to: "/agenda", mod: "settings" }, { key: "assets", icon: Truck, to: "/assets", mod: "assets" }, { key: "gps", icon: MapPin, to: "/gps", mod: "assets" },
   ] },
   { title: "inventory", icon: Package, items: [
     { key: "inventoryItems", icon: Boxes, to: "/inventory", mod: "inventory" },

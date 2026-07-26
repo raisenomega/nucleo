@@ -18,3 +18,12 @@ export async function todayGpsTrack(assetId: string, day: string): Promise<GeoPo
 
 // Antigüedad en segundos del último punto (para el semáforo transmitiendo/perdido).
 export const gpsAgeSeconds = (recordedAt: string): number => (Date.now() - new Date(recordedAt).getTime()) / 1000;
+
+// Último reporte GPS por activo (para la tabla de flota). Una sola query, se queda con el más reciente por asset.
+export async function lastReportByAsset(assetIds: string[]): Promise<Record<string, string>> {
+  if (assetIds.length === 0) return {};
+  const { data } = await supabase.from("asset_gps_logs").select("asset_id, recorded_at").in("asset_id", assetIds).order("recorded_at", { ascending: false });
+  const out: Record<string, string> = {};
+  ((data as { asset_id: string; recorded_at: string }[] | null) ?? []).forEach((r) => { if (!out[r.asset_id]) out[r.asset_id] = r.recorded_at; });
+  return out;
+}

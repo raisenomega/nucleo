@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { X, FileText, Navigation } from "lucide-react";
+import { X, FileText } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { usePdf } from "@shared/hooks/usePdf";
@@ -8,7 +8,7 @@ import { ScreenModal } from "@shared/components/ScreenModal";
 import { supabaseAssetRepository } from "@assets/infrastructure/supabase-asset.repository";
 import { AssetCustodyHistory } from "@assets/presentation/AssetCustodyHistory";
 import { AssetGpsTrack } from "@assets/presentation/AssetGpsTrack";
-import { AssetLiveGps } from "@assets/presentation/AssetLiveGps";
+import { AssetMapView } from "@assets/presentation/AssetMapView";
 import { DepreciationPanel } from "@assets/presentation/DepreciationPanel";
 import { AssetMaintenancePlans } from "@assets/presentation/AssetMaintenancePlans";
 import { ASSET_TYPE, CONDITION, STATUS, MAINT_TYPE } from "@assets/presentation/asset-labels";
@@ -46,9 +46,7 @@ export function AssetDetail({ asset, onCheckout, onCheckin, onClose }: { asset: 
         </dl>
         {can("assets", "cost") && <DepreciationPanel assetId={asset.id} canEdit={edit} />}
         <AssetMaintenancePlans assetId={asset.id} canEdit={edit} />
-        {asset.gpsEnabled && (asset.status === "in_use"
-          ? <AssetLiveGps assetId={asset.id} />
-          : <div className="flex items-center gap-2 border-t border-border pt-2 text-sm"><Navigation className="h-4 w-4 text-primary" /><span className="font-bold">{t("gps")}:</span><span className="text-muted-foreground">{t("gpsReady")}{asset.gpsProvider && ` · ${asset.gpsProvider}`}{asset.gpsDeviceId && ` · ${asset.gpsDeviceId}`}</span></div>)}
+        {asset.gpsEnabled && <AssetMapView assetId={asset.id} live={asset.status === "in_use"} />}
         <AssetGpsTrack assetId={asset.id} />
         <AssetCustodyHistory assetId={asset.id} />
         {routes.length > 0 && <div className="space-y-1 border-t border-border pt-2">
