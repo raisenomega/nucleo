@@ -8,13 +8,14 @@ import { CustomerProfileCard } from "@shared/customers/CustomerProfileCard";
 import { CustomerCommercial } from "@shared/customers/CustomerCommercial";
 import { CustomerStatement } from "@shared/customers/CustomerStatement";
 import { CustomerPayments } from "@shared/customers/CustomerPayments";
+import { CustomerOrders } from "@shared/customers/CustomerOrders";
 import { CustomerSatellites } from "@shared/customers/CustomerSatellites";
 import { CustomerDossierView } from "@shared/customers/CustomerDossierView";
 import { CustomerReviewsAdmin } from "@shared/customers/CustomerReviewsAdmin";
 import type { CustomerSegment } from "@shared/customers/customer-segments.repository";
 import type { AdminCustomer } from "@shared/customers/customers-agg";
 
-const EMPTY: Dossier = { orders: [], invoices: [], quotes: [], services: [], tickets: [], reviews: [], leads: [] };
+const EMPTY: Dossier = { invoices: [], quotes: [], services: [], tickets: [], reviews: [], leads: [] };
 
 // Detalle CRM del cliente: perfil + comercial (segmento/descuento/bloqueo) + dossier + evaluaciones.
 export function CustomerDetail({ c, tenantId, segments, onClose, onChanged }: { c: AdminCustomer; tenantId: string; segments: CustomerSegment[]; onClose: () => void; onChanged: () => void }) {
@@ -37,6 +38,7 @@ export function CustomerDetail({ c, tenantId, segments, onClose, onChanged }: { 
         <CustomerCommercial c={c} segments={segments} onChanged={onChanged} />
         <CustomerStatement customerId={c.id} />
         <CustomerPayments tenantId={tenantId} customerId={c.id} email={c.email} />
+        <CustomerOrders tenantId={tenantId} customerId={c.id} email={c.email} />
         <CustomerSatellites customerId={c.id} />
         <CustomerDossierView d={d} />
         <CustomerReviewsAdmin reviews={d.reviews} onChanged={load} />

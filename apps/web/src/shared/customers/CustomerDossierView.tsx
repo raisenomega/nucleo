@@ -26,9 +26,6 @@ export function CustomerDossierView({ d }: { d: Dossier }) {
   );
   return (
     <>
-      {sec(t("cOrders"), t("cNoOrders"), d.orders.map((o, i) => row(i,
-        o.id ? <Link to="/orders/$orderId" params={{ orderId: o.id }} className={LK}>{o.orderNumber || "—"} · {o.createdAt.slice(0, 10)}</Link> : `${o.orderNumber || "—"} · ${o.createdAt.slice(0, 10)}`,
-        `${formatCurrency(o.total)} · ${o.status}`)))}
       {sec(t("cInvoices"), t("pNoInvoices"), d.invoices.map((iv, i) => row(i,
         iv.id ? <Link to="/billing" search={{ invoice: iv.id }} className={LK}>{iv.invoiceNumber || "—"}</Link> : (iv.invoiceNumber || "—"),
         `${formatCurrency(iv.total)} · ${iv.status}`)))}
