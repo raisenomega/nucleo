@@ -5,6 +5,10 @@ import { setCustomerActive, saveCustomerNote } from "@shared/customers/customer-
 import type { AdminCustomer } from "@shared/customers/customers-agg";
 
 const wa = (p: string) => `https://wa.me/${p.replace(/\D/g, "")}`;
+const SRC: Record<string, { label: string; cls: string }> = {
+  manual: { label: "Manual", cls: "bg-secondary text-muted-foreground" }, portal: { label: "Portal", cls: "bg-blue-500/10 text-blue-600" },
+  landing_order: { label: "Orden web", cls: "bg-green-500/10 text-green-600" }, lead: { label: "Lead", cls: "bg-orange-500/10 text-orange-600" }, import: { label: "Import", cls: "bg-secondary text-muted-foreground" },
+};
 
 // Sección Perfil + acciones del CEO (WhatsApp/email/activar-desactivar/nota interna).
 export function CustomerProfileCard({ c, onChanged }: { c: AdminCustomer; onChanged: () => void }) {
@@ -14,7 +18,7 @@ export function CustomerProfileCard({ c, onChanged }: { c: AdminCustomer; onChan
   const row = (l: string, v: string) => (v ? <div><dt className="inline text-muted-foreground">{l}: </dt><dd className="inline">{v}</dd></div> : null);
   return (
     <div className="space-y-2">
-      <div className="flex items-center gap-3">{c.photoUrl && <img src={c.photoUrl} className="h-12 w-12 rounded-full object-cover" alt="" />}<div><p className="font-bold text-foreground">{c.fullName || "—"}</p><p className="text-xs text-muted-foreground">{c.email}</p></div></div>
+      <div className="flex items-center gap-3">{c.photoUrl && <img src={c.photoUrl} className="h-12 w-12 rounded-full object-cover" alt="" />}<div><p className="font-bold text-foreground">{c.fullName || "—"}<span className={`ml-2 rounded px-1.5 py-0.5 text-[10px] font-bold uppercase ${(SRC[c.source] ?? { cls: "bg-secondary text-muted-foreground" }).cls}`}>{(SRC[c.source] ?? { label: c.source }).label}</span></p><p className="text-xs text-muted-foreground">{c.email}</p></div></div>
       <dl className="space-y-1 text-sm">{row(t("pPhone"), c.phone)}{row(t("pAddress"), addr)}{row(t("pContactPref"), c.contactPreference)}{row(t("cRegisteredOn"), c.createdAt.slice(0, 10))}</dl>
       <div className="flex flex-wrap gap-2">
         {c.phone && <a href={wa(c.phone)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-lg bg-green-600 px-3 py-1.5 text-sm font-bold text-white"><MessageCircle className="h-4 w-4" />WhatsApp</a>}

@@ -9,7 +9,7 @@ import type { AdminCustomer } from "@shared/customers/customers-agg";
 
 const wa = (p: string) => `https://wa.me/${p.replace(/\D/g, "")}`;
 // Badge de origen del cliente: portal (auto-registro), manual (alta desde el panel), landing (compró sin cuenta).
-const SRC: Record<string, string> = { portal: "Portal", manual: "Manual", landing_order: "Landing", import: "Import" };
+const SRC: Record<string, string> = { portal: "Portal", manual: "Manual", landing_order: "Orden web", lead: "Lead", import: "Import" };
 
 export function CustomersTable({ rows, segments = [], onView, onEdit }: { rows: readonly AdminCustomer[]; segments?: readonly CustomerSegment[]; onView: (id: string) => void; onEdit?: (c: AdminCustomer) => void }) {
   const { t } = useI18n();

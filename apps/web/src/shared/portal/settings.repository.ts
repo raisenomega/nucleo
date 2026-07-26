@@ -5,12 +5,13 @@ export async function updatePassword(pw: string): Promise<string | null> {
   const { error } = await supabase.auth.updateUser({ password: pw });
   return error ? error.message : null;
 }
-export async function updateCustomerPrefs(id: string, patch: Record<string, string>): Promise<boolean> {
-  const { error } = await supabase.from("customer_profiles").update({ ...patch, updated_at: new Date().toISOString() }).eq("id", id);
+// Actualiza vía RPC whitelist (solo campos editables por el cliente; nunca notes_for_team ni campos internos).
+export async function updateCustomerPrefs(_id: string, patch: Record<string, string>): Promise<boolean> {
+  const { error } = await supabase.rpc("update_my_customer", { _payload: patch });
   return !error;
 }
-export async function deactivateAccount(id: string): Promise<boolean> {
-  const { error } = await supabase.from("customer_profiles").update({ is_active: false }).eq("id", id);
+export async function deactivateAccount(_id: string): Promise<boolean> {
+  const { error } = await supabase.rpc("deactivate_my_account", {});
   return !error;
 }
 // Descargar mis datos (GDPR): todo lo que el cliente puede ver por RLS.
