@@ -4,12 +4,15 @@ import type { CustomerBase, OrderLite, ReviewLite, InvoiceLite } from "@shared/c
 export interface AdminCustomer extends CustomerBase { ordersCount: number; totalBilled: number; lastOrderAt: string | null; avgRating: number; debt: number }
 export interface CustomerKpis { total: number; active30: number; totalBilled: number; avgRating: number }
 const isPaid = (st: string) => st === "paid";
+// 2b: correlaciona por customer_id (FK) primero; email solo como fallback cuando la fila no tiene FK.
+// Evita el $0 por email cambiado/ausente y el doble conteo (una fila con FK cuenta para un solo cliente).
+const matches = (cid: string, email: string, c: CustomerBase) => (cid ? cid === c.id : !!email && email === c.email);
 
 export function aggregate(customers: CustomerBase[], orders: OrderLite[], reviews: ReviewLite[], invoices: InvoiceLite[], now: number): { rows: AdminCustomer[]; kpis: CustomerKpis } {
   const rows: AdminCustomer[] = customers.map((c) => {
-    const os = orders.filter((o) => o.email && o.email === c.email);
+    const os = orders.filter((o) => matches(o.customerId, o.email, c));
     const rs = reviews.filter((r) => r.profileId === c.id);
-    const iv = invoices.filter((i) => i.email && i.email === c.email);
+    const iv = invoices.filter((i) => matches(i.customerId, i.email, c));
     const lastOrderAt = os.map((o) => o.createdAt).sort().at(-1) ?? null;
     return {
       ...c, ordersCount: os.length,

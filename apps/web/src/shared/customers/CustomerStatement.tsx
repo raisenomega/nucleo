@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link } from "@tanstack/react-router";
 import { Wallet, MapPin } from "lucide-react";
 import { formatCurrency } from "@shared/lib/format";
 import { getCustomerAr, type CustomerAr } from "@shared/customers/ar.repository";
-import { AR_BUCKET_LABEL, AR_BUCKET_COLOR } from "@shared/customers/ar-ui";
 import { CustomerArSummary } from "@shared/customers/CustomerArSummary";
+import { CustomerInvoiceTable } from "@shared/customers/CustomerInvoiceTable";
 
 // Estado de cuenta UNIFICADO (2.4b): facturas impagas + servicios de ruta pendientes = total adeudado por cliente.
 export function CustomerStatement({ customerId }: { customerId: string }) {
@@ -28,17 +27,7 @@ export function CustomerStatement({ customerId }: { customerId: string }) {
       {ar.invoices.length > 0 && <CustomerArSummary ar={ar} />}
       {ar.invoices.length === 0
         ? <p className="py-2 text-center text-sm text-muted-foreground">Sin facturas.</p>
-        : <div className="overflow-x-auto"><table className="w-full text-xs">
-            <thead className="bg-secondary text-[10px] uppercase text-muted-foreground"><tr><th className={th}>Factura</th><th className={th}>Emisión</th><th className={th}>Vence</th><th className={`${th} text-right`}>Total</th><th className={th}>Aging</th></tr></thead>
-            <tbody>{ar.invoices.map((i) => (
-              <tr key={i.id} className="border-t border-border">
-                <td className="px-2 py-1.5 font-mono"><Link to="/billing" search={{ invoice: i.id }} className="text-primary hover:underline">{i.invoiceNumber ?? "—"}</Link></td>
-                <td className="px-2 py-1.5 text-muted-foreground">{i.invoiceDate || "—"}</td>
-                <td className="px-2 py-1.5 text-muted-foreground">{i.dueDate ?? "—"}{i.daysOverdue > 0 && <span className="ml-1 font-bold text-red-600">(+{i.daysOverdue}d)</span>}</td>
-                <td className="px-2 py-1.5 text-right font-semibold">{formatCurrency(i.total)}</td>
-                <td className="px-2 py-1.5"><span className={`rounded px-1.5 py-0.5 text-[10px] font-bold ${AR_BUCKET_COLOR[i.bucket] ?? ""}`}>{AR_BUCKET_LABEL[i.bucket] ?? i.bucket}</span></td>
-              </tr>))}</tbody>
-          </table></div>}
+        : <CustomerInvoiceTable invoices={ar.invoices} />}
       {fd.stops.length > 0 && (
         <div className="space-y-1 border-t border-border pt-2">
           <div className="flex items-center justify-between">

@@ -11,9 +11,9 @@ export interface CustomerBase {
   source: string; displayName: string; companyName: string; taxId: string; customerType: string; creditLimit: number; paymentTerms: string;
   segmentId: string; discountPct: number; onHold: boolean; holdReason: string;
 }
-export interface OrderLite { email: string; total: number; status: string; paidAt: string | null; createdAt: string }
+export interface OrderLite { customerId: string; email: string; total: number; status: string; paidAt: string | null; createdAt: string }
 export interface ReviewLite { profileId: string; rating: number }
-export interface InvoiceLite { email: string; total: number; status: string }
+export interface InvoiceLite { customerId: string; email: string; total: number; status: string }
 
 export async function fetchCustomers(tenantId: string): Promise<CustomerBase[]> {
   const { data } = await supabase.from("customer_profiles").select("id, user_id, full_name, email, phone, address, city, state, zip_code, contact_preference, notes_for_team, photo_url, is_active, created_at, source, display_name, company_name, tax_id, customer_type, credit_limit, payment_terms, segment_id, discount_pct, on_hold, hold_reason").eq("tenant_id", tenantId).order("created_at", { ascending: false });
@@ -22,16 +22,16 @@ export async function fetchCustomers(tenantId: string): Promise<CustomerBase[]> 
     segmentId: s(r.segment_id), discountPct: n(r.discount_pct), onHold: r.on_hold === true, holdReason: s(r.hold_reason) }));
 }
 export async function fetchOrders(tenantId: string): Promise<OrderLite[]> {
-  const { data } = await supabase.from("tenant_landing_orders").select("customer_email, total, status, paid_at, created_at").eq("tenant_id", tenantId);
-  return ((data as Row[] | null) ?? []).map((r) => ({ email: s(r.customer_email), total: n(r.total), status: s(r.status), paidAt: (r.paid_at as string) ?? null, createdAt: s(r.created_at) }));
+  const { data } = await supabase.from("tenant_landing_orders").select("customer_id, customer_email, total, status, paid_at, created_at").eq("tenant_id", tenantId);
+  return ((data as Row[] | null) ?? []).map((r) => ({ customerId: s(r.customer_id), email: s(r.customer_email), total: n(r.total), status: s(r.status), paidAt: (r.paid_at as string) ?? null, createdAt: s(r.created_at) }));
 }
 export async function fetchReviews(tenantId: string): Promise<ReviewLite[]> {
   const { data } = await supabase.from("customer_reviews").select("customer_profile_id, rating").eq("tenant_id", tenantId);
   return ((data as Row[] | null) ?? []).map((r) => ({ profileId: s(r.customer_profile_id), rating: n(r.rating) }));
 }
 export async function fetchInvoices(tenantId: string): Promise<InvoiceLite[]> {
-  const { data } = await supabase.from("invoices").select("email, total, status").eq("tenant_id", tenantId);
-  return ((data as Row[] | null) ?? []).map((r) => ({ email: s(r.email), total: n(r.total), status: s(r.status) }));
+  const { data } = await supabase.from("invoices").select("customer_id, email, total, status").eq("tenant_id", tenantId);
+  return ((data as Row[] | null) ?? []).map((r) => ({ customerId: s(r.customer_id), email: s(r.email), total: n(r.total), status: s(r.status) }));
 }
 export async function replyReview(id: string, reply: string): Promise<boolean> {
   const { error } = await supabase.from("customer_reviews").update({ reply, replied_at: new Date().toISOString() }).eq("id", id);

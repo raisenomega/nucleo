@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { FileText, DollarSign, FileCheck, ShoppingBag, MapPin, UserPlus, Star, UserCheck } from "lucide-react";
 import { getCustomerTimeline, type TimelineEvent } from "@shared/customers/customer-timeline.repository";
+import { TimelineFilters } from "@shared/customers/TimelineFilters";
 
 // Feed cronológico unificado de la actividad del cliente. Cada evento linkea a su entidad (factura/cotización/orden…).
 const META: Record<string, { Icon: typeof FileText; cls: string }> = {
@@ -25,6 +26,7 @@ function EventLink({ e, children }: { e: TimelineEvent; children: ReactNode }) {
 
 export function CustomerTimeline({ customerId }: { customerId: string }) {
   const [events, setEvents] = useState<TimelineEvent[]>([]);
+  const [filter, setFilter] = useState("all");
   const [offset, setOffset] = useState(0); const [more, setMore] = useState(true); const [loading, setLoading] = useState(true);
   const load = useCallback(async (off: number) => {
     const page = await getCustomerTimeline(customerId, 20, off);
@@ -33,9 +35,12 @@ export function CustomerTimeline({ customerId }: { customerId: string }) {
   useEffect(() => { setLoading(true); void load(0); }, [load]);
   if (loading) return <p className="p-4 text-sm text-muted-foreground">…</p>;
   if (events.length === 0) return <p className="p-6 text-center text-sm text-muted-foreground">Sin actividad registrada.</p>;
+  const shown = filter === "all" ? events : events.filter((e) => e.eventType.startsWith(filter));
   return (
     <div className="space-y-3">
-      {events.map((e, i) => { const m = metaOf(e.eventType);
+      <TimelineFilters value={filter} onChange={setFilter} />
+      {shown.length === 0 && <p className="py-4 text-center text-xs text-muted-foreground">Sin eventos de este tipo.</p>}
+      {shown.map((e, i) => { const m = metaOf(e.eventType);
         return (
           <div key={i} className="flex gap-3">
             <div className={`grid h-8 w-8 shrink-0 place-items-center rounded-full ${m.cls}`}><m.Icon className="h-4 w-4" /></div>
