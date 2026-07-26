@@ -13,6 +13,8 @@ export const SOURCE_META: Record<SourceType, { key: TranslationKey; cls: string 
   adjustment: { key: "sAdjustment", cls: "bg-secondary text-muted-foreground" },
   closing: { key: "sClosing", cls: "bg-secondary text-muted-foreground" },
   opening: { key: "sOpening", cls: "bg-secondary text-muted-foreground" },
+  vendor_bill: { key: "sVendorBill", cls: "bg-fuchsia-500/10 text-fuchsia-600" },
+  bill_payment: { key: "sBillPayment", cls: "bg-indigo-500/10 text-indigo-600" },
 };
 
 export const STATUS_META: Record<EntryStatus, { key: TranslationKey; cls: string }> = {
@@ -21,5 +23,5 @@ export const STATUS_META: Record<EntryStatus, { key: TranslationKey; cls: string
   voided: { key: "stVoided", cls: "bg-destructive/10 text-destructive line-through" },
 };
 
-export const SOURCE_TYPES: SourceType[] = ["expense", "income", "invoice", "invoice_payment", "payroll", "inventory", "adjustment"];
+export const SOURCE_TYPES: SourceType[] = ["expense", "income", "invoice", "invoice_payment", "payroll", "inventory", "vendor_bill", "bill_payment", "adjustment"];
 export const STATUSES: EntryStatus[] = ["posted", "draft", "voided"];

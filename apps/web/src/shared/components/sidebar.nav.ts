@@ -3,7 +3,7 @@ import {
   AlertCircle, Scale, Repeat, HandCoins, RefreshCw, BarChart3, UserPlus, Megaphone, ShoppingCart, FileText,
   Home, FileCheck, ClipboardCheck, NotebookPen, GraduationCap, LifeBuoy, Bell, Settings,
   Cog, Wallet, Store, Briefcase, Palette, SlidersHorizontal, Tags, Wrench, Boxes, Quote, HelpCircle, FileInput, Layers, Ticket,
-  BookOpen, BookMarked, ScrollText, TrendingUp, Lock,
+  BookOpen, BookMarked, ScrollText, TrendingUp, Lock, Receipt,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { TranslationKey } from "@shared/i18n";
@@ -11,7 +11,7 @@ import type { TranslationKey } from "@shared/i18n";
 // Solo las rutas ya construidas llevan `to`; el resto se renderiza deshabilitado.
 // Solo rutas con archivo real (TanStack <Link to> valida contra rutas generadas). Las rutas landing
 // futuras (products/services/packages/faqs/…) se agregan acá cuando exista su archivo (Sesión 3.b+).
-type EnabledPath = "/dashboard" | "/routes" | "/income" | "/expenses" | "/extraordinary" | "/payroll" | "/inventory" | "/inventory/suppliers" | "/inventory/purchase-orders" | "/inventory/counts" | "/leads" | "/marketing" | "/reconciliation" | "/recurring" | "/accounts-receivable" | "/billing" | "/quotes" | "/reports" | "/accounting/chart" | "/accounting/journal" | "/accounting/income-statement" | "/accounting/balance-sheet" | "/accounting/period-close" | "/evaluations" | "/observations" | "/training" | "/support" | "/documents" | "/settings" | "/settings/agenda" | "/agenda" | "/orders" | "/assets" | "/notifications" | "/customers"
+type EnabledPath = "/dashboard" | "/routes" | "/income" | "/expenses" | "/extraordinary" | "/payroll" | "/inventory" | "/inventory/suppliers" | "/inventory/purchase-orders" | "/inventory/counts" | "/leads" | "/marketing" | "/reconciliation" | "/recurring" | "/accounts-receivable" | "/billing" | "/quotes" | "/reports" | "/accounting/chart" | "/accounting/journal" | "/accounting/income-statement" | "/accounting/balance-sheet" | "/accounting/period-close" | "/accounting/payables" | "/evaluations" | "/observations" | "/training" | "/support" | "/documents" | "/settings" | "/settings/agenda" | "/agenda" | "/orders" | "/assets" | "/notifications" | "/customers"
   | "/tenants" | "/platform/analytics" | "/web/campanas" | "/web/leads" | "/web/secciones" | "/web/hero" | "/web/features" | "/web/proceso" | "/web/precios" | "/web/testimonios" | "/web/soluciones" | "/web/faq" | "/web/footer" | "/web/legales" | "/web/reservas" | "/web/disponibilidad"
   | "/settings/landing/config" | "/settings/landing/categories" | "/settings/landing/products" | "/settings/landing/services" | "/settings/landing/packages" | "/settings/landing/testimonials" | "/settings/landing/faqs" | "/settings/landing/order-forms" | "/settings/landing/service-pages" | "/settings/landing/coupons" | "/settings/landing/payment-methods" | "/settings/landing/analytics" | "/campanas";
 // mod = clave de módulo para el gate (can(mod,"view")). Items sin mod = "próximamente" (solo roadmap coo/ceo).
@@ -50,7 +50,7 @@ export const SECTIONS: NavSection[] = [
 
 // Sección Contabilidad (GL) — inyectada por Sidebar solo si gl_enabled. Items gated por can("accounting","view").
 export const ACCOUNTING_SECTION: NavSection = { title: "accounting", icon: BookOpen, items: [
-  { key: "chartOfAccounts", icon: BookMarked, to: "/accounting/chart", mod: "accounting" }, { key: "generalLedger", icon: ScrollText, to: "/accounting/journal", mod: "accounting" }, { key: "incomeStatement", icon: TrendingUp, to: "/accounting/income-statement", mod: "accounting" }, { key: "balanceSheet", icon: Scale, to: "/accounting/balance-sheet", mod: "accounting" }, { key: "periodClose", icon: Lock, to: "/accounting/period-close", mod: "accounting" }] };
+  { key: "chartOfAccounts", icon: BookMarked, to: "/accounting/chart", mod: "accounting" }, { key: "generalLedger", icon: ScrollText, to: "/accounting/journal", mod: "accounting" }, { key: "accountsPayable", icon: Receipt, to: "/accounting/payables", mod: "accounting" }, { key: "incomeStatement", icon: TrendingUp, to: "/accounting/income-statement", mod: "accounting" }, { key: "balanceSheet", icon: Scale, to: "/accounting/balance-sheet", mod: "accounting" }, { key: "periodClose", icon: Lock, to: "/accounting/period-close", mod: "accounting" }] };
 
 // Sección Landing — inyectada por Sidebar solo si landingEnabled && CEO. mod:"settings" pasa el filtro CEO.
 export const LANDING_SECTION: NavSection = { title: "landing", icon: Palette, items: [

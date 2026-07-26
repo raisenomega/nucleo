@@ -1,6 +1,6 @@
 // BC accounting — libro mayor (asientos). Puro. READ-ONLY en esta fase (asientos auto).
 export type EntryStatus = "draft" | "posted" | "voided";
-export type SourceType = "expense" | "income" | "invoice" | "invoice_payment" | "payroll" | "inventory" | "bank" | "adjustment" | "closing" | "opening";
+export type SourceType = "expense" | "income" | "invoice" | "invoice_payment" | "payroll" | "inventory" | "bank" | "adjustment" | "closing" | "opening" | "vendor_bill" | "bill_payment";
 
 export interface JournalEntryLine {
   readonly id: string; readonly accountId: string; readonly accountCode: string;
