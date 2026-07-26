@@ -17,8 +17,8 @@ export interface Dossier { orders: DossierOrder[]; invoices: DossierInvoice[]; s
 export async function loadDossier(tenantId: string, email: string, phone: string, userId: string, profileId: string): Promise<Dossier> {
   const dg = digitsOf(phone);
   const [o, i, rs, rv, ld] = await Promise.all([
-    supabase.from("tenant_landing_orders").select("id, order_number, total, status, created_at").eq("tenant_id", tenantId).eq("customer_email", email).order("created_at", { ascending: false }).limit(10),
-    supabase.from("invoices").select("id, invoice_number, total, status, due_date").eq("tenant_id", tenantId).eq("email", email).order("created_at", { ascending: false }),
+    supabase.from("tenant_landing_orders").select("id, order_number, total, status, created_at").eq("tenant_id", tenantId).or(email ? `customer_id.eq.${profileId},customer_email.eq.${email}` : `customer_id.eq.${profileId}`).order("created_at", { ascending: false }).limit(10),
+    supabase.from("invoices").select("id, invoice_number, total, status, due_date").eq("tenant_id", tenantId).or(email ? `customer_id.eq.${profileId},email.eq.${email}` : `customer_id.eq.${profileId}`).order("created_at", { ascending: false }),
     supabase.from("route_stops").select("service_type, status, completed_at, phone, customer_id").eq("tenant_id", tenantId).is("deleted_at", null),
     supabase.from("customer_reviews").select("id, rating, comment, reply, created_at").eq("tenant_id", tenantId).eq("customer_profile_id", profileId).order("created_at", { ascending: false }),
     supabase.from("leads").select("contact_name, service_requested, status, quoted_price").eq("tenant_id", tenantId).eq("customer_id", profileId).order("created_at", { ascending: false }),
