@@ -4,6 +4,7 @@ import { Wallet, MapPin } from "lucide-react";
 import { formatCurrency } from "@shared/lib/format";
 import { getCustomerAr, type CustomerAr } from "@shared/customers/ar.repository";
 import { AR_BUCKET_LABEL, AR_BUCKET_COLOR } from "@shared/customers/ar-ui";
+import { CustomerArSummary } from "@shared/customers/CustomerArSummary";
 
 // Estado de cuenta UNIFICADO (2.4b): facturas impagas + servicios de ruta pendientes = total adeudado por cliente.
 export function CustomerStatement({ customerId }: { customerId: string }) {
@@ -22,9 +23,9 @@ export function CustomerStatement({ customerId }: { customerId: string }) {
         <h3 className="flex items-center gap-2 text-sm font-bold text-foreground"><Wallet className="h-4 w-4" />Estado de cuenta</h3>
         <div className="text-right"><p className="text-xs text-muted-foreground">Total adeudado</p>
           <p className={`text-lg font-bold ${ar.totalDue > 0 ? "text-red-600" : "text-green-600"}`}>{formatCurrency(ar.totalDue)}</p>
-          {fd.total > 0 && <p className="text-[10px] text-muted-foreground">Facturas {formatCurrency(ar.totalOutstanding)} · Servicios {formatCurrency(fd.total)}</p>}
           {billed > 0 && <p className="text-[10px] text-muted-foreground">Facturado {formatCurrency(billed)} · Cobrado {formatCurrency(collected)} ({pct}%)</p>}</div>
       </div>
+      {ar.invoices.length > 0 && <CustomerArSummary ar={ar} />}
       {ar.invoices.length === 0
         ? <p className="py-2 text-center text-sm text-muted-foreground">Sin facturas.</p>
         : <div className="overflow-x-auto"><table className="w-full text-xs">
