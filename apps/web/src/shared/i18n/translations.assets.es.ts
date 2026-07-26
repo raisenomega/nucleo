@@ -29,4 +29,6 @@ export const esAssets = {
   gpsNoteAndroid: "GPS rastreará incluso con la pantalla apagada. Para mejor rendimiento, desactiva el ahorro de batería para esta app.",
   gpsNoteIos: "GPS solo funciona con la app en pantalla. Para tracking continuo, usa una tablet Android montada en el vehículo.",
   gpsNoteDesktop: "GPS usa la ubicación de tu computadora (menos preciso que un celular).",
+  fleetMap: "Mapa de flota", unitsList: "Lista de unidades", liveOn: "En vivo", liveOff: "Sin conexión", inService: "En servicio", noSignal: "Sin señal",
+  gpsRealtime: "Monitoreo GPS en vivo", gpsRealtimeHint: "Habilita el mapa de flota con posiciones en tiempo real (feature premium).",
 } satisfies Partial<Record<TranslationKey, string>>;

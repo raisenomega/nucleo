@@ -29,4 +29,6 @@ export const enAssets = {
   gpsNoteAndroid: "GPS will track even with the screen off. For best results, disable battery saver for this app.",
   gpsNoteIos: "GPS only works with the app on screen. For continuous tracking, use a mounted Android tablet in the vehicle.",
   gpsNoteDesktop: "GPS uses your computer's location (less accurate than a phone).",
+  fleetMap: "Fleet map", unitsList: "Units list", liveOn: "Live", liveOff: "Offline", inService: "In service", noSignal: "No signal",
+  gpsRealtime: "Live GPS monitoring", gpsRealtimeHint: "Enables the fleet map with real-time positions (premium feature).",
 } satisfies Partial<Record<TranslationKey, string>>;

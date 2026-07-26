@@ -41,12 +41,12 @@ export function BrandProvider({ children }: { children: ReactNode }) {
     let alive = true;
     void (async () => {
       const [ten, theme, files] = await Promise.all([
-        supabase.from("tenants").select("legal_name,display_name,landing_enabled,gl_enabled").limit(1),
+        supabase.from("tenants").select("legal_name,display_name,landing_enabled,gl_enabled,gps_realtime_enabled").limit(1),
         supabase.from("tenant_themes").select("*").limit(1),
         supabase.storage.from("brand").list(tenantId),
       ]);
       if (!alive) return;
-      const row = (ten.data as { legal_name: string; display_name: string | null; landing_enabled?: boolean; gl_enabled?: boolean }[] | null)?.[0];
+      const row = (ten.data as { legal_name: string; display_name: string | null; landing_enabled?: boolean; gl_enabled?: boolean; gps_realtime_enabled?: boolean }[] | null)?.[0];
       const names = ((files.data as { name: string }[] | null) ?? []).map((f) => f.name);
       const url = (kind: string) => {
         const f = names.find((n) => n.startsWith(`${kind}.`));
@@ -55,7 +55,8 @@ export function BrandProvider({ children }: { children: ReactNode }) {
       setBrand({
         tenantId, displayName: row?.display_name ?? "", legalName: row?.legal_name ?? "",
         logoUrl: url("logo"), faviconUrl: url("favicon"), theme: toTheme((theme.data as ThemeRow[] | null)?.[0]),
-        isLoading: false, landingEnabled: row?.landing_enabled ?? false, glEnabled: row?.gl_enabled ?? false, reload,
+        isLoading: false, landingEnabled: row?.landing_enabled ?? false, glEnabled: row?.gl_enabled ?? false,
+        gpsRealtimeEnabled: row?.gps_realtime_enabled ?? false, reload,
       });
     })();
     return () => { alive = false; };

@@ -23,6 +23,8 @@ export default function GpsMapInner({ center, zoom = 10, markers = [], track, he
     if (track && track.length > 1) {
       const line = L.polyline(track.map((p) => [p.lat, p.lng] as [number, number]), { color: "royalblue", weight: 4, opacity: 0.7 }).addTo(map);
       map.fitBounds(line.getBounds(), { padding: [30, 30] });
+    } else if (markers.length > 1) {
+      map.fitBounds(L.latLngBounds(markers.map((m) => [m.lat, m.lng])), { padding: [40, 40] });
     }
     return () => { map.remove(); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
