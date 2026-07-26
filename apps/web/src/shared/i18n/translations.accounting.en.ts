@@ -52,4 +52,9 @@ export const enAccounting = {
   bsDraft: "Draft", bsPending: "Pending", bsApproved: "Approved", bsPartial: "Partially paid", bsPaid: "Paid", bsVoided: "Voided", bsDisputed: "Disputed",
   sVendorBill: "Vendor bill", sBillPayment: "Bill payment",
   agingCurrent: "Current", aging1_30: "1-30", aging31_60: "31-60", aging61_90: "61-90", aging90plus: "90+",
+  cashFlowStatement: "Cash Flow Statement", cashFlow: "Cash flow",
+  operatingActivities: "Operating Activities", investingActivities: "Investing Activities", financingActivities: "Financing Activities",
+  nonCashAdjustments: "Non-cash adjustments:", workingCapitalChanges: "Working capital changes:",
+  netCashFromOperations: "Net cash from operations", netCashFromInvesting: "Net cash from investing", netCashFromFinancing: "Net cash from financing",
+  netChangeInCash: "Net change in cash", cashBeginning: "Cash at beginning", cashEnding: "Cash at end", verified: "Verified",
 } satisfies Partial<Record<TranslationKey, string>>;

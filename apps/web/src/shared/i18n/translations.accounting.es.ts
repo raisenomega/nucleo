@@ -52,4 +52,9 @@ export const esAccounting = {
   bsDraft: "Borrador", bsPending: "Pendiente", bsApproved: "Aprobada", bsPartial: "Pago parcial", bsPaid: "Pagada", bsVoided: "Anulada", bsDisputed: "En disputa",
   sVendorBill: "Factura prov.", sBillPayment: "Pago prov.",
   agingCurrent: "Corriente", aging1_30: "1-30", aging31_60: "31-60", aging61_90: "61-90", aging90plus: "90+",
+  cashFlowStatement: "Estado de Flujo de Efectivo", cashFlow: "Flujo de efectivo",
+  operatingActivities: "Actividades Operativas", investingActivities: "Actividades de Inversión", financingActivities: "Actividades de Financiamiento",
+  nonCashAdjustments: "Ajustes por partidas no monetarias:", workingCapitalChanges: "Cambios en capital de trabajo:",
+  netCashFromOperations: "Efectivo neto de operaciones", netCashFromInvesting: "Efectivo neto de inversión", netCashFromFinancing: "Efectivo neto de financiamiento",
+  netChangeInCash: "Cambio neto en efectivo", cashBeginning: "Efectivo al inicio", cashEnding: "Efectivo al final", verified: "Verificado",
 } satisfies Partial<Record<TranslationKey, string>>;

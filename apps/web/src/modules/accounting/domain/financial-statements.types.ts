@@ -33,7 +33,18 @@ export interface BalanceSheet {
   readonly summary: BalanceSheetSummary;
 }
 
+export interface CashFlowItem { readonly label: string; readonly code: string; readonly amount: number; }
+export interface CashFlowWcItem { readonly label: string; readonly code: string; readonly change: number; readonly description: string; }
+export interface CashFlowStatement {
+  readonly period: { readonly year: number; readonly monthFrom: number; readonly monthTo: number };
+  readonly operating: { readonly netIncome: number; readonly adjustments: readonly CashFlowItem[]; readonly workingCapital: readonly CashFlowWcItem[]; readonly total: number };
+  readonly investing: { readonly items: readonly CashFlowItem[]; readonly total: number };
+  readonly financing: { readonly items: readonly CashFlowItem[]; readonly total: number };
+  readonly summary: { readonly netChange: number; readonly cashBeginning: number; readonly cashEnding: number; readonly verification: boolean };
+}
+
 export interface IFinancialStatementsRepository {
   getIncomeStatement(f: StatementFilters): Promise<IncomeStatement | null>;
   getBalanceSheet(asOfDate: string): Promise<BalanceSheet | null>;
+  getCashFlow(f: StatementFilters): Promise<CashFlowStatement | null>;
 }
