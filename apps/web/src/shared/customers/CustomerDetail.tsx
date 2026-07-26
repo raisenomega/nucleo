@@ -7,6 +7,7 @@ import { loadDossier, type Dossier } from "@shared/customers/customer-dossier";
 import { CustomerProfileCard } from "@shared/customers/CustomerProfileCard";
 import { CustomerCommercial } from "@shared/customers/CustomerCommercial";
 import { CustomerStatement } from "@shared/customers/CustomerStatement";
+import { CustomerPayments } from "@shared/customers/CustomerPayments";
 import { CustomerSatellites } from "@shared/customers/CustomerSatellites";
 import { CustomerDossierView } from "@shared/customers/CustomerDossierView";
 import { CustomerReviewsAdmin } from "@shared/customers/CustomerReviewsAdmin";
@@ -35,6 +36,7 @@ export function CustomerDetail({ c, tenantId, segments, onClose, onChanged }: { 
         <CustomerProfileCard c={c} onChanged={onChanged} />
         <CustomerCommercial c={c} segments={segments} onChanged={onChanged} />
         <CustomerStatement customerId={c.id} />
+        <CustomerPayments tenantId={tenantId} customerId={c.id} email={c.email} />
         <CustomerSatellites customerId={c.id} />
         <CustomerDossierView d={d} />
         <CustomerReviewsAdmin reviews={d.reviews} onChanged={load} />

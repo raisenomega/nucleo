@@ -12,13 +12,18 @@ export function CustomerStatement({ customerId }: { customerId: string }) {
   if (!ar) return null;
   const th = "px-2 py-1.5 text-left font-bold";
   const fd = ar.fieldDebt;
+  const active = ar.invoices.filter((i) => i.status !== "cancelled");
+  const billed = active.reduce((s, i) => s + i.total, 0);
+  const collected = Math.max(0, billed - ar.totalOutstanding);
+  const pct = billed > 0 ? Math.round((collected / billed) * 100) : 0;
   return (
     <div className="space-y-3 rounded-lg border border-border bg-card p-4">
       <div className="flex items-center justify-between">
         <h3 className="flex items-center gap-2 text-sm font-bold text-foreground"><Wallet className="h-4 w-4" />Estado de cuenta</h3>
         <div className="text-right"><p className="text-xs text-muted-foreground">Total adeudado</p>
           <p className={`text-lg font-bold ${ar.totalDue > 0 ? "text-red-600" : "text-green-600"}`}>{formatCurrency(ar.totalDue)}</p>
-          {fd.total > 0 && <p className="text-[10px] text-muted-foreground">Facturas {formatCurrency(ar.totalOutstanding)} · Servicios {formatCurrency(fd.total)}</p>}</div>
+          {fd.total > 0 && <p className="text-[10px] text-muted-foreground">Facturas {formatCurrency(ar.totalOutstanding)} · Servicios {formatCurrency(fd.total)}</p>}
+          {billed > 0 && <p className="text-[10px] text-muted-foreground">Facturado {formatCurrency(billed)} · Cobrado {formatCurrency(collected)} ({pct}%)</p>}</div>
       </div>
       {ar.invoices.length === 0
         ? <p className="py-2 text-center text-sm text-muted-foreground">Sin facturas.</p>
