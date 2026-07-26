@@ -37,12 +37,14 @@ export async function replyReview(id: string, reply: string): Promise<boolean> {
   const { error } = await supabase.from("customer_reviews").update({ reply, replied_at: new Date().toISOString() }).eq("id", id);
   return !error;
 }
+// 5b: ambos rutean a update_customer (RPC definer, gate customers.edit). El UPDATE directo fallaba en silencio:
+// no hay policy de UPDATE para staff en customer_profiles → 0 filas y la UI mentía "guardado".
 export async function setCustomerActive(id: string, active: boolean): Promise<boolean> {
-  const { error } = await supabase.from("customer_profiles").update({ is_active: active }).eq("id", id);
+  const { error } = await supabase.rpc("update_customer", { _customer_id: id, _payload: { is_active: active } });
   return !error;
 }
 export async function saveCustomerNote(id: string, note: string): Promise<boolean> {
-  const { error } = await supabase.from("customer_profiles").update({ notes_for_team: note || null }).eq("id", id);
+  const { error } = await supabase.rpc("update_customer", { _customer_id: id, _payload: { notes_for_team: note } });
   return !error;
 }
 
