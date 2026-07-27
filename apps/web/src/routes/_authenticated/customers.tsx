@@ -1,8 +1,11 @@
 import { useMemo, useState } from "react";
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { useI18n, type TranslationKey } from "@shared/i18n";
-import { Plus, Tag } from "lucide-react";
+import { Plus, Tag, FileDown } from "lucide-react";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
+import { usePdfExport } from "@shared/hooks/usePdfExport";
+import { usePdfBrand } from "@shared/hooks/usePdfBrand";
+import { clientListDoc } from "@shared/customers/customer-pdf";
 import { useSession } from "@shared/providers/SessionProvider";
 import { useToast } from "@shared/providers/toast-context";
 import { useCustomersCrm } from "@shared/customers/useCustomersCrm.hook";
@@ -24,6 +27,7 @@ const LABEL: Record<(typeof FILTERS)[number], TranslationKey> = { all: "filterAl
 
 function CustomersPage() {
   const { t } = useI18n(); const { can } = useModuleAccess(); const { session } = useSession(); const toast = useToast();
+  const { generating, exportPdf } = usePdfExport(); const brand = usePdfBrand();
   const tenantId = session?.tenantId ?? "";
   const crm = useCustomersCrm(tenantId); const segs = useCustomerSegments(tenantId);
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("all");
@@ -46,6 +50,7 @@ function CustomersPage() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="font-display text-xl font-bold text-foreground md:text-3xl">{t("portal")}</h1>
         <div className="flex flex-wrap items-center gap-2">
+          <button type="button" disabled={generating || !shown.length} onClick={() => void exportPdf(() => clientListDoc(shown, t(LABEL[filter]), brand, t))} className="inline-flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-sm font-bold text-foreground disabled:opacity-50"><FileDown className="h-4 w-4" />{t("exportClientsPdf")}</button>
           {can("customers", "edit") && <button type="button" onClick={() => setManaging(true)} className="inline-flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-sm font-bold text-foreground"><Tag className="h-4 w-4" />Segmentos</button>}
           {can("customers", "create") && <button type="button" onClick={() => setEditing(null)} className="inline-flex items-center gap-1 rounded-lg bg-primary px-3 py-2 text-sm font-bold text-primary-foreground"><Plus className="h-4 w-4" />Nuevo cliente</button>}
         </div>

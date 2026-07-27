@@ -1,5 +1,6 @@
 import type { ReactElement } from "react";
-import { supabase } from "@shared/lib/supabase";
+import { renderPdfBlob } from "@shared/pdf/render-blob";
+import { uploadTenantPdf } from "@shared/lib/upload-tenant-pdf";
 import type { TranslationKey } from "@shared/i18n";
 import type { PdfBrand } from "@shared/pdf/pdf-brand";
 import type { Quote, QuoteStatus } from "@quotes/domain/quote.types";
@@ -29,13 +30,6 @@ export async function quoteDoc(q: Quote, brand: PdfBrand, t: T): Promise<ReactEl
 
 // Flujo WhatsApp/link público: render client-side → blob → sube a tenant-pdfs → signed URL 7 días (sin Railway).
 export async function uploadQuotePdf(tenantId: string, q: Quote, brand: PdfBrand, t: T): Promise<string | null> {
-  try {
-    const [{ pdf }, el] = await Promise.all([import("@react-pdf/renderer"), quoteDoc(q, brand, t)]);
-    const blob = await pdf(el as Parameters<typeof pdf>[0]).toBlob();
-    const path = `${tenantId}/quote/${q.id}-${Date.now()}.pdf`;
-    const up = await supabase.storage.from("tenant-pdfs").upload(path, blob, { contentType: "application/pdf", upsert: true });
-    if (up.error) return null;
-    const signed = await supabase.storage.from("tenant-pdfs").createSignedUrl(path, 7 * 24 * 3600);
-    return signed.data?.signedUrl ?? null;
-  } catch { return null; }
+  const blob = await renderPdfBlob(await quoteDoc(q, brand, t));
+  return blob ? uploadTenantPdf(tenantId, `quote/${q.id}-${Date.now()}.pdf`, blob) : null;
 }

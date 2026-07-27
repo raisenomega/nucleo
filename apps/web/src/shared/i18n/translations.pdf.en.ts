@@ -16,4 +16,10 @@ export const enPdf = {
   evalDocTitle: "PERFORMANCE EVALUATION", evalProbation: "In probationary period", criterion: "Criterion", evalLegalTitle: "Requires legal validation (Act 80)",
   docLead: "LEAD SHEET", wmDraft: "DRAFT", wmPaid: "PAID", wmVoided: "VOIDED", wmOverdue: "OVERDUE",
   wmAccepted: "APPROVED", wmRejected: "REJECTED", wmExpired: "EXPIRED",
+  sendDraftConfirm: "On sending, the document will change from Draft to Sent. Continue?",
+  docCustomer: "CUSTOMER REPORT", docClientList: "CUSTOMER LIST", docOrder: "ORDER RECEIPT",
+  docOrderList: "ORDER LIST", docMarketingLeads: "COMMERCIAL LEADS", docService: "SERVICE RECEIPT",
+  exportClientsPdf: "Export PDF", sendWhatsapp: "Send via WhatsApp", sendEmailPdf: "Send via email",
+  photosBefore: "Before", photosAfter: "After", attachPhotos: "Attach evidence photos", sendServiceWa: "Send summary to customer via WhatsApp",
+  totalClients: "Total customers", totalDebt: "Total debt", statement: "Statement", activity: "Recent activity",
 } satisfies Partial<Record<TranslationKey, string>>;

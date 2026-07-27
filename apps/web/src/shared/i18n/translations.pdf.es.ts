@@ -16,4 +16,10 @@ export const esPdf = {
   evalDocTitle: "EVALUACIÓN DE DESEMPEÑO", evalProbation: "En período probatorio", criterion: "Criterio", evalLegalTitle: "Requiere validación legal (Ley 80)",
   docLead: "FICHA DE LEAD", wmDraft: "BORRADOR", wmPaid: "PAGADA", wmVoided: "ANULADA", wmOverdue: "VENCIDA",
   wmAccepted: "APROBADA", wmRejected: "RECHAZADA", wmExpired: "EXPIRADA",
+  sendDraftConfirm: "Al enviar, el documento pasará de Borrador a Enviado. ¿Continuar?",
+  docCustomer: "REPORTE DE CLIENTE", docClientList: "LISTADO DE CLIENTES", docOrder: "COMPROBANTE DE ORDEN",
+  docOrderList: "LISTADO DE ÓRDENES", docMarketingLeads: "LEADS COMERCIALES", docService: "COMPROBANTE DE SERVICIO",
+  exportClientsPdf: "Exportar PDF", sendWhatsapp: "Enviar por WhatsApp", sendEmailPdf: "Enviar por email",
+  photosBefore: "Antes", photosAfter: "Después", attachPhotos: "Adjuntar fotos de evidencia", sendServiceWa: "Enviar resumen al cliente por WhatsApp",
+  totalClients: "Total clientes", totalDebt: "Deuda total", statement: "Estado de cuenta", activity: "Actividad reciente",
 } satisfies Partial<Record<TranslationKey, string>>;
