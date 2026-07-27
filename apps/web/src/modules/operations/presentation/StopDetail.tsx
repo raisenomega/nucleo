@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { X, Camera, Image as ImageIcon } from "lucide-react";
 import { useI18n } from "@shared/i18n";
+import { usePdfShare } from "@shared/hooks/usePdfShare";
+import { usePdfBrand } from "@shared/hooks/usePdfBrand";
+import { serviceCompletionDoc } from "@operations/presentation/pdf/service-pdf";
 import { formatCurrency } from "@shared/lib/format";
 import { ScreenModal } from "@shared/components/ScreenModal";
 import { StopEvidencePhase } from "@operations/presentation/StopEvidencePhase";
@@ -15,11 +18,20 @@ export function StopDetail({ stop, tenantId, onClose, onPay, onNotAttended, onEv
   onPay: (p: CompletePayload) => void; onNotAttended: (r: string) => void; onEvidence: (phase: "before" | "after", paths: string[]) => void;
 }) {
   const { t } = useI18n();
+  const { sharing, sharePdf } = usePdfShare(); const brand = usePdfBrand();
   const canComplete = stop.evidenceBefore.length >= 1 && stop.evidenceAfter.length >= 1;
   const [mode, setMode] = useState<"" | "reason">("");
   const [reason, setReason] = useState("");
   const [paying, setPaying] = useState(false);
   const [supplies, setSupplies] = useState(false);
+  const [waWanted, setWaWanted] = useState(false); const [withPhotos, setWithPhotos] = useState(false);
+  async function doComplete() {
+    if (waWanted && stop.phone) {
+      const url = await sharePdf(() => serviceCompletionDoc(stop, "", withPhotos, brand, t), `service/${stop.id}-${Date.now()}.pdf`);
+      window.open(`https://wa.me/${stop.phone.replace(/\D/g, "")}?text=${encodeURIComponent(`${t("docService")}${url ? `\n${url}` : ""}`)}`, "_blank", "noopener");
+    } else if (waWanted) window.alert(t("noPhone"));
+    onMarkDone();
+  }
   const done = stop.status === "Completada";
   const debt = stop.status === "No atendido" && stop.pendingCollection;
   return (
@@ -44,8 +56,10 @@ export function StopDetail({ stop, tenantId, onClose, onPay, onNotAttended, onEv
           <StopEvidencePhase tenantId={tenantId} routeId={stop.routeId} stopId={stop.id} phase="after" value={stop.evidenceAfter} onChange={(p) => onEvidence("after", p)} /></div>
         {done ? <div className="rounded-lg bg-green-50 dark:bg-green-500/15 p-3 text-center font-bold text-green-700 dark:text-green-300">{t("stopCompleted")}: {formatCurrency(stop.actualAmount ?? stop.estimatedAmount)}</div>
           : debt ? <div className="rounded-lg bg-yellow-50 dark:bg-yellow-500/15 p-3 text-center font-bold text-yellow-700 dark:text-yellow-300">{t("pendingDebt")}: {formatCurrency(stop.estimatedAmount)}</div>
-          : <div className="space-y-1">
-              <button type="button" disabled={!canComplete} onClick={onMarkDone} title={canComplete ? "" : t("evidenceRequired")} className="w-full rounded-lg bg-green-600 p-3 text-center font-bold text-white disabled:opacity-50">{t("completeStop")}</button>
+          : <div className="space-y-2">
+              <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={waWanted} onChange={(e) => setWaWanted(e.target.checked)} /> {t("sendServiceWa")}</label>
+              {waWanted && <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={withPhotos} onChange={(e) => setWithPhotos(e.target.checked)} /> {t("attachPhotos")}</label>}
+              <button type="button" disabled={!canComplete || sharing} onClick={() => void doComplete()} title={canComplete ? "" : t("evidenceRequired")} className="w-full rounded-lg bg-green-600 p-3 text-center font-bold text-white disabled:opacity-50">{sharing ? t("generatingPdf") : t("completeStop")}</button>
               {!canComplete && <p className="text-center text-xs text-muted-foreground">{t("evidenceRequired")}</p>}
             </div>}
       </div>

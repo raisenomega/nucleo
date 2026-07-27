@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "@tanstack/react-router";
-import { Download } from "lucide-react";
+import { Download, FileDown } from "lucide-react";
 import { useToast } from "@shared/providers/toast-context";
 import { useSuperAdmin } from "@shared/hooks/useSuperAdmin";
+import { usePdfExport } from "@shared/hooks/usePdfExport";
+import { usePdfBrand } from "@shared/hooks/usePdfBrand";
+import { marketingLeadsDoc } from "@raisen-marketing/admin/marketing-leads-pdf";
 import { downloadLeadsCsv } from "@shared/lib/lead-csv";
 import { listCampaignPages } from "@campaigns/infrastructure/campaigns-admin.repository";
 import { getLeads, setLeadFields, saveLeadEdit, deleteLead, emailLead } from "@raisen-marketing/infrastructure/marketing-leads.repository";
@@ -23,6 +26,7 @@ const EMPTY_F: LeadFilter = { search: "", status: "", temperature: "", leadType:
 export function LeadsInbox() {
   const { isSuperAdmin } = useSuperAdmin();
   const toast = useToast();
+  const { generating, exportPdf } = usePdfExport(); const brand = usePdfBrand();
   const [config, setConfig] = useState<LeadFormConfig | null>(null);
   const [leads, setLeads] = useState<MarketingLead[]>([]);
   const [f, setF] = useState<LeadFilter>(EMPTY_F);
@@ -32,27 +36,21 @@ export function LeadsInbox() {
   useEffect(() => { void getLeadFormConfig().then(setConfig); reload(); void listCampaignPages(true).then((c) => setCamps(c.map((x) => ({ id: x.id, name: x.name })))); }, []);
   if (!isSuperAdmin) return <Navigate to="/dashboard" />;
   const done = (e: string | null) => { if (e) toast.error(e); else reload(); };
-  const shown = leads.filter((l) => {
-    if (!f.showArchived && f.status !== "archived" && l.status === "archived") return false;
-    if (f.status && l.status !== f.status) return false;
-    if (f.temperature && l.temperature !== f.temperature) return false;
-    if (f.leadType && l.leadType !== f.leadType) return false;
-    if (f.campaign && l.campaignPageId !== f.campaign) return false;
-    if (f.search) { const q = f.search.toLowerCase(); return [l.customerName, l.customerEmail, l.company].some((x) => (x ?? "").toLowerCase().includes(q)); }
-    return true;
-  });
-  const exportCsv = () => downloadLeadsCsv(shown.map((l) => { const a = l.attribution ?? {}; return {
-    date: l.createdAt.slice(0, 10), name: l.customerName, email: l.customerEmail, phone: l.customerPhone ?? "",
-    campaign: camps.find((c) => c.id === l.campaignPageId)?.name ?? "", utmSource: a.utm_source ?? l.utmSource ?? "",
-    utmMedium: a.utm_medium ?? l.utmMedium ?? "", utmCampaign: a.utm_campaign ?? l.utmCampaign ?? "",
-    fbclid: a.fbclid ?? "", gclid: a.gclid ?? "", status: l.status }; }), `leads-${new Date().toISOString().slice(0, 10)}.csv`);
+  const shown = leads.filter((l) => (f.showArchived || f.status === "archived" || l.status !== "archived")
+    && (!f.status || l.status === f.status) && (!f.temperature || l.temperature === f.temperature)
+    && (!f.leadType || l.leadType === f.leadType) && (!f.campaign || l.campaignPageId === f.campaign)
+    && (!f.search || [l.customerName, l.customerEmail, l.company].some((x) => (x ?? "").toLowerCase().includes(f.search.toLowerCase()))));
+  const exportCsv = () => downloadLeadsCsv(shown.map((l) => { const a = l.attribution ?? {}; return { date: l.createdAt.slice(0, 10), name: l.customerName, email: l.customerEmail, phone: l.customerPhone ?? "", campaign: camps.find((c) => c.id === l.campaignPageId)?.name ?? "", utmSource: a.utm_source ?? l.utmSource ?? "", utmMedium: a.utm_medium ?? l.utmMedium ?? "", utmCampaign: a.utm_campaign ?? l.utmCampaign ?? "", fbclid: a.fbclid ?? "", gclid: a.gclid ?? "", status: l.status }; }), `leads-${new Date().toISOString().slice(0, 10)}.csv`);
   const saveDetail = async (id: string, p: { status: LeadStatus; temperature: LeadTemperature; notes: string }) => { const e = await setLeadFields(id, p); if (e) return toast.error(e); setDlg(null); toast.success("Guardado"); reload(); };
   const saveEdit = async (id: string, ef: LeadEditFields) => { const e = await saveLeadEdit(id, ef); if (e) return toast.error(e); setDlg(null); toast.success("Guardado"); reload(); };
   return (
     <div className="max-w-4xl space-y-5 p-4 md:p-8">
       <div className="flex items-center justify-between gap-2">
         <h1 className="font-display text-2xl font-bold text-foreground">Inbox · Leads comercial (CRM)</h1>
-        <button type="button" onClick={exportCsv} className="flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-sm"><Download className="h-4 w-4" /> CSV</button>
+        <div className="flex items-center gap-2">
+          <button type="button" disabled={generating || !shown.length} onClick={() => void exportPdf(() => marketingLeadsDoc(shown, brand))} className="flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-sm disabled:opacity-50"><FileDown className="h-4 w-4" /> PDF</button>
+          <button type="button" onClick={exportCsv} className="flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-sm"><Download className="h-4 w-4" /> CSV</button>
+        </div>
       </div>
       {config && <LeadFormConfigEditor config={config} />}
       <LeadsStats leads={leads} />
