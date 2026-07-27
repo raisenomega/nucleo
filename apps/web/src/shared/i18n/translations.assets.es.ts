@@ -31,4 +31,6 @@ export const esAssets = {
   gpsNoteDesktop: "GPS usa la ubicación de tu computadora (menos preciso que un celular).",
   fleetMap: "Mapa de flota", unitsList: "Lista de unidades", liveOn: "En vivo", liveOff: "Sin conexión", inService: "En servicio", noSignal: "Sin señal",
   gpsRealtime: "Monitoreo GPS en vivo", gpsRealtimeHint: "Habilita el mapa de flota con posiciones en tiempo real (feature premium).",
+  geofences: "Geocercas", newGeofence: "Nueva geocerca", radiusMeters: "Radio (m)", triggerOn: "Alertar en", tEnter: "Entrada", tExit: "Salida", tBoth: "Ambos",
+  appliesAll: "Todos los activos", geofenceEvents: "Eventos", gfEntered: "Entró", gfExited: "Salió", showGeofences: "Mostrar geocercas", color: "Color",
 } satisfies Partial<Record<TranslationKey, string>>;

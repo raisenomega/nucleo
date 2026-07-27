@@ -31,4 +31,6 @@ export const enAssets = {
   gpsNoteDesktop: "GPS uses your computer's location (less accurate than a phone).",
   fleetMap: "Fleet map", unitsList: "Units list", liveOn: "Live", liveOff: "Offline", inService: "In service", noSignal: "No signal",
   gpsRealtime: "Live GPS monitoring", gpsRealtimeHint: "Enables the fleet map with real-time positions (premium feature).",
+  geofences: "Geofences", newGeofence: "New geofence", radiusMeters: "Radius (m)", triggerOn: "Alert on", tEnter: "Enter", tExit: "Exit", tBoth: "Both",
+  appliesAll: "All assets", geofenceEvents: "Events", gfEntered: "Entered", gfExited: "Exited", showGeofences: "Show geofences", color: "Color",
 } satisfies Partial<Record<TranslationKey, string>>;
