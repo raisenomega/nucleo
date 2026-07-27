@@ -6,7 +6,7 @@ import type { PublicOpening, ApplyData } from "@hr/domain/recruitment.types";
 const EMPTY = { fullName: "", email: "", phone: "", address: "", city: "", state: "", zipCode: "", coverLetter: "" };
 
 // Formulario público del candidato (sin login). Solo texto — la subida de CV se difiere (falta signed URL anón).
-export function PublicApplyForm({ opening, onDone }: { opening: PublicOpening; onDone: () => void }) {
+export function PublicApplyForm({ opening, onDone }: { opening: PublicOpening; onDone: (id: string) => void }) {
   const { t } = useI18n();
   const [f, setF] = useState(EMPTY);
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -19,7 +19,7 @@ export function PublicApplyForm({ opening, onDone }: { opening: PublicOpening; o
     setBusy(true);
     const r = await supabaseRecruitmentRepository.apply(opening.openingId, { ...f, customAnswers: answers } as ApplyData);
     setBusy(false);
-    if (r.ok) onDone(); else setErr(r.error);
+    if (r.ok) onDone(r.id); else setErr(r.error);
   }
   return (
     <form onSubmit={(e) => { e.preventDefault(); void submit(); }} className="space-y-3">

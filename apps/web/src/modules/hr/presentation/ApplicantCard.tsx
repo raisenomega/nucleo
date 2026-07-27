@@ -12,8 +12,7 @@ export function ApplicantCard({ a, isOffer, done, onOpen, onAdvance, onReject }:
     <div className="space-y-1 rounded-lg border border-border bg-card p-2 text-xs">
       <button type="button" onClick={onOpen} className="block w-full truncate text-left font-semibold text-foreground hover:underline">{a.fullName}</button>
       <p className="truncate text-muted-foreground">{a.email}</p>
-      <p className="text-muted-foreground">{t("documents")}: {a.documentsUploaded.length} · {t("score")}: {a.interviewScore != null ? a.interviewScore.toFixed(1) : "—"}</p>
-      <p className="text-muted-foreground">{daysAgo(a.createdAt)} {t("daysUnit")}</p>
+      <p className="text-muted-foreground">📄 {a.documentsUploaded.filter((d) => d.verified).length}/{a.documentsUploaded.length} · 📝 {Object.values(a.examScores).filter((e) => e.passed).length} · {daysAgo(a.createdAt)}{t("daysUnitShort")}</p>
       {done ? <p className="flex items-center gap-1 pt-1 font-bold text-green-600"><UserCheck className="h-3 w-3" /> {t("hired")}</p> : (
         <div className="flex gap-1 pt-1">
           <button type="button" onClick={onAdvance} className="flex flex-1 items-center justify-center gap-1 rounded bg-primary px-2 py-1 font-bold text-primary-foreground">

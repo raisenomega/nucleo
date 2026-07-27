@@ -1,16 +1,19 @@
 import { X, UserCheck, ArrowRight } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { ScreenModal } from "@shared/components/ScreenModal";
+import { DocVerifyList } from "@hr/presentation/DocVerifyList";
 import { STAGE_KEY } from "@hr/presentation/recruit-ui";
 import type { Applicant } from "@hr/domain/recruitment.types";
 
-export function ApplicantDetail({ a, onClose, onAdvance, onReject }: {
-  a: Applicant; onClose: () => void; onAdvance: () => void; onReject: () => void;
+export function ApplicantDetail({ a, onClose, onAdvance, onReject, onChanged }: {
+  a: Applicant; onClose: () => void; onAdvance: () => void; onReject: () => void; onChanged: () => void;
 }) {
   const { t } = useI18n();
   const terminal = ["hired", "rejected", "withdrawn"].includes(a.stage);
   const addr = [a.address, a.city, a.state, a.zipCode].filter(Boolean).join(", ");
   const answers = Object.entries(a.customAnswers);
+  const exams = Object.values(a.examScores);
+  const examsPassed = exams.filter((e) => e.passed).length;
   const row = (label: string, val: string | null) => (val ? <div><dt className="inline text-muted-foreground">{label}: </dt><dd className="inline">{val}</dd></div> : null);
   return (
     <ScreenModal onClose={onClose}>
@@ -22,9 +25,8 @@ export function ApplicantDetail({ a, onClose, onAdvance, onReject }: {
         <span className="inline-block rounded bg-secondary px-2 py-0.5 text-xs font-bold">{t(STAGE_KEY[a.stage])}</span>
         <dl className="space-y-1">{row(t("email"), a.email)}{row(t("phone"), a.phone)}{row(t("address"), addr || null)}</dl>
         {a.coverLetter && <div className="rounded-lg bg-secondary p-3"><span className="font-bold">{t("coverLetter")}: </span>{a.coverLetter}</div>}
-        {a.documentsUploaded.length > 0 && (
-          <div><p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("documents")}</p>
-            {a.documentsUploaded.map((d, i) => <a key={i} href={d.url} target="_blank" rel="noreferrer" className="block truncate text-primary hover:underline">{d.name}</a>)}</div>)}
+        <DocVerifyList applicantId={a.id} docs={a.documentsUploaded} onChanged={onChanged} />
+        {exams.length > 0 && <p className="text-sm"><span className="font-bold">{t("exams")}: </span>{examsPassed}/{exams.length} {t("examPassedShort")}</p>}
         {answers.length > 0 && <div className="space-y-1">{answers.map(([q, ans]) => <div key={q}><span className="font-bold">{q}: </span>{String(ans)}</div>)}</div>}
         {a.decisionNotes && <div className="rounded-lg bg-secondary p-3"><span className="font-bold">{t("notes")}: </span>{a.decisionNotes}</div>}
         {!terminal && (

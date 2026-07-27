@@ -19,4 +19,13 @@ export const enRecruitment = {
   osDraft: "Draft", osPublished: "Published", osPaused: "Paused", osClosed: "Closed", osFilled: "Filled",
   fullTime: "Full-time", partTime: "Part-time", contract: "Contract", temporary: "Temporary", intern: "Intern",
   salaryHourly: "Hourly", salarySalary: "Salary", salaryCommission: "Commission", salaryMixed: "Mixed", schedule: "Schedule",
+  pendingVerification: "Pending verification", selectionProcess: "Selection process",
+  applicationNotAdvanced: "Your application did not advance this time.", continueApplication: "Continue my application",
+  takeExam: "Take exam", submitExam: "Submit answers", examPassed: "Passed", examFailed: "Not passed",
+  examPassedShort: "passed", attemptsLeft: "Attempts left", noAttemptsLeft: "No attempts left",
+  trueLabel: "True", falseLabel: "False", examTitle: "Exam title", passingScore: "Pass %",
+  maxAttempts: "Attempts", createExam: "New exam", editExam: "Edit exam", addQuestion: "Add question",
+  statement: "Statement", correctIsTrue: "Correct answer is True", option: "Option", qtMc: "Multiple choice",
+  qtMs: "Multiple select", qtTf: "True / False", timeLimit: "Time (min)", shuffleQuestions: "Shuffle questions",
+  shuffleOptions: "Shuffle options", showCorrectAnswers: "Show answers", daysUnitShort: "d", questions: "Questions",
 } satisfies Partial<Record<TranslationKey, string>>;

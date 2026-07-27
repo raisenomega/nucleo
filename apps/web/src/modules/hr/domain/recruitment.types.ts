@@ -30,6 +30,7 @@ export interface Applicant {
   readonly customAnswers: Readonly<Record<string, unknown>>; readonly stage: ApplicantStage;
   readonly documentsUploaded: readonly { readonly name: string; readonly url: string; readonly verified: boolean }[];
   readonly documentsVerified: boolean; readonly interviewScore: number | null; readonly interviewRecommendation: InterviewRec;
+  readonly examScores: Readonly<Record<string, { readonly passed: boolean; readonly score: number }>>;
   readonly decisionNotes: string | null; readonly createdAt: string;
 }
 export interface PublicOpening {
@@ -64,5 +65,5 @@ export interface IRecruitmentRepository {
   reject(id: string, reason: string): Promise<RecruitResult>;
   convert(id: string): Promise<RecruitResult>;
   getPublic(token: string): Promise<PublicOpening | null>;
-  apply(openingId: string, d: ApplyData): Promise<RecruitResult>;
+  apply(openingId: string, d: ApplyData): Promise<{ ok: true; id: string } | { ok: false; error: string }>;
 }

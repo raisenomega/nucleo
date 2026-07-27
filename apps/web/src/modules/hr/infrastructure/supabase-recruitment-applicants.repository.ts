@@ -3,7 +3,7 @@ import type { Applicant, ApplyData, PublicOpening, RecruitResult } from "@hr/dom
 
 const ok = (e: { message: string } | null): RecruitResult => (e ? { ok: false, error: e.message } : { ok: true });
 const num = (v: unknown): number | null => (v != null ? Number(v) : null);
-const ASEL = "id,opening_id,full_name,email,phone,address,city,state,zip_code,cover_letter,resume_url,custom_answers,stage,documents_uploaded,documents_verified,interview_score,interview_recommendation,decision_notes,created_at";
+const ASEL = "id,opening_id,full_name,email,phone,address,city,state,zip_code,cover_letter,resume_url,custom_answers,stage,documents_uploaded,documents_verified,interview_score,interview_recommendation,exam_scores,decision_notes,created_at";
 
 const toApplicant = (r: Record<string, unknown>): Applicant => ({
   id: r.id as string, openingId: r.opening_id as string, fullName: r.full_name as string, email: r.email as string,
@@ -14,6 +14,7 @@ const toApplicant = (r: Record<string, unknown>): Applicant => ({
   documentsUploaded: (Array.isArray(r.documents_uploaded) ? r.documents_uploaded : []) as Applicant["documentsUploaded"],
   documentsVerified: !!r.documents_verified, interviewScore: num(r.interview_score),
   interviewRecommendation: (r.interview_recommendation as Applicant["interviewRecommendation"]) ?? null,
+  examScores: (r.exam_scores as Applicant["examScores"]) ?? {},
   decisionNotes: (r.decision_notes as string) ?? null, createdAt: r.created_at as string,
 });
 
@@ -50,9 +51,10 @@ export const recruitApplicants = {
     const { data } = await supabase.rpc("get_public_opening", { p_token: token });
     return data ? toPublic(data as Record<string, unknown>) : null;
   },
-  async apply(openingId: string, d: ApplyData): Promise<RecruitResult> {
-    return ok((await supabase.rpc("apply_to_opening", { p_opening_id: openingId, p_full_name: d.fullName, p_email: d.email,
-      p_phone: d.phone || null, p_address: d.address || null, p_city: d.city || null, p_state: d.state || null,
-      p_zip_code: d.zipCode || null, p_cover_letter: d.coverLetter || null, p_custom_answers: d.customAnswers })).error);
+  async apply(openingId: string, d: ApplyData): Promise<{ ok: true; id: string } | { ok: false; error: string }> {
+    const { data, error } = await supabase.rpc("apply_to_opening", { p_opening_id: openingId, p_full_name: d.fullName,
+      p_email: d.email, p_phone: d.phone || null, p_address: d.address || null, p_city: d.city || null, p_state: d.state || null,
+      p_zip_code: d.zipCode || null, p_cover_letter: d.coverLetter || null, p_custom_answers: d.customAnswers });
+    return error ? { ok: false, error: error.message } : { ok: true, id: data as string };
   },
 };

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { useI18n } from "@shared/i18n";
 import { supabaseRecruitmentRepository } from "@hr/infrastructure/supabase-recruitment.repository";
 import { PublicApplyForm } from "@hr/presentation/PublicApplyForm";
@@ -9,16 +10,17 @@ import type { PublicOpening } from "@hr/domain/recruitment.types";
 export function PublicOpeningPage({ token }: { token: string }) {
   const { t } = useI18n();
   const [op, setOp] = useState<PublicOpening | null | undefined>(undefined);
-  const [done, setDone] = useState(false);
+  const [doneId, setDoneId] = useState<string | null>(null);
   useEffect(() => { void supabaseRecruitmentRepository.getPublic(token).then(setOp); }, [token]);
   const wrap = "min-h-screen bg-background text-foreground";
   if (op === undefined) return <main className={`${wrap} grid place-items-center p-4`}>{t("loading")}</main>;
   if (op === null) return <main className={`${wrap} grid place-items-center p-4 text-center`}><p className="text-lg font-bold text-primary">{t("positionClosed")}</p></main>;
-  if (done) return (
+  if (doneId) return (
     <main className={`${wrap} grid place-items-center p-4 text-center`}>
-      <div className="max-w-md space-y-2"><p className="text-3xl">🎉</p>
+      <div className="max-w-md space-y-3"><p className="text-3xl">🎉</p>
         <p className="text-lg font-bold text-primary">{t("thankYouForApplying")}</p>
-        <p className="text-muted-foreground">{t("applicationSent")}</p></div>
+        <p className="text-muted-foreground">{t("applicationSent")}</p>
+        <Link to="/screening/$applicantId" params={{ applicantId: doneId }} className="inline-block rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground">{t("continueApplication")}</Link></div>
     </main>);
   return (
     <main className={wrap}>
@@ -34,7 +36,7 @@ export function PublicOpeningPage({ token }: { token: string }) {
         {op.skills.length > 0 && <section><h2 className="font-bold text-foreground">{t("skills")}</h2><p className="text-sm text-muted-foreground">{op.skills.join(", ")}</p></section>}
         <div className="rounded-xl border border-border bg-card p-4">
           <h2 className="mb-3 font-display text-lg font-bold text-foreground">{t("applyNow")}</h2>
-          <PublicApplyForm opening={op} onDone={() => setDone(true)} />
+          <PublicApplyForm opening={op} onDone={(id) => setDoneId(id)} />
         </div>
       </div>
     </main>

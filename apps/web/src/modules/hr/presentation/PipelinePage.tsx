@@ -54,7 +54,7 @@ export function PipelinePage({ openingId }: { openingId: string }) {
       {rejected.length > 0 && (
         <div><button type="button" onClick={() => setShowRej((v) => !v)} className="text-sm font-bold text-muted-foreground hover:text-foreground">{t("rejected")} ({rejected.length})</button>
           {showRej && <div className="mt-2 space-y-1">{rejected.map((a) => <div key={a.id} className="rounded border border-border p-2 text-sm text-muted-foreground">{a.fullName} — {a.email}</div>)}</div>}</div>)}
-      {detail && <ApplicantDetail a={detail} onClose={() => setDetail(null)} onAdvance={() => advance(detail)} onReject={() => reject(detail)} />}
+      {detail && <ApplicantDetail a={detail} onClose={() => setDetail(null)} onAdvance={() => advance(detail)} onReject={() => reject(detail)} onChanged={() => void p.refresh()} />}
     </div>
   );
 }

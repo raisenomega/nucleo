@@ -19,4 +19,13 @@ export const esRecruitment = {
   osDraft: "Borrador", osPublished: "Publicada", osPaused: "Pausada", osClosed: "Cerrada", osFilled: "Cubierta",
   fullTime: "Tiempo completo", partTime: "Medio tiempo", contract: "Contrato", temporary: "Temporal", intern: "Pasante",
   salaryHourly: "Por hora", salarySalary: "Salario", salaryCommission: "Comisión", salaryMixed: "Mixto", schedule: "Horario",
+  pendingVerification: "Pendiente de verificación", selectionProcess: "Proceso de selección",
+  applicationNotAdvanced: "Tu aplicación no avanzó en esta ocasión.", continueApplication: "Continuar mi aplicación",
+  takeExam: "Tomar examen", submitExam: "Enviar respuestas", examPassed: "Aprobado", examFailed: "No aprobado",
+  examPassedShort: "aprobados", attemptsLeft: "Intentos restantes", noAttemptsLeft: "Sin intentos disponibles",
+  trueLabel: "Verdadero", falseLabel: "Falso", examTitle: "Título del examen", passingScore: "% aprobación",
+  maxAttempts: "Intentos", createExam: "Nuevo examen", editExam: "Editar examen", addQuestion: "Añadir pregunta",
+  statement: "Afirmación", correctIsTrue: "La correcta es Verdadero", option: "Opción", qtMc: "Opción múltiple",
+  qtMs: "Selección múltiple", qtTf: "Verdadero / Falso", timeLimit: "Tiempo (min)", shuffleQuestions: "Mezclar preguntas",
+  shuffleOptions: "Mezclar opciones", showCorrectAnswers: "Mostrar respuestas", daysUnitShort: "d", questions: "Preguntas",
 } satisfies Partial<Record<TranslationKey, string>>;
