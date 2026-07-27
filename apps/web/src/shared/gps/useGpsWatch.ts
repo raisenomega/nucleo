@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { flushGpsLogs, type GpsPointInput } from "@shared/gps/gps.repository";
+import { deviceConfig } from "@shared/gps/report-device";
 import type { GpsActive } from "@shared/gps/gps-session";
 
 export type GpsStatus = "idle" | "tracking" | "searching";
-const FLUSH_MS = 30000;
 
 // watchPosition mientras haya custodia activa: bufferiza puntos y los descarga en lote cada 30s.
 export function useGpsWatch(active: GpsActive | null): GpsStatus {
@@ -23,7 +23,7 @@ export function useGpsWatch(active: GpsActive | null): GpsStatus {
     };
     const flush = () => { const b = buffer.current; buffer.current = []; if (b.length) void flushGpsLogs(b); };
     const watchId = navigator.geolocation.watchPosition(onPos, () => setStatus("searching"), { enableHighAccuracy: true, maximumAge: 10000, timeout: 15000 });
-    const iv = setInterval(flush, FLUSH_MS);
+    const iv = setInterval(flush, deviceConfig().gpsIntervalMs);
     return () => { navigator.geolocation.clearWatch(watchId); clearInterval(iv); flush(); setStatus("idle"); };
   }, [active]);
   return status;

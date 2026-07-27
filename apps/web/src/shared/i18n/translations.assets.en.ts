@@ -33,4 +33,6 @@ export const enAssets = {
   gpsRealtime: "Live GPS monitoring", gpsRealtimeHint: "Enables the fleet map with real-time positions (premium feature).",
   geofences: "Geofences", newGeofence: "New geofence", radiusMeters: "Radius (m)", triggerOn: "Alert on", tEnter: "Enter", tExit: "Exit", tBoth: "Both",
   appliesAll: "All assets", geofenceEvents: "Events", gfEntered: "Entered", gfExited: "Exited", showGeofences: "Show geofences", color: "Color",
+  devices: "Devices", deviceName: "Device", lastSeen: "Last seen", battery: "Battery", gpsInterval: "GPS interval (s)",
+  offlineBuffer: "Offline buffer", wakeLock: "Wake lock", cameraOn: "Camera", platform: "Platform",
 } satisfies Partial<Record<TranslationKey, string>>;

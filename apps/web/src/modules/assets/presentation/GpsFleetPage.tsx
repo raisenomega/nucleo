@@ -12,9 +12,10 @@ import { GpsFleetTable } from "@assets/presentation/GpsFleetTable";
 import { GpsFleetMap } from "@assets/presentation/GpsFleetMap";
 import { GpsFleetSummary } from "@assets/presentation/GpsFleetSummary";
 import { GeofencesTab } from "@assets/presentation/GeofencesTab";
+import { DevicesTab } from "@assets/presentation/DevicesTab";
 import { AssetMapView } from "@assets/presentation/AssetMapView";
 
-const TABS = ["map", "list", "fences"] as const;
+const TABS = ["map", "list", "fences", "devices"] as const;
 type Tab = (typeof TABS)[number];
 
 // Monitoreo GPS (premium): mapa de flota en vivo + geocercas + lista. Sin flag: solo la lista (polling GPS-1).
@@ -35,7 +36,7 @@ export function GpsFleetPage() {
   const circles = useMemo(() => (showFences ? fences : []).filter((g) => g.active && g.centerLat != null && g.centerLng != null && g.radiusMeters)
     .map((g) => ({ lat: g.centerLat as number, lng: g.centerLng as number, radius: g.radiusMeters as number, color: g.color })), [fences, showFences]);
   const view = rows.find((a) => a.id === viewing);
-  const label = (k: Tab) => (k === "map" ? t("fleetMap") : k === "list" ? t("unitsList") : t("geofences"));
+  const label = (k: Tab) => (k === "map" ? t("fleetMap") : k === "list" ? t("unitsList") : k === "fences" ? t("geofences") : t("devices"));
   return (
     <div className="space-y-6 p-4 md:p-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -50,6 +51,7 @@ export function GpsFleetPage() {
       )}
       {!gpsRealtimeEnabled || tab === "list" ? <GpsFleetTable rows={rows} lastReport={last} onMap={setViewing} />
         : tab === "fences" ? <GeofencesTab />
+        : tab === "devices" ? <DevicesTab />
         : <GpsFleetMap positions={positions} geofences={circles} />}
       {view && <ScreenModal onClose={() => setViewing(null)}><div className="space-y-3 p-4 md:p-6"><h2 className="font-display text-lg font-bold text-foreground">{view.name}</h2><AssetMapView assetId={view.id} live={view.status === "in_use"} height="480px" /></div></ScreenModal>}
     </div>

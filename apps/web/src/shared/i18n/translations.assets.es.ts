@@ -33,4 +33,6 @@ export const esAssets = {
   gpsRealtime: "Monitoreo GPS en vivo", gpsRealtimeHint: "Habilita el mapa de flota con posiciones en tiempo real (feature premium).",
   geofences: "Geocercas", newGeofence: "Nueva geocerca", radiusMeters: "Radio (m)", triggerOn: "Alertar en", tEnter: "Entrada", tExit: "Salida", tBoth: "Ambos",
   appliesAll: "Todos los activos", geofenceEvents: "Eventos", gfEntered: "Entró", gfExited: "Salió", showGeofences: "Mostrar geocercas", color: "Color",
+  devices: "Dispositivos", deviceName: "Dispositivo", lastSeen: "Última conexión", battery: "Batería", gpsInterval: "Intervalo GPS (s)",
+  offlineBuffer: "Buffer offline", wakeLock: "Pantalla activa", cameraOn: "Cámara", platform: "Plataforma",
 } satisfies Partial<Record<TranslationKey, string>>;
