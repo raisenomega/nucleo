@@ -3,8 +3,9 @@ import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { FileText } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
-import { usePdf } from "@shared/hooks/usePdf";
-import { buildFiscalBody } from "@finance/presentation/recon-pdf";
+import { usePdfExport } from "@shared/hooks/usePdfExport";
+import { usePdfBrand } from "@shared/hooks/usePdfBrand";
+import { reconDoc } from "@finance/presentation/pdf/recon-doc";
 import { useReconciliation } from "@finance/application/useReconciliation.hook";
 import { supabaseReconciliationRepository } from "@finance/infrastructure/supabase-reconciliation.repository";
 import { supabaseBankAccountRepository } from "@finance/infrastructure/supabase-bank-account.repository";
@@ -28,7 +29,7 @@ function ReconciliationPage() {
   const { can } = useModuleAccess();
   const [month, setMonth] = useState(() => new Date().toISOString().slice(0, 7)); const [modal, setModal] = useState<Modal>(null);
   const m = useReconciliation(supabaseReconciliationRepository, supabaseBankAccountRepository, month);
-  const pdf = usePdf(); const close = () => setModal(null);
+  const { generating, exportPdf } = usePdfExport(); const brand = usePdfBrand(); const close = () => setModal(null);
   const submit = async (op: Promise<RepoResult>) => {
     try { const r = await op; if (!r.ok) { window.alert(r.error); return; } close(); }
     catch (e) { window.alert(e instanceof Error ? e.message : String(e)); }
@@ -42,7 +43,7 @@ function ReconciliationPage() {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <h1 className="font-display text-xl font-bold text-foreground md:text-3xl">{t("reconciliation")}</h1>
           <div className="flex items-center gap-2">
-            {can("reconciliation", "fiscal") && (<button type="button" disabled={pdf.generating || !m.snapshot} onClick={() => { if (m.snapshot) void pdf.generatePdf("reconciliation", null, buildFiscalBody(month, m.snapshot)); }} className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold disabled:opacity-50"><FileText className="h-4 w-4" /> {pdf.generating ? t("generatingPdf") : t("fiscalReport")}</button>)}
+            {can("reconciliation", "fiscal") && (<button type="button" disabled={generating || !m.snapshot} onClick={() => { if (m.snapshot) void exportPdf(() => reconDoc(month, m.snapshot!, brand, t)); }} className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold disabled:opacity-50"><FileText className="h-4 w-4" /> {generating ? t("generatingPdf") : t("fiscalReport")}</button>)}
             <input type="month" value={month} onChange={(e) => setMonth(e.target.value)} className="rounded-lg border border-border bg-background p-2 text-sm" />
           </div>
         </div>
@@ -58,8 +59,7 @@ function ReconciliationPage() {
           <BankImportSection accounts={m.bankAccounts} canWrite={can("reconciliation", "create")} month={month} />
           {can("reconciliation", "fiscal") && (<>
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-              <ReconciliationTaxPanel tax={m.snapshot.tax} />
-              <ReconciliationSummary summary={m.snapshot.summary} />
+              <ReconciliationTaxPanel tax={m.snapshot.tax} /><ReconciliationSummary summary={m.snapshot.summary} />
             </div>
             <ReconciliationHealth health={m.snapshot.summary.health} />
             <ReconciliationRetentionPanel retention={m.snapshot.retention} />

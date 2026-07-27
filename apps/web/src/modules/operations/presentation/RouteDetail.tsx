@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { X, FileDown } from "lucide-react";
 import { useI18n } from "@shared/i18n";
-import { usePdf } from "@shared/hooks/usePdf";
+import { usePdfExport } from "@shared/hooks/usePdfExport";
+import { usePdfBrand } from "@shared/hooks/usePdfBrand";
+import { routeDoc } from "@operations/presentation/pdf/route-doc";
 import { ScreenModal } from "@shared/components/ScreenModal";
 import { StopCard } from "@operations/presentation/StopCard";
 import { StopDetail } from "@operations/presentation/StopDetail";
@@ -16,7 +18,8 @@ export function RouteDetail({ route, stops, employees, tenantId, onClose, onPay,
   onEvidence: (id: string, phase: "before" | "after", paths: string[]) => void; onMarkDone: (id: string) => void;
 }) {
   const { t } = useI18n();
-  const pdf = usePdf();
+  const { generating, exportPdf } = usePdfExport();
+  const brand = usePdfBrand();
   const [open, setOpen] = useState<RouteStop | null>(null);
   const emp = employees.find((e) => e.id === route.assignedTo)?.full_name ?? "—";
   const cur = open ? (stops.find((s) => s.id === open.id) ?? open) : null;
@@ -27,7 +30,7 @@ export function RouteDetail({ route, stops, employees, tenantId, onClose, onPay,
           <div><h2 className="font-display text-lg font-bold text-foreground">{route.routeDate} · {emp}</h2>
             <p className="text-xs text-muted-foreground">{route.status} · {route.completedCount}/{route.stopCount} {t("stopsCompleted")}{route.assetName && ` · ${t("vehicle")}: ${route.assetName}`}</p></div>
           <div className="flex items-center gap-3">
-            <button type="button" disabled={pdf.generating} onClick={() => void pdf.generatePdf("route", route.id)} aria-label={t("routePdf")} className="text-muted-foreground hover:text-foreground disabled:opacity-50"><FileDown className="h-5 w-5" /></button>
+            <button type="button" disabled={generating} onClick={() => void exportPdf(() => routeDoc(route, stops, emp, brand, t))} aria-label={t("routePdf")} className="text-muted-foreground hover:text-foreground disabled:opacity-50"><FileDown className="h-5 w-5" /></button>
             <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button></div>
         </div>
         <div className="space-y-2 p-4">

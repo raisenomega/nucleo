@@ -1,5 +1,11 @@
 # pdf-api — Servicio de PDFs (NÚCLEO by raisen)
 
+> ⚠️ **DEAD CODE / DEPRECADO (desde PDF-3, 2026-07-27).** Los **14 tipos de PDF** ya se generan
+> **client-side** con `@react-pdf/renderer` (ver `apps/web/src/shared/pdf/`). Este servicio **ya no se
+> invoca** desde el frontend. **Railway/Gotenberg se pueden apagar.** Se conserva este directorio solo
+> como referencia (los templates Jinja2 documentan el layout original). No borrar sin OK del owner.
+> `VITE_PDF_API_URL` quedó sin uso en el código (inofensivo en `.env`).
+
 FastAPI que convierte datos de Supabase en PDFs white-label vía **Gotenberg** (Chromium).
 Cada tenant recibe su marca: logo (bucket `brand`), colores (`settings`), nombre (`tenants.legal_name`).
 

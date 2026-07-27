@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { X, FileText } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
-import { usePdf } from "@shared/hooks/usePdf";
+import { usePdfExport } from "@shared/hooks/usePdfExport";
+import { usePdfBrand } from "@shared/hooks/usePdfBrand";
+import { assetDoc } from "@assets/presentation/pdf/asset-doc";
 import { formatCurrency } from "@shared/lib/format";
 import { ScreenModal } from "@shared/components/ScreenModal";
 import { supabaseAssetRepository } from "@assets/infrastructure/supabase-asset.repository";
@@ -13,17 +15,20 @@ import { DepreciationPanel } from "@assets/presentation/DepreciationPanel";
 import { AssetMaintenancePlans } from "@assets/presentation/AssetMaintenancePlans";
 import { ASSET_TYPE, CONDITION, STATUS, MAINT_TYPE } from "@assets/presentation/asset-labels";
 import { assetValue } from "@assets/application/asset-helpers";
-import type { Asset, MaintenanceLog, AssetRoute } from "@assets/domain/asset.types";
+import type { Asset, MaintenanceLog, AssetRoute, CustodyLog } from "@assets/domain/asset.types";
 
 // Detalle del activo: ficha + imagen + custodia + historial de mantenimiento + rutas.
 export function AssetDetail({ asset, onCheckout, onCheckin, onClose }: { asset: Asset; onCheckout: () => void; onCheckin: () => void; onClose: () => void }) {
   const { t } = useI18n();
   const { can } = useModuleAccess();
-  const { generatePdf, generating } = usePdf();
+  const { generating, exportPdf } = usePdfExport();
+  const brand = usePdfBrand();
   const edit = can("assets", "edit");
   const [logs, setLogs] = useState<MaintenanceLog[]>([]);
   const [routes, setRoutes] = useState<AssetRoute[]>([]);
-  useEffect(() => { void supabaseAssetRepository.listMaintenance(asset.id).then(setLogs); void supabaseAssetRepository.listRoutes(asset.id).then(setRoutes); }, [asset.id]);
+  const [custody, setCustody] = useState<CustodyLog[]>([]);
+  useEffect(() => { void supabaseAssetRepository.listMaintenance(asset.id).then(setLogs); void supabaseAssetRepository.listRoutes(asset.id).then(setRoutes); void supabaseAssetRepository.listCustody(asset.id).then(setCustody); }, [asset.id]);
+  const genPdf = () => exportPdf(() => assetDoc(asset, custody, logs, routes, can("assets", "cost"), brand, t));
   const row = (label: string, v: string) => (v ? <div><dt className="inline text-muted-foreground">{label}: </dt><dd className="inline">{v}</dd></div> : null);
   return (
     <ScreenModal onClose={onClose}>
@@ -36,7 +41,7 @@ export function AssetDetail({ asset, onCheckout, onCheckin, onClose }: { asset: 
         <div className="flex flex-wrap gap-2">
           {edit && (asset.status === "in_use" ? <button type="button" onClick={onCheckin} className="rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-bold">{t("receiveCheckin")}</button>
             : <button type="button" onClick={onCheckout} className="rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-bold">{t("assignCheckout")}</button>)}
-          <button type="button" disabled={generating} onClick={() => void generatePdf("asset", asset.id)} className="flex items-center gap-1.5 rounded-lg bg-secondary text-foreground px-3 py-2 text-sm font-bold disabled:opacity-50"><FileText className="h-4 w-4" />{t("generatePdf")}</button>
+          <button type="button" disabled={generating} onClick={() => void genPdf()} className="flex items-center gap-1.5 rounded-lg bg-secondary text-foreground px-3 py-2 text-sm font-bold disabled:opacity-50"><FileText className="h-4 w-4" />{t("generatePdf")}</button>
         </div>
         <dl className="grid grid-cols-1 gap-1 font-body text-sm md:grid-cols-2">
           {row(t("assetType"), t(ASSET_TYPE[asset.assetType]))}{row(t("category"), asset.category)}{row(t("brand"), asset.brand)}{row(t("model"), asset.model)}
@@ -48,7 +53,7 @@ export function AssetDetail({ asset, onCheckout, onCheckin, onClose }: { asset: 
         <AssetMaintenancePlans assetId={asset.id} canEdit={edit} />
         {asset.gpsEnabled && <AssetMapView assetId={asset.id} live={asset.status === "in_use"} />}
         <AssetGpsTrack assetId={asset.id} />
-        <AssetCustodyHistory assetId={asset.id} />
+        <AssetCustodyHistory assetId={asset.id} assetName={asset.name} />
         {routes.length > 0 && <div className="space-y-1 border-t border-border pt-2">
           <p className="text-xs font-bold uppercase text-muted-foreground">{t("routesDone")}</p>
           {routes.map((r) => <div key={r.id} className="flex flex-wrap justify-between gap-2 text-sm"><span>{r.routeDate} · {t("stopsCount")}: {r.stopsCount}</span><span className="text-muted-foreground">{r.status}</span></div>)}
