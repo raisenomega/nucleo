@@ -1,16 +1,17 @@
 import { useState } from "react";
-import { Trash2 } from "lucide-react";
+import { Trash2, BookOpen } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { MobileCard } from "@shared/components/MobileCard";
 import { Pagination } from "@shared/components/Pagination";
 import type { Course } from "@hr/domain/training.types";
 
-export function CourseTable({ rows, onDelete }: { rows: readonly Course[]; onDelete?: (id: string) => void }) {
+export function CourseTable({ rows, onDelete, onMaterials }: { rows: readonly Course[]; onDelete?: (id: string) => void; onMaterials?: (c: Course) => void }) {
   const { t } = useI18n();
   const [page, setPage] = useState(1);
   const paged = rows.slice((page - 1) * 12, page * 12);
   if (rows.length === 0) return <p className="text-sm text-muted-foreground">{t("noRecords")}</p>;
   const req = (c: Course) => c.required ? <span className="rounded bg-amber-100 dark:bg-amber-500/20 px-2 py-0.5 text-xs font-bold text-amber-800 dark:text-amber-300">{t("required")}</span> : null;
+  const mat = (c: Course) => onMaterials ? <button type="button" onClick={() => onMaterials(c)} aria-label={t("courseMaterials")} title={t("courseMaterials")} className="text-foreground"><BookOpen className="h-4 w-4" /></button> : null;
   const del = (c: Course) => onDelete ? <button type="button" onClick={() => onDelete(c.id)} aria-label={t("delete")} className="text-destructive"><Trash2 className="h-4 w-4" /></button> : null;
   return (
     <>
@@ -21,11 +22,11 @@ export function CourseTable({ rows, onDelete }: { rows: readonly Course[]; onDel
           <tr key={c.id} className="border-b border-border">
             <td className="p-2 font-semibold">{c.title}</td><td className="p-2">{c.category ?? "—"}</td>
             <td className="p-2">{c.hours ?? "—"}</td><td className="p-2">{req(c)}</td>
-            <td className="p-2 text-right">{del(c)}</td></tr>))}</tbody>
+            <td className="p-2"><div className="flex justify-end gap-2">{mat(c)}{del(c)}</div></td></tr>))}</tbody>
       </table>
       <div className="space-y-2 md:hidden">{paged.map((c) => (
         <MobileCard key={c.id} title={c.title} lines={[[c.category, c.hours != null ? `${c.hours}h` : null].filter(Boolean).join(" · ")]}
-          extra={req(c)} onDelete={onDelete ? () => onDelete(c.id) : undefined} />))}</div>
+          extra={<div className="flex items-center gap-2">{req(c)}{mat(c)}</div>} onDelete={onDelete ? () => onDelete(c.id) : undefined} />))}</div>
       <Pagination total={rows.length} page={page} pageSize={12} onPageChange={setPage} />
     </>
   );

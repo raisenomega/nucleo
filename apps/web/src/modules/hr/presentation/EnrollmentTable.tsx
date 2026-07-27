@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AlertTriangle, Check, Trash2, FileDown } from "lucide-react";
+import { AlertTriangle, Check, Trash2, FileDown, BookOpen } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { usePdf } from "@shared/hooks/usePdf";
 import { MobileCard } from "@shared/components/MobileCard";
@@ -8,8 +8,9 @@ import { ENROLL_KEY, ENROLL_COLOR } from "@hr/presentation/tr-ui";
 import type { Enrollment } from "@hr/domain/training.types";
 
 // Asignaciones: badge de estado, ⚠️ si curso obligatorio no completado, completar/certificado/eliminar.
-export function EnrollmentTable({ rows, onComplete, onDelete }: {
+export function EnrollmentTable({ rows, onComplete, onDelete, onMaterials }: {
   rows: readonly Enrollment[]; onComplete?: (id: string) => void; onDelete?: (id: string) => void;
+  onMaterials?: (courseId: string, courseTitle: string) => void;
 }) {
   const { t } = useI18n();
   const pdf = usePdf();
@@ -20,6 +21,7 @@ export function EnrollmentTable({ rows, onComplete, onDelete }: {
   const warn = (e: Enrollment) => e.courseRequired && e.status !== "completed" ? <span title={t("required")} className="text-amber-600"><AlertTriangle className="inline h-4 w-4" /></span> : null;
   const acts = (e: Enrollment) => (
     <div className="flex justify-end gap-2">
+      {onMaterials && <button type="button" onClick={() => onMaterials(e.courseId, e.courseTitle)} aria-label={t("courseMaterials")} title={t("courseMaterials")} className="text-foreground"><BookOpen className="h-4 w-4" /></button>}
       {onComplete && e.status !== "completed" && <button type="button" onClick={() => onComplete(e.id)} aria-label={t("markComplete")} className="text-green-600"><Check className="h-4 w-4" /></button>}
       {e.status === "completed" && <button type="button" disabled={pdf.generating} onClick={() => void pdf.generatePdf("training", e.id)} aria-label={t("certificatePdf")} title={t("certificatePdf")} className="text-foreground disabled:opacity-50"><FileDown className="h-4 w-4" /></button>}
       {onDelete && <button type="button" onClick={() => onDelete(e.id)} aria-label={t("delete")} className="text-destructive"><Trash2 className="h-4 w-4" /></button>}
