@@ -52,13 +52,15 @@ export const supabaseDashboardRepository: IDashboardRepository = {
     const args = month ? { p_month: month.toISOString().slice(0, 10) } : {};
     const { data, error } = await supabase.rpc("get_reconciliation_snapshot", args);
     if (error || !data) return null;
-    const d = data as unknown as { bank_panel: { calculated_balance: number }; summary_panel: { available_balance: number; total_payroll: number; operating_profit: number; health: {
+    const d = data as unknown as { bank_panel: { calculated_balance: number }; summary_panel: { available_balance: number; total_payroll: number; operating_profit: number;
+      expense_breakdown?: { category: string; amount: number }[]; health: {
       operating_status: "surplus" | "tight" | "deficit"; break_even_pct: number; shortfall: number; surplus: number; recurring_budgeted: number; recurring_paid: number;
     } } };
     const s = d.summary_panel;
     return { availableBalance: Number(s.available_balance), operatingStatus: s.health.operating_status,
       breakEvenPct: Number(s.health.break_even_pct), shortfall: Number(s.health.shortfall), surplus: Number(s.health.surplus),
       bankCalculated: Number(d.bank_panel.calculated_balance), payrollCost: Number(s.total_payroll), operatingProfit: Number(s.operating_profit ?? 0),
+      expenseBreakdown: (s.expense_breakdown ?? []).map((e) => ({ category: e.category ?? "—", amount: Number(e.amount) })),
       recurringBudgeted: Number(s.health.recurring_budgeted), recurringPaid: Number(s.health.recurring_paid) };
   },
   ...dashboardExtra,

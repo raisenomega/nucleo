@@ -1,9 +1,5 @@
 // BC finance — tipos de dominio del dashboard. Puro: sin imports externos.
-export interface RecentItem {
-  readonly date: string;
-  readonly category: string | null;
-  readonly amount: number;
-}
+export interface RecentItem { readonly date: string; readonly category: string | null; readonly amount: number }
 
 export interface Snapshot {
   readonly totalIncome: number;
@@ -52,13 +48,16 @@ export interface FiscalSnapshot {
   readonly recurringBudgeted: number;
   readonly recurringPaid: number;
   readonly operatingProfit: number;
+  readonly expenseBreakdown: readonly { readonly category: string; readonly amount: number }[];
 }
 
-// DASH-1: bandas nuevas del centro de comando.
-export interface Aging { readonly current: number; readonly b1_30: number; readonly b31_60: number; readonly b61_90: number; readonly b90_plus: number; readonly total: number }
-export interface InvSnapshot { readonly totalItems: number; readonly totalValue: number; readonly lowStock: number; readonly expiringLots: number; readonly cogsMonth: number; readonly topConsumed: readonly { readonly name: string; readonly qty: number }[] }
+// DASH-1/2: bandas + vistas profundas del centro de comando.
+export interface Aging { readonly current: number; readonly b1_30: number; readonly b31_60: number; readonly b61_90: number; readonly b90_plus: number; readonly total: number; readonly byCustomer: readonly { readonly name: string; readonly outstanding: number }[] }
+export interface InvSnapshot { readonly totalItems: number; readonly totalValue: number; readonly lowStock: number; readonly expiringLots: number; readonly cogsMonth: number; readonly topConsumed: readonly { readonly name: string; readonly qty: number }[]; readonly byWarehouse: readonly { readonly name: string; readonly value: number }[]; readonly lowStockItems: readonly { readonly name: string; readonly stock: number; readonly min: number }[]; readonly expiringList: readonly { readonly name: string; readonly lot: string; readonly expiry: string }[] }
 export interface OpsSnapshot { readonly routesTotal: number; readonly routesDone: number; readonly stopsTotal: number; readonly stopsDone: number; readonly fleetInService: number; readonly geofenceEvents: number; readonly maintAlerts: number; readonly customersActive: number; readonly customersNew: number; readonly customersDebt: number }
 export interface TrendPoint { readonly month: number; readonly income: number; readonly expenses: number; readonly profit: number }
+export interface QuotesSummary { readonly sent: number; readonly draft: number; readonly accepted: number; readonly rejected: number; readonly expired: number; readonly totalQuoted: number }
+export interface FleetPos { readonly name: string; readonly assignedTo: string | null; readonly status: string; readonly lat: number | null; readonly lng: number | null; readonly speed: number | null; readonly hasCustody: boolean }
 
 // Puerto del repositorio — lo implementa infrastructure; lo consume application (DI).
 export interface IDashboardRepository {
@@ -71,4 +70,6 @@ export interface IDashboardRepository {
   getInventory(): Promise<InvSnapshot | null>;
   getOps(): Promise<OpsSnapshot | null>;
   getTrend(): Promise<readonly TrendPoint[]>;
+  getQuotes(): Promise<QuotesSummary | null>;
+  getFleet(): Promise<readonly FleetPos[]>;
 }
