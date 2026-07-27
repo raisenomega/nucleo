@@ -26,4 +26,5 @@ export const enRoutes = {
   evidenceRequired: "Upload at least 1 before and 1 after photo to complete",
   assignedVehicle: "Assigned vehicle", vehicle: "Vehicle",
   stopVerified: "GPS verified", stopUnverified: "Not verified",
+  myRoute: "My route", noRouteToday: "No route assigned for today", nextStop: "Next stop",
 } satisfies Partial<Record<TranslationKey, string>>;
