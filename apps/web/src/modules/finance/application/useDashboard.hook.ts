@@ -1,25 +1,34 @@
 import { useEffect, useState } from "react";
-import type { IDashboardRepository, Snapshot, CrmSnapshot, MktSnapshot, FiscalSnapshot } from "@finance/domain/dashboard.types";
+import type {
+  IDashboardRepository, Snapshot, CrmSnapshot, MktSnapshot, FiscalSnapshot, Aging, InvSnapshot, OpsSnapshot, TrendPoint,
+} from "@finance/domain/dashboard.types";
 
-// Recibe el repositorio por inyección (DI) — NO importa infrastructure (A9 + oráculo #3).
-export function useDashboard(repo: IDashboardRepository) {
-  const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
-  const [crm, setCrm] = useState<CrmSnapshot | null>(null);
-  const [mkt, setMkt] = useState<MktSnapshot | null>(null);
-  const [fiscal, setFiscal] = useState<FiscalSnapshot | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+export interface DashData {
+  snapshot: Snapshot | null; crm: CrmSnapshot | null; mkt: MktSnapshot | null; fiscal: FiscalSnapshot | null;
+  ar: Aging | null; ap: Aging | null; inv: InvSnapshot | null; ops: OpsSnapshot | null;
+  trend: readonly TrendPoint[]; prevSnapshot: Snapshot | null;
+}
 
+// Carga todas las bandas en paralelo para el período dado. Cada llamada con .catch → null (nunca cuelga el loading).
+// Trae también el snapshot del mes anterior para la variación de KPIs. Recibe el repo por DI (no importa infra).
+export function useDashboard(repo: IDashboardRepository, month?: Date) {
+  const [d, setD] = useState<DashData | null>(null);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
+    let alive = true;
+    setLoading(true);
+    const base = month ?? new Date();
+    const prev = new Date(base.getFullYear(), base.getMonth() - 1, 1);
+    const safe = <T,>(p: Promise<T>) => p.catch(() => null);
     void Promise.all([
-      repo.getSnapshot(), repo.getCrmSnapshot(), repo.getMarketingSnapshot(), repo.getReconciliationSnapshot(),
-    ]).then(([s, c, mk, fi]) => {
-      setSnapshot(s);
-      setCrm(c);
-      setMkt(mk);
-      setFiscal(fi);
-      setIsLoading(false);
+      safe(repo.getSnapshot(month)), safe(repo.getCrmSnapshot(month)), safe(repo.getMarketingSnapshot(month)), safe(repo.getReconciliationSnapshot(month)),
+      safe(repo.getArAging()), safe(repo.getApAging()), safe(repo.getInventory()), safe(repo.getOps()), safe(repo.getTrend()), safe(repo.getSnapshot(prev)),
+    ]).then((r) => {
+      if (!alive) return;
+      setD({ snapshot: r[0], crm: r[1], mkt: r[2], fiscal: r[3], ar: r[4], ap: r[5], inv: r[6], ops: r[7], trend: r[8] ?? [], prevSnapshot: r[9] });
+      setLoading(false);
     });
-  }, [repo]);
-
-  return { snapshot, crm, mkt, fiscal, isLoading };
+    return () => { alive = false; };
+  }, [repo, month]);
+  return { d, loading };
 }

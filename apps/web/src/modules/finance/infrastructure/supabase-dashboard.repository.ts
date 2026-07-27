@@ -2,6 +2,7 @@ import { supabase } from "@shared/lib/supabase";
 import type {
   IDashboardRepository, RecentItem, Snapshot, CrmSnapshot, RecentLead, MktSnapshot, FiscalSnapshot,
 } from "@finance/domain/dashboard.types";
+import { dashboardExtra } from "@finance/infrastructure/dashboard-extra.repository";
 
 interface Raw {
   total_income: number; total_expenses: number; balance: number;
@@ -51,13 +52,14 @@ export const supabaseDashboardRepository: IDashboardRepository = {
     const args = month ? { p_month: month.toISOString().slice(0, 10) } : {};
     const { data, error } = await supabase.rpc("get_reconciliation_snapshot", args);
     if (error || !data) return null;
-    const d = data as unknown as { bank_panel: { calculated_balance: number }; summary_panel: { available_balance: number; total_payroll: number; health: {
+    const d = data as unknown as { bank_panel: { calculated_balance: number }; summary_panel: { available_balance: number; total_payroll: number; operating_profit: number; health: {
       operating_status: "surplus" | "tight" | "deficit"; break_even_pct: number; shortfall: number; surplus: number; recurring_budgeted: number; recurring_paid: number;
     } } };
     const s = d.summary_panel;
     return { availableBalance: Number(s.available_balance), operatingStatus: s.health.operating_status,
       breakEvenPct: Number(s.health.break_even_pct), shortfall: Number(s.health.shortfall), surplus: Number(s.health.surplus),
-      bankCalculated: Number(d.bank_panel.calculated_balance), payrollCost: Number(s.total_payroll),
+      bankCalculated: Number(d.bank_panel.calculated_balance), payrollCost: Number(s.total_payroll), operatingProfit: Number(s.operating_profit ?? 0),
       recurringBudgeted: Number(s.health.recurring_budgeted), recurringPaid: Number(s.health.recurring_paid) };
   },
+  ...dashboardExtra,
 };
