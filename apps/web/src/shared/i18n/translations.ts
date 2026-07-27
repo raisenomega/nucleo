@@ -48,8 +48,10 @@ import { esRecruitment } from "./translations.recruitment.es";
 import { enRecruitment } from "./translations.recruitment.en";
 import { esAttendance } from "./translations.attendance.es";
 import { enAttendance } from "./translations.attendance.en";
+import { esOnboarding } from "./translations.onboarding.es";
+import { enOnboarding } from "./translations.onboarding.en";
 
 export const translations: Record<Locale, Record<TranslationKey, string>> = {
-  es: { ...es, ...esRecon, ...esPayroll, ...esEmployee, ...esRoutes, ...esReports, ...esHr, ...esDocs, ...esBilling, ...esQuotes, ...esPdf, ...esBrand, ...esLanding, ...esAgenda, ...esOrders, ...esOrdersPublic, ...esOrderForms, ...esInventory, ...esAssets, ...esAccounting, ...esPortal, ...esCustomers, ...esRecruitment, ...esAttendance },
-  en: { ...en, ...enRecon, ...enPayroll, ...enEmployee, ...enRoutes, ...enReports, ...enHr, ...enDocs, ...enBilling, ...enQuotes, ...enPdf, ...enBrand, ...enLanding, ...enAgenda, ...enOrders, ...enOrdersPublic, ...enOrderForms, ...enInventory, ...enAssets, ...enAccounting, ...enPortal, ...enCustomers, ...enRecruitment, ...enAttendance },
+  es: { ...es, ...esRecon, ...esPayroll, ...esEmployee, ...esRoutes, ...esReports, ...esHr, ...esDocs, ...esBilling, ...esQuotes, ...esPdf, ...esBrand, ...esLanding, ...esAgenda, ...esOrders, ...esOrdersPublic, ...esOrderForms, ...esInventory, ...esAssets, ...esAccounting, ...esPortal, ...esCustomers, ...esRecruitment, ...esAttendance, ...esOnboarding },
+  en: { ...en, ...enRecon, ...enPayroll, ...enEmployee, ...enRoutes, ...enReports, ...enHr, ...enDocs, ...enBilling, ...enQuotes, ...enPdf, ...enBrand, ...enLanding, ...enAgenda, ...enOrders, ...enOrdersPublic, ...enOrderForms, ...enInventory, ...enAssets, ...enAccounting, ...enPortal, ...enCustomers, ...enRecruitment, ...enAttendance, ...enOnboarding },
 };
