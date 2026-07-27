@@ -3,20 +3,21 @@ import type {
   IEvaluationRepository, Criterion, Evaluation, EvaluationDetail, Suggestion, SaveScore, EvalResult, Classification,
 } from "@hr/domain/evaluation.types";
 
+// list/detail van por RPC SECURITY DEFINER (get_my_evaluations/get_evaluation_detail): enmascaran
+// evaluator_id cuando la eval es anónima y el viewer no es COO+ ni el evaluador (fix de privacidad).
 interface Row {
   id: string; employee_id: string; period: string; composite_score: number | string | null;
   classification: string | null; in_probation: boolean; requires_legal_validation: boolean;
-  eval_type: string; is_anonymous: boolean; evaluator_id: string;
-  status: string; notes: string | null; created_at: string; profiles: { full_name: string } | null;
+  eval_type: string; is_anonymous: boolean; evaluator_id: string | null;
+  status: string; notes: string | null; created_at: string; employee_name: string | null;
 }
 const toEval = (r: Row): Evaluation => ({
-  id: r.id, employeeId: r.employee_id, employeeName: r.profiles?.full_name ?? "—", period: r.period,
+  id: r.id, employeeId: r.employee_id, employeeName: r.employee_name ?? "—", period: r.period,
   compositeScore: Number(r.composite_score ?? 0), classification: (r.classification as Classification | null),
   inProbation: r.in_probation, requiresLegalValidation: r.requires_legal_validation,
   evalType: r.eval_type as Evaluation["evalType"], isAnonymous: r.is_anonymous, evaluatorId: r.evaluator_id,
   status: r.status, notes: r.notes, createdAt: r.created_at,
 });
-const SEL = "id,employee_id,period,composite_score,classification,in_probation,requires_legal_validation,eval_type,is_anonymous,evaluator_id,status,notes,created_at,profiles:employee_id(full_name)";
 
 export const supabaseEvaluationRepository: IEvaluationRepository = {
   async getCriteria(): Promise<Criterion[]> {
@@ -25,16 +26,15 @@ export const supabaseEvaluationRepository: IEvaluationRepository = {
       .map((c) => ({ id: c.id, label: c.label, weight: Number(c.weight), sort: c.sort }));
   },
   async list(): Promise<Evaluation[]> {
-    const { data } = await supabase.from("evaluations").select(SEL).order("created_at", { ascending: false });
-    return ((data as unknown as Row[] | null) ?? []).map(toEval);
+    const { data } = await supabase.rpc("get_my_evaluations");
+    return ((data as Row[] | null) ?? []).map(toEval);
   },
   async detail(id): Promise<EvaluationDetail | null> {
-    const { data } = await supabase.from("evaluations").select(SEL).eq("id", id).single();
-    if (!data) return null;
-    const { data: sc } = await supabase.from("evaluation_scores").select("criterion_id,score,evaluation_criteria:criterion_id(label)").eq("evaluation_id", id);
-    const scores = ((sc as unknown as { criterion_id: string; score: number | string; evaluation_criteria: { label: string } | null }[] | null) ?? [])
-      .map((s) => ({ criterionId: s.criterion_id, label: s.evaluation_criteria?.label ?? "—", score: Number(s.score) }));
-    return { ...toEval(data as unknown as Row), scores };
+    const { data } = await supabase.rpc("get_evaluation_detail", { p_id: id });
+    const r = data as (Row & { scores: { criterion_id: string; label: string; score: number | string }[] }) | null;
+    if (!r) return null;
+    const scores = (r.scores ?? []).map((s) => ({ criterionId: s.criterion_id, label: s.label, score: Number(s.score) }));
+    return { ...toEval(r), scores };
   },
   async save(employeeId, period, scores: SaveScore[], notes, evalType, isAnonymous): Promise<EvalResult> {
     const { error } = await supabase.rpc("save_evaluation", {

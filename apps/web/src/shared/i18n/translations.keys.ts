@@ -8,7 +8,7 @@ export type TranslationKey =
   | "panel" | "payroll" | "routes" | "inventory" | "inventoryItems" | "leads" | "marketing" | "reports"
   | "settings" | "comingSoon" | "operations" | "finance" | "salesCrm" | "management"
   | "agenda" | "extraordinary" | "reconciliation" | "orders" | "quotes" | "evaluations"
-  | "training" | "support" | "incomeSubtitle"
+  | "training" | "support" | "incomeSubtitle" | "hr" | "signature" | "clearSignature" | "validityMonths"
   | "assets" | "billing" | "portal" | "documents" | "notifications" | "menu" | "aiChat"
   | "addEvidence" | "viewDetail"
   | "expenseList" | "newExpense" | "expenseSubtitle" | "expenseDetail"

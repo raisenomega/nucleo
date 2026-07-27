@@ -11,7 +11,7 @@ import type { TranslationKey } from "@shared/i18n";
 // Solo las rutas ya construidas llevan `to`; el resto se renderiza deshabilitado.
 // Solo rutas con archivo real (TanStack <Link to> valida contra rutas generadas). Las rutas landing
 // futuras (products/services/packages/faqs/…) se agregan acá cuando exista su archivo (Sesión 3.b+).
-type EnabledPath = "/dashboard" | "/routes" | "/income" | "/expenses" | "/extraordinary" | "/payroll" | "/inventory" | "/inventory/suppliers" | "/inventory/purchase-orders" | "/inventory/counts" | "/leads" | "/marketing" | "/reconciliation" | "/recurring" | "/accounts-receivable" | "/billing" | "/quotes" | "/reports" | "/accounting/chart" | "/accounting/journal" | "/accounting/income-statement" | "/accounting/balance-sheet" | "/accounting/period-close" | "/accounting/payables" | "/accounting/cash-flow" | "/evaluations" | "/observations" | "/training" | "/support" | "/documents" | "/settings" | "/settings/agenda" | "/agenda" | "/orders" | "/assets" | "/gps" | "/my-route" | "/notifications" | "/customers"
+type EnabledPath = "/dashboard" | "/routes" | "/income" | "/expenses" | "/extraordinary" | "/payroll" | "/inventory" | "/inventory/suppliers" | "/inventory/purchase-orders" | "/inventory/counts" | "/leads" | "/marketing" | "/reconciliation" | "/recurring" | "/accounts-receivable" | "/billing" | "/quotes" | "/reports" | "/accounting/chart" | "/accounting/journal" | "/accounting/income-statement" | "/accounting/balance-sheet" | "/accounting/period-close" | "/accounting/payables" | "/accounting/cash-flow" | "/evaluations" | "/observations" | "/training" | "/support" | "/documents" | "/settings" | "/settings-team" | "/settings/agenda" | "/agenda" | "/orders" | "/assets" | "/gps" | "/my-route" | "/notifications" | "/customers"
   | "/tenants" | "/platform/analytics" | "/web/campanas" | "/web/leads" | "/web/secciones" | "/web/hero" | "/web/features" | "/web/proceso" | "/web/precios" | "/web/testimonios" | "/web/soluciones" | "/web/faq" | "/web/footer" | "/web/legales" | "/web/reservas" | "/web/disponibilidad"
   | "/settings/landing/config" | "/settings/landing/categories" | "/settings/landing/products" | "/settings/landing/services" | "/settings/landing/packages" | "/settings/landing/testimonials" | "/settings/landing/faqs" | "/settings/landing/order-forms" | "/settings/landing/service-pages" | "/settings/landing/coupons" | "/settings/landing/payment-methods" | "/settings/landing/analytics" | "/campanas";
 // mod = clave de módulo para el gate (can(mod,"view")). Items sin mod = "próximamente" (solo roadmap coo/ceo).
@@ -40,8 +40,7 @@ export const SECTIONS: NavSection[] = [
   ] },
   { title: "finance", icon: Wallet, items: [
     { key: "income", icon: DollarSign, to: "/income", mod: "income" },
-    { key: "expenses", icon: CreditCard, to: "/expenses", mod: "expenses" }, { key: "recurringExpenses", icon: Repeat, to: "/recurring", mod: "recurring" },
-    { key: "payroll", icon: Users, to: "/payroll", mod: "payroll" }, { key: "extraordinary", icon: AlertCircle, to: "/extraordinary", mod: "extraordinary" },
+    { key: "expenses", icon: CreditCard, to: "/expenses", mod: "expenses" }, { key: "recurringExpenses", icon: Repeat, to: "/recurring", mod: "recurring" }, { key: "extraordinary", icon: AlertCircle, to: "/extraordinary", mod: "extraordinary" },
     { key: "reconciliation", icon: Scale, to: "/reconciliation", mod: "reconciliation" },
   ] },
 ];
@@ -67,9 +66,10 @@ export const ANALYTICS_SECTION: NavSection = {
   items: [{ key: "landingAnalytics", icon: BarChart3, to: "/settings/landing/analytics", mod: "settings" }],
 };
 
-// Reportes: grupo propio al final. Gestión: se conserva al final (evaluaciones/RRHH/soporte/notificaciones).
+// Reportes: grupo propio. RRHH: expediente/nómina/evaluaciones/capacitación/observaciones/soporte/notificaciones.
 export const REPORTS_SECTION: NavSection = { title: "reports", icon: FileText, items: [{ key: "reports", icon: BarChart3, to: "/reports", mod: "reports" }] };
-export const MANAGEMENT_SECTION: NavSection = { title: "management", icon: Briefcase, items: [
-  { key: "evaluations", icon: ClipboardCheck, to: "/evaluations", mod: "evaluations" }, { key: "observations", icon: NotebookPen, to: "/observations", mod: "observations" },
-  { key: "training", icon: GraduationCap, to: "/training", mod: "training" }, { key: "support", icon: LifeBuoy, to: "/support", mod: "support" },
-  { key: "documents", icon: FileCheck, to: "/documents", mod: "documents" }, { key: "notifications", icon: Bell, to: "/notifications" }] };
+export const HR_SECTION: NavSection = { title: "hr", icon: Users, items: [
+  { key: "team", icon: Users, to: "/settings-team", mod: "settings" }, { key: "payroll", icon: Banknote, to: "/payroll", mod: "payroll" }, { key: "evaluations", icon: ClipboardCheck, to: "/evaluations", mod: "evaluations" },
+  { key: "training", icon: GraduationCap, to: "/training", mod: "training" }, { key: "observations", icon: NotebookPen, to: "/observations", mod: "observations" }, { key: "support", icon: LifeBuoy, to: "/support", mod: "support" },
+  { key: "notifications", icon: Bell, to: "/notifications" }] };
+export const MANAGEMENT_SECTION: NavSection = { title: "management", icon: Briefcase, items: [{ key: "documents", icon: FileCheck, to: "/documents", mod: "documents" }] };

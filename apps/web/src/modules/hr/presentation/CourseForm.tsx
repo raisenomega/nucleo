@@ -7,13 +7,14 @@ export function CourseForm({ onSubmit, onCancel }: { onSubmit: (id: string | nul
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [hours, setHours] = useState(0);
+  const [validity, setValidity] = useState(0);
   const [required, setRequired] = useState(false);
   const [description, setDescription] = useState("");
   const [busy, setBusy] = useState(false);
   async function submit() {
     if (!title.trim()) return;
     setBusy(true);
-    const r = await onSubmit(null, { title: title.trim(), category, hours, required, description });
+    const r = await onSubmit(null, { title: title.trim(), category, hours, required, description, validityMonths: validity });
     setBusy(false);
     if (!r.ok) window.alert(r.error); else onCancel();
   }
@@ -24,6 +25,7 @@ export function CourseForm({ onSubmit, onCancel }: { onSubmit: (id: string | nul
         <input required value={title} onChange={(e) => setTitle(e.target.value)} placeholder={t("courseTitle")} className={`${fld} md:col-span-2`} />
         <input value={category} onChange={(e) => setCategory(e.target.value)} placeholder={t("category")} className={fld} />
         <input type="number" step="0.5" min="0" value={hours || ""} onChange={(e) => setHours(Number(e.target.value))} placeholder={t("hours")} className={fld} />
+        <input type="number" step="1" min="0" value={validity || ""} onChange={(e) => setValidity(Number(e.target.value))} placeholder={t("validityMonths")} className={fld} />
         <label className="flex items-center gap-2 text-sm md:col-span-2"><input type="checkbox" checked={required} onChange={(e) => setRequired(e.target.checked)} /> {t("required")}</label>
       </div>
       <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder={t("description")} rows={2} className={fld} />

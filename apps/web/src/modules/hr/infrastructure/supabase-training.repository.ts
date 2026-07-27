@@ -18,12 +18,12 @@ const toEnroll = (r: ERow): Enrollment => ({
 
 export const supabaseTrainingRepository: ITrainingRepository = {
   async listCourses(): Promise<Course[]> {
-    const { data } = await supabase.from("training_courses").select("id,title,description,category,hours,required,active").eq("active", true).order("title");
-    return ((data as { id: string; title: string; description: string | null; category: string | null; hours: number | string | null; required: boolean; active: boolean }[] | null) ?? [])
-      .map((c) => ({ ...c, hours: c.hours != null ? Number(c.hours) : null }));
+    const { data } = await supabase.from("training_courses").select("id,title,description,category,hours,required,active,validity_months").eq("active", true).order("title");
+    return ((data as { id: string; title: string; description: string | null; category: string | null; hours: number | string | null; required: boolean; active: boolean; validity_months: number | null }[] | null) ?? [])
+      .map((c) => ({ ...c, hours: c.hours != null ? Number(c.hours) : null, validityMonths: c.validity_months }));
   },
   async saveCourse(id, c: CourseInput): Promise<TrResult> {
-    const row = { title: c.title, description: c.description || null, category: c.category || null, hours: c.hours || null, required: c.required };
+    const row = { title: c.title, description: c.description || null, category: c.category || null, hours: c.hours || null, required: c.required, validity_months: c.validityMonths || null };
     return ok((id ? await supabase.from("training_courses").update(row).eq("id", id) : await supabase.from("training_courses").insert(row)).error);
   },
   async removeCourse(id): Promise<TrResult> { return ok((await supabase.from("training_courses").update({ active: false }).eq("id", id)).error); },

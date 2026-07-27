@@ -6,11 +6,12 @@ export interface Observation {
   readonly id: string; readonly employeeId: string; readonly employeeName: string;
   readonly category: ObsCategory; readonly notes: string;
   readonly requiresFollowUp: boolean; readonly followUpDate: string | null; readonly createdAt: string;
+  readonly digitalSignature: string | null;
 }
 
 export interface IObservationRepository {
   list(): Promise<Observation[]>;
   listForEmployee(employeeId: string): Promise<Observation[]>;
-  save(employeeId: string, category: ObsCategory, notes: string, followUp: string | null): Promise<ObsResult>;
+  save(employeeId: string, category: ObsCategory, notes: string, followUp: string | null, signature: string | null): Promise<ObsResult>;
   remove(id: string): Promise<ObsResult>;
 }

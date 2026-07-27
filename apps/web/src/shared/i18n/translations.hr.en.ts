@@ -18,6 +18,7 @@ export const enHr = {
   currentPeriod: "Current period", freqWeekly: "Weekly", freqBiweekly: "Biweekly", freqMonthly: "Monthly",
   periodFeedback: "Period feedback",
   trainingSubtitle: "Courses + assignments + completion", courses: "Courses", assignments: "Assignments",
+  hr: "HR", signature: "Signature", clearSignature: "Clear signature", validityMonths: "Validity (months)",
   newCourse: "New course", assignCourse: "Assign course", courseTitle: "Course title", hours: "Hours",
   required: "Required", completion: "Completion", markComplete: "Mark complete", course: "Course", trainingPct: "Training",
   stNotStarted: "Not started", stInProgress: "In progress", stCompleted: "Completed", stExpired: "Expired",

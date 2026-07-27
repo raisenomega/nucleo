@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useI18n } from "@shared/i18n";
+import { SignaturePad } from "@shared/components/SignaturePad";
 import { CATEGORIES, CAT_KEY } from "@hr/presentation/obs-ui";
 import type { ObsCategory, ObsResult } from "@hr/domain/observation.types";
 
@@ -7,18 +8,19 @@ type Emp = { id: string; full_name: string };
 const NEEDS_FOLLOW = (c: ObsCategory) => c === "INCIDENTE" || c === "OPORTUNIDAD_MEJORA";
 
 export function ObservationForm({ employees, onSubmit, onCancel }: {
-  employees: Emp[]; onSubmit: (e: string, c: ObsCategory, n: string, f: string | null) => Promise<ObsResult>; onCancel: () => void;
+  employees: Emp[]; onSubmit: (e: string, c: ObsCategory, n: string, f: string | null, s: string | null) => Promise<ObsResult>; onCancel: () => void;
 }) {
   const { t } = useI18n();
   const [emp, setEmp] = useState("");
   const [cat, setCat] = useState<ObsCategory>("LOGRO");
   const [notes, setNotes] = useState("");
   const [follow, setFollow] = useState("");
+  const [sig, setSig] = useState("");
   const [busy, setBusy] = useState(false);
   async function submit() {
     if (!emp || !notes.trim()) return;
     setBusy(true);
-    const r = await onSubmit(emp, cat, notes.trim(), NEEDS_FOLLOW(cat) ? (follow || null) : null);
+    const r = await onSubmit(emp, cat, notes.trim(), NEEDS_FOLLOW(cat) ? (follow || null) : null, sig || null);
     setBusy(false);
     if (!r.ok) window.alert(r.error); else onCancel();
   }
@@ -35,6 +37,7 @@ export function ObservationForm({ employees, onSubmit, onCancel }: {
       {NEEDS_FOLLOW(cat) && (
         <label className="block space-y-1"><span className="text-xs font-bold text-muted-foreground">{t("followUp")}</span>
           <input type="date" value={follow} onChange={(e) => setFollow(e.target.value)} className={fld} /></label>)}
+      <SignaturePad onChange={setSig} />
       <div className="flex gap-2">
         <button type="submit" disabled={busy} className="rounded-lg bg-primary text-primary-foreground px-4 py-2 text-sm font-bold disabled:opacity-50">{t("save")}</button>
         <button type="button" onClick={onCancel} className="rounded-lg bg-secondary px-4 py-2 text-sm">{t("cancel")}</button>

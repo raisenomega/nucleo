@@ -18,6 +18,7 @@ export const esHr = {
   currentPeriod: "Período actual", freqWeekly: "Semanal", freqBiweekly: "Quincenal", freqMonthly: "Mensual",
   periodFeedback: "Feedback del período",
   trainingSubtitle: "Cursos + asignaciones + cumplimiento", courses: "Cursos", assignments: "Asignaciones",
+  hr: "RRHH", signature: "Firma", clearSignature: "Limpiar firma", validityMonths: "Validez (meses)",
   newCourse: "Nuevo curso", assignCourse: "Asignar curso", courseTitle: "Título del curso", hours: "Horas",
   required: "Obligatorio", completion: "Cumplimiento", markComplete: "Marcar completado", course: "Curso", trainingPct: "Capacitación",
   stNotStarted: "Sin iniciar", stInProgress: "En progreso", stCompleted: "Completado", stExpired: "Vencido",

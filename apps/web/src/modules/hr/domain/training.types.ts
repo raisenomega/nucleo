@@ -5,8 +5,9 @@ export type EnrollStatus = "not_started" | "in_progress" | "completed" | "expire
 export interface Course {
   readonly id: string; readonly title: string; readonly description: string | null;
   readonly category: string | null; readonly hours: number | null; readonly required: boolean; readonly active: boolean;
+  readonly validityMonths: number | null;
 }
-export interface CourseInput { title: string; description: string; category: string; hours: number; required: boolean; }
+export interface CourseInput { title: string; description: string; category: string; hours: number; required: boolean; validityMonths: number; }
 export interface Enrollment {
   readonly id: string; readonly employeeId: string; readonly employeeName: string;
   readonly courseId: string; readonly courseTitle: string; readonly courseRequired: boolean;

@@ -9,7 +9,7 @@ export interface Evaluation {
   readonly id: string; readonly employeeId: string; readonly employeeName: string; readonly period: string;
   readonly compositeScore: number; readonly classification: Classification | null;
   readonly inProbation: boolean; readonly requiresLegalValidation: boolean;
-  readonly evalType: EvalType; readonly isAnonymous: boolean; readonly evaluatorId: string;
+  readonly evalType: EvalType; readonly isAnonymous: boolean; readonly evaluatorId: string | null;
   readonly status: string; readonly notes: string | null; readonly createdAt: string;
 }
 export interface EvaluationDetail extends Evaluation { readonly scores: readonly EvalScore[]; }
