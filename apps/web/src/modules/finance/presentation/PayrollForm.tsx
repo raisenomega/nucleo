@@ -4,6 +4,7 @@ import type { TranslationKey } from "@shared/i18n";
 import { useSession } from "@shared/providers/SessionProvider";
 import { EvidenceUpload } from "@finance/presentation/EvidenceUpload";
 import { PayrollDeductionPreview } from "@finance/presentation/PayrollDeductionPreview";
+import { AttendanceGrossButton } from "@finance/presentation/AttendanceGrossButton";
 import { CategoryPicker } from "@shared/components/CategoryPicker";
 import type { PayrollFormData, PayrollCalc, WorkerType, PayrollPreviewCtx } from "@finance/domain/payroll.types";
 
@@ -35,8 +36,7 @@ export function PayrollForm({ employees, externals, payCats, initial, excludeId,
   useEffect(() => { // ctx → la RPC aplica el tope anual acumulado (YTD) del trabajador elegido
     if (gross > 0) void preview(gross, worker, { employeeId: f.employeeId, externalWorkerId: f.externalWorkerId, date: f.date, excludeId }).then(setCalc); else setCalc(null);
   }, [gross, worker, f.employeeId, f.externalWorkerId, f.date, excludeId, preview]);
-  const field = "w-full rounded-lg border border-border bg-background p-2 font-body";
-  const lbl = "text-xs font-bold text-muted-foreground";
+  const field = "w-full rounded-lg border border-border bg-background p-2 font-body"; const lbl = "text-xs font-bold text-muted-foreground";
   return (
     <form onSubmit={(e) => { e.preventDefault(); onSubmit(f); }} className="space-y-4 rounded-lg border border-border bg-card p-5">
       <h2 className="font-body font-bold">{t("newPayroll")}</h2>
@@ -53,7 +53,7 @@ export function PayrollForm({ employees, externals, payCats, initial, excludeId,
           </select>
           {selExt && (selExt.specialty || selExt.department) && <span className="text-xs text-muted-foreground">{[selExt.specialty, selExt.department].filter(Boolean).join(" · ")}</span>}</label>
         <label className="space-y-1"><span className={lbl}>{worker === "employee" ? t("grossSalary") : t("amount")}</span>
-          <input type="number" step="0.01" min="0" value={gross || ""} onChange={(e) => setF({ ...f, grossSalary: Number(e.target.value), amount: Number(e.target.value) })} className={field} /></label>
+          <input type="number" step="0.01" min="0" value={gross || ""} onChange={(e) => setF({ ...f, grossSalary: Number(e.target.value), amount: Number(e.target.value) })} className={field} />{worker === "employee" && f.employeeId && <AttendanceGrossButton employeeId={f.employeeId} date={f.date} onFill={(g, r, o) => setF({ ...f, grossSalary: g, amount: g, hoursRegular: r, hoursOvertime: o })} />}</label>
         <label className="space-y-1"><span className={lbl}>{t("period")}</span>
           <select value={f.period} onChange={(e) => setF({ ...f, period: e.target.value })} className={field}>
             <option value="">—</option>{PERIODS.map((p) => <option key={p} value={p}>{p}</option>)}

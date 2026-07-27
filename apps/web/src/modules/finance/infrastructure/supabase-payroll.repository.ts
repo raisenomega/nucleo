@@ -25,6 +25,7 @@ async function buildRow(d: PayrollFormData, excludeId?: string) {
     employee_id: d.employeeId || null, external_worker_id: d.externalWorkerId || null,
     amount: gross, period: d.period, payment_method_id: d.paymentMethodId,
     pay_date: d.date, notes: d.notes, evidence_urls: d.evidenceUrls ?? [], worker_type: worker, gross_salary: gross,
+    hours_regular: d.hoursRegular ?? null, hours_overtime: d.hoursOvertime ?? null,
     deductions_employee: c?.employee_deductions ?? [], contributions_employer: c?.employer_contributions ?? [],
     net_salary: c?.net_salary ?? gross, total_employer_cost: c?.total_employer_cost ?? gross,
   };

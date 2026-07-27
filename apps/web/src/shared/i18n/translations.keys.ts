@@ -1,6 +1,6 @@
 export type Locale = "es" | "en";
 export type TranslationKey =
-  | "title" | "tagline" | "toggleTheme" | "switchLang" | "welcome" | "yourBusiness" | "role" | "logout"
+  | "calcFromAttendance" | "applyGross" | "newCycle" | "evalCycle" | "evalCycles" | "activateCycle" | "ct_monthly" | "ct_quarterly" | "ct_semi_annual" | "ct_annual" | "ct_custom" | "cs_draft" | "cs_active" | "cs_closed" | "cs_cancelled" | "periodStart" | "periodEnd" | "evalStart" | "evaluator" | "evalType" | "title" | "tagline" | "toggleTheme" | "switchLang" | "welcome" | "yourBusiness" | "role" | "logout"
   | "trialBanner" | "trialEnded" | "trialEndedDesc" | "scheduleConsultation"
   | "income" | "incomeList" | "newIncome" | "amount" | "category" | "description" | "date"
   | "paymentMethod" | "save" | "cancel" | "edit" | "delete" | "noRecords" | "createdBy"

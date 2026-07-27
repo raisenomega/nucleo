@@ -43,6 +43,8 @@ export interface PayrollFormData {
   readonly evidenceUrls?: readonly string[];
   readonly workerType?: WorkerType;
   readonly grossSalary?: number;
+  readonly hoursRegular?: number;
+  readonly hoursOvertime?: number;
 }
 
 export type PayrollListResult = Result<Payroll[], string>;
