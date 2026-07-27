@@ -4,7 +4,9 @@ import { Plus, FileText } from "lucide-react";
 import { supabase } from "@shared/lib/supabase";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
-import { usePdf } from "@shared/hooks/usePdf";
+import { usePdfExport } from "@shared/hooks/usePdfExport";
+import { usePdfBrand } from "@shared/hooks/usePdfBrand";
+import { reportDoc } from "@finance/presentation/pdf/report-doc";
 import { assetsReportBody } from "@assets/presentation/assets-report";
 import { useAssets } from "@assets/application/useAssets.hook";
 import { supabaseAssetRepository } from "@assets/infrastructure/supabase-asset.repository";
@@ -19,7 +21,8 @@ export const Route = createFileRoute("/_authenticated/assets")({ component: Asse
 function AssetsPage() {
   const { t } = useI18n();
   const { can } = useModuleAccess();
-  const pdf = usePdf();
+  const { generating, exportPdf } = usePdfExport();
+  const brand = usePdfBrand();
   const assets = useAssets(supabaseAssetRepository);
   const [editing, setEditing] = useState<string | null>(null);
   const [profiles, setProfiles] = useState<ProfileRef[]>([]);
@@ -43,7 +46,7 @@ function AssetsPage() {
       <div className="flex items-center justify-between gap-4">
         <h1 className="font-display text-xl font-bold text-foreground md:text-3xl">{t("assets")}</h1>
         <div className="flex items-center gap-2">
-          <button type="button" disabled={pdf.generating || !items.length} onClick={() => void pdf.generatePdf("report", null, assetsReportBody(items, now, t))} className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold disabled:opacity-50"><FileText className="h-4 w-4" /> {pdf.generating ? t("generatingPdf") : t("assetReport")}</button>
+          <button type="button" disabled={generating || !items.length} onClick={() => void exportPdf(() => reportDoc(assetsReportBody(items, now, t), brand))} className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold disabled:opacity-50"><FileText className="h-4 w-4" /> {generating ? t("generatingPdf") : t("assetReport")}</button>
           {can("assets", "create") && <button type="button" onClick={() => setEditing("new")} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-body font-bold"><Plus className="h-4 w-4" /> {t("newAsset")}</button>}
         </div>
       </div>

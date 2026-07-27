@@ -4,6 +4,8 @@ import { useI18n } from "@shared/i18n";
 import { useToast } from "@shared/providers/toast-context";
 import { ScreenModal } from "@shared/components/ScreenModal";
 import { formatCurrency } from "@shared/lib/format";
+import { usePdfBrand } from "@shared/hooks/usePdfBrand";
+import { uploadQuotePdf } from "@quotes/presentation/pdf/quote-pdf";
 import { useQuoteSend } from "@quotes/presentation/useQuoteSend";
 import type { Quote } from "@quotes/domain/quote.types";
 
@@ -15,7 +17,8 @@ export function SendQuoteDialog({ quote: q, tenantId, onClose, onSent }: {
   quote: Quote; tenantId: string; onClose: () => void; onSent: () => void;
 }) {
   const { t } = useI18n(); const toast = useToast();
-  const { send, sending } = useQuoteSend(tenantId);
+  const brand = usePdfBrand();
+  const { send, sending } = useQuoteSend();
   const [wa, setWa] = useState(!!q.clientPhone);
   const [em, setEm] = useState(false);
   const [msg, setMsg] = useState("");
@@ -29,7 +32,7 @@ export function SendQuoteDialog({ quote: q, tenantId, onClose, onSent }: {
       toast.info(t("noEmailWarning")); channels = channels.filter((c) => c !== "email");
     }
     if (channels.length === 0) { toast.error(t("noChannels")); return; }
-    const r = await send(q.id, channels, msg);
+    const r = await send(q.id, channels, msg, () => uploadQuotePdf(tenantId, q, brand, t));
     if (!r) { toast.error(t("sendError")); return; }
     if (wa) {
       const text = `${msg ? msg + "\n\n" : ""}${t("quote")} ${q.quoteNumber ?? ""} — ${formatCurrency(q.total)}\n\n${t("viewAndRespond")}:\n${r.approvalUrl}`;

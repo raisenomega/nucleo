@@ -5,9 +5,9 @@ import { useI18n } from "@shared/i18n";
 // PDFs vía pdf-api (Railway) → Gotenberg. FALLBACK para los tipos AÚN NO migrados a client-side.
 // COEXISTENCIA (migración progresiva a @react-pdf/renderer): los tipos ya migrados NO usan este hook —
 // se generan client-side vía usePdfExport + su componente <XxxPdf/> (sin servidor, sin 403 de rol).
-// Ya migrados (PDF-1): income · expense · extraordinary · payroll · training · evaluation.
-// Pendientes (siguen por Railway): invoice · quote · report · reconciliation · lead · route · asset · asset_custody.
-export const MIGRATED_PDF_TYPES = ["income", "expense", "extraordinary", "payroll", "training", "evaluation"] as const;
+// Ya migrados: PDF-1 (income·expense·extraordinary·payroll·training·evaluation) + PDF-2 (invoice·quote·lead·report).
+// Pendientes (siguen por Railway): route · asset · asset_custody · reconciliation.
+export const MIGRATED_PDF_TYPES = ["income", "expense", "extraordinary", "payroll", "training", "evaluation", "invoice", "quote", "lead", "report"] as const;
 const API: string = import.meta.env.VITE_PDF_API_URL ?? "https://nucleo-production-ab48.up.railway.app";
 
 export type PdfState = "idle" | "generating" | "done" | "error";

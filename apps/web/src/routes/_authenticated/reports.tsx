@@ -4,7 +4,9 @@ import { useI18n } from "@shared/i18n";
 import type { TranslationKey } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { FileText } from "lucide-react";
-import { usePdf } from "@shared/hooks/usePdf";
+import { usePdfExport } from "@shared/hooks/usePdfExport";
+import { usePdfBrand } from "@shared/hooks/usePdfBrand";
+import { reportDoc } from "@finance/presentation/pdf/report-doc";
 import { useReports, type Period } from "@finance/application/useReports.hook";
 import { supabaseReportRepository } from "@finance/infrastructure/supabase-report.repository";
 import { buildReportBody } from "@finance/presentation/report-pdf";
@@ -32,9 +34,10 @@ function ReportsPage() {
   ];
   const active = tabs.some((x) => x.id === tab) ? tab : (tabs[0]?.id ?? "employees");
   const s = m.series;
-  const pdf = usePdf();
+  const { generating, exportPdf: runPdf } = usePdfExport();
+  const brand = usePdfBrand();
   const activeTitle = t(tabs.find((x) => x.id === active)?.k ?? "reports");
-  const exportPdf = () => { if (s) void pdf.generatePdf("report", null, buildReportBody(active, s, m.employees, m.range.from, m.range.to, activeTitle)); };
+  const exportPdf = () => { if (s) void runPdf(() => reportDoc(buildReportBody(active, s, m.employees, m.range.from, m.range.to, activeTitle), brand)); };
   return (
     <div className="space-y-6 p-4 md:p-8">
       <div className="space-y-2">
@@ -49,9 +52,9 @@ function ReportsPage() {
       <div className="flex flex-wrap items-center gap-2 border-b border-border">{tabs.map((x) => (
         <button key={x.id} type="button" onClick={() => setTab(x.id)}
           className={`px-3 py-2 text-sm font-bold ${active === x.id ? "border-b-2 border-foreground text-foreground" : "text-muted-foreground"}`}>{t(x.k)}</button>))}
-        <button type="button" onClick={exportPdf} disabled={pdf.generating || !s}
+        <button type="button" onClick={exportPdf} disabled={generating || !s}
           className="ml-auto flex items-center gap-1 rounded-lg bg-secondary px-3 py-1.5 text-xs font-bold disabled:opacity-50">
-          <FileText className="h-4 w-4" /> {pdf.generating ? t("generatingPdf") : t("exportPdf")}</button></div>
+          <FileText className="h-4 w-4" /> {generating ? t("generatingPdf") : t("exportPdf")}</button></div>
       {!s ? <p className="text-sm text-muted-foreground">{t("noData")}</p> : (
         <>{active === "sales" && <ReportSalesTab s={s} />}
           {active === "employees" && <ReportEmployeesTab emp={m.employees} />}

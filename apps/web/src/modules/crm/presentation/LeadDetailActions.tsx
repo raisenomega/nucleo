@@ -2,25 +2,29 @@ import { Archive, Copy, Pencil, Receipt, FileText, FileDown } from "lucide-react
 import { useNavigate } from "@tanstack/react-router";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
-import { usePdf } from "@shared/hooks/usePdf";
+import { usePdfExport } from "@shared/hooks/usePdfExport";
+import { usePdfBrand } from "@shared/hooks/usePdfBrand";
+import { leadDoc } from "@crm/presentation/pdf/lead-pdf";
 import { supabaseInvoiceRepository } from "@billing/infrastructure/supabase-invoice.repository";
 import { supabaseQuoteRepository } from "@quotes/infrastructure/supabase-quote.repository";
+import type { Lead } from "@crm/domain/lead.types";
 
 // Acciones del header del detalle, gateadas por module_access (leads). Cotizar/Factura generan docs reales desde los items.
-export function LeadDetailActions({ leadId, onEdit, onDuplicate, onArchive }: {
-  leadId: string; onEdit: () => void; onDuplicate: () => void; onArchive: () => void;
+export function LeadDetailActions({ lead, onEdit, onDuplicate, onArchive }: {
+  lead: Lead; onEdit: () => void; onDuplicate: () => void; onArchive: () => void;
 }) {
   const { t } = useI18n();
   const { can } = useModuleAccess();
   const nav = useNavigate();
-  const pdf = usePdf();
+  const { generating, exportPdf } = usePdfExport();
+  const brand = usePdfBrand();
   const edit = can("leads", "edit"), create = can("leads", "create"), docs = can("leads", "documents");
   async function quote() {
-    const id = await supabaseQuoteRepository.fromLead(leadId);
+    const id = await supabaseQuoteRepository.fromLead(lead.id);
     if (id) void nav({ to: "/quotes" }); else window.alert(t("requiredFields"));
   }
   async function invoice() {
-    const id = await supabaseInvoiceRepository.fromLead(leadId);
+    const id = await supabaseInvoiceRepository.fromLead(lead.id);
     if (id) void nav({ to: "/billing" }); else window.alert(t("requiredFields"));
   }
   const b = "flex items-center gap-1 rounded-lg bg-secondary px-2 py-1 text-xs font-body hover:bg-primary hover:text-primary-foreground";
@@ -31,7 +35,7 @@ export function LeadDetailActions({ leadId, onEdit, onDuplicate, onArchive }: {
       {edit && <button type="button" onClick={onArchive} className={b}><Archive className="h-3 w-3" /> {t("archive")}</button>}
       {docs && <button type="button" onClick={() => void quote()} className={b}><FileText className="h-3 w-3" /> {t("quote")}</button>}
       {docs && <button type="button" onClick={() => void invoice()} className={b}><Receipt className="h-3 w-3" /> {t("invoice")}</button>}
-      {docs && <button type="button" disabled={pdf.generating} onClick={() => void pdf.generatePdf("lead", leadId)} className={`${b} disabled:opacity-50`}><FileDown className="h-3 w-3" /> {pdf.generating ? t("generatingPdf") : "PDF"}</button>}
+      {docs && <button type="button" disabled={generating} onClick={() => void exportPdf(() => leadDoc(lead, brand, t))} className={`${b} disabled:opacity-50`}><FileDown className="h-3 w-3" /> {generating ? t("generatingPdf") : "PDF"}</button>}
     </div>
   );
 }

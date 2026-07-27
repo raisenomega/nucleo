@@ -14,4 +14,6 @@ export const enPdf = {
   docCertificate: "CERTIFICATE", certTitle: "TRAINING CERTIFICATE", certCertifies: "certifies that",
   certCompleted: "successfully completed the course", certAuthorized: "Authorized signature",
   evalDocTitle: "PERFORMANCE EVALUATION", evalProbation: "In probationary period", criterion: "Criterion", evalLegalTitle: "Requires legal validation (Act 80)",
+  docLead: "LEAD SHEET", wmDraft: "DRAFT", wmPaid: "PAID", wmVoided: "VOIDED", wmOverdue: "OVERDUE",
+  wmAccepted: "APPROVED", wmRejected: "REJECTED", wmExpired: "EXPIRED",
 } satisfies Partial<Record<TranslationKey, string>>;

@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { X, MessageCircle, Ban, FileDown, DollarSign, Boxes } from "lucide-react";
 import { useI18n } from "@shared/i18n";
-import { usePdf } from "@shared/hooks/usePdf";
+import { usePdfExport } from "@shared/hooks/usePdfExport";
+import { usePdfBrand } from "@shared/hooks/usePdfBrand";
+import { invoiceDoc } from "@billing/presentation/pdf/invoice-pdf";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { formatCurrency } from "@shared/lib/format";
 import { ScreenModal } from "@shared/components/ScreenModal";
@@ -20,7 +22,7 @@ const wa = (i: Invoice, msg: string) => `https://wa.me/${(i.phone ?? "").replace
 export function InvoiceDetail({ inv, canManage, onChanged, onCancel, onClose }: {
   inv: Invoice; canManage: boolean; onChanged: () => void; onCancel: () => void; onClose: () => void;
 }) {
-  const { t } = useI18n(); const pdf = usePdf(); const { can } = useModuleAccess();
+  const { t } = useI18n(); const { generating, exportPdf } = usePdfExport(); const brand = usePdfBrand(); const { can } = useModuleAccess();
   const pay = useInvoicePayments(inv.id); const [paying, setPaying] = useState(false); const [drillProduct, setDrillProduct] = useState<string | null>(null);
   const paid = pay.payments.reduce((s, p) => s + p.amount, 0);
   const balance = Math.round((inv.total - paid) * 100) / 100;
@@ -50,7 +52,7 @@ export function InvoiceDetail({ inv, canManage, onChanged, onCancel, onClose }: 
         </div>
         <PaymentHistory payments={pay.payments} canVoid={canManage} onVoid={voidP} />
         <div className="flex flex-wrap gap-2">
-          <button type="button" disabled={pdf.generating} onClick={() => void pdf.generatePdf("invoice", inv.id)} className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-sm font-bold disabled:opacity-50"><FileDown className="h-4 w-4" /> {pdf.generating ? t("generatingPdf") : t("downloadPdf")}</button>
+          <button type="button" disabled={generating} onClick={() => void exportPdf(() => invoiceDoc(inv, st, paid, balance, brand, t))} className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-sm font-bold disabled:opacity-50"><FileDown className="h-4 w-4" /> {generating ? t("generatingPdf") : t("downloadPdf")}</button>
           {inv.phone && <a href={wa(inv, msg)} target="_blank" rel="noreferrer" className="flex items-center gap-1 rounded-lg bg-green-600 px-3 py-2 text-sm font-bold text-white"><MessageCircle className="h-4 w-4" /> {t("whatsapp")}</a>}
           {canManage && balance > 0.01 && st !== "cancelled" && <button type="button" onClick={() => setPaying(true)} className="flex items-center gap-1 rounded-lg bg-primary px-3 py-2 text-sm font-bold text-primary-foreground"><DollarSign className="h-4 w-4" /> Registrar pago</button>}
           {canManage && st !== "cancelled" && st !== "paid" && <button type="button" onClick={onCancel} className="flex items-center gap-1 rounded-lg bg-destructive px-3 py-2 text-sm font-bold text-white"><Ban className="h-4 w-4" /> {t("cancel")}</button>}

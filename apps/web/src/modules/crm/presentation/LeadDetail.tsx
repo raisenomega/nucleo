@@ -38,7 +38,7 @@ export function LeadDetail({ lead, onClose, onEdit, onDuplicate, onArchive }: {
           <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button>
         </div>
         <div className="space-y-3 p-4 md:p-6">
-          <LeadDetailActions leadId={lead.id} onEdit={onEdit} onDuplicate={onDuplicate} onArchive={onArchive} />
+          <LeadDetailActions lead={lead} onEdit={onEdit} onDuplicate={onDuplicate} onArchive={onArchive} />
           {lead.customerId && <LinkedCustomerBadge customerId={lead.customerId} name="Cliente en el maestro ↗" className="text-sm font-bold text-green-600" />}
           <AttributionSection attribution={lead.attribution} fromCampaign={!!lead.campaignPageId} />
           <dl className="space-y-1 font-body text-sm">

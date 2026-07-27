@@ -14,4 +14,6 @@ export const esPdf = {
   docCertificate: "CERTIFICADO", certTitle: "CERTIFICADO DE CAPACITACIÓN", certCertifies: "certifica que",
   certCompleted: "completó satisfactoriamente el curso", certAuthorized: "Firma autorizada",
   evalDocTitle: "EVALUACIÓN DE DESEMPEÑO", evalProbation: "En período probatorio", criterion: "Criterio", evalLegalTitle: "Requiere validación legal (Ley 80)",
+  docLead: "FICHA DE LEAD", wmDraft: "BORRADOR", wmPaid: "PAGADA", wmVoided: "ANULADA", wmOverdue: "VENCIDA",
+  wmAccepted: "APROBADA", wmRejected: "RECHAZADA", wmExpired: "EXPIRADA",
 } satisfies Partial<Record<TranslationKey, string>>;

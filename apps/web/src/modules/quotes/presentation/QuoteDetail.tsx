@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { X, Send, FileOutput, Check, Ban, FileDown, Pencil } from "lucide-react";
 import { useI18n } from "@shared/i18n";
-import { usePdf } from "@shared/hooks/usePdf";
+import { usePdfExport } from "@shared/hooks/usePdfExport";
+import { usePdfBrand } from "@shared/hooks/usePdfBrand";
+import { quoteDoc } from "@quotes/presentation/pdf/quote-pdf";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { formatCurrency } from "@shared/lib/format";
 import { ScreenModal } from "@shared/components/ScreenModal";
@@ -15,7 +17,7 @@ import type { Quote, QuoteStatus } from "@quotes/domain/quote.types";
 export function QuoteDetail({ quote, canManage, onStatus, onConvert, onEdit, onSend, onClose }: {
   quote: Quote; canManage: boolean; onStatus: (s: QuoteStatus) => void; onConvert: () => void; onEdit: () => void; onSend: () => void; onClose: () => void;
 }) {
-  const { t } = useI18n(); const pdf = usePdf(); const { can } = useModuleAccess();
+  const { t } = useI18n(); const { generating, exportPdf } = usePdfExport(); const brand = usePdfBrand(); const { can } = useModuleAccess();
   const [drill, setDrill] = useState<string | null>(null);
   const q = quote;
   const open = q.status === "draft" || q.status === "sent" || q.status === "viewed";
@@ -38,8 +40,8 @@ export function QuoteDetail({ quote, canManage, onStatus, onConvert, onEdit, onS
         {q.validUntil && <p className="text-sm"><span className="font-bold">{t("validUntil")}: </span>{q.validUntil}</p>}
         {q.terms && <p className="text-xs text-muted-foreground"><span className="font-bold">{t("terms")}: </span>{q.terms}</p>}
         <div className="flex flex-wrap gap-2">
-          <button type="button" disabled={pdf.generating} onClick={() => void pdf.generatePdf("quote", q.id)}
-            className={`${btn} bg-secondary disabled:opacity-50`}><FileDown className="h-4 w-4" /> {pdf.generating ? t("generatingPdf") : t("downloadPdf")}</button>
+          <button type="button" disabled={generating} onClick={() => void exportPdf(() => quoteDoc(q, brand, t))}
+            className={`${btn} bg-secondary disabled:opacity-50`}><FileDown className="h-4 w-4" /> {generating ? t("generatingPdf") : t("downloadPdf")}</button>
           {canManage && open && <button type="button" onClick={onSend} className={`${btn} bg-green-600 text-white`}><Send className="h-4 w-4" /> {resend ? t("resendQuote") : t("sendQuote")}</button>}
           {canManage && open && <button type="button" onClick={onEdit} className={`${btn} bg-secondary`}><Pencil className="h-4 w-4" /> {t("edit")}</button>}
           {canManage && q.status === "accepted" && <button type="button" onClick={onConvert} className={`${btn} bg-primary text-primary-foreground`}><FileOutput className="h-4 w-4" /> {t("convertToInvoice")}</button>}

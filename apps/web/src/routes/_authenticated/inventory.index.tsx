@@ -4,7 +4,9 @@ import { Plus, FileText, Ruler, ScanBarcode, ClipboardCheck, Warehouse } from "l
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { useSession } from "@shared/providers/SessionProvider";
-import { usePdf } from "@shared/hooks/usePdf";
+import { usePdfExport } from "@shared/hooks/usePdfExport";
+import { usePdfBrand } from "@shared/hooks/usePdfBrand";
+import { reportDoc } from "@finance/presentation/pdf/report-doc";
 import { useInventory } from "@fieldops/application/useInventory.hook";
 import { useSuppliers } from "@fieldops/application/useSuppliers.hook";
 import { useInventoryAnalytics } from "@fieldops/application/useInventoryAnalytics.hook";
@@ -24,13 +26,11 @@ import type { InventoryFormData, LandingProductRef } from "@fieldops/domain/inve
 export const Route = createFileRoute("/_authenticated/inventory/")({ component: InventoryPage });
 
 function InventoryPage() {
-  const { t } = useI18n();
-  const { can } = useModuleAccess();
-  const { session } = useSession();
+  const { t } = useI18n(); const { can } = useModuleAccess(); const { session } = useSession();
   const inv = useInventory(supabaseInventoryRepository);
   const sup = useSuppliers(supabaseSupplierRepository);
   const { movs, slow, high, now } = useInventoryAnalytics(inv.items);
-  const pdf = usePdf();
+  const { generating, exportPdf } = usePdfExport(); const brand = usePdfBrand();
   const [editing, setEditing] = useState<string | null>(null);
   const [landing, setLanding] = useState<LandingProductRef[]>([]);
   const [filter, setFilter] = useState<InvFilter>("all");
@@ -59,7 +59,7 @@ function InventoryPage() {
           <button type="button" onClick={() => { setScannedId(null); setScan(true); }} className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold" title={t("scanBarcode")}><ScanBarcode className="h-4 w-4" /> <span className="hidden md:inline">{t("scanBarcode")}</span></button>
           <Link to="/inventory/counts" className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold" title={t("cyclicCount")}><ClipboardCheck className="h-4 w-4" /> <span className="hidden md:inline">{t("cyclicCount")}</span></Link>
           {can("inventory", "edit") && <button type="button" onClick={() => setManageWh(true)} className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold" title={t("warehouseManager")}><Warehouse className="h-4 w-4" /> <span className="hidden md:inline">{t("warehouses")}</span></button>}{can("inventory", "edit") && <button type="button" onClick={() => setManageUom(true)} className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold" title={t("manageUnits")}><Ruler className="h-4 w-4" /> <span className="hidden md:inline">{t("manageUnits")}</span></button>}
-          <button type="button" disabled={pdf.generating || !items.length} onClick={async () => pdf.generatePdf("report", null, await inventoryReportBody(items, movs, sup.items, now, t))} className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold disabled:opacity-50"><FileText className="h-4 w-4" /> {pdf.generating ? t("generatingPdf") : t("inventoryReport")}</button>
+          <button type="button" disabled={generating || !items.length} onClick={() => void exportPdf(async () => reportDoc(await inventoryReportBody(items, movs, sup.items, now, t), brand))} className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold disabled:opacity-50"><FileText className="h-4 w-4" /> {generating ? t("generatingPdf") : t("inventoryReport")}</button>
           {can("inventory", "create") && <button type="button" onClick={() => { setScanBc(undefined); setEditing("new"); }} className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-body font-bold"><Plus className="h-4 w-4" /> {t("newItem")}</button>}
         </div>
       </div>
