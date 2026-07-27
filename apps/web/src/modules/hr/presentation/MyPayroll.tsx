@@ -5,7 +5,7 @@ import { MyPayrollDetail } from "@hr/presentation/MyPayrollDetail";
 import type { MyPayStub } from "@hr/domain/portal.types";
 
 // Mis recibos de pago (RLS payroll self). Resumen anual + detalle. Sin costo patronal.
-export function MyPayroll() {
+export function MyPayroll({ employeeName }: { employeeName: string }) {
   const { t } = useI18n();
   const [stubs, setStubs] = useState<MyPayStub[]>([]);
   const [view, setView] = useState<MyPayStub | null>(null);
@@ -31,7 +31,7 @@ export function MyPayroll() {
               <td className="p-2 font-bold">{money(s.net)}</td>
               <td className="p-2 text-right"><button type="button" onClick={() => setView(s)} className="text-xs font-bold text-primary">{t("view")}</button></td></tr>))}</tbody>
         </table>)}
-      {view && <MyPayrollDetail stub={view} onClose={() => setView(null)} />}
+      {view && <MyPayrollDetail stub={view} employeeName={employeeName} onClose={() => setView(null)} />}
     </div>
   );
 }

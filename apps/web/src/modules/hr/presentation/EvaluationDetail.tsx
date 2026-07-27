@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { X, AlertTriangle, FileDown } from "lucide-react";
-import { usePdf } from "@shared/hooks/usePdf";
+import { usePdfExport } from "@shared/hooks/usePdfExport";
+import { usePdfBrand } from "@shared/hooks/usePdfBrand";
+import { evaluationDoc } from "@hr/presentation/pdf/hr-pdf-docs";
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart, ResponsiveContainer } from "recharts";
 import { useI18n } from "@shared/i18n";
 import { ScreenModal } from "@shared/components/ScreenModal";
@@ -17,7 +19,7 @@ import type { EvaluationDetail as ED } from "@hr/domain/evaluation.types";
 // Detalle: radar + composite + Ley 80 + notas + observaciones + feedback del empleado (contexto para el evaluador).
 export function EvaluationDetail({ ev, onClose }: { ev: ED; onClose: () => void }) {
   const { t } = useI18n();
-  const pdf = usePdf();
+  const { generating, exportPdf } = usePdfExport(); const brand = usePdfBrand();
   const data = ev.scores.map((s) => ({ criterion: s.label, score: s.score }));
   const [obs, setObs] = useState<Observation[]>([]);
   const [fb, setFb] = useState<Feedback[]>([]);
@@ -33,21 +35,19 @@ export function EvaluationDetail({ ev, onClose }: { ev: ED; onClose: () => void 
       <div className="flex items-center justify-between border-b border-border p-4">
         <h2 className="font-display text-lg font-bold text-foreground">{ev.employeeName} — {ev.period}</h2>
         <div className="flex items-center gap-3">
-          <button type="button" disabled={pdf.generating} onClick={() => void pdf.generatePdf("evaluation", ev.id)} aria-label={t("downloadPdf")} className="text-muted-foreground hover:text-foreground disabled:opacity-50"><FileDown className="h-5 w-5" /></button>
+          <button type="button" disabled={generating} onClick={() => void exportPdf(() => evaluationDoc(ev, brand, t))} aria-label={t("downloadPdf")} className="text-muted-foreground hover:text-foreground disabled:opacity-50"><FileDown className="h-5 w-5" /></button>
           <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button></div>
       </div>
       <div className="space-y-4 p-4">
         <div className={`flex items-center justify-between rounded-lg p-3 ${ev.classification ? CLASS_COLOR[ev.classification] : "bg-secondary"}`}>
-          <span className="text-2xl font-bold">{ev.compositeScore.toFixed(2)}</span>
-          <span className="font-bold">{ev.classification ? t(CLASS_KEY[ev.classification]) : ev.status}</span></div>
+          <span className="text-2xl font-bold">{ev.compositeScore.toFixed(2)}</span><span className="font-bold">{ev.classification ? t(CLASS_KEY[ev.classification]) : ev.status}</span></div>
         {ev.requiresLegalValidation && (
           <div className="flex gap-2 rounded-lg bg-red-50 dark:bg-red-500/15 p-3 text-sm text-red-700 dark:text-red-300">
             <AlertTriangle className="h-5 w-5 shrink-0" /><span>{t("legalWarning")}</span></div>)}
         {trPct != null && <p className="text-sm text-muted-foreground">{t("trainingPct")}: <span className="font-bold text-foreground">{trPct}%</span></p>}
         {data.length > 0 && (
           <ResponsiveContainer width="100%" height={260}>
-            <RadarChart data={data}><PolarGrid /><PolarAngleAxis dataKey="criterion" tick={{ fontSize: 11 }} />
-              <Radar dataKey="score" stroke="hsl(38 85% 55%)" fill="hsl(38 85% 55%)" fillOpacity={0.5} /></RadarChart>
+            <RadarChart data={data}><PolarGrid /><PolarAngleAxis dataKey="criterion" tick={{ fontSize: 11 }} /><Radar dataKey="score" stroke="hsl(38 85% 55%)" fill="hsl(38 85% 55%)" fillOpacity={0.5} /></RadarChart>
           </ResponsiveContainer>)}
         {ev.notes && <div className="rounded-lg bg-secondary p-3 text-sm"><span className="font-bold">{t("notes")}: </span>{ev.notes}</div>}
         {obs.length > 0 && (

@@ -1,7 +1,9 @@
 import { X, FileDown } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
-import { usePdf } from "@shared/hooks/usePdf";
+import { usePdfExport } from "@shared/hooks/usePdfExport";
+import { usePdfBrand } from "@shared/hooks/usePdfBrand";
+import { payslipDoc } from "@finance/presentation/pdf/finance-pdf-docs";
 import { formatCurrency } from "@shared/lib/format";
 import { ScreenModal } from "@shared/components/ScreenModal";
 import { EXTERNAL_TYPE_LABEL } from "@finance/presentation/ExternalWorkerForm";
@@ -15,7 +17,9 @@ export function ExternalWorkerDetail({ worker, payments, onClose }: {
 }) {
   const { t } = useI18n();
   const { can } = useModuleAccess();
-  const pdf = usePdf();
+  const { generating, exportPdf } = usePdfExport();
+  const brand = usePdfBrand();
+  const slip = (p: Payroll) => payslipDoc({ employeeName: p.employeeName || worker.fullName, period: p.period, grossSalary: p.grossSalary || p.amount, netSalary: p.netSalary || p.grossSalary || p.amount, deductions: p.deductionsEmployee.map((d) => ({ label: d.label, amount: d.amount })) }, brand, t);
   const money = can("payroll", "salary");
   const total = payments.reduce((s, p) => s + (p.grossSalary || p.amount), 0);
   const fields: [TranslationKey, string][] = [
@@ -42,8 +46,8 @@ export function ExternalWorkerDetail({ worker, payments, onClose }: {
           {payments.map((p) => (
             <div key={p.id} className="flex flex-wrap items-center justify-between gap-2 border-t border-border pt-2">
               <span>{p.date} · {p.paymentMethodLabel}{money && ` · ${formatCurrency(p.grossSalary || p.amount)}`}</span>
-              {money && <button type="button" disabled={pdf.generating} onClick={() => void pdf.generatePdf("payroll", p.id)}
-                className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-sm font-bold disabled:opacity-50"><FileDown className="h-4 w-4" /> {pdf.generating ? t("generatingPdf") : t("payslipPdf")}</button>}
+              {money && <button type="button" disabled={generating} onClick={() => void exportPdf(() => slip(p))}
+                className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-sm font-bold disabled:opacity-50"><FileDown className="h-4 w-4" /> {generating ? t("generatingPdf") : t("payslipPdf")}</button>}
             </div>
           ))}
         </div>

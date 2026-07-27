@@ -38,7 +38,7 @@ function EmployeePortal() {
       </div>
       {tab === "overview" && <PortalSummary name={m.details?.fullName ?? ""} userId={userId} summary={m.summary} onGo={setTab} />}
       {tab === "profile" && m.details && <MyProfile details={m.details} onSave={m.updateDetails} />}
-      {tab === "payroll" && <MyPayroll />}
+      {tab === "payroll" && <MyPayroll employeeName={m.details?.fullName ?? ""} />}
       {tab === "evaluations" && <MyEvaluations userId={userId} />}
       {tab === "leave" && <MyLeave userId={userId} />}
       {tab === "training" && <MyTraining />}

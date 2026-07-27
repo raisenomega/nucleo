@@ -2,8 +2,12 @@ import { useState } from "react";
 import { supabase } from "@shared/lib/supabase";
 import { useI18n } from "@shared/i18n";
 
-// PDFs reales vía pdf-api (Railway) → Gotenberg. El JWT del usuario viaja en Authorization;
-// el tenant lo resuelve el servicio desde el token verificado (nunca del body).
+// PDFs vía pdf-api (Railway) → Gotenberg. FALLBACK para los tipos AÚN NO migrados a client-side.
+// COEXISTENCIA (migración progresiva a @react-pdf/renderer): los tipos ya migrados NO usan este hook —
+// se generan client-side vía usePdfExport + su componente <XxxPdf/> (sin servidor, sin 403 de rol).
+// Ya migrados (PDF-1): income · expense · extraordinary · payroll · training · evaluation.
+// Pendientes (siguen por Railway): invoice · quote · report · reconciliation · lead · route · asset · asset_custody.
+export const MIGRATED_PDF_TYPES = ["income", "expense", "extraordinary", "payroll", "training", "evaluation"] as const;
 const API: string = import.meta.env.VITE_PDF_API_URL ?? "https://nucleo-production-ab48.up.railway.app";
 
 export type PdfState = "idle" | "generating" | "done" | "error";

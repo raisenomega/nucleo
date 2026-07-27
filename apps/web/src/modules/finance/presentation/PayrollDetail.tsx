@@ -3,7 +3,9 @@ import { PhotoLightbox } from "@shared/components/PhotoLightbox";
 import { X, FileDown } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
-import { usePdf } from "@shared/hooks/usePdf";
+import { usePdfExport } from "@shared/hooks/usePdfExport";
+import { usePdfBrand } from "@shared/hooks/usePdfBrand";
+import { payslipDoc } from "@finance/presentation/pdf/finance-pdf-docs";
 import { formatCurrency } from "@shared/lib/format";
 import { ScreenModal } from "@shared/components/ScreenModal";
 import { signEvidence } from "@finance/infrastructure/supabase-evidence.storage";
@@ -12,7 +14,9 @@ import type { Payroll } from "@finance/domain/payroll.types";
 export function PayrollDetail({ item, onClose }: { item: Payroll; onClose: () => void }) {
   const { t } = useI18n();
   const { can } = useModuleAccess();
-  const pdf = usePdf();
+  const { generating, exportPdf } = usePdfExport();
+  const brand = usePdfBrand();
+  const payslip = () => payslipDoc({ employeeName: item.employeeName, period: item.period, grossSalary: item.grossSalary, netSalary: item.netSalary, deductions: item.deductionsEmployee.map((d) => ({ label: d.label, amount: d.amount })) }, brand, t);
   const [urls, setUrls] = useState<string[]>([]);
   const [photo, setPhoto] = useState<string | null>(null);
   useEffect(() => { void signEvidence(item.evidenceUrls).then(setUrls); }, [item]);
@@ -51,9 +55,9 @@ export function PayrollDetail({ item, onClose }: { item: Payroll; onClose: () =>
             </div>
           )}
           {can("payroll", "salary") && (
-            <button type="button" disabled={pdf.generating} onClick={() => void pdf.generatePdf("payroll", item.id)}
+            <button type="button" disabled={generating} onClick={() => void exportPdf(payslip)}
               className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-sm font-bold disabled:opacity-50">
-              <FileDown className="h-4 w-4" /> {pdf.generating ? t("generatingPdf") : t("payslipPdf")}</button>
+              <FileDown className="h-4 w-4" /> {generating ? t("generatingPdf") : t("payslipPdf")}</button>
           )}
         </div>
       </ScreenModal>

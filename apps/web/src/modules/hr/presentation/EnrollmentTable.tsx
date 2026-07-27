@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { AlertTriangle, Check, Trash2, FileDown, BookOpen } from "lucide-react";
 import { useI18n } from "@shared/i18n";
-import { usePdf } from "@shared/hooks/usePdf";
+import { usePdfExport } from "@shared/hooks/usePdfExport";
+import { usePdfBrand } from "@shared/hooks/usePdfBrand";
+import { certificateDoc } from "@hr/presentation/pdf/hr-pdf-docs";
 import { MobileCard } from "@shared/components/MobileCard";
 import { Pagination } from "@shared/components/Pagination";
 import { ENROLL_KEY, ENROLL_COLOR } from "@hr/presentation/tr-ui";
@@ -13,7 +15,9 @@ export function EnrollmentTable({ rows, onComplete, onDelete, onMaterials }: {
   onMaterials?: (courseId: string, courseTitle: string) => void;
 }) {
   const { t } = useI18n();
-  const pdf = usePdf();
+  const { generating, exportPdf } = usePdfExport();
+  const brand = usePdfBrand();
+  const cert = (e: Enrollment) => certificateDoc({ employeeName: e.employeeName, courseName: e.courseTitle, completedAt: (e.completedAt ?? "").slice(0, 10), score: e.score }, brand, t);
   const [page, setPage] = useState(1);
   if (rows.length === 0) return <p className="text-sm text-muted-foreground">{t("noRecords")}</p>;
   const visible = rows.slice((page - 1) * 12, page * 12);
@@ -23,7 +27,7 @@ export function EnrollmentTable({ rows, onComplete, onDelete, onMaterials }: {
     <div className="flex justify-end gap-2">
       {onMaterials && <button type="button" onClick={() => onMaterials(e.courseId, e.courseTitle)} aria-label={t("courseMaterials")} title={t("courseMaterials")} className="text-foreground"><BookOpen className="h-4 w-4" /></button>}
       {onComplete && e.status !== "completed" && <button type="button" onClick={() => onComplete(e.id)} aria-label={t("markComplete")} className="text-green-600"><Check className="h-4 w-4" /></button>}
-      {e.status === "completed" && <button type="button" disabled={pdf.generating} onClick={() => void pdf.generatePdf("training", e.id)} aria-label={t("certificatePdf")} title={t("certificatePdf")} className="text-foreground disabled:opacity-50"><FileDown className="h-4 w-4" /></button>}
+      {e.status === "completed" && <button type="button" disabled={generating} onClick={() => void exportPdf(() => cert(e))} aria-label={t("certificatePdf")} title={t("certificatePdf")} className="text-foreground disabled:opacity-50"><FileDown className="h-4 w-4" /></button>}
       {onDelete && <button type="button" onClick={() => onDelete(e.id)} aria-label={t("delete")} className="text-destructive"><Trash2 className="h-4 w-4" /></button>}
     </div>);
   return (
