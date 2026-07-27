@@ -1,0 +1,22 @@
+import type { TranslationKey } from "./translations.keys";
+
+// Recruitment dictionary (RRHH-1A). Merged into translations.ts.
+export const enRecruitment = {
+  recruitment: "Recruitment", jobPositions: "Positions", jobOpenings: "Openings", pipeline: "Pipeline",
+  createPosition: "New position", editPosition: "Edit position", createOpening: "New opening",
+  publishOpening: "Publish", closeOpening: "Close", jobTitle: "Job title", employmentType: "Employment type",
+  salary: "Salary", positionsCount: "Slots", salaryMin: "Min. salary", salaryMax: "Max. salary", remote: "Remote",
+  requirements: "Requirements", requiredDocuments: "Required documents", skills: "Skills", responsibilities: "Responsibilities",
+  vacancyNumber: "No.", candidateCount: "Candidates", copyLink: "Copy link", linkCopied: "Link copied",
+  closingDate: "Closing date", customQuestions: "Additional questions", advance: "Advance", hireApplicant: "Hire",
+  score: "Score", daysUnit: "days", confirmHire: "Hire this candidate? An invitation will be emailed to them.",
+  applicantHired: "Candidate hired. Invitation sent.", coverLetter: "Cover letter",
+  applyNow: "Submit application", thankYouForApplying: "Thanks for applying!", applicationSent: "We'll contact you by email.",
+  positionClosed: "This opening is no longer available.", loading: "Loading…", fullName: "Full name",
+  stateField: "State", zipCode: "ZIP code",
+  applied: "Applied", screening: "Screening", exams: "Exams", interview: "Interview", offer: "Offer",
+  hired: "Hired", rejected: "Rejected", withdrawn: "Withdrawn",
+  osDraft: "Draft", osPublished: "Published", osPaused: "Paused", osClosed: "Closed", osFilled: "Filled",
+  fullTime: "Full-time", partTime: "Part-time", contract: "Contract", temporary: "Temporary", intern: "Intern",
+  salaryHourly: "Hourly", salarySalary: "Salary", salaryCommission: "Commission", salaryMixed: "Mixed", schedule: "Schedule",
+} satisfies Partial<Record<TranslationKey, string>>;
