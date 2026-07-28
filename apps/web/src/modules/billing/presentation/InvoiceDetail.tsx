@@ -2,10 +2,9 @@ import { useState } from "react";
 import { X, MessageCircle, Ban, FileDown, DollarSign, Boxes } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { usePdfExport } from "@shared/hooks/usePdfExport";
-import { usePdfShare } from "@shared/hooks/usePdfShare";
 import { usePdfBrand } from "@shared/hooks/usePdfBrand";
 import { invoiceDoc } from "@billing/presentation/pdf/invoice-pdf";
-import { supabaseInvoiceRepository } from "@billing/infrastructure/supabase-invoice.repository";
+import { getInvoiceShareUrl, markInvoiceSent } from "@billing/infrastructure/supabase-invoice-share.repository";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { formatCurrency } from "@shared/lib/format";
 import { ScreenModal } from "@shared/components/ScreenModal";
@@ -24,7 +23,7 @@ const wa = (i: Invoice, msg: string) => `https://wa.me/${(i.phone ?? "").replace
 export function InvoiceDetail({ inv, canManage, onChanged, onCancel, onClose }: {
   inv: Invoice; canManage: boolean; onChanged: () => void; onCancel: () => void; onClose: () => void;
 }) {
-  const { t } = useI18n(); const { generating, exportPdf } = usePdfExport(); const { sharing, sharePdf } = usePdfShare(); const brand = usePdfBrand(); const { can } = useModuleAccess();
+  const { t } = useI18n(); const { generating, exportPdf } = usePdfExport(); const brand = usePdfBrand(); const { can } = useModuleAccess();
   const pay = useInvoicePayments(inv.id); const [paying, setPaying] = useState(false); const [drillProduct, setDrillProduct] = useState<string | null>(null);
   const paid = pay.payments.reduce((s, p) => s + p.amount, 0);
   const balance = Math.round((inv.total - paid) * 100) / 100;
@@ -32,13 +31,14 @@ export function InvoiceDetail({ inv, canManage, onChanged, onCancel, onClose }: 
   const after = (e: string | null) => { if (e) window.alert(e); else onChanged(); };
   const voidP = (id: string) => { const r = window.prompt("Motivo de la anulación (mín. 3):"); if (r) void pay.void(id, r).then(after); };
   const msg = `${t("invoice")} ${inv.invoiceNumber ?? ""} — ${formatCurrency(inv.total)}`;
-  // WhatsApp con PDF adjunto: si es borrador → confirma, genera SIN watermark (status 'sent'), sube y pasa a 'sent'.
+  // WhatsApp: linkea a la página pública branded /factura/{token} (preview del dominio del tenant, no URL cruda).
+  // Si es borrador → confirma y pasa a 'sent' (dispara el posting GL) ANTES de abrir WhatsApp.
   async function waSend() {
     const draft = inv.status === "draft";
     if (draft && !window.confirm(t("sendDraftConfirm"))) return;
-    const url = await sharePdf(() => invoiceDoc(inv, draft ? "sent" : st, paid, balance, brand, t), `invoice/${inv.id}-${Date.now()}.pdf`);
-    if (draft) { await supabaseInvoiceRepository.setStatus(inv.id, "sent"); onChanged(); }
-    window.open(wa(inv, `${msg}${url ? `\n${url}` : ""}`), "_blank", "noopener");
+    if (draft) { await markInvoiceSent(inv.id); onChanged(); }
+    const url = await getInvoiceShareUrl(inv.id);
+    window.open(wa(inv, `${msg}${url ? `\n${t("viewInvoice")}: ${url}` : ""}`), "_blank", "noopener");
   }
   return (
     <ScreenModal onClose={onClose}>
@@ -63,7 +63,7 @@ export function InvoiceDetail({ inv, canManage, onChanged, onCancel, onClose }: 
         <PaymentHistory payments={pay.payments} canVoid={canManage} onVoid={voidP} />
         <div className="flex flex-wrap gap-2">
           <button type="button" disabled={generating} onClick={() => void exportPdf(() => invoiceDoc(inv, st, paid, balance, brand, t))} className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-sm font-bold disabled:opacity-50"><FileDown className="h-4 w-4" /> {generating ? t("generatingPdf") : t("downloadPdf")}</button>
-          {inv.phone && <button type="button" disabled={sharing} onClick={() => void waSend()} className="flex items-center gap-1 rounded-lg bg-green-600 px-3 py-2 text-sm font-bold text-white disabled:opacity-50"><MessageCircle className="h-4 w-4" /> {sharing ? t("generatingPdf") : t("whatsapp")}</button>}
+          {inv.phone && <button type="button" onClick={() => void waSend()} className="flex items-center gap-1 rounded-lg bg-green-600 px-3 py-2 text-sm font-bold text-white"><MessageCircle className="h-4 w-4" /> {t("whatsapp")}</button>}
           {canManage && balance > 0.01 && st !== "cancelled" && <button type="button" onClick={() => setPaying(true)} className="flex items-center gap-1 rounded-lg bg-primary px-3 py-2 text-sm font-bold text-primary-foreground"><DollarSign className="h-4 w-4" /> Registrar pago</button>}
           {canManage && st !== "cancelled" && st !== "paid" && <button type="button" onClick={onCancel} className="flex items-center gap-1 rounded-lg bg-destructive px-3 py-2 text-sm font-bold text-white"><Ban className="h-4 w-4" /> {t("cancel")}</button>}
         </div>
