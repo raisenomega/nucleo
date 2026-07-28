@@ -6,7 +6,7 @@ import { MobileNav } from "@shared/components/MobileNav";
 import { GpsIndicator } from "@shared/gps/GpsIndicator";
 import { GpsResilience } from "@shared/gps/GpsResilience";
 import { NotificationBell } from "@shared/notifications/NotificationBell";
-import { DemoBanner } from "@shared/components/DemoBanner";
+import { OwnerModeIndicator } from "@shared/components/OwnerModeIndicator";
 import { useI18n } from "@shared/i18n";
 
 export function AppLayout() {
@@ -17,15 +17,17 @@ export function AppLayout() {
       <GpsResilience />
       <Sidebar expanded={expanded} onClose={() => setExpanded(false)} onToggle={() => setExpanded((v) => !v)} />
       <div className={`flex min-h-screen flex-col transition-all duration-300 ${expanded ? "md:pl-60" : "md:pl-16"}`}>
-        <DemoBanner />
-        <header className="sticky top-0 z-30 flex items-center gap-2 border-b border-border bg-background p-3 md:p-4">
+        <header className="sticky top-0 z-30 flex items-start gap-2 border-b border-border bg-background p-3 md:p-4">
           <GpsIndicator />
           <div className="flex-1" />
           <NotificationBell />
-          <button type="button"
-            className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-body font-semibold">
-            <MessageCircle className="h-4 w-4" /> <span className="hidden sm:inline">{t("aiChat")}</span>
-          </button>
+          <div className="flex flex-col items-end">
+            <button type="button"
+              className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-body font-semibold">
+              <MessageCircle className="h-4 w-4" /> <span className="hidden sm:inline">{t("aiChat")}</span>
+            </button>
+            <OwnerModeIndicator />
+          </div>
         </header>
         <main className="min-w-0 flex-1 bg-card pb-20 md:pb-0"><Outlet /></main>
       </div>

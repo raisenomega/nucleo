@@ -1,12 +1,23 @@
+import { useState } from "react";
 import { LogOut, Settings } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { ThemeToggle } from "@shared/components/ThemeToggle";
+import { DemoPinModal } from "@shared/components/DemoPinModal";
 import { useI18n } from "@shared/i18n";
 import { useSession } from "@shared/providers/SessionProvider";
+import { useBrand } from "@shared/providers/brand-context";
+import { useDemoOwner } from "@shared/providers/demo-owner-context";
 
 export function SidebarUser() {
   const { t, locale, setLocale } = useI18n();
   const { session, signOut } = useSession();
+  const { isDemoTenant } = useBrand();
+  const { ownerMode } = useDemoOwner();
+  const navigate = useNavigate();
+  const [pin, setPin] = useState(false);
+  const goSettings = () => void navigate({ to: "/settings" });
+  // En demo sin owner: la rueda pide PIN antes de abrir Ajustes.
+  const onSettings = () => { if (isDemoTenant && !ownerMode) setPin(true); else goSettings(); };
   async function onLogout() {
     await signOut();
     // Vuelve a la página pública del host: raisen/tenant → su landing; panel (app.*) → /login.
@@ -25,13 +36,14 @@ export function SidebarUser() {
           aria-label={t("switchLang")} className="rounded-lg bg-secondary text-foreground p-2 font-body">
           {locale === "es" ? "EN" : "ES"}
         </button>
-        <Link to="/settings" aria-label={t("systemSettings")} title={t("systemSettings")}
-          className="rounded-lg bg-secondary p-2 text-foreground"><Settings className="h-5 w-5" /></Link>
+        <button type="button" onClick={onSettings} aria-label={t("systemSettings")} title={t("systemSettings")}
+          className="rounded-lg bg-secondary p-2 text-foreground"><Settings className="h-5 w-5" /></button>
       </div>
       <button type="button" onClick={onLogout}
         className="flex w-full items-center justify-center gap-2 rounded-lg bg-secondary text-foreground px-3 py-2 text-sm font-body font-bold hover:bg-primary hover:text-primary-foreground">
         <LogOut className="h-4 w-4" /> {t("logout")}
       </button>
+      {pin && <DemoPinModal onClose={() => setPin(false)} onSuccess={goSettings} />}
     </div>
   );
 }

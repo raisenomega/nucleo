@@ -5,7 +5,7 @@ import { ScreenModal } from "@shared/components/ScreenModal";
 import { useToast } from "@shared/providers/toast-context";
 import { useDemoOwner } from "@shared/providers/demo-owner-context";
 
-export function DemoPinModal({ onClose }: { onClose: () => void }) {
+export function DemoPinModal({ onClose, onSuccess }: { onClose: () => void; onSuccess?: () => void }) {
   const { t } = useI18n();
   const toast = useToast();
   const { enableOwnerMode } = useDemoOwner();
@@ -16,7 +16,7 @@ export function DemoPinModal({ onClose }: { onClose: () => void }) {
     setBusy(true); setBad(false);
     const { data } = await supabase.rpc("verify_demo_owner_pin", { p_pin: pin });
     setBusy(false);
-    if (data === true) { enableOwnerMode(); toast.success(t("demoOwnerOn")); onClose(); }
+    if (data === true) { enableOwnerMode(); toast.success(t("demoOwnerOn")); onSuccess?.(); onClose(); }
     else { setBad(true); setPin(""); }
   };
   return (
