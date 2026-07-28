@@ -21,5 +21,5 @@ export const esPdf = {
   docOrderList: "LISTADO DE ÓRDENES", docMarketingLeads: "LEADS COMERCIALES", docService: "COMPROBANTE DE SERVICIO",
   exportClientsPdf: "Exportar PDF", sendWhatsapp: "Enviar por WhatsApp", sendEmailPdf: "Enviar por email",
   photosBefore: "Antes", photosAfter: "Después", attachPhotos: "Adjuntar fotos de evidencia", sendServiceWa: "Enviar resumen al cliente por WhatsApp",
-  totalClients: "Total clientes", totalDebt: "Deuda total", statement: "Estado de cuenta", activity: "Actividad reciente", viewInvoice: "Ver factura",
+  totalClients: "Total clientes", totalDebt: "Deuda total", statement: "Estado de cuenta", activity: "Actividad reciente", viewInvoice: "Ver factura", viewOrder: "Ver orden", viewStatement: "Ver estado de cuenta",
 } satisfies Partial<Record<TranslationKey, string>>;

@@ -3,9 +3,10 @@ import { X, CalendarPlus, FileDown, MessageCircle } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useI18n } from "@shared/i18n";
 import { usePdfExport } from "@shared/hooks/usePdfExport";
-import { usePdfShare } from "@shared/hooks/usePdfShare";
 import { usePdfBrand } from "@shared/hooks/usePdfBrand";
 import { customerDoc } from "@shared/customers/customer-pdf";
+import { getCustomerShareUrl } from "@shared/customers/customer-statement.repository";
+import { shareViaWhatsApp, docWaMessage } from "@shared/lib/share-whatsapp";
 import { ScreenModal } from "@shared/components/ScreenModal";
 import { loadDossier, type Dossier } from "@shared/customers/customer-dossier";
 import { CustomerProfileCard } from "@shared/customers/CustomerProfileCard";
@@ -26,15 +27,15 @@ const EMPTY: Dossier = { invoices: [], quotes: [], services: [], tickets: [], re
 export function CustomerDetail({ c, tenantId, segments, onClose, onChanged }: { c: AdminCustomer; tenantId: string; segments: CustomerSegment[]; onClose: () => void; onChanged: () => void }) {
   const { t } = useI18n();
   const { generating, exportPdf } = usePdfExport();
-  const { sharing, sharePdf } = usePdfShare();
   const brand = usePdfBrand();
   const [tab, setTab] = useState<"summary" | "activity">("summary");
   const [d, setD] = useState<Dossier>(EMPTY);
   const load = () => { void loadDossier(tenantId, c.email, c.phone, c.userId, c.id).then(setD); };
   useEffect(load, [c.id, tenantId]);
+  // WhatsApp: link branded al estado de cuenta público /estado-cuenta/{token} (no URL cruda de Storage).
   async function waSend() {
-    const url = await sharePdf(() => customerDoc(c, tenantId, brand, t), `customer/${c.id}-${Date.now()}.pdf`);
-    window.open(`https://wa.me/${(c.phone ?? "").replace(/\D/g, "")}?text=${encodeURIComponent(`${t("docCustomer")}${url ? `\n${url}` : ""}`)}`, "_blank", "noopener");
+    const url = await getCustomerShareUrl(c.id);
+    shareViaWhatsApp(c.phone, docWaMessage(t("statement"), t("viewStatement"), url));
   }
   return (
     <ScreenModal onClose={onClose}>
@@ -42,7 +43,7 @@ export function CustomerDetail({ c, tenantId, segments, onClose, onChanged }: { 
         <h2 className="font-display text-lg font-bold text-foreground">{c.fullName || c.email}</h2>
         <div className="flex items-center gap-2">
           <button type="button" disabled={generating} onClick={() => void exportPdf(() => customerDoc(c, tenantId, brand, t))} className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-1.5 text-xs font-bold disabled:opacity-50"><FileDown className="h-4 w-4" />PDF</button>
-          {c.phone && <button type="button" disabled={sharing} onClick={() => void waSend()} className="flex items-center gap-1 rounded-lg bg-green-600 px-3 py-1.5 text-xs font-bold text-white disabled:opacity-50"><MessageCircle className="h-4 w-4" />{sharing ? t("generatingPdf") : t("whatsapp")}</button>}
+          {c.phone && <button type="button" onClick={() => void waSend()} className="flex items-center gap-1 rounded-lg bg-green-600 px-3 py-1.5 text-xs font-bold text-white"><MessageCircle className="h-4 w-4" />{t("whatsapp")}</button>}
           <Link to="/routes" search={{ customer: c.id, cname: c.fullName, cphone: c.phone, caddr: c.address }}
             className="hidden items-center gap-1 rounded-lg bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground sm:flex"><CalendarPlus className="h-4 w-4" />Agendar servicio</Link>
           <button type="button" onClick={onClose} aria-label={t("cancel")}><X className="h-6 w-6" /></button>

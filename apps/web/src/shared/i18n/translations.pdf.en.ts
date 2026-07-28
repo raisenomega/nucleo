@@ -21,5 +21,5 @@ export const enPdf = {
   docOrderList: "ORDER LIST", docMarketingLeads: "COMMERCIAL LEADS", docService: "SERVICE RECEIPT",
   exportClientsPdf: "Export PDF", sendWhatsapp: "Send via WhatsApp", sendEmailPdf: "Send via email",
   photosBefore: "Before", photosAfter: "After", attachPhotos: "Attach evidence photos", sendServiceWa: "Send summary to customer via WhatsApp",
-  totalClients: "Total customers", totalDebt: "Total debt", statement: "Statement", activity: "Recent activity", viewInvoice: "View invoice",
+  totalClients: "Total customers", totalDebt: "Total debt", statement: "Statement", activity: "Recent activity", viewInvoice: "View invoice", viewOrder: "View order", viewStatement: "View statement",
 } satisfies Partial<Record<TranslationKey, string>>;

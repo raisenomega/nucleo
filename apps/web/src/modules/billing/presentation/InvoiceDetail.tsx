@@ -5,6 +5,7 @@ import { usePdfExport } from "@shared/hooks/usePdfExport";
 import { usePdfBrand } from "@shared/hooks/usePdfBrand";
 import { invoiceDoc } from "@billing/presentation/pdf/invoice-pdf";
 import { getInvoiceShareUrl, markInvoiceSent } from "@billing/infrastructure/supabase-invoice-share.repository";
+import { shareViaWhatsApp, docWaMessage } from "@shared/lib/share-whatsapp";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { formatCurrency } from "@shared/lib/format";
 import { ScreenModal } from "@shared/components/ScreenModal";
@@ -16,8 +17,6 @@ import { PaymentHistory } from "@billing/presentation/PaymentHistory";
 import { SaleLinesList } from "@shared/components/SaleLinesList";
 import { LineItemInventoryPanel } from "@fieldops/presentation/LineItemInventoryPanel";
 import type { Invoice, InvoiceStatus } from "@billing/domain/invoice.types";
-
-const wa = (i: Invoice, msg: string) => `https://wa.me/${(i.phone ?? "").replace(/\D/g, "")}?text=${encodeURIComponent(msg)}`;
 
 // Detalle factura: balance live (derivado de los pagos) + registrar pago parcial/total + historial (anular).
 export function InvoiceDetail({ inv, canManage, onChanged, onCancel, onClose }: {
@@ -38,7 +37,7 @@ export function InvoiceDetail({ inv, canManage, onChanged, onCancel, onClose }: 
     if (draft && !window.confirm(t("sendDraftConfirm"))) return;
     if (draft) { await markInvoiceSent(inv.id); onChanged(); }
     const url = await getInvoiceShareUrl(inv.id);
-    window.open(wa(inv, `${msg}${url ? `\n${t("viewInvoice")}: ${url}` : ""}`), "_blank", "noopener");
+    shareViaWhatsApp(inv.phone, docWaMessage(msg, t("viewInvoice"), url));
   }
   return (
     <ScreenModal onClose={onClose}>
