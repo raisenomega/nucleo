@@ -1,6 +1,5 @@
 import { ArrowDown } from "lucide-react";
 import { COPY, type Lang } from "@raisen-marketing/data/copy";
-import { DemoTrigger } from "@shared/components/DemoTrigger";
 import type { MarketingHeroRow } from "@raisen-marketing/data/hero.types";
 
 // Hero foreground (z-10) · réplica OMEGA HeroSection. Lee de marketing_hero (fallback al copy mientras carga).
@@ -20,7 +19,7 @@ export function MarketingHero({ lang, hero }: { lang: Lang; hero: MarketingHeroR
         <p className="mx-auto max-w-2xl animate-fade-up text-base leading-relaxed text-white/70 sm:text-lg" style={{ animationDelay: "150ms" }}>{subtitle}</p>
         <div className="flex animate-fade-up flex-col items-center justify-center gap-3 pt-2 sm:flex-row" style={{ animationDelay: "300ms" }}>
           <button type="button" onClick={onCta} className="inline-flex items-center justify-center rounded-full bg-primary px-8 py-3.5 font-display text-base font-semibold text-primary-foreground transition-transform hover:scale-105">{cta}</button>
-          <DemoTrigger lang={lang} className="inline-flex items-center justify-center rounded-full border border-white/25 px-8 py-3.5 font-display text-base font-semibold text-white transition-colors hover:bg-white/10">{c.heroDemo} →</DemoTrigger>
+          <button type="button" onClick={() => document.getElementById("lead-form")?.scrollIntoView({ behavior: "smooth", block: "start" })} className="inline-flex items-center justify-center rounded-full border border-white/25 px-8 py-3.5 font-display text-base font-semibold text-white transition-colors hover:bg-white/10">{c.heroDemo} →</button>
         </div>
       </div>
       {(hero?.showScrollIndicator ?? true) && (

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
 import { track } from "@shared/analytics/track";
-import { DemoTrigger } from "@shared/components/DemoTrigger";
 import { getCampaignPage } from "@campaigns/infrastructure/campaigns-public.repository";
 import { BlockRenderer } from "@campaigns/presentation/blocks/BlockRenderer";
 import type { CampaignPageData } from "@campaigns/domain/campaign.types";
@@ -36,10 +35,6 @@ export function CampaignPageView({ initial, preview, slug }: { initial: Campaign
     <div className="camp-root" style={vars} data-theme={variant} data-oncontrast={oncontrast}>
       {preview && !data.page.isPublished && <div className="camp-preview-banner">MODO VISTA PREVIA — esta página no está publicada</div>}
       {data.blocks.map((blk) => <BlockRenderer key={blk.id} block={blk} lang={data.page.lang} pageId={data.page.id} />)}
-      <DemoTrigger lang={data.page.lang === "en" ? "en" : "es"}
-        className="fixed bottom-4 right-4 z-40 rounded-full bg-amber-500 px-4 py-2.5 text-sm font-bold text-black shadow-lg transition-transform hover:scale-105">
-        🚀 {data.page.lang === "en" ? "Try demo" : "Probar demo"}
-      </DemoTrigger>
     </div>
   );
 }

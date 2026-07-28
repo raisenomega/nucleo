@@ -1,6 +1,8 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
+import { Link } from "@tanstack/react-router";
 import { z } from "zod";
 import { Send, CheckCircle, Loader2 } from "lucide-react";
+import { CredentialsToast } from "@raisen-marketing/components/lead/CredentialsToast";
 import { useScrollReveal } from "@raisen-marketing/hooks/useScrollReveal";
 import { useMarketingLeadForm } from "@raisen-marketing/hooks/useMarketingLeadForm";
 import { submitLead } from "@raisen-marketing/infrastructure/marketing-lead-form.repository";
@@ -20,6 +22,7 @@ export function MarketingLeadForm({ lang, audience, setAudience }: { lang: Lang;
   const [form, setForm] = useState({ name: "", email: "", phone: "", company: "", message: "", website: "" });
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const [showToast, setShowToast] = useState(false);
   const set = (k: keyof typeof form) => (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setForm((f) => ({ ...f, [k]: e.target.value }));
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -27,7 +30,7 @@ export function MarketingLeadForm({ lang, audience, setAudience }: { lang: Lang;
     if (!schema.safeParse(form).success) { setErrorMsg(es ? c.errorEs : c.errorEn); return setStatus("error"); }
     setStatus("submitting");
     const r = await submitLead({ customerName: form.name, customerEmail: form.email, customerPhone: form.phone, company: form.company, message: form.message, leadType: audience, lang });
-    if (r.ok) setStatus("success");
+    if (r.ok) { setStatus("success"); setShowToast(true); }
     else { setErrorMsg(r.message || (es ? c.errorEs : c.errorEn)); setStatus("error"); }
   };
   if (status === "success") return (
@@ -35,6 +38,7 @@ export function MarketingLeadForm({ lang, audience, setAudience }: { lang: Lang;
       <div className="mx-auto flex max-w-2xl flex-col items-center gap-4 rounded-lg border border-primary/30 bg-card p-12 text-center">
         <CheckCircle size={48} className="text-primary" /><p className="text-lg font-medium text-foreground">{es ? c.successEs : c.successEn}</p>
       </div>
+      <CredentialsToast visible={showToast} onClose={() => setShowToast(false)} es={es} />
     </section>
   );
   return (
@@ -43,6 +47,7 @@ export function MarketingLeadForm({ lang, audience, setAudience }: { lang: Lang;
         <div className="mb-10 text-center">
           <h2 id="lead-form-title" className="mb-4 font-display text-3xl font-bold tracking-tight text-foreground md:text-4xl">{es ? c.titleEs : c.titleEn}</h2>
           <p className="text-muted-foreground">{es ? c.subtitleEs : c.subtitleEn}</p>
+          <p className="mt-4 text-sm text-amber-500">{es ? "Llena los datos y obtén tus credenciales ahora mismo y navega la plataforma" : "Fill in your details and get your credentials right now to explore the platform"}</p>
         </div>
         <div className="mb-6 flex gap-3">
           {(["business", "partner"] as Audience[]).map((a) => (
@@ -60,6 +65,7 @@ export function MarketingLeadForm({ lang, audience, setAudience }: { lang: Lang;
           <button type="submit" disabled={status === "submitting"} className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-8 py-3 font-display text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.02] disabled:opacity-50">
             {status === "submitting" ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />} {es ? c.ctaLabelEs : c.ctaLabelEn}
           </button>
+          <Link to="/login" className="block text-center text-sm text-amber-500 hover:text-amber-400">( {es ? "iniciar sesión" : "sign in"} )</Link>
           <p className="text-center text-xs text-muted-foreground">{es ? c.consentEs : c.consentEn}</p>
         </form>
       </div>
