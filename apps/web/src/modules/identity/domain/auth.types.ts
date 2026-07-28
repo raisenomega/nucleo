@@ -13,7 +13,7 @@ export interface Session {
 }
 
 export interface AuthError {
-  readonly code: "invalid_credentials" | "no_session" | "unknown";
+  readonly code: "invalid_credentials" | "no_session" | "too_many_attempts" | "unknown";
   readonly message: string;
 }
 
