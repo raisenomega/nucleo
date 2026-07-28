@@ -2,6 +2,7 @@ import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { SessionProvider, useSession } from "@shared/providers/SessionProvider";
 import { ModuleAccessProvider } from "@shared/providers/ModuleAccessProvider";
 import { BrandProvider } from "@shared/providers/BrandProvider";
+import { DemoOwnerProvider } from "@shared/providers/DemoOwnerProvider";
 import { ToastProvider } from "@shared/providers/ToastProvider";
 import { AppLayout } from "@shared/components/AppLayout";
 import { MfaGate } from "@shared/components/MfaGate";
@@ -35,13 +36,15 @@ function Guard() {
   return (
     <ToastProvider>
       <BrandProvider>
-        <ModuleAccessProvider>
-          <GpsProvider>
-            <MfaGate>
-              <AppLayout />
-            </MfaGate>
-          </GpsProvider>
-        </ModuleAccessProvider>
+        <DemoOwnerProvider>
+          <ModuleAccessProvider>
+            <GpsProvider>
+              <MfaGate>
+                <AppLayout />
+              </MfaGate>
+            </GpsProvider>
+          </ModuleAccessProvider>
+        </DemoOwnerProvider>
       </BrandProvider>
     </ToastProvider>
   );

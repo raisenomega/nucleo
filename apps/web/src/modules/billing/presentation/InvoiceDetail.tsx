@@ -9,6 +9,7 @@ import { shareViaWhatsApp, docWaMessage } from "@shared/lib/share-whatsapp";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { formatCurrency } from "@shared/lib/format";
 import { ScreenModal } from "@shared/components/ScreenModal";
+import { DemoGuard } from "@shared/components/DemoGuard";
 import { LinkedCustomerBadge } from "@shared/components/LinkedCustomerBadge";
 import { INV_ST_KEY, INV_ST_COLOR } from "@billing/presentation/billing-ui";
 import { useInvoicePayments } from "@billing/presentation/useInvoicePayments.hook";
@@ -64,7 +65,7 @@ export function InvoiceDetail({ inv, canManage, onChanged, onCancel, onClose }: 
           <button type="button" disabled={generating} onClick={() => void exportPdf(() => invoiceDoc(inv, st, paid, balance, brand, t))} className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-sm font-bold disabled:opacity-50"><FileDown className="h-4 w-4" /> {generating ? t("generatingPdf") : t("downloadPdf")}</button>
           {inv.phone && <button type="button" onClick={() => void waSend()} className="flex items-center gap-1 rounded-lg bg-green-600 px-3 py-2 text-sm font-bold text-white"><MessageCircle className="h-4 w-4" /> {t("whatsapp")}</button>}
           {canManage && balance > 0.01 && st !== "cancelled" && <button type="button" onClick={() => setPaying(true)} className="flex items-center gap-1 rounded-lg bg-primary px-3 py-2 text-sm font-bold text-primary-foreground"><DollarSign className="h-4 w-4" /> Registrar pago</button>}
-          {canManage && st !== "cancelled" && st !== "paid" && <button type="button" onClick={onCancel} className="flex items-center gap-1 rounded-lg bg-destructive px-3 py-2 text-sm font-bold text-white"><Ban className="h-4 w-4" /> {t("cancel")}</button>}
+          {canManage && st !== "cancelled" && st !== "paid" && <DemoGuard><button type="button" onClick={onCancel} className="flex items-center gap-1 rounded-lg bg-destructive px-3 py-2 text-sm font-bold text-white"><Ban className="h-4 w-4" /> {t("cancel")}</button></DemoGuard>}
         </div>
       </div>
       {paying && <PaymentDialog invoiceId={inv.id} balance={balance} onClose={() => setPaying(false)} onSave={(p) => { setPaying(false); void pay.record(p).then(after); }} />}
