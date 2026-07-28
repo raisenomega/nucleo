@@ -32,6 +32,7 @@ function Login() {
   return (
     <main className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
       <form onSubmit={onSubmit} className="w-full max-w-sm space-y-4">
+        <Link to="/" className="block text-center text-sm text-muted-foreground hover:text-foreground">← Volver al inicio</Link>
         <h1 className="font-display text-3xl font-bold text-foreground text-center">{hostBrand?.display_name ?? ""}</h1>
         <input
           type="email"

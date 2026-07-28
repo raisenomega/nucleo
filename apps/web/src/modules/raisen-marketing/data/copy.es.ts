@@ -1,6 +1,7 @@
 // Copy estático ES de la landing comercial de NÚCLEO (nav + hero + headers de sección + lead form + footer).
 export const es = {
   navProduct: "Producto", navPricing: "Precios", navContact: "Contacto", navCta: "Solicitar acceso",
+  navDemo: "Probar demo", heroDemo: "O prueba el demo",
   heroTitle: "Tu negocio de servicio, bajo control total",
   heroSubtitle: "Facturación, rutas, empleados, impuestos, landing y agentes IA — todo integrado bajo tu marca. NÚCLEO es el sistema operativo que tu negocio de servicio necesita.",
   heroCta: "Solicitar acceso", heroScroll: "scroll",

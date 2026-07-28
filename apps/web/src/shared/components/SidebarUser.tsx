@@ -1,5 +1,5 @@
 import { LogOut, Settings } from "lucide-react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { ThemeToggle } from "@shared/components/ThemeToggle";
 import { useI18n } from "@shared/i18n";
 import { useSession } from "@shared/providers/SessionProvider";
@@ -7,10 +7,11 @@ import { useSession } from "@shared/providers/SessionProvider";
 export function SidebarUser() {
   const { t, locale, setLocale } = useI18n();
   const { session, signOut } = useSession();
-  const navigate = useNavigate();
   async function onLogout() {
     await signOut();
-    void navigate({ to: "/login" });
+    // Vuelve a la página pública del host: raisen/tenant → su landing; panel (app.*) → /login.
+    // Recarga completa para limpiar todos los providers de sesión.
+    window.location.assign("/");
   }
   return (
     <div className="space-y-2 border-t border-border p-4">

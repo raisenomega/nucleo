@@ -1,6 +1,7 @@
 // Copy estático EN (paridad con copy.es — copy.ts valida que tenga las mismas claves/tipos).
 export const en = {
   navProduct: "Product", navPricing: "Pricing", navContact: "Contact", navCta: "Request access",
+  navDemo: "Try demo", heroDemo: "Or try the demo",
   heroTitle: "Your service business, fully under control",
   heroSubtitle: "Billing, routes, employees, taxes, landing pages and AI agents — all integrated under your brand. NÚCLEO is the operating system your service business needs.",
   heroCta: "Request access", heroScroll: "scroll",
