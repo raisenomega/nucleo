@@ -1,25 +1,27 @@
 import { useState } from "react";
-import { createFileRoute, Navigate } from "@tanstack/react-router";
+import { createFileRoute, Navigate, useNavigate } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { useBrand } from "@shared/providers/BrandProvider";
 import { useSalesOrders } from "@sales/application/useSalesOrders.hook";
 import { supabaseSalesOrderRepository } from "@sales/infrastructure/supabase-sales-order.repository";
+import { supabaseDeliveryNoteRepository } from "@sales/infrastructure/supabase-delivery-note.repository";
 import { SalesOrderForm } from "@sales/presentation/SalesOrderForm";
 import { SalesOrderTable } from "@sales/presentation/SalesOrderTable";
 import { SalesOrderDetail } from "@sales/presentation/SalesOrderDetail";
 import { SalesOrderKpis } from "@sales/presentation/SalesOrderKpis";
 import { BackorderModal } from "@sales/presentation/BackorderModal";
+import { CreateDeliveryNoteModal } from "@sales/presentation/CreateDeliveryNoteModal";
 import type { SalesOrder, Backorder } from "@sales/domain/sales-order.types";
 
 export const Route = createFileRoute("/_authenticated/sales-orders")({ component: SalesOrdersPage });
 
 function SalesOrdersPage() {
-  const { t } = useI18n(); const { can } = useModuleAccess(); const brand = useBrand();
+  const { t } = useI18n(); const { can } = useModuleAccess(); const brand = useBrand(); const navigate = useNavigate();
   const m = useSalesOrders(supabaseSalesOrderRepository);
   const [creating, setCreating] = useState(false); const [viewing, setViewing] = useState<SalesOrder | null>(null);
-  const [backorder, setBackorder] = useState<Backorder[] | null>(null);
+  const [backorder, setBackorder] = useState<Backorder[] | null>(null); const [delivering, setDelivering] = useState<SalesOrder | null>(null);
   if (!can("sales", "view") || !brand.fulfillmentEnabled) return <Navigate to="/dashboard" />;
   const view = viewing ? m.list.find((o) => o.id === viewing.id) ?? viewing : null;
   const onConfirm = () => { if (view) void m.confirm(view.id).then((r) => { if (r.backordered_items.length) setBackorder(r.backordered_items); }); };
@@ -38,8 +40,10 @@ function SalesOrdersPage() {
       <SalesOrderKpis rows={m.list} />
       {creating && <SalesOrderForm onSubmit={m.create} onCancel={() => setCreating(false)} />}
       <SalesOrderTable rows={m.list} onView={setViewing} />
-      {view && <SalesOrderDetail order={view} canManage={can("sales", "edit")} onConfirm={onConfirm} onInvoice={onInvoice} onCancel={onCancel} onClose={() => setViewing(null)} />}
+      {view && <SalesOrderDetail order={view} canManage={can("sales", "edit")} onConfirm={onConfirm} onCreateDelivery={() => setDelivering(view)} onInvoice={onInvoice} onCancel={onCancel} onClose={() => setViewing(null)} />}
       {backorder && <BackorderModal items={backorder} onClose={() => setBackorder(null)} />}
+      {delivering && <CreateDeliveryNoteModal order={delivering} onClose={() => setDelivering(null)}
+        onCreate={async (d) => { const r = await supabaseDeliveryNoteRepository.create(d); if (r.ok) { setDelivering(null); void navigate({ to: "/delivery-notes" }); } return r; }} />}
     </div>
   );
 }

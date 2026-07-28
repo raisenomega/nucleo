@@ -14,4 +14,12 @@ export const esSales = {
   soOpen: "Abiertas", soToShip: "Por despachar", soValue: "Valor", reserved: "Reservado", physicalStock: "Físico",
   soDraft: "Borrador", soConfirmed: "Confirmada", soPartiallyShipped: "Despacho parcial", soShipped: "Despachada",
   soPartiallyInvoiced: "Factura parcial", soInvoiced: "Facturada", soClosed: "Cerrada", soCancelled: "Cancelada",
+  deliveryNotes: "Conduces", deliveryNote: "Conduce", conduce: "Conduce", noteNumber: "N.º conduce",
+  deliveryNotesSubtitle: "Notas de entrega — despacho parcial, firma y evidencia; deduce el stock físico",
+  dispatch: "Despachar", dispatchDate: "Fecha de despacho", shippingAddress: "Dirección de envío", shippingNotes: "Notas de envío",
+  qtyDispatched: "Despachado", lot: "Lote", receivedBy: "Recibido por", evidencePhotos: "Fotos de evidencia", addPhoto: "Añadir foto",
+  confirmDelivery: "Confirmar entrega", createDeliveryNote: "Crear conduce", dispatchConfirmation: "Confirmar despacho de",
+  stockWillBeDeducted: "Se deducirá el stock físico de los items.", cannotUndo: "Esta acción no se puede deshacer.",
+  dispatched: "Despachado", inTransit: "En tránsito", delivered: "Entregado", fromSalesOrder: "Orden",
+  selectItems: "Selecciona al menos un ítem", noPendingItems: "No hay items pendientes de despacho", noDeliveryNotes: "Sin conduces",
 } satisfies Partial<Record<TranslationKey, string>>;

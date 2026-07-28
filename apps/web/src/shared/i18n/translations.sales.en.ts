@@ -14,4 +14,12 @@ export const enSales = {
   soOpen: "Open", soToShip: "To ship", soValue: "Value", reserved: "Reserved", physicalStock: "Physical",
   soDraft: "Draft", soConfirmed: "Confirmed", soPartiallyShipped: "Partially shipped", soShipped: "Shipped",
   soPartiallyInvoiced: "Partially invoiced", soInvoiced: "Invoiced", soClosed: "Closed", soCancelled: "Cancelled",
+  deliveryNotes: "Delivery Notes", deliveryNote: "Delivery Note", conduce: "Delivery Note", noteNumber: "Note #",
+  deliveryNotesSubtitle: "Delivery notes — partial dispatch, signature and evidence; deducts physical stock",
+  dispatch: "Dispatch", dispatchDate: "Dispatch date", shippingAddress: "Shipping address", shippingNotes: "Shipping notes",
+  qtyDispatched: "Dispatched", lot: "Lot", receivedBy: "Received by", evidencePhotos: "Evidence photos", addPhoto: "Add photo",
+  confirmDelivery: "Confirm delivery", createDeliveryNote: "Create delivery note", dispatchConfirmation: "Confirm dispatch of",
+  stockWillBeDeducted: "Physical stock will be deducted for the items.", cannotUndo: "This action cannot be undone.",
+  dispatched: "Dispatched", inTransit: "In transit", delivered: "Delivered", fromSalesOrder: "Order",
+  selectItems: "Select at least one item", noPendingItems: "No items pending dispatch", noDeliveryNotes: "No delivery notes",
 } satisfies Partial<Record<TranslationKey, string>>;

@@ -22,6 +22,13 @@ export async function uploadStopPhoto(tenantId: string, routeId: string, stopId:
   return error ? null : path;
 }
 
+// Foto de entrega de un conduce (ya comprimida). Path: {tenant}/deliveries/{note}/{uuid}.jpg.
+export async function uploadDeliveryPhoto(tenantId: string, noteId: string, blob: Blob): Promise<string | null> {
+  const path = `${tenantId}/deliveries/${noteId}/${crypto.randomUUID()}.jpg`;
+  const { error } = await supabase.storage.from(BUCKET).upload(path, blob, { contentType: "image/jpeg", upsert: true });
+  return error ? null : path;
+}
+
 // Firma URLs temporales (1h) para mostrar la evidencia sin exponer el bucket. El array vuelve ALINEADO
 // por índice con `paths` ("" si esa firma falló): antes se hacía push condicional y un solo fallo corría
 // todas las URLs siguientes → la miniatura N mostraba la foto N-1. En paralelo (campo = señal lenta).
