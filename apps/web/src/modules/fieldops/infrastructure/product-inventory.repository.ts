@@ -13,7 +13,7 @@ export async function getProductInventorySnapshot(productId: string): Promise<Pr
   const d = (data as J | null) ?? {};
   if (error || d.linked !== true) return { linked: false, item: null, isLow: false, stockValue: null };
   const item: InventoryItem = {
-    id: d.id as string, tenantId: "", name: s(d.name), stock: n(d.stock), unitCost: n(d.unit_cost), minStock: n(d.min_stock),
+    id: d.id as string, tenantId: "", name: s(d.name), stock: n(d.stock), reserved: n(d.reserved), unitCost: n(d.unit_cost), minStock: n(d.min_stock),
     sku: s(d.sku), avgCost: n(d.avg_cost), supplierName: s(d.supplier_name), supplierId: (d.supplier_id as string | null) ?? null,
     landingProductId: (d.landing_product_id as string | null) ?? null, lastRestockDate: (d.last_restock_date as string | null) ?? null,
     warehouseZone: s(d.warehouse_zone), aisle: s(d.aisle), shelf: s(d.shelf), bin: s(d.bin),

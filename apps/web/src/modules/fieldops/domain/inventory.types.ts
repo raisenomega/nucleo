@@ -5,7 +5,7 @@ export type Result<T, E> =
 
 export interface InventoryItem {
   readonly id: string; readonly tenantId: string; readonly name: string;
-  readonly stock: number; readonly unitCost: number; readonly minStock: number;
+  readonly stock: number; readonly reserved: number; readonly unitCost: number; readonly minStock: number;
   readonly sku: string; readonly avgCost: number;
   readonly supplierName: string; readonly supplierId: string | null;
   readonly landingProductId: string | null; readonly lastRestockDate: string | null;

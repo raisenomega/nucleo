@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { X, Send, FileOutput, Check, Ban, FileDown, Pencil } from "lucide-react";
+import { X, Send, FileOutput, Check, Ban, FileDown, Pencil, ShoppingCart } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { usePdfExport } from "@shared/hooks/usePdfExport";
 import { usePdfBrand } from "@shared/hooks/usePdfBrand";
+import { useBrand } from "@shared/providers/BrandProvider";
 import { quoteDoc } from "@quotes/presentation/pdf/quote-pdf";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { formatCurrency } from "@shared/lib/format";
@@ -14,10 +15,11 @@ import { QUOTE_ST_KEY, QUOTE_ST_COLOR } from "@quotes/presentation/quote-ui";
 import type { Quote, QuoteStatus } from "@quotes/domain/quote.types";
 
 // Detalle cotización (ScreenModal): items clicables (drill-down) + [Enviar] [Convertir] [Aceptar/Rechazar].
-export function QuoteDetail({ quote, canManage, onStatus, onConvert, onEdit, onSend, onClose }: {
-  quote: Quote; canManage: boolean; onStatus: (s: QuoteStatus) => void; onConvert: () => void; onEdit: () => void; onSend: () => void; onClose: () => void;
+export function QuoteDetail({ quote, canManage, onStatus, onConvert, onCreateOrder, onEdit, onSend, onClose }: {
+  quote: Quote; canManage: boolean; onStatus: (s: QuoteStatus) => void; onConvert: () => void; onCreateOrder: () => void; onEdit: () => void; onSend: () => void; onClose: () => void;
 }) {
   const { t } = useI18n(); const { generating, exportPdf } = usePdfExport(); const brand = usePdfBrand(); const { can } = useModuleAccess();
+  const { fulfillmentEnabled } = useBrand();
   const [drill, setDrill] = useState<string | null>(null);
   const q = quote;
   const open = q.status === "draft" || q.status === "sent" || q.status === "viewed";
@@ -44,7 +46,8 @@ export function QuoteDetail({ quote, canManage, onStatus, onConvert, onEdit, onS
             className={`${btn} bg-secondary disabled:opacity-50`}><FileDown className="h-4 w-4" /> {generating ? t("generatingPdf") : t("downloadPdf")}</button>
           {canManage && open && <button type="button" onClick={onSend} className={`${btn} bg-green-600 text-white`}><Send className="h-4 w-4" /> {resend ? t("resendQuote") : t("sendQuote")}</button>}
           {canManage && open && <button type="button" onClick={onEdit} className={`${btn} bg-secondary`}><Pencil className="h-4 w-4" /> {t("edit")}</button>}
-          {canManage && q.status === "accepted" && <button type="button" onClick={onConvert} className={`${btn} bg-primary text-primary-foreground`}><FileOutput className="h-4 w-4" /> {t("convertToInvoice")}</button>}
+          {canManage && q.status === "accepted" && fulfillmentEnabled && <button type="button" onClick={onCreateOrder} className={`${btn} bg-primary text-primary-foreground`}><ShoppingCart className="h-4 w-4" /> {t("createSalesOrder")}</button>}
+          {canManage && q.status === "accepted" && <button type="button" onClick={onConvert} className={`${btn} bg-secondary`}><FileOutput className="h-4 w-4" /> {t("convertToInvoice")}</button>}
           {canManage && open && <button type="button" onClick={() => onStatus("accepted")} className={`${btn} bg-green-600 text-white`}><Check className="h-4 w-4" /> {t("markAccepted")}</button>}
           {canManage && open && <button type="button" onClick={() => onStatus("rejected")} className={`${btn} bg-destructive text-white`}><Ban className="h-4 w-4" /> {t("markRejected")}</button>}
         </div>

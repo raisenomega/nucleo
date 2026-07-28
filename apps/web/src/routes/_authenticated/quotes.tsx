@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { createFileRoute, Navigate } from "@tanstack/react-router";
+import { createFileRoute, Navigate, useNavigate } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { useSession } from "@shared/providers/SessionProvider";
 import { useQuotes } from "@quotes/application/useQuotes.hook";
 import { supabaseQuoteRepository } from "@quotes/infrastructure/supabase-quote.repository";
+import { supabaseSalesOrderRepository } from "@sales/infrastructure/supabase-sales-order.repository";
 import { QuoteForm } from "@quotes/presentation/QuoteForm";
 import { QuoteTable } from "@quotes/presentation/QuoteTable";
 import { QuoteDetail } from "@quotes/presentation/QuoteDetail";
@@ -20,6 +21,7 @@ export const Route = createFileRoute("/_authenticated/quotes")({
 
 function QuotesPage() {
   const { t } = useI18n(); const { can } = useModuleAccess(); const { session } = useSession();
+  const navigate = useNavigate();
   const { quote } = Route.useSearch();
   const m = useQuotes(supabaseQuoteRepository);
   const [creating, setCreating] = useState(false); const [viewing, setViewing] = useState<Quote | null>(null);
@@ -34,6 +36,7 @@ function QuotesPage() {
   if (!can("quotes", "view")) return <Navigate to="/dashboard" />;
   const onStatus = (s: QuoteStatus) => { if (viewing) { void m.setStatus(viewing.id, s); setViewing(null); } };
   const onConvert = () => { if (viewing) { void m.convert(viewing.id).then((inv) => { if (inv) window.alert(t("invoiceSaved")); }); setViewing(null); } };
+  const onCreateOrder = () => { if (viewing) { void supabaseSalesOrderRepository.createFromQuote(viewing.id).then((id) => { if (id) void navigate({ to: "/sales-orders" }); }); setViewing(null); } };
   return (
     <div className="space-y-6 p-4 md:p-8">
       <div className="space-y-2">
@@ -49,7 +52,7 @@ function QuotesPage() {
         onSubmit={editing ? (d) => m.update(editing.id, d) : m.save}
         onCancel={() => { setCreating(false); setEditing(null); }} />}
       <QuoteTable rows={m.list} onView={setViewing} />
-      {viewing && <QuoteDetail quote={viewing} canManage={can("quotes", "edit")} onStatus={onStatus} onConvert={onConvert}
+      {viewing && <QuoteDetail quote={viewing} canManage={can("quotes", "edit")} onStatus={onStatus} onConvert={onConvert} onCreateOrder={onCreateOrder}
         onEdit={() => { setEditing(viewing); setViewing(null); }} onSend={() => { setSending(viewing); setViewing(null); }} onClose={() => setViewing(null)} />}
       {sending && <SendQuoteDialog quote={sending} tenantId={session?.tenantId ?? ""}
         onClose={() => setSending(null)} onSent={() => { setSending(null); void m.reload(); }} />}

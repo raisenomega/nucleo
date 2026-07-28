@@ -5,7 +5,7 @@ import { useI18n } from "@shared/i18n";
 import { useBrand } from "@shared/providers/BrandProvider";
 import { useSession } from "@shared/providers/SessionProvider";
 import { useSuperAdmin } from "@shared/hooks/useSuperAdmin";
-import { SECTIONS, ACCOUNTING_SECTION, HR_SECTION, LANDING_SECTION, CAMPAIGNS_SECTION, ANALYTICS_SECTION, REPORTS_SECTION, MANAGEMENT_SECTION, type NavSection } from "@shared/components/sidebar.nav";
+import { SECTIONS, FULFILLMENT_NAV, ACCOUNTING_SECTION, HR_SECTION, LANDING_SECTION, CAMPAIGNS_SECTION, ANALYTICS_SECTION, REPORTS_SECTION, MANAGEMENT_SECTION, type NavSection } from "@shared/components/sidebar.nav";
 import { SidebarPinned } from "@shared/components/SidebarPinned";
 import { SUPERADMIN_SECTIONS } from "@shared/components/sidebar.superadmin.nav";
 import { SidebarSection } from "@shared/components/SidebarSection";
@@ -30,7 +30,7 @@ export function Sidebar({ expanded, onClose, onToggle }: { expanded: boolean; on
   const { pathname } = useLocation();
   // Superadmin → grupos de PLATAFORMA (no tenant). Tenant → grupos de siempre (+ Landing si CEO/superadmin y activo).
   const isCeo = session?.role === "ceo" || session?.role === "superadmin";
-  const tenantSections = [...SECTIONS,
+  const tenantSections = [...(brand.fulfillmentEnabled ? SECTIONS.map((s) => (s.title === "salesCrm" ? { ...s, items: [...s.items, ...FULFILLMENT_NAV] } : s)) : SECTIONS), // + Órdenes de venta si fulfillment
     ...(brand.glEnabled ? [ACCOUNTING_SECTION] : []), HR_SECTION,
     ...(brand.landingEnabled && isCeo ? [LANDING_SECTION, CAMPAIGNS_SECTION, ANALYTICS_SECTION] : []),
     REPORTS_SECTION, MANAGEMENT_SECTION];
