@@ -5,7 +5,7 @@ const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ b
 // Header de la landing (réplica OMEGA LandingHeader): glass fixed, logo, links de sección, toggle ES/EN, CTA
 // dorado. Landing DARK-ONLY. El CTA del header (editable en /web/hero: nav_cta_*) es el FUNNEL PRIMARIO → /demo
 // (por defecto). El link "Agendar demo" separado se quitó para no duplicar. El CTA del hero sigue → #lead-form.
-export function MarketingNav({ lang, toggleLang, navCtaLabel, navCtaHref }: { lang: Lang; toggleLang: () => void; navCtaLabel: string; navCtaHref: string }) {
+export function MarketingNav({ lang, toggleLang }: { lang: Lang; toggleLang: () => void }) {
   const c = COPY[lang];
   const links = [{ label: c.navProduct, id: "services" }, { label: c.navPricing, id: "pricing" }, { label: c.navContact, id: "lead-form" }];
   return (
@@ -20,7 +20,7 @@ export function MarketingNav({ lang, toggleLang, navCtaLabel, navCtaHref }: { la
       </nav>
       <div className="flex shrink-0 items-center gap-3">
         <button type="button" onClick={toggleLang} aria-label="idioma" className="shrink-0 rounded-full border border-white/20 px-3 py-1 text-xs font-semibold text-white/70 transition-colors hover:text-white">{lang === "es" ? "EN" : "ES"}</button>
-        <a href={navCtaHref} className="shrink-0 whitespace-nowrap rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground transition-transform hover:scale-105">{navCtaLabel}</a>
+        <a href="/login" className="shrink-0 whitespace-nowrap rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground transition-transform hover:scale-105">{c.navLogin}</a>
       </div>
     </header>
   );
