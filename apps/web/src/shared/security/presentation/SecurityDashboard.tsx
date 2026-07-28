@@ -8,10 +8,11 @@ import { SecurityAuditTab } from "./SecurityAuditTab";
 import { SecurityEventsTab } from "./SecurityEventsTab";
 import { SecurityWatchlistTab } from "./SecurityWatchlistTab";
 import { SecuritySentinelTab } from "./SecuritySentinelTab";
+import { SecurityHermesTab } from "./SecurityHermesTab";
 
 const TABS: { id: string; k: TranslationKey }[] = [
   { id: "panel", k: "secTabPanel" }, { id: "audit", k: "secTabAudit" }, { id: "events", k: "secTabEvents" },
-  { id: "watch", k: "secTabWatchlist" }, { id: "sentinel", k: "secTabSentinel" },
+  { id: "watch", k: "secTabWatchlist" }, { id: "sentinel", k: "secTabSentinel" }, { id: "hermes", k: "secTabHermes" },
 ];
 
 export function SecurityDashboard() {
@@ -35,6 +36,7 @@ export function SecurityDashboard() {
       {tab === "events" && <SecurityEventsTab repo={repo} onChange={refresh} />}
       {tab === "watch" && <SecurityWatchlistTab items={data?.activeWatchlist ?? []} repo={repo} onChange={refresh} />}
       {tab === "sentinel" && <SecuritySentinelTab scans={scans} repo={repo} onChange={refresh} />}
+      {tab === "hermes" && <SecurityHermesTab repo={repo} />}
     </div>
   );
 }

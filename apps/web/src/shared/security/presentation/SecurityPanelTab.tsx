@@ -1,5 +1,6 @@
 import { useI18n } from "@shared/i18n";
 import type { SecurityDashboardData } from "@shared/security/domain/security.types";
+import { MfaBanner } from "@identity/presentation/MfaBanner";
 import { SecurityKpiCard } from "./SecurityKpiCard";
 import { SeverityBadge } from "./SeverityBadge";
 import { fmtDate } from "./security.fmt";
@@ -12,6 +13,7 @@ export function SecurityPanelTab({ data, loading }: { data: SecurityDashboardDat
   const sentinel = [{ label: t("secRlsAudit"), s: data.lastRlsAudit }, { label: t("secGlIntegrity"), s: data.lastGlIntegrity }];
   return (
     <div className="space-y-6">
+      <MfaBanner />
       <div className="rounded-xl border border-border bg-card p-5">
         <p className="text-xs uppercase text-muted-foreground">{t("secScore")}</p>
         <p className="text-4xl font-bold text-foreground">{scoreDot(data.securityScore)} {data.securityScore}/100</p>

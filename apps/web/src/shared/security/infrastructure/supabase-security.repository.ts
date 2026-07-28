@@ -1,6 +1,6 @@
 import { supabase } from "@shared/lib/supabase";
 import type {
-  AuditEntry, AuditFilters, EventFilters, GuardianEvent, ISecurityRepository,
+  AuditEntry, AuditFilters, EventFilters, GuardianEvent, HermesCheckpoint, ISecurityRepository,
   IpWatchEntry, Paged, SecurityDashboardData, SentinelScan,
 } from "@shared/security/domain/security.types";
 
@@ -32,6 +32,24 @@ export const supabaseSecurityRepository: ISecurityRepository = {
       id: s.id as string, scanType: s.scan_type as string, score: s.score as number | null,
       passed: s.passed as boolean, issuesCount: Number(s.issues_count ?? 0), scannedAt: s.scanned_at as string,
     }));
+  },
+  async listCheckpoints(): Promise<HermesCheckpoint[]> {
+    const { data } = await supabase
+      .from("hermes_checkpoints")
+      .select("id,checkpoint_type,table_count,function_count,trigger_count,cron_count,migration_count,rls_policy_count,changes_detected,created_at")
+      .order("created_at", { ascending: false })
+      .limit(30);
+    return (data ?? []).map((c) => ({
+      id: c.id as string, checkpointType: c.checkpoint_type as string,
+      tableCount: c.table_count as number | null, functionCount: c.function_count as number | null,
+      triggerCount: c.trigger_count as number | null, cronCount: c.cron_count as number | null,
+      migrationCount: c.migration_count as number | null, rlsPolicyCount: c.rls_policy_count as number | null,
+      changesCount: Array.isArray(c.changes_detected) ? c.changes_detected.length : 0, createdAt: c.created_at as string,
+    }));
+  },
+  async createCheckpoint(notes: string | null): Promise<boolean> {
+    const { error } = await supabase.rpc("create_hermes_checkpoint", { p_type: "manual", p_notes: notes });
+    return !error;
   },
   async resolveEvent(id: string, notes: string): Promise<boolean> {
     const { error } = await supabase.rpc("resolve_guardian_event", { p_id: id, p_notes: notes });

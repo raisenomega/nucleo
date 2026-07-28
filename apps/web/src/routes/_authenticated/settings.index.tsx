@@ -12,11 +12,12 @@ import { GlToggleCard } from "@admin/presentation/GlToggleCard";
 import { GpsRealtimeToggleCard } from "@admin/presentation/GpsRealtimeToggleCard";
 import { AdminBrandTab } from "@admin/presentation/AdminBrandTab";
 import { AdminThemesTab } from "@admin/presentation/AdminThemesTab";
+import { MfaEnrollment } from "@identity/presentation/MfaEnrollment";
 import { useSession } from "@shared/providers/SessionProvider";
 
 export const Route = createFileRoute("/_authenticated/settings/")({ component: SettingsPage });
 
-type Tab = "team" | "categories" | "general" | "brand" | "themes";
+type Tab = "team" | "categories" | "general" | "brand" | "themes" | "security";
 
 function SettingsPage() {
   const { t } = useI18n();
@@ -34,6 +35,7 @@ function SettingsPage() {
     { id: "general", label: t("generalSettings"), show: isCeo },
     { id: "brand", label: t("templatesTab"), show: isCeo },
     { id: "themes", label: t("themesTab"), show: isCeo },
+    { id: "security", label: t("mfaTitle"), show: true },
   ];
   return (
     <div className="space-y-6 p-4 md:p-8">
@@ -49,6 +51,7 @@ function SettingsPage() {
       {tab === "general" && isCeo && <div className="space-y-4"><AdminSettingsTab settings={m.settings} onSave={m.upsertSetting} /><CostingMethodCard /><GlToggleCard /><GpsRealtimeToggleCard /></div>}
       {tab === "brand" && isCeo && <AdminBrandTab tenantId={session?.tenantId ?? ""} settings={m.settings} onSaveSetting={m.upsertSetting} />}
       {tab === "themes" && isCeo && <AdminThemesTab tenantId={session?.tenantId ?? ""} />}
+      {tab === "security" && <MfaEnrollment />}
     </div>
   );
 }

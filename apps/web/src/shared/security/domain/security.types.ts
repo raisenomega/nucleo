@@ -44,17 +44,15 @@ export interface SentinelScan {
   readonly scannedAt: string;
 }
 export interface SecurityDashboardData {
-  readonly loginsToday: number;
-  readonly failedLoginsToday: number;
-  readonly bruteForceAttempts: number;
-  readonly criticalEvents: number;
-  readonly blockedIps: number;
-  readonly lastRlsAudit: SentinelScan | null;
-  readonly lastGlIntegrity: SentinelScan | null;
-  readonly securityScore: number;
-  readonly recentEvents: GuardianEvent[];
-  readonly recentAudit: AuditEntry[];
-  readonly activeWatchlist: IpWatchEntry[];
+  readonly loginsToday: number; readonly failedLoginsToday: number; readonly bruteForceAttempts: number;
+  readonly criticalEvents: number; readonly blockedIps: number; readonly securityScore: number;
+  readonly lastRlsAudit: SentinelScan | null; readonly lastGlIntegrity: SentinelScan | null;
+  readonly recentEvents: GuardianEvent[]; readonly recentAudit: AuditEntry[]; readonly activeWatchlist: IpWatchEntry[];
+}
+export interface HermesCheckpoint {
+  readonly id: string; readonly checkpointType: string; readonly changesCount: number; readonly createdAt: string;
+  readonly tableCount: number | null; readonly functionCount: number | null; readonly triggerCount: number | null;
+  readonly cronCount: number | null; readonly migrationCount: number | null; readonly rlsPolicyCount: number | null;
 }
 export interface AuditFilters { tenantId?: string; userId?: string; entityType?: string; action?: string; riskLevel?: string; from?: string; to?: string; limit?: number; offset?: number; }
 export interface EventFilters { severity?: string; eventType?: string; unresolvedOnly?: boolean; limit?: number; offset?: number; }
@@ -64,6 +62,8 @@ export interface ISecurityRepository {
   getAuditLog(f: AuditFilters): Promise<Paged<AuditEntry>>;
   getGuardianEvents(f: EventFilters): Promise<Paged<GuardianEvent>>;
   listScans(): Promise<SentinelScan[]>;
+  listCheckpoints(): Promise<HermesCheckpoint[]>;
+  createCheckpoint(notes: string | null): Promise<boolean>;
   resolveEvent(id: string, notes: string): Promise<boolean>;
   manageIp(ip: string, action: "add" | "remove", listType?: string, reason?: string, expires?: string | null): Promise<boolean>;
   runScan(type: string): Promise<boolean>;
