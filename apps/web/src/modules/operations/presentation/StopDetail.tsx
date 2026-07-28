@@ -4,6 +4,7 @@ import { useI18n } from "@shared/i18n";
 import { usePdfShare } from "@shared/hooks/usePdfShare";
 import { usePdfBrand } from "@shared/hooks/usePdfBrand";
 import { serviceCompletionDoc } from "@operations/presentation/pdf/service-pdf";
+import { shareViaWhatsApp } from "@shared/lib/share-whatsapp";
 import { formatCurrency } from "@shared/lib/format";
 import { ScreenModal } from "@shared/components/ScreenModal";
 import { StopEvidencePhase } from "@operations/presentation/StopEvidencePhase";
@@ -13,8 +14,8 @@ import { StopPaymentForm } from "@operations/presentation/StopPaymentForm";
 import { StopSuppliesForm } from "@operations/presentation/StopSuppliesForm";
 import type { RouteStop, CompletePayload } from "@operations/domain/route.types";
 
-export function StopDetail({ stop, tenantId, onClose, onPay, onNotAttended, onEvidence, onMarkDone }: {
-  stop: RouteStop; tenantId: string; onClose: () => void; onMarkDone: () => void;
+export function StopDetail({ stop, tenantId, completedBy, onClose, onPay, onNotAttended, onEvidence, onMarkDone }: {
+  stop: RouteStop; tenantId: string; completedBy: string; onClose: () => void; onMarkDone: () => void;
   onPay: (p: CompletePayload) => void; onNotAttended: (r: string) => void; onEvidence: (phase: "before" | "after", paths: string[]) => void;
 }) {
   const { t } = useI18n();
@@ -25,10 +26,11 @@ export function StopDetail({ stop, tenantId, onClose, onPay, onNotAttended, onEv
   const [paying, setPaying] = useState(false);
   const [supplies, setSupplies] = useState(false);
   const [waWanted, setWaWanted] = useState(false); const [withPhotos, setWithPhotos] = useState(false);
+  // Al completar: si se pidió, genera el comprobante (con/sin fotos) → sube → WhatsApp branded al cliente.
   async function doComplete() {
     if (waWanted && stop.phone) {
-      const url = await sharePdf(() => serviceCompletionDoc(stop, "", withPhotos, brand, t), `service/${stop.id}-${Date.now()}.pdf`);
-      window.open(`https://wa.me/${stop.phone.replace(/\D/g, "")}?text=${encodeURIComponent(`${t("docService")}${url ? `\n${url}` : ""}`)}`, "_blank", "noopener");
+      const url = await sharePdf(() => serviceCompletionDoc(stop, completedBy, withPhotos, brand, t), `service/${stop.id}-${Date.now()}.pdf`);
+      shareViaWhatsApp(stop.phone, `${t("docService")}\n${stop.address}${url ? `\n\n${url}` : ""}`);
     } else if (waWanted) window.alert(t("noPhone"));
     onMarkDone();
   }

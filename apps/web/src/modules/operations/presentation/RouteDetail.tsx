@@ -39,7 +39,7 @@ export function RouteDetail({ route, stops, employees, tenantId, onClose, onPay,
         </div>
         {route.assetId && <RouteGpsVerify assetId={route.assetId} routeDate={route.routeDate} stops={stops} />}
       </ScreenModal>
-      {cur && <StopDetail stop={cur} tenantId={tenantId} onClose={() => setOpen(null)}
+      {cur && <StopDetail stop={cur} tenantId={tenantId} completedBy={emp} onClose={() => setOpen(null)}
         onPay={(p) => onPay(cur.id, p)}
         onNotAttended={(r) => { onNotAttended(cur.id, r); setOpen(null); }}
         onMarkDone={() => { onMarkDone(cur.id); setOpen(null); }}

@@ -21,14 +21,14 @@ function PhotoGrid({ urls }: { urls: string[] }) {
 
 export function ServiceCompletionPdf({ data, photos, brand, labels }: {
   data: ServiceCompletionData; photos?: ServicePhotos; brand: PdfBrand;
-  labels: { title: string; customer: string; service: string; date: string; notes: string; before: string; after: string; completedBy: string };
+  labels: { title: string; customer: string; service: string; date: string; address: string; notes: string; before: string; after: string; completedBy: string };
 }) {
   const line = (k: string, v: string) => (v ? <View style={{ flexDirection: "row", paddingVertical: 1 }}><Text style={[doc.muted, { width: "30%" }]}>{k}</Text><Text>{v}</Text></View> : null);
   return (
     <PdfDocument title={labels.title} brand={brand} meta={<Text style={doc.docNumber}>{labels.title}</Text>}>
       <View style={doc.box}>
         {line(labels.customer, data.customerName)}{line(labels.service, data.serviceType)}
-        {line(labels.date, data.date)}{line("", data.address)}
+        {line(labels.date, data.date)}{line(labels.address, data.address)}
       </View>
       {data.notes ? <><Text style={doc.h2}>{labels.notes}</Text><Text style={doc.muted}>{data.notes}</Text></> : null}
       {photos?.before.length ? <><Text style={doc.h2}>{labels.before}</Text><PhotoGrid urls={photos.before} /></> : null}
