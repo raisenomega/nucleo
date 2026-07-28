@@ -9,6 +9,7 @@ import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { formatCurrency } from "@shared/lib/format";
 import { ScreenModal } from "@shared/components/ScreenModal";
 import { LinkedCustomerBadge } from "@shared/components/LinkedCustomerBadge";
+import { QuoteConversionLink } from "@quotes/presentation/QuoteConversionLink";
 import { SaleLinesList } from "@shared/components/SaleLinesList";
 import { LineItemInventoryPanel } from "@fieldops/presentation/LineItemInventoryPanel";
 import { QUOTE_ST_KEY, QUOTE_ST_COLOR } from "@quotes/presentation/quote-ui";
@@ -35,6 +36,7 @@ export function QuoteDetail({ quote, canManage, onStatus, onConvert, onCreateOrd
         <div className="flex flex-wrap items-center gap-2">
           <span className="font-mono text-xs">{q.quoteNumber ?? "—"}</span>
           <span className={`rounded px-2 py-0.5 text-xs font-bold ${QUOTE_ST_COLOR[q.status]}`}>{t(QUOTE_ST_KEY[q.status])}</span>
+          {q.status === "converted" && <QuoteConversionLink quoteId={q.id} />}
         </div>
         <LinkedCustomerBadge customerId={q.customerId} name={q.clientName} className="text-sm" />
         <SaleLinesList items={q.items} canView={can("inventory", "view")} onLineClick={setDrill} />
