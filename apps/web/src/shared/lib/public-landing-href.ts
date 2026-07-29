@@ -1,9 +1,11 @@
 // URL de la landing PÚBLICA del tenant, para el botón "Volver al inicio" de las páginas públicas.
-// Si la página se sirve en el panel (app.{dominio}), quita el prefijo `app.`: en ese host, "/" redirige
-// a /login (hostKind='panel'), no a la landing. En el host público del tenant devuelve la raíz absoluta.
-// Las páginas públicas solo montan sus botones en cliente (los datos se fetchean en useEffect), así que
-// window siempre existe aquí; el fallback "/" es solo defensa por si se llamara en SSR.
+// Las páginas de éxito se sirven a veces en el subdominio del PANEL (app.{dominio}, = portal de empleados),
+// donde "/" redirige a /login (hostKind='panel'), no a la landing. La landing pública del cliente vive en el
+// subdominio público (www.{dominio}). Por eso mapeamos `app.` → `www.` para ir SIEMPRE a la landing pública.
+// Si el host ya es público (www./apex/otro), se deja igual. Fallback "/" solo por defensa en SSR (los botones
+// de las páginas públicas montan en cliente, así que window siempre existe aquí).
 export function publicLandingHref(): string {
   if (typeof window === "undefined") return "/";
-  return `${window.location.protocol}//${window.location.host.replace(/^app\./i, "")}/`;
+  const host = window.location.host.replace(/^app\./i, "www.");
+  return `${window.location.protocol}//${host}/`;
 }
