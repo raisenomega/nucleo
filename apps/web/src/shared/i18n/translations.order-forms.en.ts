@@ -11,7 +11,7 @@ export const enOrderForms = {
   ofOptions: "Options", ofAddOption: "Add option", ofMin: "Min", ofMax: "Max", ofRows: "Rows", ofStep: "Step", ofPattern: "Pattern (regex)", ofDefaultChecked: "Checked by default",
   ofCondToggle: "Show only if another field has a value", ofCondValue: "Value",
   ofKindText: "Short text", ofKindEmail: "Email", ofKindTel: "Phone", ofKindTextarea: "Long text", ofKindNumber: "Number", ofKindSelect: "Dropdown", ofKindRadio: "Radio", ofKindCheckbox: "Checkbox",
-  ofKindDate: "Date", ofKindAddress: "Full address", ofKindMatrix: "Price matrix", ofKindAddons: "Add-ons", ofKindRepeatable: "Repeatable group", ofKindFile: "File upload",
+  ofKindDate: "Date", ofKindAddress: "Full address", ofKindMatrix: "Price matrix", ofKindAddons: "Add-ons", ofKindRepeatable: "Repeatable group", ofKindFile: "File upload", ofKindDisclaimer: "Notice / Disclaimer",
   ofItemFormLabel: "Order form", ofItemFormDefault: "— Use default form —",
   ofItemFormHint: "The form the customer sees when ordering this item. Default = the tenant's form marked as default.",
   ofDepsTitle: "You can't delete this form", ofDepsBody: "{n} catalog items are using it. Reassign them before deleting.", ofClose: "Close",
