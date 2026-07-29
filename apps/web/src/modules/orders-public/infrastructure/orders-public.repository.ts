@@ -57,15 +57,15 @@ export const ordersPublicRepository = {
     const { data } = await supabase.rpc("_public_create_order", { _hostname: window.location.hostname, _payload: payload, _client_ip: null });
     return data as { status?: string; code?: string; order_number?: string; order_id?: string; public_token?: string } | null;
   },
-  // Config de pago del tenant (por hostname). El modal decide picker legacy vs Stripe.
-  async payConfig(): Promise<PayConfig> {
+  async payConfig(): Promise<PayConfig> { // config de pago del tenant: el modal decide picker legacy vs Stripe
     const { data } = await supabase.rpc("_public_landing_pay_config", { _hostname: window.location.hostname });
-    const d = data as { stripeEnabled?: boolean; publishableKey?: string | null } | null;
-    return { stripeEnabled: d?.stripeEnabled ?? false, publishableKey: d?.publishableKey ?? null };
+    const d = (data ?? {}) as Partial<PayConfig>;
+    return { stripeEnabled: d.stripeEnabled ?? false, publishableKey: d.publishableKey ?? null };
   },
-  // Checkout Stripe one-time para una orden ya creada (reusa el RPC de STRIPE-2).
-  async createCheckout(orderToken: string): Promise<string | null> {
-    const { data } = await supabase.rpc("create_stripe_checkout_session", { p_invoice_token: null, p_order_token: orderToken });
+  async createCheckout(orderToken: string, subscription = false): Promise<string | null> { // one-time (STRIPE-2) o suscripción inline
+    const { data } = subscription
+      ? await supabase.rpc("create_stripe_subscription_checkout", { p_order_token: orderToken })
+      : await supabase.rpc("create_stripe_checkout_session", { p_invoice_token: null, p_order_token: orderToken });
     return (data as { checkout_url?: string } | null)?.checkout_url ?? null;
   },
   async confirmAthSent(orderId: string): Promise<boolean> {

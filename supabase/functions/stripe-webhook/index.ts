@@ -4,7 +4,8 @@
 //
 // Deploy manual (Jojo):  supabase functions deploy stripe-webhook --no-verify-jwt
 // Endpoint por tenant:   https://ultwflbebsdhkphntjkw.supabase.co/functions/v1/stripe-webhook?tenant_id=<TENANT_UUID>
-// Eventos a suscribir en Stripe: checkout.session.completed, charge.refunded, charge.dispute.created
+// Eventos a suscribir en Stripe: checkout.session.completed, charge.refunded,
+//   customer.subscription.created/updated/deleted, invoice.payment_succeeded, invoice.payment_failed
 import Stripe from "https://esm.sh/stripe@14?target=deno";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -33,10 +34,17 @@ Deno.serve(async (req) => {
   if (insErr?.code === "23505") return new Response("Already processed", { status: 200 });
 
   try {
+    const obj = event.data.object as Record<string, unknown>;
     if (event.type === "checkout.session.completed")
-      await supabase.rpc("process_checkout_completed", { p_tenant_id: tenantId, p_session: event.data.object });
+      await supabase.rpc(obj.mode === "subscription" ? "process_subscription_checkout" : "process_checkout_completed", { p_tenant_id: tenantId, p_session: obj });
     else if (event.type === "charge.refunded")
-      await supabase.rpc("process_refund", { p_tenant_id: tenantId, p_charge: event.data.object });
+      await supabase.rpc("process_refund", { p_tenant_id: tenantId, p_charge: obj });
+    else if (event.type.startsWith("customer.subscription."))
+      await supabase.rpc("process_subscription_event", { p_tenant_id: tenantId, p_sub: obj });
+    else if (event.type === "invoice.payment_succeeded")
+      await supabase.rpc("process_recurring_payment", { p_tenant_id: tenantId, p_invoice: obj });
+    else if (event.type === "invoice.payment_failed")
+      await supabase.rpc("process_failed_recurring_payment", { p_tenant_id: tenantId, p_invoice: obj });
     await supabase.from("stripe_webhook_events")
       .update({ processed: true, processed_at: new Date().toISOString() }).eq("stripe_event_id", event.id);
   } catch (e) {

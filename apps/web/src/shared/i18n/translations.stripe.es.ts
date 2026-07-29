@@ -26,4 +26,9 @@ export const esStripe = {
   payTx30d: "Transacciones 30d",
   payTotal30d: "Total 30d",
   payNoStripe: "Ningún tenant con Stripe activo todavía.",
+  subscribeCard: "Suscribirme con tarjeta",
+  subActivated: "¡Suscripción activada! Recibirás confirmación por email.",
+  subsTab: "Suscripciones", subsItem: "Plan", subsFrequency: "Frecuencia", subsAmount: "Monto",
+  subsStatus: "Estado", subsNextCharge: "Próximo cobro", subsCancel: "Cancelar",
+  subsCancelConfirm: "¿Cancelar esta suscripción al fin del período actual?", subsEmpty: "Aún no hay suscripciones.",
 } satisfies Partial<Record<TranslationKey, string>>;

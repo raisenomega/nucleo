@@ -5,6 +5,7 @@ import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { InvoicesTab } from "@billing/presentation/InvoicesTab";
 import { PlansTab } from "@billing/presentation/PlansTab";
+import { SubscriptionsTab } from "@billing/presentation/SubscriptionsTab";
 import { ArAgingPanel } from "@shared/customers/ArAgingPanel";
 
 export const Route = createFileRoute("/_authenticated/billing")({
@@ -12,7 +13,7 @@ export const Route = createFileRoute("/_authenticated/billing")({
   validateSearch: (s: Record<string, unknown>): { invoice?: string } => ({ invoice: typeof s.invoice === "string" ? s.invoice : undefined }),
 });
 
-type Tab = "invoices" | "receivables" | "plans" | "orders";
+type Tab = "invoices" | "receivables" | "plans" | "subscriptions" | "orders";
 
 function BillingPage() {
   const { t } = useI18n(); const { can } = useModuleAccess();
@@ -20,7 +21,7 @@ function BillingPage() {
   const [tab, setTab] = useState<Tab>("invoices");
   if (!can("billing", "view")) return <Navigate to="/dashboard" />;
   const tabs: { k: Tab; label: string }[] = [
-    { k: "invoices", label: t("invoice") }, { k: "receivables", label: "Cartera" }, { k: "plans", label: t("recurringPlans") }, { k: "orders", label: t("orders") }];
+    { k: "invoices", label: t("invoice") }, { k: "receivables", label: "Cartera" }, { k: "plans", label: t("recurringPlans") }, { k: "subscriptions", label: t("subsTab") }, { k: "orders", label: t("orders") }];
   return (
     <div className="space-y-6 p-4 md:p-8">
       <div className="space-y-2">
@@ -33,6 +34,7 @@ function BillingPage() {
       {tab === "invoices" && <InvoicesTab initialInvoiceId={invoice} />}
       {tab === "receivables" && <ArAgingPanel />}
       {tab === "plans" && <PlansTab />}
+      {tab === "subscriptions" && <SubscriptionsTab />}
       {tab === "orders" && (
         <div className="rounded-xl border border-dashed border-border bg-card p-8 text-center">
           <ShoppingCart className="mx-auto h-8 w-8 text-muted-foreground" />

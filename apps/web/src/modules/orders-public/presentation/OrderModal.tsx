@@ -25,9 +25,9 @@ export function OrderModal({ item, onClose, defaultValues, defaultCoupon, promoC
   const [values, setValues] = useState<Record<string, unknown>>({});
   const [pm, setPm] = useState(""); const [coupon, setCoupon] = useState<string | null>(defaultCoupon ?? null);
   const [done, setDone] = useState<{ orderNumber: string; orderId: string } | null>(null); const [redirecting, setRedirecting] = useState(false);
-  // Suscripciones (form con campo 'frequency') siguen el flujo legacy hasta Fase 2; one-time con Stripe → checkout.
+  // isSub (form con campo 'frequency') → checkout de suscripción; one-time → checkout normal. Ambos con Stripe si está activo.
   const isSub = form?.fields.some((f) => f.fieldKey === "frequency") ?? false;
-  const useStripe = (payConfig?.stripeEnabled ?? false) && !isSub;
+  const useStripe = payConfig?.stripeEnabled ?? false;
   useEffect(() => { if (!useStripe && methods[0] && !pm) setPm(methods[0].methodKey); }, [methods, pm, useStripe]);
   useEffect(() => { if (form) setValues({ ...Object.fromEntries(form.fields.filter((f) => f.validation.default !== undefined).map((f) => [f.fieldKey, f.validation.default])), ...defaultValues }); }, [form]);
   const items = [{ kind: item.kind, id: item.id, qty: 1, name: item.name }]; const totals = useOrderPricing(item, values, coupon);
@@ -37,9 +37,9 @@ export function OrderModal({ item, onClose, defaultValues, defaultCoupon, promoC
     if (bad) { const msg = (locale === "en" ? bad.validation.error_en : bad.validation.error_es) as string | undefined; return toast.error(msg || t("checkoutRequiredField")); }
     const r = await submit({ formId: form.id, items, customFields: values, paymentMethodKey: useStripe ? "stripe" : pm, couponCode: coupon, clientTotal: totals.total });
     if (!r.ok) return toast.error(t((ERR[r.code] ?? "opErrNetwork") as Parameters<typeof t>[0]));
-    if (useStripe) { // crea la orden pending → redirige a Stripe Checkout; el webhook la marca pagada.
+    if (useStripe) { // crea la orden pending → redirige a Stripe Checkout (suscripción o one-time); el webhook confirma.
       setRedirecting(true);
-      const url = r.publicToken ? await checkout(r.publicToken) : null;
+      const url = r.publicToken ? await checkout(r.publicToken, isSub) : null;
       if (url) window.location.assign(url); else { setRedirecting(false); toast.error(t("payError")); }
       return;
     }
@@ -65,7 +65,7 @@ export function OrderModal({ item, onClose, defaultValues, defaultCoupon, promoC
         )}
       </div>
       {status === "ready" && form && (
-        <OrderSubmitBar form={form} totals={totals} promoContext={promoContext} busy={busy} redirecting={redirecting} useStripe={useStripe} pm={pm} locale={locale} onSubmit={() => void onSubmit()} onClose={onClose} />
+        <OrderSubmitBar form={form} totals={totals} promoContext={promoContext} busy={busy} redirecting={redirecting} useStripe={useStripe} isSub={isSub} pm={pm} locale={locale} onSubmit={() => void onSubmit()} onClose={onClose} />
       )}
     </ScreenModal>
   );

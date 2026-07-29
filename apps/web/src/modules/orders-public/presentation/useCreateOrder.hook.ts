@@ -14,9 +14,9 @@ export function useCreateOrder() {
       return { ok: false, code: d.code ?? "network", errors: d.errors };
     } finally { setBusy(false); }
   }
-  // Checkout Stripe one-time para una orden ya creada (redirige a Stripe).
-  async function checkout(orderToken: string): Promise<string | null> {
-    return ordersPublicRepository.createCheckout(orderToken);
+  // Checkout Stripe (one-time o suscripción) para una orden ya creada (redirige a Stripe).
+  async function checkout(orderToken: string, subscription: boolean): Promise<string | null> {
+    return ordersPublicRepository.createCheckout(orderToken, subscription);
   }
   return { busy, submit, checkout };
 }

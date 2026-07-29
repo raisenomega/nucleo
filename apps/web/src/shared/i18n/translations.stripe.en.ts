@@ -26,4 +26,9 @@ export const enStripe = {
   payTx30d: "Transactions 30d",
   payTotal30d: "Total 30d",
   payNoStripe: "No tenant with Stripe enabled yet.",
+  subscribeCard: "Subscribe by card",
+  subActivated: "Subscription activated! You'll get a confirmation by email.",
+  subsTab: "Subscriptions", subsItem: "Plan", subsFrequency: "Frequency", subsAmount: "Amount",
+  subsStatus: "Status", subsNextCharge: "Next charge", subsCancel: "Cancel",
+  subsCancelConfirm: "Cancel this subscription at the end of the current period?", subsEmpty: "No subscriptions yet.",
 } satisfies Partial<Record<TranslationKey, string>>;
