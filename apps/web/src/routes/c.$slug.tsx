@@ -33,8 +33,11 @@ function campaignHead(ld: LD | undefined) {
 
 // Ruta pública SSR ACOTADA: el loader corre server-side y solo lee page+blocks+tema (no toca PublicLandingRoot).
 export const Route = createFileRoute("/c/$slug")({
-  validateSearch: (s: Record<string, unknown>): { preview: boolean } => ({ preview: s.preview === true || s.preview === "true" }),
-  loaderDeps: ({ search }) => ({ preview: search.preview }),
+  // preview OPCIONAL: solo se incluye en la URL cuando ?preview=true. Antes se devolvía siempre
+  // { preview:false } → TanStack redirigía (307) la URL limpia a ?preview=false, y Googlebot veía un
+  // redirect + mismatch de canonical → "no indexada". La URL limpia debe servir 200 directo.
+  validateSearch: (s: Record<string, unknown>): { preview?: true } => (s.preview === true || s.preview === "true" ? { preview: true } : {}),
+  loaderDeps: ({ search }) => ({ preview: search.preview === true }),
   loader: async ({ params, deps }): Promise<LD> => {
     const data = await getCampaignPage(currentHost(), params.slug, deps.preview);
     if (!data && !deps.preview) throw notFound();
