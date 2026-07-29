@@ -2,7 +2,7 @@ import type { TranslationKey } from "./translations.keys";
 
 // Namespace Stripe (STRIPE-1 Fase 1 · métodos de pago).
 export const esStripe = {
-  stripePayments: "Métodos de pago",
+  stripePayments: "Stripe",
   stripeIntro: "Acepta pagos con tarjeta conectando tu cuenta Stripe. NÚCLEO no cobra comisión adicional — solo pagas las tarifas de Stripe (2.9% + $0.30). Tus claves se guardan cifradas.",
   stripePk: "Publishable key (pk_...)",
   stripeSk: "Secret key (sk_...) — se cifra al guardar",

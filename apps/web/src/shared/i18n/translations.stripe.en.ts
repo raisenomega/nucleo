@@ -2,7 +2,7 @@ import type { TranslationKey } from "./translations.keys";
 
 // Stripe namespace (STRIPE-1 Phase 1 · payment methods).
 export const enStripe = {
-  stripePayments: "Payment methods",
+  stripePayments: "Stripe",
   stripeIntro: "Accept card payments by connecting your Stripe account. NÚCLEO takes no extra fee — you only pay Stripe's rates (2.9% + $0.30). Your keys are stored encrypted.",
   stripePk: "Publishable key (pk_...)",
   stripeSk: "Secret key (sk_...) — encrypted on save",

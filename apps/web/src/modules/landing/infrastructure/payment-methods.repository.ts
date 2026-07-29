@@ -10,6 +10,11 @@ export const paymentMethodsRepository = {
     const { data } = await supabase.from("tenant_payment_methods").select(COLS).order("display_order");
     return (data as PaymentMethod[] | null) ?? [];
   },
+  // ¿El tenant tiene Stripe conectado? (para mostrar Stripe como método principal en el panel).
+  async stripeEnabled(): Promise<boolean> {
+    const { data } = await supabase.rpc("get_stripe_config");
+    return (data as { stripeEnabled?: boolean } | null)?.stripeEnabled === true;
+  },
   async save(d: PaymentMethodDraft): Promise<string | null> {
     const { id, ...row } = d;
     const res = id
