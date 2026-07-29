@@ -20,8 +20,8 @@ export function DashboardCartera({ d }: { d: DashData }) {
         <KpiCard label={t("activeClients")} value={`${d.ops?.customersActive ?? 0}`} sub={`${d.ops?.customersDebt ?? 0} ${t("cWithDebt")}`} />
       </div>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        {ar && <DashAgingBar title={t("arAging")} aging={ar} />}
-        {ap && ap.total > 0 && <DashAgingBar title={t("apAging")} aging={ap} />}
+        {ar && <DashAgingBar title={t("arAging")} aging={ar} emptyMessage={t("chartNoAr")} />}
+        {ap && <DashAgingBar title={t("apAging")} aging={ap} emptyMessage={t("chartNoAp")} />}
       </div>
       <DashList title={t("topDebtors")} rows={debtors} />
     </div>
