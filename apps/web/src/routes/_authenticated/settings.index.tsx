@@ -13,11 +13,12 @@ import { GpsRealtimeToggleCard } from "@admin/presentation/GpsRealtimeToggleCard
 import { AdminBrandTab } from "@admin/presentation/AdminBrandTab";
 import { AdminThemesTab } from "@admin/presentation/AdminThemesTab";
 import { MfaEnrollment } from "@identity/presentation/MfaEnrollment";
+import { StripeConfigPanel } from "@admin/presentation/StripeConfigPanel";
 import { useSession } from "@shared/providers/SessionProvider";
 
 export const Route = createFileRoute("/_authenticated/settings/")({ component: SettingsPage });
 
-type Tab = "team" | "categories" | "general" | "brand" | "themes" | "security";
+type Tab = "team" | "categories" | "general" | "brand" | "themes" | "security" | "payments";
 
 function SettingsPage() {
   const { t } = useI18n();
@@ -36,6 +37,7 @@ function SettingsPage() {
     { id: "brand", label: t("templatesTab"), show: isCeo },
     { id: "themes", label: t("themesTab"), show: isCeo },
     { id: "security", label: t("mfaTitle"), show: true },
+    { id: "payments", label: t("stripePayments"), show: isCeo },
   ];
   return (
     <div className="space-y-6 p-4 md:p-8">
@@ -52,6 +54,7 @@ function SettingsPage() {
       {tab === "brand" && isCeo && <AdminBrandTab tenantId={session?.tenantId ?? ""} settings={m.settings} onSaveSetting={m.upsertSetting} />}
       {tab === "themes" && isCeo && <AdminThemesTab tenantId={session?.tenantId ?? ""} />}
       {tab === "security" && <MfaEnrollment />}
+      {tab === "payments" && isCeo && <StripeConfigPanel />}
     </div>
   );
 }
