@@ -1,17 +1,18 @@
 // BC landing — panel de edición. Puro (sin infra). Tipos + interfaces de repositorio.
 import type { ItemHighlight } from "@shared/types/item-highlight.types";
+import type { ContactConfig } from "@landing/domain/contact-config.types";
 export type Result = { ok: true } | { ok: false; error: string };
 export type BusinessHours = Record<string, { open: string; close: string } | null>;
 export type CtaType = "quote" | "order" | "contact" | "custom";
 export type CategoryType = "product" | "service" | "both";
 
 export interface LandingConfig {
-  heroTitle: string; heroSubtitle: string; heroCtaLabel: string; heroCtaType: CtaType; heroCtaHref: string;
-  heroImageUrl: string | null; heroVideoUrl: string | null;
+  heroTitle: string; heroSubtitle: string; heroCtaLabel: string; heroCtaType: CtaType; heroCtaHref: string; heroImageUrl: string | null; heroVideoUrl: string | null;
   metaTitle: string; metaDescription: string; metaOgImageUrl: string | null; metaKeywords: string[];
   publicPhone: string; publicWhatsapp: string; publicEmail: string; publicAddress: string;
   businessHours: BusinessHours | null;
   socialFacebook: string; socialInstagram: string; socialYoutube: string; socialTiktok: string;
+  socialLinkedin: string; socialX: string; contactConfig: ContactConfig | null;
   schemaBusinessType: string; schemaGeoLat: number | null; schemaGeoLng: number | null; schemaPriceRange: string;
 }
 

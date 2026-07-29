@@ -1,10 +1,8 @@
 import { Phone, Mail, MessageCircle } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useI18n } from "@shared/i18n";
+import { FooterSocials } from "@landing-public/presentation/footer/FooterSocials";
 import type { PublicBrand } from "@landing-public/domain/public-brand.types";
-
-const SOCIALS = [["facebook", "f"], ["instagram", "IG"], ["youtube", "YT"], ["tiktok", "TT"]] as const;
-const chip = "grid h-9 w-9 place-items-center rounded-full border border-[color:var(--glass-border)] text-xs font-bold";
 
 // Footer medio: 3 columnas (marca / contacto / redes) + fila inferior (copyright + blog + legal placeholder).
 export function PublicFooter({ brand, tagline }: { brand: PublicBrand; tagline: string }) {
@@ -29,7 +27,7 @@ export function PublicFooter({ brand, tagline }: { brand: PublicBrand; tagline: 
         </div>
         <div>
           <h3 className="mb-3 font-bold">{t("lpFooterSocialHeader")}</h3>
-          <div className="flex gap-2">{SOCIALS.filter(([k]) => s[k]).map(([k, l]) => <a key={k} href={s[k]!} target="_blank" rel="noreferrer" aria-label={k} className={chip}>{l}</a>)}</div>
+          <FooterSocials links={s} />
         </div>
       </div>
       <div className="mx-auto mt-10 flex max-w-7xl flex-wrap items-center justify-between gap-4 border-t border-[color:var(--glass-border)] pt-6 text-xs text-[color:hsl(var(--lp-muted))]">

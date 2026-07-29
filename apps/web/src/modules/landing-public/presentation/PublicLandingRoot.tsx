@@ -11,6 +11,7 @@ import { useLandingHome } from "@landing-public/presentation/useLandingHome.hook
 import { HomeSections } from "@landing-public/presentation/HomeSections";
 import { LandingHeroSections } from "@landing-public/presentation/hero-sections/LandingHeroSections";
 import { ContactSection } from "@landing-public/presentation/sections/ContactSection";
+import type { ContactConfig } from "@landing-public/domain/contact-config.types";
 import { PromoOffer } from "@landing-public/presentation/promo/PromoOffer";
 import { PublicFooter } from "@landing-public/presentation/footer/PublicFooter";
 
@@ -42,7 +43,7 @@ export function PublicLandingRoot() {
         </HeroContainer>
         <LandingHeroSections />
         <HomeSections home={home} />
-        <ContactSection />
+        <ContactSection contactConfig={(hero?.contact_config ?? null) as ContactConfig | null} />
         <PublicFooter brand={s.brand} tagline={(hero?.meta_description as string) ?? ""} />
         <PromoOffer />
       </div>

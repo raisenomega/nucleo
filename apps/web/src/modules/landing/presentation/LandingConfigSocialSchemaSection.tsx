@@ -11,6 +11,8 @@ export function LandingConfigSocialSchemaSection({ c, set }: { c: LandingConfig;
       <input value={c.socialInstagram} onChange={(e) => set({ socialInstagram: e.target.value })} placeholder="Instagram" className={f} />
       <input value={c.socialYoutube} onChange={(e) => set({ socialYoutube: e.target.value })} placeholder="YouTube" className={f} />
       <input value={c.socialTiktok} onChange={(e) => set({ socialTiktok: e.target.value })} placeholder="TikTok" className={f} />
+      <input value={c.socialLinkedin} onChange={(e) => set({ socialLinkedin: e.target.value })} placeholder="LinkedIn" className={f} />
+      <input value={c.socialX} onChange={(e) => set({ socialX: e.target.value })} placeholder="X (Twitter)" className={f} />
       <input value={c.schemaBusinessType} onChange={(e) => set({ schemaBusinessType: e.target.value })} placeholder={t("businessType")} className={f} />
       <div className="flex gap-2">
         <input type="number" value={c.schemaGeoLat ?? ""} onChange={(e) => set({ schemaGeoLat: num(e.target.value) })} placeholder={t("geoLat")} className={f} />

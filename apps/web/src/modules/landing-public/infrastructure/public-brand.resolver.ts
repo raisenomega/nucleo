@@ -21,7 +21,7 @@ export async function resolvePublicBrand(hostname: string): Promise<PublicBrand 
     primaryColor: d.primary_color as string, accentColor: d.accent_color as string,
     logoUrl: (d.logo_url as string | null) ?? null, faviconUrl: (d.favicon_url as string | null) ?? null,
     contactPhone: (d.contact_phone as string | null) ?? null, contactEmail: (d.contact_email as string | null) ?? null,
-    socialLinks: { facebook: s.facebook ?? null, instagram: s.instagram ?? null, youtube: s.youtube ?? null, tiktok: s.tiktok ?? null },
+    socialLinks: { facebook: s.facebook ?? null, instagram: s.instagram ?? null, youtube: s.youtube ?? null, tiktok: s.tiktok ?? null, linkedin: s.linkedin ?? null, x: s.x ?? null },
   };
   cache.set(hostname, brand);
   return brand;
