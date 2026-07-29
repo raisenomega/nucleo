@@ -2,6 +2,7 @@ import { FileDown, ArrowLeft } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { usePdfExport } from "@shared/hooks/usePdfExport";
 import { publicDeliveryDoc } from "@sales/presentation/pdf/public-delivery-pdf";
+import { publicLandingHref } from "@shared/lib/public-landing-href";
 import type { PublicDeliveryResp } from "@sales/infrastructure/supabase-delivery-share.repository";
 
 // Página pública branded del conduce (patrón /orden). Marca del RPC. Firma inline; PDF client-side.
@@ -28,7 +29,7 @@ export function PublicDeliveryView({ data }: { data: PublicDeliveryResp }) {
         {n.received_by && <p className="text-sm"><span className="font-bold">{t("receivedBy")}: </span>{n.received_by}</p>}
         {n.signature && <div><p className="text-xs font-bold text-muted-foreground">{t("signature")}</p><img src={n.signature} alt="" className="h-20 rounded border border-border bg-white" /></div>}
         <div className="flex flex-wrap gap-3">
-          <a href="/" className="flex items-center gap-2 rounded-lg border border-border px-4 py-2 font-bold text-foreground"><ArrowLeft className="h-4 w-4" /> {t("backToHome")}</a>
+          <a href={publicLandingHref()} className="flex items-center gap-2 rounded-lg border border-border px-4 py-2 font-bold text-foreground"><ArrowLeft className="h-4 w-4" /> {t("backToHome")}</a>
           <button type="button" disabled={generating} onClick={() => void exportPdf(() => publicDeliveryDoc(data, labels))} className="flex items-center gap-2 rounded-lg px-4 py-2 font-bold text-white disabled:opacity-50" style={{ backgroundColor: tn.primary_color }}><FileDown className="h-4 w-4" /> {t("downloadPdf")}</button>
         </div>
       </div>

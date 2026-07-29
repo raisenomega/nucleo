@@ -3,6 +3,7 @@ import { useI18n } from "@shared/i18n";
 import { usePdfExport } from "@shared/hooks/usePdfExport";
 import { publicInvoiceDoc } from "@billing/presentation/pdf/public-invoice-pdf";
 import { InvoicePayButton } from "@billing/presentation/InvoicePayButton";
+import { publicLandingHref } from "@shared/lib/public-landing-href";
 import type { PublicInvoiceResp } from "@billing/infrastructure/supabase-invoice-share.repository";
 
 const money = (n: number) => `$${(n ?? 0).toFixed(2)}`;
@@ -34,7 +35,7 @@ export function PublicInvoiceView({ data, token }: { data: PublicInvoiceResp; to
         </div>
         {token && inv.status !== "paid" && <InvoicePayButton token={token} />}
         <div className="flex flex-wrap gap-3">
-          <a href="/" className="flex items-center gap-2 rounded-lg border border-border px-4 py-2 font-bold text-foreground"><ArrowLeft className="h-4 w-4" /> {t("backToHome")}</a>
+          <a href={publicLandingHref()} className="flex items-center gap-2 rounded-lg border border-border px-4 py-2 font-bold text-foreground"><ArrowLeft className="h-4 w-4" /> {t("backToHome")}</a>
           <button type="button" disabled={generating} onClick={() => void exportPdf(() => publicInvoiceDoc(data, labels))} className="flex items-center gap-2 rounded-lg px-4 py-2 font-bold text-white disabled:opacity-50" style={{ backgroundColor: tn.primary_color }}><FileDown className="h-4 w-4" /> {t("downloadPdf")}</button>
         </div>
       </div>
