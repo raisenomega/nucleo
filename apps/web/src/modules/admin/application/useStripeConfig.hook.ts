@@ -37,5 +37,13 @@ export function useStripeConfig() {
     return data as ValRes;
   }, [refresh]);
 
-  return { config, busy, save, validate };
+  const syncCatalog = useCallback(async (): Promise<{ created?: number; error?: string } | null> => {
+    setBusy(true);
+    const { data } = await supabase.rpc("sync_catalog_to_stripe");
+    setBusy(false);
+    await refresh();
+    return data as { created?: number; error?: string } | null;
+  }, [refresh]);
+
+  return { config, busy, save, validate, syncCatalog };
 }

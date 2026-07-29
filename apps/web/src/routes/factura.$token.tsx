@@ -11,5 +11,5 @@ function PublicInvoicePage() {
   const [data, setData] = useState<PublicInvoiceResp | null>(null);
   useEffect(() => { void getInvoiceByToken(token).then(setData); }, [token]);
   if (!data) return <main className="flex min-h-screen items-center justify-center bg-background p-4 text-muted-foreground">…</main>;
-  return <PublicInvoiceView data={data} />;
+  return <PublicInvoiceView data={data} token={token} />;
 }
