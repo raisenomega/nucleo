@@ -1,4 +1,4 @@
-import { FileDown } from "lucide-react";
+import { FileDown, ArrowLeft } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { usePdfExport } from "@shared/hooks/usePdfExport";
 import { publicInvoiceDoc } from "@billing/presentation/pdf/public-invoice-pdf";
@@ -33,7 +33,10 @@ export function PublicInvoiceView({ data, token }: { data: PublicInvoiceResp; to
           <div className="flex justify-between text-lg font-bold" style={{ color: tn.primary_color }}><span>{t("total")}</span><span>{money(inv.total)}</span></div>
         </div>
         {token && inv.status !== "paid" && <InvoicePayButton token={token} />}
-        <button type="button" disabled={generating} onClick={() => void exportPdf(() => publicInvoiceDoc(data, labels))} className="flex items-center gap-2 rounded-lg px-4 py-2 font-bold text-white disabled:opacity-50" style={{ backgroundColor: tn.primary_color }}><FileDown className="h-4 w-4" /> {t("downloadPdf")}</button>
+        <div className="flex flex-wrap gap-3">
+          <a href="/" className="flex items-center gap-2 rounded-lg border border-border px-4 py-2 font-bold text-foreground"><ArrowLeft className="h-4 w-4" /> {t("backToHome")}</a>
+          <button type="button" disabled={generating} onClick={() => void exportPdf(() => publicInvoiceDoc(data, labels))} className="flex items-center gap-2 rounded-lg px-4 py-2 font-bold text-white disabled:opacity-50" style={{ backgroundColor: tn.primary_color }}><FileDown className="h-4 w-4" /> {t("downloadPdf")}</button>
+        </div>
       </div>
     </main>
   );

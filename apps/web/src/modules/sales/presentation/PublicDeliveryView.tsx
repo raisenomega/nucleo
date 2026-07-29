@@ -1,4 +1,4 @@
-import { FileDown } from "lucide-react";
+import { FileDown, ArrowLeft } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { usePdfExport } from "@shared/hooks/usePdfExport";
 import { publicDeliveryDoc } from "@sales/presentation/pdf/public-delivery-pdf";
@@ -27,7 +27,10 @@ export function PublicDeliveryView({ data }: { data: PublicDeliveryResp }) {
           <tbody>{n.items.map((it, i) => <tr key={i} className="border-t border-border"><td className="p-1">{it.description}</td><td className="p-1 text-right">{it.qty}</td></tr>)}</tbody></table>
         {n.received_by && <p className="text-sm"><span className="font-bold">{t("receivedBy")}: </span>{n.received_by}</p>}
         {n.signature && <div><p className="text-xs font-bold text-muted-foreground">{t("signature")}</p><img src={n.signature} alt="" className="h-20 rounded border border-border bg-white" /></div>}
-        <button type="button" disabled={generating} onClick={() => void exportPdf(() => publicDeliveryDoc(data, labels))} className="flex items-center gap-2 rounded-lg px-4 py-2 font-bold text-white disabled:opacity-50" style={{ backgroundColor: tn.primary_color }}><FileDown className="h-4 w-4" /> {t("downloadPdf")}</button>
+        <div className="flex flex-wrap gap-3">
+          <a href="/" className="flex items-center gap-2 rounded-lg border border-border px-4 py-2 font-bold text-foreground"><ArrowLeft className="h-4 w-4" /> {t("backToHome")}</a>
+          <button type="button" disabled={generating} onClick={() => void exportPdf(() => publicDeliveryDoc(data, labels))} className="flex items-center gap-2 rounded-lg px-4 py-2 font-bold text-white disabled:opacity-50" style={{ backgroundColor: tn.primary_color }}><FileDown className="h-4 w-4" /> {t("downloadPdf")}</button>
+        </div>
       </div>
     </main>
   );

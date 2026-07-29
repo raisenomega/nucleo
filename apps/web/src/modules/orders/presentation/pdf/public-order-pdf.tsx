@@ -18,8 +18,11 @@ export async function publicOrderDoc(d: PublicOrderResp, l: PubOrderLabels): Pro
   const a = o.address; // customer_address es objeto jsonb → aplanar a string
   const addr = a && typeof a === "object" ? [a.address, a.unit, a.city, a.state, a.zip].filter(Boolean).join(", ") : (a ?? "");
   const lines = [o.phone ?? "", o.email ?? "", addr, o.billing_frequency ?? ""];
+  // Los items no guardan price (precio dinámico → total); derivar el unitario desde subtotal (reparto por qty).
+  const tq = o.items.reduce((s, it) => s + (it.qty || 0), 0) || 1;
+  const unit = (it: { price?: number; qty: number }) => (it.price != null ? it.price : (o.subtotal * ((it.qty || 0) / tq)) / (it.qty || 1));
   return <SalesDocPdf brand={brand} docTitle={num} docNumber={num} metaLines={[`${l.date}: ${o.created_at.slice(0, 10)}`, `${o.status}`]}
     clientTitle={l.client} clientName={o.customer_name} clientLines={lines}
     itemHeaders={[l.description, l.qty, l.price, l.total]} itemWidths={[55, 15, 15, 15]}
-    itemRows={o.items.map((it) => [it.name, it.qty, $(it.price), $((it.price || 0) * it.qty)])} totals={totals} />;
+    itemRows={o.items.map((it) => [it.name, it.qty, $(unit(it)), $(unit(it) * it.qty)])} totals={totals} />;
 }

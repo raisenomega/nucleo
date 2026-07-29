@@ -1,4 +1,4 @@
-import { FileDown } from "lucide-react";
+import { FileDown, ArrowLeft } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { usePdfExport } from "@shared/hooks/usePdfExport";
 import { publicOrderDoc } from "@orders/presentation/pdf/public-order-pdf";
@@ -14,6 +14,9 @@ export function PublicOrderView({ data, paid, subscribed }: { data: PublicOrderR
   if (data.status !== "valid" || !o || !tn) return <main className="flex min-h-screen items-center justify-center p-4 text-center text-muted-foreground">{t("pdfNotAvailable")}</main>;
   // customer_address llega como objeto jsonb ({address,unit,city,state,zip}); aplanar a string (renderizar el objeto crasheaba React).
   const a = o.address; const addr = a && typeof a === "object" ? [a.address, a.unit, a.city, a.state, a.zip].filter(Boolean).join(", ") : (a ?? null);
+  // Los items no guardan price (el precio es dinámico → vive en el total). Derivar la línea desde subtotal (reparto por qty).
+  const tq = o.items.reduce((s, it) => s + (it.qty || 0), 0) || 1;
+  const lineTotal = (it: { price?: number; qty: number }) => (it.price != null ? it.price * it.qty : o.subtotal * ((it.qty || 0) / tq));
   const labels = { order: t("docOrder"), date: t("date"), client: t("ordCustomerTitle"), description: t("description"),
     qty: t("quantity"), price: t("unitPrice"), total: t("total"), subtotal: t("subtotal"), tax: t("tax") };
   return (
@@ -29,12 +32,15 @@ export function PublicOrderView({ data, paid, subscribed }: { data: PublicOrderR
           {[o.phone, o.email, addr, o.billing_frequency].filter(Boolean).map((x, i) => <p key={i} className="text-muted-foreground">{x}</p>)}</div>
         <table className="w-full text-sm"><thead><tr className="text-left text-xs" style={{ color: tn.primary_color }}>
           <th className="p-1">{t("description")}</th><th className="p-1 text-right">{t("quantity")}</th><th className="p-1 text-right">{t("total")}</th></tr></thead>
-          <tbody>{o.items.map((it, i) => <tr key={i} className="border-t border-border"><td className="p-1">{it.name}</td><td className="p-1 text-right">{it.qty}</td><td className="p-1 text-right">{money((it.price || 0) * it.qty)}</td></tr>)}</tbody></table>
+          <tbody>{o.items.map((it, i) => <tr key={i} className="border-t border-border"><td className="p-1">{it.name}</td><td className="p-1 text-right">{it.qty}</td><td className="p-1 text-right">{money(lineTotal(it))}</td></tr>)}</tbody></table>
         <div className="ml-auto max-w-xs space-y-1 text-sm">
           <div className="flex justify-between"><span className="text-muted-foreground">{t("subtotal")}</span><span>{money(o.subtotal)}</span></div>
           <div className="flex justify-between text-lg font-bold" style={{ color: tn.primary_color }}><span>{t("total")}</span><span>{money(o.total)}</span></div>
         </div>
-        <button type="button" disabled={generating} onClick={() => void exportPdf(() => publicOrderDoc(data, labels))} className="flex items-center gap-2 rounded-lg px-4 py-2 font-bold text-white disabled:opacity-50" style={{ backgroundColor: tn.primary_color }}><FileDown className="h-4 w-4" /> {t("downloadPdf")}</button>
+        <div className="flex flex-wrap gap-3">
+          <a href="/" className="flex items-center gap-2 rounded-lg border border-border px-4 py-2 font-bold text-foreground"><ArrowLeft className="h-4 w-4" /> {t("backToHome")}</a>
+          <button type="button" disabled={generating} onClick={() => void exportPdf(() => publicOrderDoc(data, labels))} className="flex items-center gap-2 rounded-lg px-4 py-2 font-bold text-white disabled:opacity-50" style={{ backgroundColor: tn.primary_color }}><FileDown className="h-4 w-4" /> {t("downloadPdf")}</button>
+        </div>
       </div>
     </main>
   );

@@ -6,7 +6,7 @@ export interface PublicOrderResp {
   order?: {
     order_number: string | null; customer_name: string; phone: string | null; email: string | null;
     address: { address?: string | null; unit?: string | null; city?: string | null; state?: string | null; zip?: string | null } | string | null;
-    items: { name: string; qty: number; price: number; kind?: string }[];
+    items: { name: string; qty: number; price?: number; kind?: string }[];
     subtotal: number; tax: number; shipping: number; discount: number; total: number;
     status: string; created_at: string; billing_frequency: string | null; source: string | null; custom_fields: Record<string, unknown>;
   };

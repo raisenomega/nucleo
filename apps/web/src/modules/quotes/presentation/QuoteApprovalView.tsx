@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ArrowLeft } from "lucide-react";
 import { useI18n } from "@shared/i18n";
 import { formatCurrency } from "@shared/lib/format";
 import type { PublicQuoteResp } from "@quotes/infrastructure/supabase-public-quote.repository";
@@ -17,6 +18,7 @@ export function QuoteApprovalView({ token, data }: { token: string; data: Public
         <p className="text-2xl font-bold text-foreground">{done === "accepted" ? t("quoteAcceptedThanks") : t("quoteRejectedThanks")}</p>
         <p className="font-bold">{tn.display_name}</p>
         {tn.contact_phone && <p className="text-muted-foreground">{tn.contact_phone}</p>}
+        <a href="/" className="mt-2 inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 font-bold text-foreground"><ArrowLeft className="h-4 w-4" /> {t("backToHome")}</a>
       </div>
     </main>
   );
