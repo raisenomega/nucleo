@@ -15,7 +15,9 @@ export async function publicOrderDoc(d: PublicOrderResp, l: PubOrderLabels): Pro
   const num = `${l.order.toUpperCase()} ${o.order_number ?? ""}`;
   const totals = [{ label: l.subtotal, value: $(o.subtotal) }, ...(o.tax ? [{ label: l.tax, value: $(o.tax) }] : []),
     { label: l.total.toUpperCase(), value: $(o.total), grand: true }];
-  const lines = [o.phone ?? "", o.email ?? "", o.address ?? "", o.billing_frequency ?? ""];
+  const a = o.address; // customer_address es objeto jsonb → aplanar a string
+  const addr = a && typeof a === "object" ? [a.address, a.unit, a.city, a.state, a.zip].filter(Boolean).join(", ") : (a ?? "");
+  const lines = [o.phone ?? "", o.email ?? "", addr, o.billing_frequency ?? ""];
   return <SalesDocPdf brand={brand} docTitle={num} docNumber={num} metaLines={[`${l.date}: ${o.created_at.slice(0, 10)}`, `${o.status}`]}
     clientTitle={l.client} clientName={o.customer_name} clientLines={lines}
     itemHeaders={[l.description, l.qty, l.price, l.total]} itemWidths={[55, 15, 15, 15]}

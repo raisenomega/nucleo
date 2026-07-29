@@ -12,6 +12,8 @@ export function PublicOrderView({ data, paid, subscribed }: { data: PublicOrderR
   const { generating, exportPdf } = usePdfExport();
   const o = data.order; const tn = data.tenant;
   if (data.status !== "valid" || !o || !tn) return <main className="flex min-h-screen items-center justify-center p-4 text-center text-muted-foreground">{t("pdfNotAvailable")}</main>;
+  // customer_address llega como objeto jsonb ({address,unit,city,state,zip}); aplanar a string (renderizar el objeto crasheaba React).
+  const a = o.address; const addr = a && typeof a === "object" ? [a.address, a.unit, a.city, a.state, a.zip].filter(Boolean).join(", ") : (a ?? null);
   const labels = { order: t("docOrder"), date: t("date"), client: t("ordCustomerTitle"), description: t("description"),
     qty: t("quantity"), price: t("unitPrice"), total: t("total"), subtotal: t("subtotal"), tax: t("tax") };
   return (
@@ -24,7 +26,7 @@ export function PublicOrderView({ data, paid, subscribed }: { data: PublicOrderR
             <p className="text-sm text-muted-foreground">{t("docOrder")} {o.order_number ?? ""} · {o.status}</p></div>
         </div>
         <div className="rounded-lg border border-border p-3 text-sm"><p className="font-bold">{o.customer_name}</p>
-          {[o.phone, o.email, o.address, o.billing_frequency].filter(Boolean).map((x, i) => <p key={i} className="text-muted-foreground">{x}</p>)}</div>
+          {[o.phone, o.email, addr, o.billing_frequency].filter(Boolean).map((x, i) => <p key={i} className="text-muted-foreground">{x}</p>)}</div>
         <table className="w-full text-sm"><thead><tr className="text-left text-xs" style={{ color: tn.primary_color }}>
           <th className="p-1">{t("description")}</th><th className="p-1 text-right">{t("quantity")}</th><th className="p-1 text-right">{t("total")}</th></tr></thead>
           <tbody>{o.items.map((it, i) => <tr key={i} className="border-t border-border"><td className="p-1">{it.name}</td><td className="p-1 text-right">{it.qty}</td><td className="p-1 text-right">{money((it.price || 0) * it.qty)}</td></tr>)}</tbody></table>
