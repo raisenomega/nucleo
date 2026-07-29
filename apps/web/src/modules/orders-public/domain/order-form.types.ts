@@ -23,8 +23,11 @@ export interface CreateOrderInput {
   paymentMethodKey: string; couponCode: string | null; clientTotal: number;
 }
 export type OrderResult =
-  | { ok: true; orderNumber: string; orderId: string }
+  | { ok: true; orderNumber: string; orderId: string; publicToken: string | null }
   | { ok: false; code: string; errors?: { field: string; error: string }[] };
+
+// Config de pago del landing (anon): decide picker legacy vs botón Stripe.
+export interface PayConfig { stripeEnabled: boolean; publishableKey: string | null; }
 
 // Reglas de pricing crudas (para preview client-side espejo del server).
 export interface PricingRules {

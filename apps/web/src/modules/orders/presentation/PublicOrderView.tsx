@@ -7,7 +7,7 @@ import type { PublicOrderResp } from "@orders/infrastructure/supabase-order-shar
 const money = (n: number) => `$${(n ?? 0).toFixed(2)}`;
 
 // Página pública branded de orden (patrón /factura). Marca del RPC. PDF client-side con el detalle completo.
-export function PublicOrderView({ data }: { data: PublicOrderResp }) {
+export function PublicOrderView({ data, paid }: { data: PublicOrderResp; paid?: boolean }) {
   const { t } = useI18n();
   const { generating, exportPdf } = usePdfExport();
   const o = data.order; const tn = data.tenant;
@@ -17,6 +17,7 @@ export function PublicOrderView({ data }: { data: PublicOrderResp }) {
   return (
     <main className="min-h-screen bg-background p-4 text-foreground">
       <div className="mx-auto max-w-2xl space-y-4">
+        {paid && <div className="rounded-lg border border-green-600/40 bg-green-600/10 p-3 text-center text-sm font-bold text-green-700">✅ {t("payReceived")}</div>}
         <div className="flex items-center gap-3 border-b-2 pb-3" style={{ borderColor: tn.primary_color }}>
           {tn.logo_url && <img src={tn.logo_url} alt="" className="h-12 w-12 object-contain" />}
           <div><h1 className="text-xl font-bold" style={{ color: tn.primary_color }}>{tn.display_name || tn.legal_name}</h1>

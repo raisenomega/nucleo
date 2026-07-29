@@ -9,7 +9,12 @@ export const Route = createFileRoute("/orden/$token")({ component: PublicOrderPa
 function PublicOrderPage() {
   const { token } = Route.useParams();
   const [data, setData] = useState<PublicOrderResp | null>(null);
-  useEffect(() => { void getOrderByToken(token).then(setData); }, [token]);
+  const paid = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("paid") === "1";
+  // Tras el checkout de Stripe el cliente vuelve con ?paid=1; el webhook ya marcó la orden. Recargamos a los 5s.
+  useEffect(() => {
+    void getOrderByToken(token).then(setData);
+    if (paid) { const id = setTimeout(() => { void getOrderByToken(token).then(setData); }, 5000); return () => clearTimeout(id); }
+  }, [token, paid]);
   if (!data) return <main className="flex min-h-screen items-center justify-center bg-background p-4 text-muted-foreground">…</main>;
-  return <PublicOrderView data={data} />;
+  return <PublicOrderView data={data} paid={paid} />;
 }

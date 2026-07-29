@@ -10,9 +10,13 @@ export function useCreateOrder() {
     try {
       const d = await ordersPublicRepository.create(input);
       if (!d) return { ok: false, code: "network" };
-      if (d.status === "ok" && d.order_number && d.order_id) return { ok: true, orderNumber: d.order_number, orderId: d.order_id };
+      if (d.status === "ok" && d.order_number && d.order_id) return { ok: true, orderNumber: d.order_number, orderId: d.order_id, publicToken: d.public_token ?? null };
       return { ok: false, code: d.code ?? "network", errors: d.errors };
     } finally { setBusy(false); }
   }
-  return { busy, submit };
+  // Checkout Stripe one-time para una orden ya creada (redirige a Stripe).
+  async function checkout(orderToken: string): Promise<string | null> {
+    return ordersPublicRepository.createCheckout(orderToken);
+  }
+  return { busy, submit, checkout };
 }

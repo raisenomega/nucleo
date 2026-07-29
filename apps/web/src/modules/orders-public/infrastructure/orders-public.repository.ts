@@ -1,5 +1,5 @@
 import { supabase } from "@shared/lib/supabase";
-import type { CreateOrderInput, OrderForm, OrderFormField, PaymentOption, PricingRules } from "@orders-public/domain/order-form.types";
+import type { CreateOrderInput, OrderForm, OrderFormField, PayConfig, PaymentOption, PricingRules } from "@orders-public/domain/order-form.types";
 
 type FormRow = { id: string; name: string; submit_button_label_es: string | null; submit_button_label_en: string | null; cancel_button_label_es: string | null; cancel_button_label_en: string | null; show_summary: boolean | null; summary_footer_es: string | null; summary_footer_en: string | null };
 type FieldRow = { id: string; order_index: number; kind: string; field_key: string; label_es: string; label_en: string | null; placeholder_es: string | null; placeholder_en: string | null; required: boolean; validation_rules: Record<string, unknown>; options: unknown; conditional_on: unknown; group_name: string | null; group_description_es: string | null; group_description_en: string | null };
@@ -47,7 +47,7 @@ export const ordersPublicRepository = {
       taxPct: tax?.percentage ?? 0, shipping: ship?.amount ?? 0,
     };
   },
-  async create(input: CreateOrderInput): Promise<{ status?: string; code?: string; order_number?: string; order_id?: string; errors?: { field: string; error: string }[] } | null> {
+  async create(input: CreateOrderInput): Promise<{ status?: string; code?: string; order_number?: string; order_id?: string; public_token?: string; errors?: { field: string; error: string }[] } | null> {
     const payload = {
       form_id: input.formId, idempotency_key: crypto.randomUUID(), items: input.items,
       custom_fields: input.customFields, payment_method_key: input.paymentMethodKey,
@@ -55,7 +55,18 @@ export const ordersPublicRepository = {
       user_agent: navigator.userAgent, referrer: document.referrer || undefined,
     };
     const { data } = await supabase.rpc("_public_create_order", { _hostname: window.location.hostname, _payload: payload, _client_ip: null });
-    return data as { status?: string; code?: string; order_number?: string; order_id?: string } | null;
+    return data as { status?: string; code?: string; order_number?: string; order_id?: string; public_token?: string } | null;
+  },
+  // Config de pago del tenant (por hostname). El modal decide picker legacy vs Stripe.
+  async payConfig(): Promise<PayConfig> {
+    const { data } = await supabase.rpc("_public_landing_pay_config", { _hostname: window.location.hostname });
+    const d = data as { stripeEnabled?: boolean; publishableKey?: string | null } | null;
+    return { stripeEnabled: d?.stripeEnabled ?? false, publishableKey: d?.publishableKey ?? null };
+  },
+  // Checkout Stripe one-time para una orden ya creada (reusa el RPC de STRIPE-2).
+  async createCheckout(orderToken: string): Promise<string | null> {
+    const { data } = await supabase.rpc("create_stripe_checkout_session", { p_invoice_token: null, p_order_token: orderToken });
+    return (data as { checkout_url?: string } | null)?.checkout_url ?? null;
   },
   async confirmAthSent(orderId: string): Promise<boolean> {
     const { data } = await supabase.rpc("_public_confirm_ath_movil_sent", { _hostname: window.location.hostname, _order_id: orderId, _idempotency_key: crypto.randomUUID(), _client_ip: null });

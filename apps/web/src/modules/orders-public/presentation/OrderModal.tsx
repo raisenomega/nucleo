@@ -8,13 +8,11 @@ import { useOrderForm } from "@orders-public/presentation/useOrderForm.hook";
 import { useCreateOrder } from "@orders-public/presentation/useCreateOrder.hook";
 import { useOrderPricing } from "@orders-public/presentation/useOrderPricing.hook";
 import { OrderFormRenderer } from "@orders-public/presentation/OrderFormRenderer";
-import { OrderTotalPreview } from "@orders-public/presentation/OrderTotalPreview";
-import { OrderDynamicSummary } from "@orders-public/presentation/OrderDynamicSummary";
+import { OrderSubmitBar } from "@orders-public/presentation/OrderSubmitBar";
 import { PaymentMethodPicker } from "@orders-public/presentation/PaymentMethodPicker";
 import { CouponInput } from "@orders-public/presentation/CouponInput";
 import { OrderSuccessDialog } from "@orders-public/presentation/OrderSuccessDialog";
 import { PromoOrderHeader, type PromoHeaderCtx } from "@orders-public/presentation/PromoOrderHeader";
-import { PromoOrderSummary } from "@orders-public/presentation/PromoOrderSummary";
 import { firstInvalidField } from "@orders-public/domain/validate-order";
 
 export interface OrderItem { kind: "product" | "service" | "package"; id: string; name: string; basePrice: number }
@@ -23,20 +21,29 @@ const bar = "sticky z-10 border-border bg-card/85 p-4 backdrop-blur supports-[ba
 
 export function OrderModal({ item, onClose, defaultValues, defaultCoupon, promoContext }: { item: OrderItem; onClose: () => void; defaultValues?: Record<string, unknown>; defaultCoupon?: string | null; promoContext?: PromoHeaderCtx }) {
   const { t, locale } = useI18n(); const toast = useToast();
-  const { form, methods, status } = useOrderForm(item.kind, item.id); const { busy, submit } = useCreateOrder();
+  const { form, methods, status, payConfig } = useOrderForm(item.kind, item.id); const { busy, submit, checkout } = useCreateOrder();
   const [values, setValues] = useState<Record<string, unknown>>({});
-  const [pm, setPm] = useState(""); const [coupon, setCoupon] = useState<string | null>(defaultCoupon ?? null); const [done, setDone] = useState<{ orderNumber: string; orderId: string } | null>(null);
-  useEffect(() => { if (methods[0] && !pm) setPm(methods[0].methodKey); }, [methods, pm]);
-  // Semilla de valores desde validation_rules.default (frequency='4w', extraBuriedBins='2'…) → el preview de la
-  // matriz calcula desde que abre y responde al cambiar frecuencia (antes arrancaba vacío → matriz devolvía $0).
+  const [pm, setPm] = useState(""); const [coupon, setCoupon] = useState<string | null>(defaultCoupon ?? null);
+  const [done, setDone] = useState<{ orderNumber: string; orderId: string } | null>(null); const [redirecting, setRedirecting] = useState(false);
+  // Suscripciones (form con campo 'frequency') siguen el flujo legacy hasta Fase 2; one-time con Stripe → checkout.
+  const isSub = form?.fields.some((f) => f.fieldKey === "frequency") ?? false;
+  const useStripe = (payConfig?.stripeEnabled ?? false) && !isSub;
+  useEffect(() => { if (!useStripe && methods[0] && !pm) setPm(methods[0].methodKey); }, [methods, pm, useStripe]);
   useEffect(() => { if (form) setValues({ ...Object.fromEntries(form.fields.filter((f) => f.validation.default !== undefined).map((f) => [f.fieldKey, f.validation.default])), ...defaultValues }); }, [form]);
   const items = [{ kind: item.kind, id: item.id, qty: 1, name: item.name }]; const totals = useOrderPricing(item, values, coupon);
   async function onSubmit() {
     if (!form) return;
     const bad = firstInvalidField(form.fields, values); // bloqueante: toast educativo, no se envía la orden.
     if (bad) { const msg = (locale === "en" ? bad.validation.error_en : bad.validation.error_es) as string | undefined; return toast.error(msg || t("checkoutRequiredField")); }
-    const r = await submit({ formId: form.id, items, customFields: values, paymentMethodKey: pm, couponCode: coupon, clientTotal: totals.total });
-    if (r.ok) setDone({ orderNumber: r.orderNumber, orderId: r.orderId }); else toast.error(t((ERR[r.code] ?? "opErrNetwork") as Parameters<typeof t>[0]));
+    const r = await submit({ formId: form.id, items, customFields: values, paymentMethodKey: useStripe ? "stripe" : pm, couponCode: coupon, clientTotal: totals.total });
+    if (!r.ok) return toast.error(t((ERR[r.code] ?? "opErrNetwork") as Parameters<typeof t>[0]));
+    if (useStripe) { // crea la orden pending → redirige a Stripe Checkout; el webhook la marca pagada.
+      setRedirecting(true);
+      const url = r.publicToken ? await checkout(r.publicToken) : null;
+      if (url) window.location.assign(url); else { setRedirecting(false); toast.error(t("payError")); }
+      return;
+    }
+    setDone({ orderNumber: r.orderNumber, orderId: r.orderId });
   }
   if (done) return <OrderSuccessDialog orderNumber={done.orderNumber} orderId={done.orderId} method={methods.find((m) => m.methodKey === pm) ?? null} total={totals.total} itemName={item.name} onClose={onClose} />;
   return (
@@ -53,22 +60,12 @@ export function OrderModal({ item, onClose, defaultValues, defaultCoupon, promoC
             {promoContext && <PromoOrderHeader {...promoContext} />}
             <OrderFormRenderer fields={form.fields} values={values} onChange={(k, v) => setValues((p) => ({ ...p, [k]: v }))} />
             <CouponInput onApply={setCoupon} discount={totals.discount} activeCode={coupon} />
-            <PaymentMethodPicker methods={methods} value={pm} onChange={setPm} />
+            {!useStripe && <PaymentMethodPicker methods={methods} value={pm} onChange={setPm} />}
           </>
         )}
       </div>
       {status === "ready" && form && (
-        <div className={`${bar} bottom-0 space-y-3 border-t`}>
-          {promoContext?.summaryLine ? <PromoOrderSummary promo={promoContext} total={totals.total} />
-            : form.showSummary ? <OrderDynamicSummary totals={totals} title={t("opSummaryTitle")} footer={locale === "en" ? form.summaryFooterEn : form.summaryFooterEs} />
-            : <OrderTotalPreview totals={totals} />}
-          <div className="flex gap-2">
-            <button type="button" onClick={onClose} className="rounded-lg border border-border px-4 py-3 font-bold text-foreground">{(locale === "en" ? form.cancelLabelEn : form.cancelLabelEs) || t("opCancel")}</button>
-            <button type="button" disabled={busy || !pm} onClick={() => void onSubmit()} className="flex-1 rounded-lg bg-primary px-4 py-3 font-bold text-primary-foreground disabled:opacity-50">
-              {busy ? t("opSubmitting") : (locale === "en" ? form.submitLabelEn : form.submitLabelEs) || t("opSubmit")}
-            </button>
-          </div>
-        </div>
+        <OrderSubmitBar form={form} totals={totals} promoContext={promoContext} busy={busy} redirecting={redirecting} useStripe={useStripe} pm={pm} locale={locale} onSubmit={() => void onSubmit()} onClose={onClose} />
       )}
     </ScreenModal>
   );
