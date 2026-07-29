@@ -1,5 +1,4 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
-import { Link } from "@tanstack/react-router";
 import { z } from "zod";
 import { Send, CheckCircle, Loader2 } from "lucide-react";
 import { CredentialsToast } from "@raisen-marketing/components/lead/CredentialsToast";
@@ -65,7 +64,6 @@ export function MarketingLeadForm({ lang, audience, setAudience }: { lang: Lang;
           <button type="submit" disabled={status === "submitting"} className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-8 py-3 font-display text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.02] disabled:opacity-50">
             {status === "submitting" ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />} {es ? c.ctaLabelEs : c.ctaLabelEn}
           </button>
-          <Link to="/login" className="block text-center text-sm text-amber-500 hover:text-amber-400">( {es ? "iniciar sesión" : "sign in"} )</Link>
           <p className="text-center text-xs text-muted-foreground">{es ? c.consentEs : c.consentEn}</p>
         </form>
       </div>

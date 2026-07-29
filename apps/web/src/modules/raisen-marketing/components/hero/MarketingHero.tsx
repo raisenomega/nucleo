@@ -8,9 +8,9 @@ export function MarketingHero({ lang, hero }: { lang: Lang; hero: MarketingHeroR
   const es = lang === "es";
   const title = hero ? (es ? hero.titleEs : hero.titleEn) : c.heroTitle;
   const subtitle = hero ? (es ? hero.subtitleEs : hero.subtitleEn) : c.heroSubtitle;
-  const cta = c.heroCta; // "Solicitar demo" — lead calificado; scrollea al mismo formulario (Opción A)
+  const cta = c.heroCta; // "Solicitar demo" — abre el flujo de agendar (/demo: calendario + slots → reservation)
   const scroll = hero?.scrollText ?? c.heroScroll;
-  const onCta = () => document.getElementById("lead-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const onCta = () => window.location.assign("/demo");
   return (
     <section id="hero" aria-labelledby="hero-title" className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 text-center">
       <div className="relative z-10 mx-auto max-w-4xl space-y-6">
