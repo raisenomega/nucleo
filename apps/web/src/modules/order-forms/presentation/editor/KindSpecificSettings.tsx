@@ -19,7 +19,19 @@ export function KindSpecificSettings({ field, onChange }: { field: EditorField; 
     <label className="block"><span className="mb-1 block text-xs font-medium text-muted-foreground">{t("ofPattern")}</span>
       <input value={(v.pattern as string) ?? ""} onChange={(e) => setV({ pattern: e.target.value })} placeholder="^[0-9+()\-\s]+$" className={fld} /></label>
   );
-  if (field.kind === "select" || field.kind === "radio") return <OptionsEditor options={field.options} onChange={(o) => onChange({ options: o })} />;
+  if (field.kind === "select" || field.kind === "radio") return (
+    <>
+      {v.unit_price != null && (
+        <label className="block">
+          <span className="mb-1 block text-xs font-medium text-muted-foreground">{t("ofAddonUnitPrice")}</span>
+          <input type="number" step="0.01" min="0" value={(v.unit_price as number | undefined) ?? ""}
+            onChange={(e) => setV({ unit_price: e.target.value === "" ? undefined : Number(e.target.value) })} className={fld} />
+          <span className="mt-1 block text-xs text-muted-foreground">{t("ofAddonUnitPriceHelp")}</span>
+        </label>
+      )}
+      <OptionsEditor options={field.options} onChange={(o) => onChange({ options: o })} />
+    </>
+  );
   if (field.kind === "checkbox") return (
     <label className="flex items-center gap-2 text-sm text-foreground">
       <input type="checkbox" checked={v.default === true} onChange={(e) => setV({ default: e.target.checked })} className="h-4 w-4" />{t("ofDefaultChecked")}</label>
