@@ -19,7 +19,7 @@ export function OrderSubmitBar({ form, totals, promoContext, busy, redirecting, 
   return (
     <div className={bar}>
       {promoContext?.summaryLine ? <PromoOrderSummary promo={promoContext} total={totals.total} />
-        : form.showSummary ? <OrderDynamicSummary totals={totals} title={t("opSummaryTitle")} footer={locale === "en" ? form.summaryFooterEn : form.summaryFooterEs} />
+        : form.showSummary ? <OrderDynamicSummary totals={totals} title={t("opSummaryTitle")} footer={locale === "en" ? form.summaryFooterEn : form.summaryFooterEs} recurring={isSub ? totals.total : null} />
         : <OrderTotalPreview totals={totals} />}
       <div className="flex gap-2">
         <button type="button" onClick={onClose} className="rounded-lg border border-border px-4 py-3 font-bold text-foreground">{(locale === "en" ? form.cancelLabelEn : form.cancelLabelEs) || t("opCancel")}</button>
