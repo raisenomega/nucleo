@@ -14,6 +14,7 @@ import { PackageImageSection } from "@landing/presentation/PackageImageSection";
 import { GalleryImagesEditor } from "@landing/presentation/GalleryImagesEditor";
 import { HighlightsEditor } from "@landing/presentation/HighlightsEditor";
 import { PackageMetaSection } from "@landing/presentation/PackageMetaSection";
+import { CtaLabelInput } from "@landing/presentation/CtaLabelInput";
 import type { ILandingProductsRepository, ILandingServicesRepository } from "@landing/domain/landing.types";
 import type { LandingPackage, PackageInput } from "@landing/domain/landing-package.types";
 
@@ -43,6 +44,7 @@ export function PackageModal({ initial, productsRepo, servicesRepo, onSave, onCl
         <GalleryImagesEditor value={f.form.galleryImages} onChange={(v) => f.set("galleryImages", v)} />
         <HighlightsEditor value={f.form.highlights} onChange={(v) => f.set("highlights", v)} />
         <PackageMetaSection form={f.form} set={f.set} />
+        <CtaLabelInput value={f.form.ctaLabel} onChange={(v) => f.set("ctaLabel", v)} placeholder={t("opOrderBtn")} />
         <button type="button" disabled={busy || !f.canSave} onClick={() => void submit()}
           className="rounded-lg bg-primary px-4 py-2 font-bold text-primary-foreground disabled:opacity-50">{busy ? t("sending") : t("save")}</button>
       </div>

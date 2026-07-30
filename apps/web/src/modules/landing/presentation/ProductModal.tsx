@@ -11,6 +11,7 @@ import { ProductImagesSection } from "@landing/presentation/ProductImagesSection
 import { ProductMetaSection } from "@landing/presentation/ProductMetaSection";
 import { HighlightsEditor } from "@landing/presentation/HighlightsEditor";
 import { OrderFormPicker } from "@order-forms/presentation/OrderFormPicker";
+import { CtaLabelInput } from "@landing/presentation/CtaLabelInput";
 import type { LandingCategory, ProductInput, ProductWithCategory } from "@landing/domain/landing.types";
 
 export function ProductModal({ initial, categories, onSave, onClose }: {
@@ -42,6 +43,7 @@ export function ProductModal({ initial, categories, onSave, onClose }: {
         <HighlightsEditor value={form.highlights} onChange={(v) => set("highlights", v)} />
         <ProductMetaSection form={form} set={set} />
         <OrderFormPicker value={form.formId} onChange={(v) => set("formId", v)} />
+        <CtaLabelInput value={form.ctaLabel} onChange={(v) => set("ctaLabel", v)} placeholder={t("opOrderBtn")} />
         <button type="button" disabled={busy || !canSave} onClick={() => void submit()}
           className="rounded-lg bg-primary px-4 py-2 font-bold text-primary-foreground disabled:opacity-50">{busy ? t("sending") : t("save")}</button>
       </div>

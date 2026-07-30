@@ -6,6 +6,7 @@ import type { HomeProduct } from "@landing-public/domain/landing-home.types";
 export function ProductCard({ product: p }: { product: HomeProduct }) {
   return (
     <ItemCardVertical kind="product" id={p.id} slug={p.slug} name={p.name} shortDescription={p.short_description}
-      imageUrl={p.primary_image_url} priceLabel={formatPrice(p.price, p.currency)} basePrice={p.price ?? 0} ctaKey="opOrderBtn" />
+      imageUrl={p.primary_image_url} priceLabel={formatPrice(p.price, p.currency)} basePrice={p.price ?? 0}
+      ctaKey="opOrderBtn" ctaLabel={p.cta_label} isRecurring={p.is_recurring} />
   );
 }

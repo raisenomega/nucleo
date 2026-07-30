@@ -41,7 +41,7 @@ export interface LandingProduct {
   primaryImageUrl: string | null; galleryImages: string[]; videoUrl: string | null; highlights: ItemHighlight[];
   isActive: boolean; isFeatured: boolean; displayOrder: number;
   attributes: Record<string, unknown>; metaTitle: string; metaDescription: string; isPublished: boolean;
-  formId: string | null;
+  formId: string | null; ctaLabel: string | null;
 }
 export type ProductInput = Omit<LandingProduct, "id">;
 export type ProductWithCategory = LandingProduct & { categoryName: string | null };
@@ -62,7 +62,7 @@ export interface LandingService {
   primaryImageUrl: string | null; galleryImages: string[]; highlights: ItemHighlight[];
   landingHero: Record<string, unknown> | null;
   isActive: boolean; isFeatured: boolean; displayOrder: number;
-  metaTitle: string; metaDescription: string; isPublished: boolean;
+  metaTitle: string; metaDescription: string; isPublished: boolean; ctaLabel: string | null;
 }
 export type ServiceInput = Omit<LandingService, "id">;
 export type ServiceWithCategory = LandingService & { categoryName: string | null };

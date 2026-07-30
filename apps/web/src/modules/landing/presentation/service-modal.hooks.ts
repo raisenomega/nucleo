@@ -10,7 +10,7 @@ const DEFAULTS: ServiceInput = {
   pricingType: "quote_required", price: null, priceUnit: null,
   durationEstimateMinutes: null, requiresScheduling: true,
   primaryImageUrl: null, galleryImages: [], highlights: [], landingHero: null, isActive: true, isFeatured: false, displayOrder: 0,
-  metaTitle: "", metaDescription: "", isPublished: false,
+  metaTitle: "", metaDescription: "", isPublished: false, ctaLabel: null,
 };
 
 // Estado + validación del ServiceModal. price requerido salvo pricing_type='quote_required' (D1).

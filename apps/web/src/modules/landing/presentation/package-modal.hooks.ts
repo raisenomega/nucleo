@@ -10,7 +10,7 @@ const DEFAULTS: PackageInput = {
   price: 0, compareAtPrice: null, currency: "USD",
   includedProducts: [], includedServices: [], featuresList: [],
   primaryImageUrl: null, galleryImages: [], highlights: [], isActive: true, isFeatured: false, displayOrder: 0,
-  badgeLabel: "", metaTitle: "", metaDescription: "", isPublished: false,
+  badgeLabel: "", metaTitle: "", metaDescription: "", isPublished: false, ctaLabel: null,
 };
 
 // Estado + modo (derivado, no persistido) + validación por modo (D1/D8). Warning bundle->simple con items.

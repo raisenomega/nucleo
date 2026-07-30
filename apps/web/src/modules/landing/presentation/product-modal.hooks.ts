@@ -11,7 +11,7 @@ const DEFAULTS: ProductInput = {
   trackInventory: false, stockQuantity: null, lowStockThreshold: 5,
   primaryImageUrl: null, galleryImages: [], videoUrl: null, highlights: [],
   isActive: true, isFeatured: false, displayOrder: 0,
-  attributes: {}, metaTitle: "", metaDescription: "", isPublished: false, formId: null,
+  attributes: {}, metaTitle: "", metaDescription: "", isPublished: false, formId: null, ctaLabel: null,
 };
 
 // Estado + validación del ProductModal (extraído para que el modal quede orquestador puro).

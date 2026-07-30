@@ -6,6 +6,7 @@ import { useItemDetail } from "@landing-public/presentation/useItemDetail.hook";
 import { ItemGalleryCarousel } from "@landing-public/presentation/popup/ItemGalleryCarousel";
 import { ItemHighlightsChecklist } from "@landing-public/presentation/popup/ItemHighlightsChecklist";
 import { ItemDescriptionBlock } from "@landing-public/presentation/popup/ItemDescriptionBlock";
+import { BillingBadge } from "@landing-public/presentation/cards/BillingBadge";
 import type { CardItemProps } from "@landing-public/presentation/cards/ItemCardVertical";
 
 const bar = "sticky z-10 border-border bg-card/85 p-4 backdrop-blur supports-[backdrop-filter]:bg-card/70";
@@ -24,14 +25,14 @@ export function ItemDetailPopup({ onOrder, onClose, ...p }: CardItemProps & { on
       <div className="grid gap-4 p-4 md:grid-cols-2">
         <ItemGalleryCarousel images={gallery} alt={p.name} />
         <div className="space-y-3">
-          <span className="block text-lg font-bold text-foreground">{p.priceLabel}</span>
+          <span className="flex flex-wrap items-center gap-2"><span className="text-lg font-bold text-foreground">{p.priceLabel}</span><BillingBadge isRecurring={p.isRecurring} /></span>
           {loading && !detail && <div className="py-4"><Spinner /></div>}
           {detail && <ItemDescriptionBlock text={detail.longDescription} />}
           {detail && <ItemHighlightsChecklist highlights={detail.highlights} />}
         </div>
       </div>
       <div className={`${bar} bottom-0 border-t`}>
-        <button type="button" onClick={onOrder} className="w-full rounded-lg bg-primary px-4 py-3 font-bold text-primary-foreground">{t(p.ctaKey)}</button>
+        <button type="button" onClick={onOrder} className="w-full rounded-lg bg-primary px-4 py-3 font-bold text-primary-foreground">{p.ctaLabel || t(p.ctaKey)}</button>
       </div>
     </ScreenModal>
   );

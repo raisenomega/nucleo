@@ -12,6 +12,7 @@ import { GalleryImagesEditor } from "@landing/presentation/GalleryImagesEditor";
 import { HighlightsEditor } from "@landing/presentation/HighlightsEditor";
 import { LandingHeroEditor } from "@landing/presentation/LandingHeroEditor";
 import { ServiceMetaSection } from "@landing/presentation/ServiceMetaSection";
+import { CtaLabelInput } from "@landing/presentation/CtaLabelInput";
 import type { LandingCategory, ServiceInput, ServiceWithCategory } from "@landing/domain/landing.types";
 
 export function ServiceModal({ initial, categories, onSave, onClose }: {
@@ -44,6 +45,7 @@ export function ServiceModal({ initial, categories, onSave, onClose }: {
         <HighlightsEditor value={form.highlights} onChange={(v) => set("highlights", v)} />
         <LandingHeroEditor value={form.landingHero} onChange={(v) => set("landingHero", v)} />
         <ServiceMetaSection form={form} set={set} />
+        <CtaLabelInput value={form.ctaLabel} onChange={(v) => set("ctaLabel", v)} placeholder={`${t("opSubscribeBtn")} / ${t("opOrderBtn")}`} />
         <button type="button" disabled={busy || !canSave} onClick={() => void submit()}
           className="rounded-lg bg-primary px-4 py-2 font-bold text-primary-foreground disabled:opacity-50">{busy ? t("sending") : t("save")}</button>
       </div>

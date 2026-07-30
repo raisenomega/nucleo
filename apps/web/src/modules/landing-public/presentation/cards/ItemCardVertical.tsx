@@ -3,11 +3,13 @@ import { useI18n, type TranslationKey } from "@shared/i18n";
 import { GlassCard } from "@landing-public/primitives/GlassCard";
 import { OrderModal } from "@orders-public/presentation/OrderModal";
 import { ItemDetailPopup } from "@landing-public/presentation/popup/ItemDetailPopup";
+import { BillingBadge } from "@landing-public/presentation/cards/BillingBadge";
 import { type ItemKind } from "@landing-public/presentation/useItemDetail.hook";
 
 export interface CardItemProps {
   kind: ItemKind; id: string; slug: string; name: string; shortDescription: string | null;
   imageUrl: string | null; priceLabel: string; basePrice: number; ctaKey: TranslationKey; badgeLabel?: string | null;
+  ctaLabel?: string | null; isRecurring?: boolean; // Rodaja C: CTA custom por-ítem + badge de membresía. Solo el home los provee.
 }
 
 // Card vertical 4:5 unificada (product/service/package). Click en la card → popup (highlights viven ahí); CTA → OrderModal.
@@ -24,9 +26,14 @@ export function ItemCardVertical(p: CardItemProps) {
         </div>
         <h3 className="font-bold">{p.name}</h3>
         {p.shortDescription && <p className="mt-1 line-clamp-2 text-sm text-[color:hsl(var(--lp-muted))]">{p.shortDescription}</p>}
-        {p.priceLabel && <span className="mt-2 block font-bold">{p.priceLabel}</span>}
+        {(p.priceLabel || p.isRecurring) && (
+          <span className="mt-2 flex flex-wrap items-center gap-2">
+            {p.priceLabel && <span className="font-bold">{p.priceLabel}</span>}
+            <BillingBadge isRecurring={p.isRecurring} />
+          </span>
+        )}
       </button>
-      <button type="button" onClick={() => setOrder(true)} className="mt-3 w-full rounded-lg bg-primary px-3 py-2 text-sm font-bold text-primary-foreground">{t(p.ctaKey)}</button>
+      <button type="button" onClick={() => setOrder(true)} className="mt-3 w-full rounded-lg bg-primary px-3 py-2 text-sm font-bold text-primary-foreground">{p.ctaLabel || t(p.ctaKey)}</button>
       {popup && <ItemDetailPopup {...p} onOrder={() => { setPopup(false); setOrder(true); }} onClose={() => setPopup(false)} />}
       {order && <OrderModal item={{ kind: p.kind, id: p.id, name: p.name, basePrice: p.basePrice }} onClose={() => setOrder(false)} />}
     </GlassCard>

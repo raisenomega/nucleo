@@ -12,7 +12,7 @@ export interface LandingPackage {
   includedProducts: IncludedProduct[]; includedServices: IncludedService[]; featuresList: string[];
   primaryImageUrl: string | null; galleryImages: string[]; highlights: ItemHighlight[];
   isActive: boolean; isFeatured: boolean; displayOrder: number;
-  badgeLabel: string; metaTitle: string; metaDescription: string; isPublished: boolean;
+  badgeLabel: string; metaTitle: string; metaDescription: string; isPublished: boolean; ctaLabel: string | null;
 }
 export type PackageInput = Omit<LandingPackage, "id">;
 export interface ILandingPackagesRepository {

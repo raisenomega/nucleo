@@ -6,7 +6,7 @@ export const enOrdersPublic = {
   opSuccess: "Order received!", opSuccessMsg: "A representative will contact you within 24 hours to coordinate payment and delivery.", opClose: "Close",
   opErrForm: "Please review the form fields.", opErrTotal: "Total mismatch. Please reload and try again.",
   opErrRate: "Too many attempts. Please wait a moment.", opErrCoupon: "Invalid coupon.", opErrPayment: "Payment method unavailable.",
-  opErrNetwork: "Could not submit the order.", opOrderBtn: "Order", opSubscribeBtn: "Subscribe",
+  opErrNetwork: "Could not submit the order.", opOrderBtn: "Order", opSubscribeBtn: "Subscribe", billingRecurring: "Subscription",
   opCopyDetails: "Copy details", opAthSent: "I already sent the payment", opUnderstood: "Got it",
   opAthThanks: "Thanks! We'll verify your payment and confirm by email within 24 hours.",
   checkoutRequiredField: "Please complete the required fields to continue.", viewTermsLink: "View",

@@ -7,6 +7,6 @@ export function PackageCard({ pkg: p }: { pkg: HomePackage }) {
   return (
     <ItemCardVertical kind="package" id={p.id} slug={p.slug} name={p.name} shortDescription={p.short_description}
       imageUrl={p.primary_image_url} priceLabel={p.price != null ? formatPrice(p.price, p.currency) : ""} basePrice={p.price ?? 0}
-      ctaKey="opOrderBtn" badgeLabel={p.badge_label} />
+      ctaKey="opOrderBtn" badgeLabel={p.badge_label} ctaLabel={p.cta_label} isRecurring={p.is_recurring} />
   );
 }

@@ -9,7 +9,7 @@ export interface PackageRow {
   features_list: string[] | null; primary_image_url: string | null;
   gallery_images: string[] | null; highlights: ItemHighlight[] | null;
   is_active: boolean; is_featured: boolean; display_order: number;
-  badge_label: string | null; meta_title: string | null; meta_description: string | null; is_published: boolean;
+  badge_label: string | null; meta_title: string | null; meta_description: string | null; is_published: boolean; cta_label?: string | null;
 }
 
 // Modo derivado (no se persiste): con items en algún jsonb -> bundle; si no -> simple.
@@ -24,7 +24,7 @@ export const toLandingPackage = (r: PackageRow): LandingPackage => ({
   featuresList: r.features_list ?? [], primaryImageUrl: r.primary_image_url,
   galleryImages: r.gallery_images ?? [], highlights: r.highlights ?? [],
   isActive: r.is_active, isFeatured: r.is_featured, displayOrder: r.display_order,
-  badgeLabel: r.badge_label ?? "", metaTitle: r.meta_title ?? "", metaDescription: r.meta_description ?? "", isPublished: r.is_published,
+  badgeLabel: r.badge_label ?? "", metaTitle: r.meta_title ?? "", metaDescription: r.meta_description ?? "", isPublished: r.is_published, ctaLabel: r.cta_label ?? null,
 });
 
 export const toPackageInput = (p: LandingPackage): PackageInput => {
@@ -39,5 +39,5 @@ export const fromLandingPackageInput = (i: PackageInput) => ({
   features_list: i.featuresList.filter((f) => f.trim() !== ""), primary_image_url: i.primaryImageUrl,
   gallery_images: i.galleryImages, highlights: cleanHighlights(i.highlights),
   is_active: i.isActive, is_featured: i.isFeatured, display_order: i.displayOrder,
-  badge_label: i.badgeLabel || null, meta_title: i.metaTitle || null, meta_description: i.metaDescription || null, is_published: i.isPublished,
+  badge_label: i.badgeLabel || null, meta_title: i.metaTitle || null, meta_description: i.metaDescription || null, is_published: i.isPublished, cta_label: i.ctaLabel || null,
 });
