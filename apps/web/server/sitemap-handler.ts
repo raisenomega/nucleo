@@ -39,11 +39,32 @@ async function campaignUrls(): Promise<string> {
   } catch { return ""; }
 }
 
-// sitemap.xml solo para el dominio comercial. En un dominio de tenant devuelve 404 a propósito: su robots.txt
-// tampoco lo referencia, así que nadie lo pide — y así jamás se le atribuyen URLs de NÚCLEO a un tenant.
+// Sitemap del landing de un TENANT: URLs desde _public_get_landing_sitemap (home + catálogo + FAQ + productos/
+// servicios/paquetes activos). Host canónico = www.{dominio}. 404 si el tenant no resuelve o no tiene landing.
+async function tenantSitemap(host: string): Promise<Response> {
+  const base = process.env.VITE_SUPABASE_URL, key = process.env.VITE_SUPABASE_ANON_KEY;
+  const canon = `https://www.${host.replace(/^(www\.|app\.)/, "")}`;
+  try {
+    const res = await fetch(`${base}/rest/v1/rpc/_public_get_landing_sitemap`, {
+      method: "POST", headers: { apikey: key as string, authorization: `Bearer ${key}`, "content-type": "application/json" },
+      body: JSON.stringify({ _hostname: host }),
+    });
+    const data = await res.json() as { urls?: { loc: string; priority: number; changefreq: string; lastmod?: string }[] };
+    if (!Array.isArray(data?.urls) || !data.urls.length) return new Response("Not found", { status: 404 });
+    const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
+      data.urls.map((u) => url(`${canon}${u.loc}`, u.changefreq, String(u.priority), u.lastmod?.slice(0, 10))).join("\n") +
+      `\n</urlset>\n`;
+    return new Response(body, { status: 200, headers: { "content-type": "application/xml; charset=utf-8", "cache-control": "public, max-age=3600, s-maxage=86400" } });
+  } catch { return new Response("Not found", { status: 404 }); }
+}
+
+// sitemap.xml: dominio comercial → sitemap de NÚCLEO; dominio de tenant → sitemap propio (migr 323).
 export default defineHandler(async (event) => {
   const host = (getRequestHost(event) || "").split(":")[0]?.toLowerCase() ?? "";
-  if (!RAISEN.has(host)) return new Response("Not found", { status: 404 });
+  if (!RAISEN.has(host)) {
+    void trackAiCrawl({ user_agent: getRequestHeader(event, "user-agent"), host, path: "/sitemap.xml", resource: "sitemap" });
+    return tenantSitemap(host);
+  }
   void trackAiCrawl({ user_agent: getRequestHeader(event, "user-agent"), host, path: "/sitemap.xml", resource: "sitemap" });
   const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">

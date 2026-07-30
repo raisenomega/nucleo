@@ -24,7 +24,7 @@ export default defineHandler((event) => {
   void trackAiCrawl({ user_agent: getRequestHeader(event, "user-agent"), host, path: "/robots.txt", resource: "robots" });
   const body = isRaisen
     ? `User-agent: *\nAllow: /\n${block([...PANEL, ...TENANT_ONLY])}\n\nSitemap: https://www.nucleoraisen.com/sitemap.xml\n`
-    : `User-agent: *\nAllow: /\n${block(PANEL)}\n`;
+    : `User-agent: *\nAllow: /\n${block(PANEL)}\n\nSitemap: https://www.${host.replace(/^(www\.|app\.)/, "")}/sitemap.xml\n`;
   return new Response(body, {
     status: 200,
     headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "public, max-age=3600, s-maxage=86400" },
