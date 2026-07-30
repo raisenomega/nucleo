@@ -12,7 +12,7 @@ export interface LandingConfig {
   publicPhone: string; publicWhatsapp: string; publicEmail: string; publicAddress: string;
   businessHours: BusinessHours | null;
   socialFacebook: string; socialInstagram: string; socialYoutube: string; socialTiktok: string;
-  socialLinkedin: string; socialX: string; contactConfig: ContactConfig | null;
+  socialLinkedin: string; socialX: string; contactConfig: ContactConfig | null; blogUrl: string;
   schemaBusinessType: string; schemaGeoLat: number | null; schemaGeoLng: number | null; schemaPriceRange: string;
 }
 

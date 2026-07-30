@@ -1,12 +1,14 @@
 import { lazy, Suspense, useEffect } from "react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, redirect } from "@tanstack/react-router";
 import { useMounted } from "@shared/hooks/useMounted";
 import { PublicBrandProvider } from "@landing-public/presentation/PublicBrandProvider";
 import { PublicLandingRoot } from "@landing-public/presentation/PublicLandingRoot";
 import { landingHead } from "@shared/seo/marketing.head";
+import { tenantLandingHead } from "@shared/seo/tenant.head";
+import { fetchTenantSeo } from "@shared/seo/tenant-seo.repository";
 import { getSeoData } from "@shared/seo/seo-data";
 import { fetchLandingData } from "@raisen-marketing/infrastructure/landing-ssr.repository";
-import { hostKind } from "@shared/seo/host";
+import { hostKind, currentHost } from "@shared/seo/host";
 
 // Landing comercial de Raisen (marketing) — lazy: su chunk (marketing.css, three.js) no entra al bundle
 // inicial del panel ni al de @landing-public. En SSR el módulo se precarga en el loader para que el HTML
@@ -19,14 +21,21 @@ export const Route = createFileRoute("/")({
   // que veían una página en blanco. Al decidirlo en el loader, servidor y cliente coinciden y "/" puede SSR-ear.
   loader: async () => {
     const kind = hostKind();
-    if (kind !== "raisen") return { kind, seo: null, landing: null };
-    if (typeof window !== "undefined") return { kind, seo: null, landing: null }; // en cliente los hooks fetchean solos
-    // getSeoData alimenta el JSON-LD; fetchLandingData siembra TODAS las secciones. El import precarga el
-    // módulo lazy para que el SSR salga con el árbol ya renderizado.
+    // Dominio de tenant: en SSR redirige el apex a www (SEO: un solo host canónico) y siembra el <title>/meta
+    // del tenant para que Google no indexe el default "Portal" del root. El cuerpo sigue client-only (three.js).
+    if (kind === "tenant") {
+      if (typeof window !== "undefined") return { kind, seo: null, landing: null, tenantSeo: null };
+      const host = currentHost();
+      if (/^[^.]+\.[^.]+$/.test(host)) throw redirect({ href: `https://www.${host}/`, statusCode: 301 });
+      return { kind, seo: null, landing: null, tenantSeo: await fetchTenantSeo(host) };
+    }
+    if (kind !== "raisen") return { kind, seo: null, landing: null, tenantSeo: null };
+    if (typeof window !== "undefined") return { kind, seo: null, landing: null, tenantSeo: null }; // en cliente los hooks fetchean solos
+    // getSeoData alimenta el JSON-LD; fetchLandingData siembra TODAS las secciones. El import precarga el módulo lazy.
     const [seo, landing] = await Promise.all([getSeoData(), fetchLandingData(), import("@raisen-marketing")]);
-    return { kind, seo, landing };
+    return { kind, seo, landing, tenantSeo: null };
   },
-  head: ({ loaderData }) => landingHead(loaderData?.seo),
+  head: ({ loaderData }) => (loaderData?.kind === "tenant" ? tenantLandingHead(loaderData?.tenantSeo) : landingHead(loaderData?.seo)),
   component: Home,
 });
 

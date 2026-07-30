@@ -10,7 +10,7 @@ export const enLanding = {
   hero: "Hero", heroTitle: "Title", heroSubtitle: "Subtitle", heroCtaLabel: "Button text",
   heroCtaType: "Button action", heroCtaHref: "Custom link", heroImage: "Hero image",
   ctaQuote: "Request a quote", ctaOrder: "Buy", ctaContact: "Contact", ctaCustom: "Custom",
-  metaSeo: "Meta / SEO", metaTitle: "Meta title", metaDescription: "Meta description", metaKeywords: "Keywords", metaOgImage: "OG image",
+  metaSeo: "Meta / SEO", metaTitle: "Meta title", metaDescription: "Meta description", metaKeywords: "Keywords", metaOgImage: "OG image", blogUrlLabel: "Blog URL (optional)",
   contactSection: "Contact", publicPhone: "Phone", publicWhatsapp: "WhatsApp", publicEmail: "Email", publicAddress: "Address", businessHoursLabel: "Hours",
   socialSection: "Social media", schemaSection: "Schema / Local business", businessType: "Business type",
   geoLat: "Latitude", geoLng: "Longitude", priceRange: "Price range",

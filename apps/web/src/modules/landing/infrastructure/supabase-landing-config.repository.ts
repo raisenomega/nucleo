@@ -2,7 +2,7 @@ import { supabase } from "@shared/lib/supabase";
 import type { ILandingConfigRepository, LandingConfig, Result } from "@landing/domain/landing.types";
 
 const ok = (e: { message: string } | null): Result => (e ? { ok: false, error: e.message } : { ok: true });
-const SEL = "hero_title,hero_subtitle,hero_cta_label,hero_cta_type,hero_cta_href,hero_image_url,hero_video_url,meta_title,meta_description,meta_og_image_url,meta_keywords,public_phone,public_whatsapp,public_email,public_address,business_hours,social_facebook,social_instagram,social_youtube,social_tiktok,social_linkedin,social_x,contact_config,schema_business_type,schema_geo_lat,schema_geo_lng,schema_price_range";
+const SEL = "hero_title,hero_subtitle,hero_cta_label,hero_cta_type,hero_cta_href,hero_image_url,hero_video_url,meta_title,meta_description,meta_og_image_url,meta_keywords,public_phone,public_whatsapp,public_email,public_address,business_hours,social_facebook,social_instagram,social_youtube,social_tiktok,social_linkedin,social_x,contact_config,blog_url,schema_business_type,schema_geo_lat,schema_geo_lng,schema_price_range";
 
 interface Row { [k: string]: unknown }
 const toConfig = (r: Row): LandingConfig => ({
@@ -17,7 +17,7 @@ const toConfig = (r: Row): LandingConfig => ({
   socialFacebook: (r.social_facebook as string) ?? "", socialInstagram: (r.social_instagram as string) ?? "",
   socialYoutube: (r.social_youtube as string) ?? "", socialTiktok: (r.social_tiktok as string) ?? "",
   socialLinkedin: (r.social_linkedin as string) ?? "", socialX: (r.social_x as string) ?? "",
-  contactConfig: (r.contact_config as LandingConfig["contactConfig"]) ?? null,
+  contactConfig: (r.contact_config as LandingConfig["contactConfig"]) ?? null, blogUrl: (r.blog_url as string) ?? "",
   schemaBusinessType: (r.schema_business_type as string) ?? "LocalBusiness",
   schemaGeoLat: (r.schema_geo_lat as number) ?? null, schemaGeoLng: (r.schema_geo_lng as number) ?? null,
   schemaPriceRange: (r.schema_price_range as string) ?? "$$",
@@ -30,7 +30,7 @@ const fromConfig = (tenantId: string, c: LandingConfig) => ({
   public_address: c.publicAddress || null, business_hours: c.businessHours,
   social_facebook: c.socialFacebook || null, social_instagram: c.socialInstagram || null,
   social_youtube: c.socialYoutube || null, social_tiktok: c.socialTiktok || null,
-  social_linkedin: c.socialLinkedin || null, social_x: c.socialX || null, contact_config: c.contactConfig,
+  social_linkedin: c.socialLinkedin || null, social_x: c.socialX || null, contact_config: c.contactConfig, blog_url: c.blogUrl || null,
   schema_business_type: c.schemaBusinessType, schema_geo_lat: c.schemaGeoLat, schema_geo_lng: c.schemaGeoLng, schema_price_range: c.schemaPriceRange,
 });
 

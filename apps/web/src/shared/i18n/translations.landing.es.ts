@@ -10,7 +10,7 @@ export const esLanding = {
   hero: "Hero", heroTitle: "Título", heroSubtitle: "Subtítulo", heroCtaLabel: "Texto del botón",
   heroCtaType: "Acción del botón", heroCtaHref: "Enlace personalizado", heroImage: "Imagen hero",
   ctaQuote: "Solicitar cotización", ctaOrder: "Comprar", ctaContact: "Contacto", ctaCustom: "Personalizado",
-  metaSeo: "Meta / SEO", metaTitle: "Meta título", metaDescription: "Meta descripción", metaKeywords: "Palabras clave", metaOgImage: "Imagen OG",
+  metaSeo: "Meta / SEO", metaTitle: "Meta título", metaDescription: "Meta descripción", metaKeywords: "Palabras clave", metaOgImage: "Imagen OG", blogUrlLabel: "URL del blog (opcional)",
   contactSection: "Contacto", publicPhone: "Teléfono", publicWhatsapp: "WhatsApp", publicEmail: "Email", publicAddress: "Dirección", businessHoursLabel: "Horario",
   socialSection: "Redes sociales", schemaSection: "Schema / Negocio local", businessType: "Tipo de negocio",
   geoLat: "Latitud", geoLng: "Longitud", priceRange: "Rango de precio",

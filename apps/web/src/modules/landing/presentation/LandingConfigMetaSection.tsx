@@ -11,6 +11,7 @@ export function LandingConfigMetaSection({ c, set }: { c: LandingConfig; set: (p
       <textarea value={c.metaDescription} onChange={(e) => set({ metaDescription: e.target.value })} placeholder={t("metaDescription")} rows={2} className={f} />
       <input value={c.metaKeywords.join(", ")} placeholder={t("metaKeywords")} className={f}
         onChange={(e) => set({ metaKeywords: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) })} />
+      <input value={c.blogUrl} onChange={(e) => set({ blogUrl: e.target.value })} placeholder={t("blogUrlLabel")} className={f} />
       <label className="text-xs font-bold text-muted-foreground">{t("metaOgImage")}</label>
       <ImageUploadWithCrop entityType="hero" aspectRatio={1200 / 630} value={c.metaOgImageUrl} onUploaded={(u) => set({ metaOgImageUrl: u })} />
     </div>

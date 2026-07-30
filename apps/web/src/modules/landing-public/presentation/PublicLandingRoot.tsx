@@ -44,7 +44,7 @@ export function PublicLandingRoot() {
         <LandingHeroSections />
         <HomeSections home={home} />
         <ContactSection contactConfig={(hero?.contact_config ?? null) as ContactConfig | null} />
-        <PublicFooter brand={s.brand} tagline={(hero?.meta_description as string) ?? ""} />
+        <PublicFooter brand={s.brand} tagline={(hero?.meta_description as string) ?? ""} blogUrl={(hero?.blog_url as string) ?? null} />
         <PromoOffer />
       </div>
     </MotionProvider>

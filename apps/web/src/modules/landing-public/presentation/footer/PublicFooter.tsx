@@ -5,7 +5,7 @@ import { FooterSocials } from "@landing-public/presentation/footer/FooterSocials
 import type { PublicBrand } from "@landing-public/domain/public-brand.types";
 
 // Footer medio: 3 columnas (marca / contacto / redes) + fila inferior (copyright + blog + legal placeholder).
-export function PublicFooter({ brand, tagline }: { brand: PublicBrand; tagline: string }) {
+export function PublicFooter({ brand, tagline, blogUrl }: { brand: PublicBrand; tagline: string; blogUrl?: string | null }) {
   const { t } = useI18n();
   const year = new Date().getFullYear();
   const s = brand.socialLinks;
@@ -32,7 +32,7 @@ export function PublicFooter({ brand, tagline }: { brand: PublicBrand; tagline: 
       </div>
       <div className="mx-auto mt-10 flex max-w-7xl flex-wrap items-center justify-between gap-4 border-t border-[color:var(--glass-border)] pt-6 text-xs text-[color:hsl(var(--lp-muted))]">
         <span>© {year} {brand.displayName}. {t("lpFooterRights")}.</span>
-        <div className="flex flex-wrap items-center gap-4"><Link to="/portal/login">{t("lpLogin")}</Link><a href="https://blog.zramos.com">{t("lpFooterBlog")}</a><Link to="/privacy">{t("lpFooterPrivacy")}</Link><Link to="/terms">{t("lpFooterTerms")}</Link></div>
+        <div className="flex flex-wrap items-center gap-4"><Link to="/portal/login">{t("lpLogin")}</Link>{blogUrl && <a href={blogUrl} target="_blank" rel="noreferrer">{t("lpFooterBlog")}</a>}<Link to="/privacy">{t("lpFooterPrivacy")}</Link><Link to="/terms">{t("lpFooterTerms")}</Link></div>
       </div>
     </footer>
   );

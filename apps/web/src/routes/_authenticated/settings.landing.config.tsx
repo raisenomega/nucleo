@@ -17,7 +17,7 @@ const EMPTY: LandingConfig = {
   heroTitle: "", heroSubtitle: "", heroCtaLabel: "", heroCtaType: "quote", heroCtaHref: "", heroImageUrl: null, heroVideoUrl: null,
   metaTitle: "", metaDescription: "", metaOgImageUrl: null, metaKeywords: [], publicPhone: "", publicWhatsapp: "", publicEmail: "", publicAddress: "",
   businessHours: null, socialFacebook: "", socialInstagram: "", socialYoutube: "", socialTiktok: "",
-  socialLinkedin: "", socialX: "", contactConfig: null,
+  socialLinkedin: "", socialX: "", contactConfig: null, blogUrl: "",
   schemaBusinessType: "LocalBusiness", schemaGeoLat: null, schemaGeoLng: null, schemaPriceRange: "$$",
 };
 
