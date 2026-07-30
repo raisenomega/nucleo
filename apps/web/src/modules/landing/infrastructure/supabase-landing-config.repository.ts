@@ -2,7 +2,7 @@ import { supabase } from "@shared/lib/supabase";
 import type { ILandingConfigRepository, LandingConfig, Result } from "@landing/domain/landing.types";
 
 const ok = (e: { message: string } | null): Result => (e ? { ok: false, error: e.message } : { ok: true });
-const SEL = "hero_title,hero_subtitle,hero_cta_label,hero_cta_type,hero_cta_href,hero_image_url,hero_video_url,meta_title,meta_description,meta_og_image_url,meta_keywords,public_phone,public_whatsapp,public_email,public_address,business_hours,social_facebook,social_instagram,social_youtube,social_tiktok,social_linkedin,social_x,contact_config,blog_url,schema_business_type,schema_geo_lat,schema_geo_lng,schema_price_range";
+const SEL = "hero_title,hero_subtitle,hero_cta_label,hero_cta_type,hero_cta_href,hero_image_url,hero_video_url,meta_title,meta_description,meta_og_image_url,meta_keywords,public_phone,public_whatsapp,public_email,public_address,business_hours,social_facebook,social_instagram,social_youtube,social_tiktok,social_linkedin,social_x,contact_config,blog_url,schema_business_type,schema_geo_lat,schema_geo_lng,schema_price_range,section_services_title,section_services_subtitle,section_products_title,section_products_subtitle,section_packages_title,section_packages_subtitle";
 
 interface Row { [k: string]: unknown }
 const toConfig = (r: Row): LandingConfig => ({
@@ -21,6 +21,9 @@ const toConfig = (r: Row): LandingConfig => ({
   schemaBusinessType: (r.schema_business_type as string) ?? "LocalBusiness",
   schemaGeoLat: (r.schema_geo_lat as number) ?? null, schemaGeoLng: (r.schema_geo_lng as number) ?? null,
   schemaPriceRange: (r.schema_price_range as string) ?? "$$",
+  sectionServicesTitle: (r.section_services_title as string) ?? "", sectionServicesSubtitle: (r.section_services_subtitle as string) ?? "",
+  sectionProductsTitle: (r.section_products_title as string) ?? "", sectionProductsSubtitle: (r.section_products_subtitle as string) ?? "",
+  sectionPackagesTitle: (r.section_packages_title as string) ?? "", sectionPackagesSubtitle: (r.section_packages_subtitle as string) ?? "",
 });
 const fromConfig = (tenantId: string, c: LandingConfig) => ({
   tenant_id: tenantId, hero_title: c.heroTitle, hero_subtitle: c.heroSubtitle, hero_cta_label: c.heroCtaLabel,
@@ -32,6 +35,9 @@ const fromConfig = (tenantId: string, c: LandingConfig) => ({
   social_youtube: c.socialYoutube || null, social_tiktok: c.socialTiktok || null,
   social_linkedin: c.socialLinkedin || null, social_x: c.socialX || null, contact_config: c.contactConfig, blog_url: c.blogUrl || null,
   schema_business_type: c.schemaBusinessType, schema_geo_lat: c.schemaGeoLat, schema_geo_lng: c.schemaGeoLng, schema_price_range: c.schemaPriceRange,
+  section_services_title: c.sectionServicesTitle || null, section_services_subtitle: c.sectionServicesSubtitle || null,
+  section_products_title: c.sectionProductsTitle || null, section_products_subtitle: c.sectionProductsSubtitle || null,
+  section_packages_title: c.sectionPackagesTitle || null, section_packages_subtitle: c.sectionPackagesSubtitle || null,
 });
 
 export const supabaseLandingConfigRepository: ILandingConfigRepository = {

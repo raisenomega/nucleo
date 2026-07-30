@@ -13,7 +13,7 @@ export interface LandingConfig {
   businessHours: BusinessHours | null;
   socialFacebook: string; socialInstagram: string; socialYoutube: string; socialTiktok: string;
   socialLinkedin: string; socialX: string; contactConfig: ContactConfig | null; blogUrl: string;
-  schemaBusinessType: string; schemaGeoLat: number | null; schemaGeoLng: number | null; schemaPriceRange: string;
+  schemaBusinessType: string; schemaGeoLat: number | null; schemaGeoLng: number | null; schemaPriceRange: string; sectionServicesTitle: string; sectionServicesSubtitle: string; sectionProductsTitle: string; sectionProductsSubtitle: string; sectionPackagesTitle: string; sectionPackagesSubtitle: string;
 }
 
 export interface LandingCategory {

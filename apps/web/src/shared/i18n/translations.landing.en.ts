@@ -12,7 +12,7 @@ export const enLanding = {
   ctaQuote: "Request a quote", ctaOrder: "Buy", ctaContact: "Contact", ctaCustom: "Custom",
   metaSeo: "Meta / SEO", metaTitle: "Meta title", metaDescription: "Meta description", metaKeywords: "Keywords", metaOgImage: "OG image", blogUrlLabel: "Blog URL (optional)",
   contactSection: "Contact", publicPhone: "Phone", publicWhatsapp: "WhatsApp", publicEmail: "Email", publicAddress: "Address", businessHoursLabel: "Hours",
-  socialSection: "Social media", schemaSection: "Schema / Local business", businessType: "Business type",
+  socialSection: "Social media", schemaSection: "Schema / Local business", businessType: "Business type", sectionTitlesSection: "Home section titles", sectionServices: "Featured services", sectionProducts: "Featured products", sectionPackages: "Featured packages", sectionTitlePh: "Section title", sectionSubtitlePh: "Subtitle (optional)", sectionTitleHelp: "Leave empty to use the default title.",
   geoLat: "Latitude", geoLng: "Longitude", priceRange: "Price range",
   newCategory: "New category", categoryType: "Type", iconLabel: "Icon", imageLabel: "Image", displayOrder: "Order",
   catProduct: "Product", catService: "Service", catBoth: "Both", confirmDelete: "Delete? This cannot be undone.",
