@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Navigate } from "@tanstack/react-router";
-import { Download, FileDown } from "lucide-react";
+import { Navigate, Link } from "@tanstack/react-router";
+import { Download, FileDown, CalendarCheck } from "lucide-react";
 import { useToast } from "@shared/providers/toast-context";
 import { useSuperAdmin } from "@shared/hooks/useSuperAdmin";
 import { usePdfExport } from "@shared/hooks/usePdfExport";
@@ -48,6 +48,7 @@ export function LeadsInbox() {
       <div className="flex items-center justify-between gap-2">
         <h1 className="font-display text-2xl font-bold text-foreground">Inbox · Leads comercial (CRM)</h1>
         <div className="flex items-center gap-2">
+          <Link to="/web/reservas" className="flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-sm font-bold text-foreground hover:bg-secondary"><CalendarCheck className="h-4 w-4" /> Agendamientos</Link>
           <button type="button" disabled={generating || !shown.length} onClick={() => void exportPdf(() => marketingLeadsDoc(shown, brand))} className="flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-sm disabled:opacity-50"><FileDown className="h-4 w-4" /> PDF</button>
           <button type="button" onClick={exportCsv} className="flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-sm"><Download className="h-4 w-4" /> CSV</button>
         </div>
