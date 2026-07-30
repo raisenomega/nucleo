@@ -8,6 +8,7 @@ export interface LeadFormConfig {
   errorEs: string; errorEn: string; consentEs: string; consentEn: string;
   companyLabelEs: string; companyLabelEn: string;
   confSubjectEs: string; confSubjectEn: string; confBodyEs: string; confBodyEn: string;
+  notificationEmails: string[]; // buzones de negocio que reciben el email de cada lead/reserva
 }
 export type LeadStatus = "new" | "contacted" | "qualified" | "converted" | "lost" | "archived";
 export type LeadTemperature = "cold" | "warm" | "hot" | "converted";

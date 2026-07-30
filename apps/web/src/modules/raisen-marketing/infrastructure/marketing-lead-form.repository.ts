@@ -2,7 +2,7 @@ import { supabase } from "@shared/lib/supabase";
 import type { LeadFormConfig, LeadSubmit } from "@raisen-marketing/data/lead-form.types";
 
 const r = (o: Record<string, unknown>, k: string) => (o[k] as string) ?? "";
-const toCfg = (o: Record<string, unknown>): LeadFormConfig => ({ id: o.id as string, titleEs: r(o, "title_es"), titleEn: r(o, "title_en"), subtitleEs: r(o, "subtitle_es"), subtitleEn: r(o, "subtitle_en"), pillBusinessEs: r(o, "pill_business_es"), pillBusinessEn: r(o, "pill_business_en"), pillPartnerEs: r(o, "pill_partner_es"), pillPartnerEn: r(o, "pill_partner_en"), ctaLabelEs: r(o, "cta_label_es"), ctaLabelEn: r(o, "cta_label_en"), successEs: r(o, "success_es"), successEn: r(o, "success_en"), errorEs: r(o, "error_es"), errorEn: r(o, "error_en"), consentEs: r(o, "consent_es"), consentEn: r(o, "consent_en"), companyLabelEs: r(o, "company_label_es"), companyLabelEn: r(o, "company_label_en"), confSubjectEs: r(o, "confirmation_subject_es"), confSubjectEn: r(o, "confirmation_subject_en"), confBodyEs: r(o, "confirmation_body_es"), confBodyEn: r(o, "confirmation_body_en") });
+const toCfg = (o: Record<string, unknown>): LeadFormConfig => ({ id: o.id as string, titleEs: r(o, "title_es"), titleEn: r(o, "title_en"), subtitleEs: r(o, "subtitle_es"), subtitleEn: r(o, "subtitle_en"), pillBusinessEs: r(o, "pill_business_es"), pillBusinessEn: r(o, "pill_business_en"), pillPartnerEs: r(o, "pill_partner_es"), pillPartnerEn: r(o, "pill_partner_en"), ctaLabelEs: r(o, "cta_label_es"), ctaLabelEn: r(o, "cta_label_en"), successEs: r(o, "success_es"), successEn: r(o, "success_en"), errorEs: r(o, "error_es"), errorEn: r(o, "error_en"), consentEs: r(o, "consent_es"), consentEn: r(o, "consent_en"), companyLabelEs: r(o, "company_label_es"), companyLabelEn: r(o, "company_label_en"), confSubjectEs: r(o, "confirmation_subject_es"), confSubjectEn: r(o, "confirmation_subject_en"), confBodyEs: r(o, "confirmation_body_es"), confBodyEn: r(o, "confirmation_body_en"), notificationEmails: (o.notification_emails as string[]) ?? [] });
 
 export async function getLeadFormConfig(): Promise<LeadFormConfig | null> {
   const { data } = await supabase.from("marketing_lead_form_config").select("*").limit(1).maybeSingle();
@@ -16,6 +16,7 @@ export async function saveLeadFormConfig(c: LeadFormConfig): Promise<string | nu
     error_es: c.errorEs, error_en: c.errorEn, consent_es: c.consentEs, consent_en: c.consentEn,
     company_label_es: c.companyLabelEs, company_label_en: c.companyLabelEn,
     confirmation_subject_es: c.confSubjectEs, confirmation_subject_en: c.confSubjectEn, confirmation_body_es: c.confBodyEs, confirmation_body_en: c.confBodyEn,
+    notification_emails: c.notificationEmails,
   }).eq("id", c.id);
   return error ? error.message : null;
 }

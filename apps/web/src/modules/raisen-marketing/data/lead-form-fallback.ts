@@ -14,4 +14,5 @@ export const LEAD_FORM_FALLBACK: LeadFormConfig = {
   companyLabelEs: "Empresa (opcional)", companyLabelEn: "Company (optional)",
   confSubjectEs: "Recibimos tu solicitud — NÚCLEO", confSubjectEn: "We received your request — NÚCLEO",
   confBodyEs: "Gracias por tu interés. Recibimos tu solicitud y te contactaremos muy pronto.", confBodyEn: "Thanks for your interest. We received your request and will contact you very soon.",
+  notificationEmails: [],
 };

@@ -41,6 +41,11 @@ export function LeadFormConfigEditor({ config }: { config: LeadFormConfig }) {
               <input className={F} placeholder={`${label} EN`} value={c[en] as string} onChange={(e) => set(en, e.target.value)} />
             </div>
           ))}
+          <div>
+            <label className="mb-1 block text-xs font-bold text-muted-foreground">Emails de notificación (leads/reservas · separados por coma)</label>
+            <input className={F} placeholder="nucleoraisen@gmail.com" value={c.notificationEmails.join(", ")}
+              onChange={(e) => setC((x) => ({ ...x, notificationEmails: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) }))} />
+          </div>
           <button type="button" onClick={() => void save()} className="rounded-lg bg-primary px-5 py-2 text-sm font-bold text-primary-foreground">Guardar config</button>
         </div>
       )}
