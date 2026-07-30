@@ -22,6 +22,9 @@ export function CatalogPage({ category, type, onFilter }: {
   const s = usePublicBrand();
   const home = useLandingHome();
   const cats = isReady(home) ? home.data.categories : [];
+  const hero = (isReady(home) ? home.data.hero : null) as Record<string, unknown> | null;
+  const pageTitle = (hero?.catalog_page_title as string) || t("lpCatalogTitle");
+  const pageSubtitle = hero?.catalog_page_subtitle as string | undefined;
   const { state, items, hasMore, loadMore, retry } = useLandingCatalog(category, type);
   useDetailSeo(s.status === "ready" ? `${t("lpCatalogTitle")} | ${s.brand.displayName}` : undefined);
   if (s.status !== "ready") return <div className="min-h-screen bg-background" />;
@@ -32,7 +35,8 @@ export function CatalogPage({ category, type, onFilter }: {
         <nav aria-label="breadcrumb" className="text-sm text-[color:hsl(var(--lp-muted))]">
           <Link to="/" className="hover:underline">{t("lpDetailBreadcrumbHome")}</Link><span className="mx-2" aria-hidden>›</span><span className="text-[color:hsl(var(--lp-fg))]">{t("lpCatalogTitle")}</span>
         </nav>
-        <h1 style={{ fontSize: "var(--text-h1)" }} className="mt-3 font-bold">{t("lpCatalogTitle")}</h1>
+        <h1 style={{ fontSize: "var(--text-h1)" }} className="mt-3 font-bold">{pageTitle}</h1>
+        {pageSubtitle && <p className="mt-1 text-base text-[color:hsl(var(--lp-muted))]">{pageSubtitle}</p>}
         <CatalogFilters categories={cats} category={category} type={type} onFilter={onFilter} />
       </header>
       <div className="mx-auto max-w-7xl px-6 py-8">

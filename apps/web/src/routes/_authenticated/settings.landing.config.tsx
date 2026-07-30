@@ -9,7 +9,7 @@ import { LandingConfigHeroSection } from "@landing/presentation/LandingConfigHer
 import { LandingConfigMetaSection } from "@landing/presentation/LandingConfigMetaSection";
 import { LandingConfigContactSection } from "@landing/presentation/LandingConfigContactSection";
 import { LandingConfigSocialSchemaSection } from "@landing/presentation/LandingConfigSocialSchemaSection";
-import { LandingConfigSectionsSection } from "@landing/presentation/LandingConfigSectionsSection";
+import { LandingConfigSectionsSection, CATALOG_ROWS } from "@landing/presentation/LandingConfigSectionsSection";
 import type { LandingConfig } from "@landing/domain/landing.types";
 
 export const Route = createFileRoute("/_authenticated/settings/landing/config")({ component: Page });
@@ -21,7 +21,7 @@ const EMPTY: LandingConfig = {
   socialLinkedin: "", socialX: "", contactConfig: null, blogUrl: "",
   schemaBusinessType: "LocalBusiness", schemaGeoLat: null, schemaGeoLng: null, schemaPriceRange: "$$",
   sectionServicesTitle: "", sectionServicesSubtitle: "", sectionProductsTitle: "", sectionProductsSubtitle: "",
-  sectionPackagesTitle: "", sectionPackagesSubtitle: "",
+  sectionPackagesTitle: "", sectionPackagesSubtitle: "", catalogPageTitle: "", catalogPageSubtitle: "",
 };
 
 function Page() {
@@ -39,6 +39,7 @@ function Page() {
     { id: "contact", label: t("contactSection"), node: <LandingConfigContactSection c={draft} set={set} /> },
     { id: "social", label: t("socialSection"), node: <LandingConfigSocialSchemaSection c={draft} set={set} /> },
     { id: "sections", label: t("sectionTitlesSection"), node: <LandingConfigSectionsSection c={draft} set={set} /> },
+    { id: "catalog", label: t("catalogPageSection"), node: <LandingConfigSectionsSection c={draft} set={set} rows={CATALOG_ROWS} /> },
   ];
   return (
     <div className="space-y-4 p-4 md:p-8">
