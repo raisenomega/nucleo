@@ -13,16 +13,18 @@ import { PaymentMethodPicker } from "@orders-public/presentation/PaymentMethodPi
 import { CouponInput } from "@orders-public/presentation/CouponInput";
 import { OrderSuccessDialog } from "@orders-public/presentation/OrderSuccessDialog";
 import { PromoOrderHeader, type PromoHeaderCtx } from "@orders-public/presentation/PromoOrderHeader";
+import { OfferDisclosureBlock, type OfferCtx } from "@orders-public/presentation/OfferDisclosureBlock";
 import { firstInvalidField } from "@orders-public/domain/validate-order";
 
 export interface OrderItem { kind: "product" | "service" | "package"; id: string; name: string; basePrice: number }
 const ERR: Record<string, string> = { total_mismatch: "opErrTotal", rate_limited: "opErrRate", coupon_invalid: "opErrCoupon", payment_method_invalid: "opErrPayment", form_invalid: "opErrForm" };
 const bar = "sticky z-10 border-border bg-card/85 p-4 backdrop-blur supports-[backdrop-filter]:bg-card/70";
 
-export function OrderModal({ item, onClose, defaultValues, defaultCoupon, promoContext }: { item: OrderItem; onClose: () => void; defaultValues?: Record<string, unknown>; defaultCoupon?: string | null; promoContext?: PromoHeaderCtx }) {
+export function OrderModal({ item, onClose, defaultValues, defaultCoupon, promoContext, offerContext }: { item: OrderItem; onClose: () => void; defaultValues?: Record<string, unknown>; defaultCoupon?: string | null; promoContext?: PromoHeaderCtx; offerContext?: OfferCtx }) {
   const { t, locale } = useI18n(); const toast = useToast();
   const { form, methods, status, payConfig } = useOrderForm(item.kind, item.id); const { busy, submit, checkout } = useCreateOrder();
   const [values, setValues] = useState<Record<string, unknown>>({});
+  const [accepted, setAccepted] = useState(false);
   const [pm, setPm] = useState(""); const [coupon, setCoupon] = useState<string | null>(defaultCoupon ?? null);
   const [done, setDone] = useState<{ orderNumber: string; orderId: string } | null>(null); const [redirecting, setRedirecting] = useState(false);
   // isSub (form con campo 'frequency') → checkout de suscripción; one-time → checkout normal. Ambos con Stripe si está activo.
@@ -58,6 +60,7 @@ export function OrderModal({ item, onClose, defaultValues, defaultCoupon, promoC
         {status === "ready" && form && (
           <>
             {promoContext && <PromoOrderHeader {...promoContext} />}
+            {offerContext && <OfferDisclosureBlock offer={offerContext} recurring={totals.total} accepted={accepted} onAccept={setAccepted} />}
             <OrderFormRenderer fields={form.fields} values={values} onChange={(k, v) => setValues((p) => ({ ...p, [k]: v }))} />
             <CouponInput onApply={setCoupon} discount={totals.discount} activeCode={coupon} />
             {!useStripe && <PaymentMethodPicker methods={methods} value={pm} onChange={setPm} />}
@@ -65,7 +68,7 @@ export function OrderModal({ item, onClose, defaultValues, defaultCoupon, promoC
         )}
       </div>
       {status === "ready" && form && (
-        <OrderSubmitBar form={form} totals={totals} promoContext={promoContext} busy={busy} redirecting={redirecting} useStripe={useStripe} isSub={isSub} pm={pm} locale={locale} onSubmit={() => void onSubmit()} onClose={onClose} />
+        <OrderSubmitBar form={form} totals={totals} promoContext={promoContext} busy={busy} redirecting={redirecting} useStripe={useStripe} isSub={isSub} pm={pm} locale={locale} blocked={!!offerContext && !accepted} onSubmit={() => void onSubmit()} onClose={onClose} />
       )}
     </ScreenModal>
   );

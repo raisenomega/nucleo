@@ -8,6 +8,7 @@ export const esOrdersPublic = {
   opErrRate: "Demasiados intentos. Esperá un momento.", opErrCoupon: "Cupón inválido.", opErrPayment: "Método de pago no disponible.",
   opErrNetwork: "No se pudo enviar la orden.", opOrderBtn: "Ordenar", opSubscribeBtn: "Suscribirme", billingRecurring: "Membresía",
   opRecurringPrefix: "Suscripción automática:", opRecurringSuffix: "por ciclo",
+  offFirstCycle: "primer ciclo", offThen: "luego", offAcceptPrefix: "Acepto los términos del compromiso de", offAcceptCycles: "ciclos.",
   opCopyDetails: "Copiar detalles", opAthSent: "Ya envié el pago", opUnderstood: "Entendido",
   opAthThanks: "¡Gracias! Verificaremos tu pago y confirmaremos por email en menos de 24 horas.",
   checkoutRequiredField: "Completá los campos obligatorios para continuar.", viewTermsLink: "Ver",

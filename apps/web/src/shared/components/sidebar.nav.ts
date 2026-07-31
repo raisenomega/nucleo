@@ -3,7 +3,7 @@ import {
   AlertCircle, Scale, Repeat, HandCoins, RefreshCw, BarChart3, UserPlus, Megaphone, ShoppingCart, FileText,
   ShoppingBag, FileCheck, ClipboardCheck, NotebookPen, GraduationCap, LifeBuoy, Bell, Settings,
   Cog, Wallet, Store, Briefcase, Palette, SlidersHorizontal, Tags, Wrench, Boxes, Quote, HelpCircle, FileInput, Layers, Ticket, MapPin, Navigation,
-  BookOpen, BookMarked, ScrollText, TrendingUp, Lock, Receipt, Banknote, Clock, CalendarOff, ClipboardList,
+  BookOpen, BookMarked, ScrollText, TrendingUp, Lock, Receipt, Banknote, Clock, CalendarOff, ClipboardList, Sparkles,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { TranslationKey } from "@shared/i18n";
@@ -13,7 +13,7 @@ import type { TranslationKey } from "@shared/i18n";
 // futuras (products/services/packages/faqs/…) se agregan acá cuando exista su archivo (Sesión 3.b+).
 type EnabledPath = "/dashboard" | "/routes" | "/income" | "/expenses" | "/extraordinary" | "/payroll" | "/inventory" | "/inventory/suppliers" | "/inventory/purchase-orders" | "/inventory/counts" | "/leads" | "/marketing" | "/reconciliation" | "/recurring" | "/accounts-receivable" | "/billing" | "/quotes" | "/sales-orders" | "/delivery-notes" | "/reports" | "/accounting/chart" | "/accounting/journal" | "/accounting/income-statement" | "/accounting/balance-sheet" | "/accounting/period-close" | "/accounting/payables" | "/accounting/cash-flow" | "/evaluations" | "/observations" | "/training" | "/support" | "/recruitment" | "/onboarding" | "/attendance" | "/leave" | "/documents" | "/settings" | "/settings-team" | "/settings/agenda" | "/agenda" | "/orders" | "/assets" | "/gps" | "/my-route" | "/employee-portal" | "/notifications" | "/customers"
   | "/tenants" | "/platform/analytics" | "/security" | "/web/campanas" | "/web/leads" | "/web/secciones" | "/web/hero" | "/web/features" | "/web/proceso" | "/web/precios" | "/web/testimonios" | "/web/soluciones" | "/web/faq" | "/web/footer" | "/web/legales" | "/web/reservas" | "/web/disponibilidad"
-  | "/settings/landing/config" | "/settings/landing/categories" | "/settings/landing/products" | "/settings/landing/services" | "/settings/landing/packages" | "/settings/landing/testimonials" | "/settings/landing/faqs" | "/settings/landing/order-forms" | "/settings/landing/service-pages" | "/settings/landing/coupons" | "/settings/landing/payment-methods" | "/settings/landing/analytics" | "/campanas";
+  | "/settings/landing/config" | "/settings/landing/categories" | "/settings/landing/products" | "/settings/landing/services" | "/settings/landing/packages" | "/settings/landing/testimonials" | "/settings/landing/faqs" | "/settings/landing/order-forms" | "/settings/landing/service-pages" | "/settings/landing/coupons" | "/settings/landing/payment-methods" | "/settings/landing/ofertas" | "/settings/landing/analytics" | "/campanas";
 // mod = clave de módulo para el gate (can(mod,"view")). Items sin mod = "próximamente" (solo roadmap coo/ceo).
 export type NavItem = { key: TranslationKey; icon: LucideIcon; to?: EnabledPath; mod?: string };
 export type NavSection = { title: TranslationKey; icon: LucideIcon; items: NavItem[] };
@@ -54,7 +54,7 @@ export const LANDING_SECTION: NavSection = { title: "landing", icon: Palette, it
   { key: "landingSiteSettings", icon: SlidersHorizontal, to: "/settings/landing/config", mod: "settings" }, { key: "landingServicePages", icon: Layers, to: "/settings/landing/service-pages", mod: "settings" }, { key: "landingCategories", icon: Tags, to: "/settings/landing/categories", mod: "settings" },
   { key: "products", icon: Package, to: "/settings/landing/products", mod: "settings" }, { key: "services", icon: Wrench, to: "/settings/landing/services", mod: "settings" }, { key: "packages", icon: Boxes, to: "/settings/landing/packages", mod: "settings" },
   { key: "testimonials", icon: Quote, to: "/settings/landing/testimonials", mod: "settings" }, { key: "faqs", icon: HelpCircle, to: "/settings/landing/faqs", mod: "settings" }, { key: "landingOrderForms", icon: FileInput, to: "/settings/landing/order-forms", mod: "settings" },
-  { key: "landingCoupons", icon: Ticket, to: "/settings/landing/coupons", mod: "settings" }, { key: "landingPaymentMethods", icon: CreditCard, to: "/settings/landing/payment-methods", mod: "settings" }] };
+  { key: "landingCoupons", icon: Ticket, to: "/settings/landing/coupons", mod: "settings" }, { key: "landingPaymentMethods", icon: CreditCard, to: "/settings/landing/payment-methods", mod: "settings" }, { key: "landingOffers", icon: Sparkles, to: "/settings/landing/ofertas", mod: "settings" }] };
 
 // Campañas y Analytics: grupos propios (el sitio web ≠ las campañas ≠ la medición). Mismo gate que LANDING.
 export const CAMPAIGNS_SECTION: NavSection = {

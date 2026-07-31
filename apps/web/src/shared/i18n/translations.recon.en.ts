@@ -40,7 +40,7 @@ export const enRecon = {
   assignPin: "Assign PIN", reactivate: "Reactivate", lastAccess: "Last access", modulesVisible: "Visible modules",
   backToTeam: "Back to team", phone: "Phone", position: "Position",
   approvedDate: "Approval date", registeredDate: "Registration date",
-  landingPaymentMethods: "Payment methods", landingCoupons: "Coupons",
+  landingPaymentMethods: "Payment methods", landingCoupons: "Coupons", landingOffers: "Offers", landingOffersNew: "New offer", landingOffersEmpty: "No offers yet. Create one for the landing chip.", landingOffersHint: "Offers start inactive. Hook billing is enabled in a separate phase — don't activate until confirmed.",
   couponNew: "New coupon",
   couponEdit: "Edit coupon",
   couponEmpty: "No coupons yet.",

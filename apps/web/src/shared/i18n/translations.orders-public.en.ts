@@ -8,6 +8,7 @@ export const enOrdersPublic = {
   opErrRate: "Too many attempts. Please wait a moment.", opErrCoupon: "Invalid coupon.", opErrPayment: "Payment method unavailable.",
   opErrNetwork: "Could not submit the order.", opOrderBtn: "Order", opSubscribeBtn: "Subscribe", billingRecurring: "Subscription",
   opRecurringPrefix: "Auto-subscription:", opRecurringSuffix: "per cycle",
+  offFirstCycle: "first cycle", offThen: "then", offAcceptPrefix: "I accept the terms of the", offAcceptCycles: "cycle commitment.",
   opCopyDetails: "Copy details", opAthSent: "I already sent the payment", opUnderstood: "Got it",
   opAthThanks: "Thanks! We'll verify your payment and confirm by email within 24 hours.",
   checkoutRequiredField: "Please complete the required fields to continue.", viewTermsLink: "View",

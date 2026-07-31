@@ -12,7 +12,7 @@ import { HomeSections } from "@landing-public/presentation/HomeSections";
 import { LandingHeroSections } from "@landing-public/presentation/hero-sections/LandingHeroSections";
 import { ContactSection } from "@landing-public/presentation/sections/ContactSection";
 import type { ContactConfig } from "@landing-public/domain/contact-config.types";
-import { PromoOffer } from "@landing-public/presentation/promo/PromoOffer";
+import { OfferChip } from "@landing-public/presentation/promo/OfferChip";
 import { PublicFooter } from "@landing-public/presentation/footer/PublicFooter";
 
 // Home pública (3.E.3): hero data-driven full-screen (config real vía _public_get_landing_home).
@@ -45,7 +45,7 @@ export function PublicLandingRoot() {
         <HomeSections home={home} />
         <ContactSection contactConfig={(hero?.contact_config ?? null) as ContactConfig | null} />
         <PublicFooter brand={s.brand} tagline={(hero?.meta_description as string) ?? ""} blogUrl={(hero?.blog_url as string) ?? null} />
-        <PromoOffer />
+        <OfferChip />
       </div>
     </MotionProvider>
   );

@@ -40,7 +40,7 @@ export const esRecon = {
   assignPin: "Asignar PIN", reactivate: "Reactivar", lastAccess: "Último acceso", modulesVisible: "Módulos visibles",
   backToTeam: "Volver al equipo", phone: "Teléfono", position: "Posición",
   approvedDate: "Fecha de aprobación", registeredDate: "Fecha de registro",
-  landingPaymentMethods: "Métodos de pago", landingCoupons: "Cupones",
+  landingPaymentMethods: "Métodos de pago", landingCoupons: "Cupones", landingOffers: "Ofertas", landingOffersNew: "Nueva oferta", landingOffersEmpty: "Aún no hay ofertas. Crea una para el chip de la landing.", landingOffersHint: "Las ofertas nacen inactivas. El cobro del hook se activa en una fase aparte — no actives hasta confirmarlo.",
   couponNew: "Nuevo cupón",
   couponEdit: "Editar cupón",
   couponEmpty: "Aún no hay cupones.",
