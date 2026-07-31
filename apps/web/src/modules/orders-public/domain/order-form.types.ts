@@ -20,7 +20,7 @@ export interface PaymentOption {
 export interface OrderItemInput { kind: "product" | "service" | "package"; id: string; qty: number; name: string; }
 export interface CreateOrderInput {
   formId: string; items: OrderItemInput[]; customFields: Record<string, unknown>;
-  paymentMethodKey: string; couponCode: string | null; clientTotal: number;
+  paymentMethodKey: string; couponCode: string | null; clientTotal: number; offerId?: string | null;
 }
 export type OrderResult =
   | { ok: true; orderNumber: string; orderId: string; publicToken: string | null }

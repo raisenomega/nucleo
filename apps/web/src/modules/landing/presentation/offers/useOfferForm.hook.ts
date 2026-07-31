@@ -4,7 +4,7 @@ import type { Offer, OfferInput } from "@landing/domain/landing-offer.types";
 export const OFFER_DEFAULTS: OfferInput = {
   isActive: false, titleEs: "", titleEn: "", badgeTextEs: "OFERTA TRENDING", badgeTextEn: "TRENDING OFFER",
   hookPrice: 19.98, applicableServices: [], commitmentCycles: 3, disclosureEs: "", disclosureEn: "",
-  ctaLabelEs: "Aprovechar oferta", ctaLabelEn: "Get offer", askServiceType: true,
+  ctaLabelEs: "Aprovechar oferta", ctaLabelEn: "Get offer", termsEs: "", termsEn: "", askServiceType: true,
   modalQuestionEs: "¿Qué opción prefieres?", modalQuestionEn: "Which option do you prefer?",
   validFrom: null, validUntil: null, displayOrder: 0,
 };

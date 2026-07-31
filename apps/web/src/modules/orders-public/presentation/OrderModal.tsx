@@ -37,7 +37,7 @@ export function OrderModal({ item, onClose, defaultValues, defaultCoupon, promoC
     if (!form) return;
     const bad = firstInvalidField(form.fields, values); // bloqueante: toast educativo, no se envía la orden.
     if (bad) { const msg = (locale === "en" ? bad.validation.error_en : bad.validation.error_es) as string | undefined; return toast.error(msg || t("checkoutRequiredField")); }
-    const r = await submit({ formId: form.id, items, customFields: values, paymentMethodKey: useStripe ? "stripe" : pm, couponCode: coupon, clientTotal: totals.total });
+    const r = await submit({ formId: form.id, items, customFields: values, paymentMethodKey: useStripe ? "stripe" : pm, couponCode: coupon, clientTotal: totals.total, offerId: offerContext?.offerId ?? null });
     if (!r.ok) return toast.error(t((ERR[r.code] ?? "opErrNetwork") as Parameters<typeof t>[0]));
     if (useStripe) { // crea la orden pending → redirige a Stripe Checkout (suscripción o one-time); el webhook confirma.
       setRedirecting(true);

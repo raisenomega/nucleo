@@ -20,7 +20,7 @@ export function OfferChip() {
   const openOrder = (id: string) => { setSvcId(id); setView("order"); };
   const onChip = () => { if (offer.ask_service_type && services.length > 1) setView("select"); else if (services[0]) openOrder(services[0].id); };
   const svc = services.find((s) => s.id === svcId);
-  const offerCtx = { offerId: offer.id, hookPrice: offer.hook_price, commitmentCycles: offer.commitment_cycles, disclosure: locale === "en" ? offer.disclosure_en : offer.disclosure_es };
+  const offerCtx = { offerId: offer.id, hookPrice: offer.hook_price, commitmentCycles: offer.commitment_cycles, disclosure: locale === "en" ? offer.disclosure_en : offer.disclosure_es, terms: locale === "en" ? offer.terms_en : offer.terms_es };
   return (
     <>
       <button type="button" onClick={onChip} aria-label={badge}

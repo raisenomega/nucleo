@@ -22,10 +22,17 @@ export function OfferFields({ c, set }: { c: OfferInput; set: SetOffer }) {
         </div>
       ))}
       <div>
-        <label className="mb-1 block text-xs font-bold text-muted-foreground">Términos (disclosure)</label>
+        <label className="mb-1 block text-xs font-bold text-muted-foreground">Disclosure corto (línea bajo el precio)</label>
         <div className="grid grid-cols-2 gap-2">
-          <textarea className={f} rows={3} placeholder="ES" value={c.disclosureEs} onChange={(e) => set({ disclosureEs: e.target.value })} />
-          <textarea className={f} rows={3} placeholder="EN" value={c.disclosureEn} onChange={(e) => set({ disclosureEn: e.target.value })} />
+          <textarea className={f} rows={2} placeholder="ES" value={c.disclosureEs} onChange={(e) => set({ disclosureEs: e.target.value })} />
+          <textarea className={f} rows={2} placeholder="EN" value={c.disclosureEn} onChange={(e) => set({ disclosureEn: e.target.value })} />
+        </div>
+      </div>
+      <div>
+        <label className="mb-1 block text-xs font-bold text-muted-foreground">Términos completos (acordeón · **texto** = negrita)</label>
+        <div className="grid grid-cols-2 gap-2">
+          <textarea className={f} rows={5} placeholder="Términos ES" value={c.termsEs} onChange={(e) => set({ termsEs: e.target.value })} />
+          <textarea className={f} rows={5} placeholder="Terms EN" value={c.termsEn} onChange={(e) => set({ termsEn: e.target.value })} />
         </div>
       </div>
       <div className="grid grid-cols-3 gap-2">

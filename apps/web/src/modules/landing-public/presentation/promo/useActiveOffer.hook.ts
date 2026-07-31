@@ -6,6 +6,7 @@ export interface PublicOffer {
   id: string; badge_text_es: string; badge_text_en: string; hook_price: number;
   applicable_services: string[]; commitment_cycles: number;
   disclosure_es: string; disclosure_en: string; cta_label_es: string; cta_label_en: string;
+  terms_es: string; terms_en: string;
   ask_service_type: boolean; modal_question_es: string; modal_question_en: string;
 }
 

@@ -10,6 +10,7 @@ export interface Offer {
   commitmentCycles: number;
   disclosureEs: string; disclosureEn: string;
   ctaLabelEs: string; ctaLabelEn: string;
+  termsEs: string; termsEn: string;
   askServiceType: boolean;
   modalQuestionEs: string; modalQuestionEn: string;
   validFrom: string | null; validUntil: string | null;

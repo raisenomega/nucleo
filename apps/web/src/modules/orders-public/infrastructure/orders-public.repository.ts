@@ -51,7 +51,7 @@ export const ordersPublicRepository = {
     const payload = {
       form_id: input.formId, idempotency_key: crypto.randomUUID(), items: input.items,
       custom_fields: input.customFields, payment_method_key: input.paymentMethodKey,
-      coupon_code: input.couponCode ?? undefined, client_total: input.clientTotal,
+      coupon_code: input.couponCode ?? undefined, client_total: input.clientTotal, offer_id: input.offerId ?? undefined,
       user_agent: navigator.userAgent, referrer: document.referrer || undefined,
     };
     const { data } = await supabase.rpc("_public_create_order", { _hostname: window.location.hostname, _payload: payload, _client_ip: null });

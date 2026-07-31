@@ -9,6 +9,7 @@ export const enOrdersPublic = {
   opErrNetwork: "Could not submit the order.", opOrderBtn: "Order", opSubscribeBtn: "Subscribe", billingRecurring: "Subscription",
   opRecurringPrefix: "Auto-subscription:", opRecurringSuffix: "per cycle",
   offFirstCycle: "first cycle", offThen: "then", offAcceptPrefix: "I accept the terms of the", offAcceptCycles: "cycle commitment.",
+  offSave: "You save", offTermsTitle: "Subscription Terms (view)", offAcceptRead: "I confirm I have read and accept the Subscription Terms",
   opCopyDetails: "Copy details", opAthSent: "I already sent the payment", opUnderstood: "Got it",
   opAthThanks: "Thanks! We'll verify your payment and confirm by email within 24 hours.",
   checkoutRequiredField: "Please complete the required fields to continue.", viewTermsLink: "View",
