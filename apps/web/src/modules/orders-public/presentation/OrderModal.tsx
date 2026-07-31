@@ -68,7 +68,7 @@ export function OrderModal({ item, onClose, defaultValues, defaultCoupon, promoC
         )}
       </div>
       {status === "ready" && form && (
-        <OrderSubmitBar form={form} totals={totals} promoContext={promoContext} busy={busy} redirecting={redirecting} useStripe={useStripe} isSub={isSub} pm={pm} locale={locale} blocked={!!offerContext && !accepted} onSubmit={() => void onSubmit()} onClose={onClose} />
+        <OrderSubmitBar form={form} totals={totals} promoContext={promoContext} busy={busy} redirecting={redirecting} useStripe={useStripe} isSub={isSub} pm={pm} locale={locale} blocked={!!offerContext && !accepted} offerHook={offerContext?.hookPrice ?? null} onSubmit={() => void onSubmit()} onClose={onClose} />
       )}
     </ScreenModal>
   );

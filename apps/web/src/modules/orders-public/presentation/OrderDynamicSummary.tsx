@@ -5,8 +5,10 @@ const money = (n: number) => `$${n.toFixed(2)}`;
 
 // "Resumen del Pedido" server-authoritative (usa los totals de _public_preview_price). footer = disclaimer recurrente.
 // recurring: si es suscripción, muestra el recurrente DINÁMICO (= total en vivo), sin hardcodes de precio viejos.
-export function OrderDynamicSummary({ totals, footer, title, recurring }: { totals: Totals; footer: string | null; title: string; recurring?: number | null }) {
+// hookPrice: si hay oferta activa, el TOTAL HOY = hook (lo que cobra el ciclo 1) y el recurrente va como "próximo ciclo".
+export function OrderDynamicSummary({ totals, footer, title, recurring, hookPrice }: { totals: Totals; footer: string | null; title: string; recurring?: number | null; hookPrice?: number | null }) {
   const { t, locale } = useI18n();
+  const todayTotal = hookPrice != null ? hookPrice : totals.total;
   const line = (l: string, val: number) => (
     <div className="flex justify-between text-sm"><span className="text-muted-foreground">{l}</span><span className="text-foreground">{money(val)}</span></div>
   );
@@ -23,8 +25,9 @@ export function OrderDynamicSummary({ totals, footer, title, recurring }: { tota
       </div>
       <div className="mt-3 flex items-center justify-between border-t border-border pt-3">
         <span className="text-sm font-bold uppercase text-foreground">{t("opTotal")}</span>
-        <span className="text-2xl font-extrabold text-foreground">{money(totals.total)}</span>
+        <span className="text-2xl font-extrabold text-foreground">{money(todayTotal)}</span>
       </div>
+      {hookPrice != null && <p className="mt-1 flex justify-between text-xs text-muted-foreground"><span>{t("offNextCycle")}</span><span>{money(totals.total)}</span></p>}
       {recurring != null && <p className="mt-2 text-xs font-medium text-foreground">{t("opRecurringPrefix")} {money(recurring)} {t("opRecurringSuffix")}</p>}
       {footer && <p className="mt-2 text-xs text-muted-foreground">{footer}</p>}
     </div>

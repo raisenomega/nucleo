@@ -10,6 +10,7 @@ export const esOrdersPublic = {
   opRecurringPrefix: "Suscripción automática:", opRecurringSuffix: "por ciclo",
   offFirstCycle: "primer ciclo", offThen: "luego", offAcceptPrefix: "Acepto los términos del compromiso de", offAcceptCycles: "ciclos.",
   offSave: "Ahorras", offTermsTitle: "Términos de Suscripción (ver)", offAcceptRead: "Confirmo que leí y acepto los Términos de Suscripción",
+  offNextCycle: "Próximo ciclo", offDiscountApplied: "Descuento aplicado",
   opCopyDetails: "Copiar detalles", opAthSent: "Ya envié el pago", opUnderstood: "Entendido",
   opAthThanks: "¡Gracias! Verificaremos tu pago y confirmaremos por email en menos de 24 horas.",
   checkoutRequiredField: "Completá los campos obligatorios para continuar.", viewTermsLink: "Ver",
