@@ -9,6 +9,7 @@ export interface PublicOrderResp {
     items: { name: string; qty: number; price?: number; kind?: string }[];
     subtotal: number; tax: number; shipping: number; discount: number; total: number;
     status: string; created_at: string; billing_frequency: string | null; source: string | null; custom_fields: Record<string, unknown>;
+    offer_hook?: number | null;  // 2b2.5: si hay oferta, el "total pagado hoy" = hook (no el total regular)
   };
   tenant?: { display_name: string | null; legal_name: string | null; contact_phone: string | null; primary_color: string; accent_color: string; logo_url: string | null };
 }

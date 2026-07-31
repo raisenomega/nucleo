@@ -19,7 +19,8 @@ export function PublicOrderView({ data, paid, subscribed }: { data: PublicOrderR
   const tq = o.items.reduce((s, it) => s + (it.qty || 0), 0) || 1;
   const lineTotal = (it: { price?: number; qty: number }) => (it.price != null ? it.price * it.qty : o.subtotal * ((it.qty || 0) / tq));
   const labels = { order: t("docOrder"), date: t("date"), client: t("ordCustomerTitle"), description: t("description"),
-    qty: t("quantity"), price: t("unitPrice"), total: t("total"), subtotal: t("subtotal"), tax: t("tax") };
+    qty: t("quantity"), price: t("unitPrice"), total: t("total"), subtotal: t("subtotal"), tax: t("tax"),
+    totalToday: t("offTotalToday"), nextCycle: t("offNextCycle") };
   return (
     <main className="min-h-screen bg-background p-4 text-foreground">
       <div className="mx-auto max-w-2xl space-y-4">
@@ -36,7 +37,14 @@ export function PublicOrderView({ data, paid, subscribed }: { data: PublicOrderR
           <tbody>{o.items.map((it, i) => <tr key={i} className="border-t border-border"><td className="p-1">{it.name}</td><td className="p-1 text-right">{it.qty}</td><td className="p-1 text-right">{money(lineTotal(it))}</td></tr>)}</tbody></table>
         <div className="ml-auto max-w-xs space-y-1 text-sm">
           <div className="flex justify-between"><span className="text-muted-foreground">{t("subtotal")}</span><span>{money(o.subtotal)}</span></div>
-          <div className="flex justify-between text-lg font-bold" style={{ color: tn.primary_color }}><span>{t("total")}</span><span>{money(o.total)}</span></div>
+          {o.offer_hook != null ? (
+            <>
+              <div className="flex justify-between text-lg font-bold" style={{ color: tn.primary_color }}><span>{t("offTotalToday")}</span><span>{money(o.offer_hook)}</span></div>
+              <div className="flex justify-between text-xs text-muted-foreground"><span>{t("offNextCycle")}</span><span>{money(o.total)}</span></div>
+            </>
+          ) : (
+            <div className="flex justify-between text-lg font-bold" style={{ color: tn.primary_color }}><span>{t("total")}</span><span>{money(o.total)}</span></div>
+          )}
         </div>
         <div className="flex flex-wrap gap-3">
           <a href={publicLandingHref()} className="flex items-center gap-2 rounded-lg border border-border px-4 py-2 font-bold text-foreground"><ArrowLeft className="h-4 w-4" /> {t("backToHome")}</a>
