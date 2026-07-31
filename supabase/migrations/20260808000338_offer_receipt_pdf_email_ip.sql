@@ -100,7 +100,7 @@ begin
     insert into public.audit_log(tenant_id, action, entity_type, entity_id, ip_address, user_agent, new_values, risk_level)
     values(_t, 'subscription_terms_accepted', 'offer', _offer_id, _client_ip, _payload->>'user_agent',
       jsonb_build_object('order_id',_id,'customer_name',_nm,'customer_email',_cf->>'email',
-        'terms_hash', encode(sha256(convert_to(coalesce(_terms,''),'UTF8')),'hex'), 'accepted_at', now()), 'info');
+        'terms_hash', encode(sha256(convert_to(coalesce(_terms,''),'UTF8')),'hex'), 'accepted_at', now()), 'low');
   end if;
   return jsonb_build_object('status','ok','order_number',_num,'order_id',_id,'public_token',_tok);
 end $function$
