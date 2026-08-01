@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { noindexHead } from "@shared/seo/noindex-head";
 import { getDeliveryByToken, type PublicDeliveryResp } from "@sales/infrastructure/supabase-delivery-share.repository";
 import { PublicDeliveryView } from "@sales/presentation/PublicDeliveryView";
 
-export const Route = createFileRoute("/entrega/$token")({ component: PublicDeliveryPage });
+export const Route = createFileRoute("/entrega/$token")({ component: PublicDeliveryPage, head: noindexHead });
 
 // Página pública (sin auth): el cliente ve su nota de entrega branded por token. Enlazada desde el WhatsApp.
 function PublicDeliveryPage() {

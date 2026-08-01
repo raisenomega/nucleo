@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { noindexHead } from "@shared/seo/noindex-head";
 import { getOrderByToken, type PublicOrderResp } from "@orders/infrastructure/supabase-order-share.repository";
 import { PublicOrderView } from "@orders/presentation/PublicOrderView";
 
-export const Route = createFileRoute("/orden/$token")({ component: PublicOrderPage });
+export const Route = createFileRoute("/orden/$token")({ component: PublicOrderPage, head: noindexHead });
 
 // Página pública (sin auth): el cliente ve su orden branded por token. Enlazada desde el WhatsApp.
 function PublicOrderPage() {

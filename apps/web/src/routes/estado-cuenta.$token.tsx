@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { noindexHead } from "@shared/seo/noindex-head";
 import { getStatementByToken, type PublicStatementResp } from "@shared/customers/customer-statement.repository";
 import { PublicStatementView } from "@shared/customers/PublicStatementView";
 
-export const Route = createFileRoute("/estado-cuenta/$token")({ component: PublicStatementPage });
+export const Route = createFileRoute("/estado-cuenta/$token")({ component: PublicStatementPage, head: noindexHead });
 
 // Página pública (sin auth): el cliente ve su estado de cuenta branded por token. Enlazada desde el WhatsApp.
 function PublicStatementPage() {

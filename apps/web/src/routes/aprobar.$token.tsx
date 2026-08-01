@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { noindexHead } from "@shared/seo/noindex-head";
 import { useI18n } from "@shared/i18n";
 import { getQuoteByToken, type PublicQuoteResp } from "@quotes/infrastructure/supabase-public-quote.repository";
 import { QuoteApprovalView } from "@quotes/presentation/QuoteApprovalView";
 
-export const Route = createFileRoute("/aprobar/$token")({ component: ApprovalPage });
+export const Route = createFileRoute("/aprobar/$token")({ component: ApprovalPage, head: noindexHead });
 
 // Página pública (sin auth) donde el cliente ve y responde la cotización por token.
 function ApprovalPage() {
