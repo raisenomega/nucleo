@@ -11,6 +11,11 @@ const PANEL = [
   "/notifications", "/observations", "/evaluations", "/extraordinary", "/reconciliation", "/recurring",
   "/support", "/training", "/accounts-receivable", "/portal", "/glass-demo",
 ];
+// Documentos privados de cliente servidos por token público (comprobantes, facturas, estados de cuenta):
+// son URLs adivinables-por-enlace que NUNCA deben entrar al índice. El prefijo desnudo ya cubre las sub-rutas
+// (robots.txt matchea por prefijo); la variante /* se emite además para crawlers que hacen match exacto.
+const DOCS = ["/orden", "/orden/*", "/factura", "/factura/*", "/entrega", "/entrega/*", "/estado-cuenta",
+  "/estado-cuenta/*", "/cotizacion", "/cotizacion/*", "/contrato", "/contrato/*"];
 // Rutas de la landing de TENANT — en el host comercial de NÚCLEO no renderizan nada útil: fuera del índice.
 const TENANT_ONLY = ["/catalog", "/product/", "/service/", "/servicios/", "/package/", "/privacy", "/terms"];
 
@@ -23,8 +28,8 @@ export default defineHandler((event) => {
   const isRaisen = RAISEN.has(host);
   void trackAiCrawl({ user_agent: getRequestHeader(event, "user-agent"), host, path: "/robots.txt", resource: "robots" });
   const body = isRaisen
-    ? `User-agent: *\nAllow: /\n${block([...PANEL, ...TENANT_ONLY])}\n\nSitemap: https://www.nucleoraisen.com/sitemap.xml\n`
-    : `User-agent: *\nAllow: /\n${block(PANEL)}\n\nSitemap: https://www.${host.replace(/^(www\.|app\.)/, "")}/sitemap.xml\n`;
+    ? `User-agent: *\nAllow: /\n${block([...PANEL, ...DOCS, ...TENANT_ONLY])}\n\nSitemap: https://www.nucleoraisen.com/sitemap.xml\n`
+    : `User-agent: *\nAllow: /\n${block([...PANEL, ...DOCS])}\n\nSitemap: https://www.${host.replace(/^(www\.|app\.)/, "")}/sitemap.xml\n`;
   return new Response(body, {
     status: 200,
     headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "public, max-age=3600, s-maxage=86400" },
