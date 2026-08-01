@@ -36,9 +36,10 @@ export const supabaseInvoiceRepository: IInvoiceRepository = {
   async setStatus(id, status: InvoiceStatus): Promise<BillingResult> {
     return ok((await supabase.from("invoices").update({ status }).eq("id", id)).error);
   },
-  async fromLead(leadId): Promise<string | null> {
-    const { data } = await supabase.rpc("generate_invoice_from_lead", { p_lead_id: leadId });
-    return (data as string | null) ?? null;
+  async fromLead(leadId) {
+    const { data, error } = await supabase.rpc("generate_invoice_from_lead", { p_lead_id: leadId });
+    if (error || !data) return { ok: false as const, error: error?.message ?? "Sin datos del servidor" };
+    return { ok: true as const, value: data as string };
   },
   async summary(): Promise<BillingSummary> {
     const { data } = await supabase.rpc("get_billing_summary");

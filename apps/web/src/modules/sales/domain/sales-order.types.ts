@@ -1,4 +1,7 @@
 // BC sales — órdenes de venta (fulfillment). Puro. Hermano de quotes; alimenta conduces + facturas.
+export type Result<T, E> = { readonly ok: true; readonly value: T } | { readonly ok: false; readonly error: E };
+// Result y no `string | null`: estas RPC NUNCA devuelven null (o retornan uuid o hacen raise), asi que un
+// null solo podia significar «fallo tragado» — indistinguible de un resultado real (auditoria E2E §13).
 export type SoResult = { ok: true; id?: string } | { ok: false; error: string };
 export type SoStatus = "draft" | "confirmed" | "partially_shipped" | "shipped" | "partially_invoiced" | "invoiced" | "closed" | "cancelled";
 
@@ -29,9 +32,9 @@ export interface ConfirmResult { confirmed: boolean; backordered_items: Backorde
 export interface ISalesOrderRepository {
   list(): Promise<SalesOrder[]>;
   create(input: SoInput): Promise<SoResult>;
-  createFromQuote(quoteId: string): Promise<string | null>;
+  createFromQuote(quoteId: string): Promise<Result<string, string>>;
   confirm(id: string): Promise<ConfirmResult>;
   cancel(id: string, reason: string): Promise<SoResult>;
   update(id: string, input: SoInput): Promise<SoResult>;
-  invoiceFromOrder(id: string): Promise<string | null>;
+  invoiceFromOrder(id: string): Promise<Result<string, string>>;
 }

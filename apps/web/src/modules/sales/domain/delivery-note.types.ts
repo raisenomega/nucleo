@@ -1,4 +1,5 @@
 // BC sales — conduces / notas de entrega (fulfillment). Puro. Nace de un SO; deduce físico al despachar.
+import type { Result } from "@sales/domain/sales-order.types";   // mismo BC, un solo Result
 export type DnResult = { ok: true; id?: string } | { ok: false; error: string };
 export type DnStatus = "draft" | "dispatched" | "in_transit" | "delivered" | "cancelled";
 
@@ -24,5 +25,5 @@ export interface IDeliveryNoteRepository {
   dispatch(id: string): Promise<DnResult>;
   deliver(id: string, input: DeliverInput): Promise<DnResult>;
   cancel(id: string, reason: string): Promise<DnResult>;
-  invoiceFromDelivery(id: string): Promise<string | null>;
+  invoiceFromDelivery(id: string): Promise<Result<string, string>>;
 }

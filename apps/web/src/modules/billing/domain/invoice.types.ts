@@ -1,4 +1,7 @@
 // BC billing — facturas. Puro. items = snapshot inmutable, tax por-item.
+export type Result<T, E> = { readonly ok: true; readonly value: T } | { readonly ok: false; readonly error: E };
+// Result y no `string | null`: estas RPC NUNCA devuelven null (o retornan uuid o hacen raise), asi que un
+// null solo podia significar «fallo tragado» — indistinguible de un resultado real (auditoria E2E §13).
 export type BillingResult = { ok: true } | { ok: false; error: string };
 export type InvoiceStatus = "draft" | "sent" | "partially_paid" | "paid" | "overdue" | "cancelled";
 
@@ -27,6 +30,6 @@ export interface IInvoiceRepository {
   save(input: InvoiceInput): Promise<BillingResult>;
   confirmPayment(id: string): Promise<BillingResult>;
   setStatus(id: string, status: InvoiceStatus): Promise<BillingResult>;
-  fromLead(leadId: string): Promise<string | null>;
+  fromLead(leadId: string): Promise<Result<string, string>>;
   summary(): Promise<BillingSummary>;
 }

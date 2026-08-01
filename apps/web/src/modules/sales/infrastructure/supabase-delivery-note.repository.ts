@@ -33,8 +33,9 @@ export const supabaseDeliveryNoteRepository: IDeliveryNoteRepository = {
   async cancel(id, reason): Promise<DnResult> {
     return ok((await supabase.rpc("cancel_delivery_note", { p_note_id: id, p_reason: reason || null })).error);
   },
-  async invoiceFromDelivery(id): Promise<string | null> {
-    const { data } = await supabase.rpc("create_invoice_from_delivery", { p_delivery_note_id: id });
-    return (data as string | null) ?? null;
+  async invoiceFromDelivery(id) {
+    const { data, error } = await supabase.rpc("create_invoice_from_delivery", { p_delivery_note_id: id });
+    if (error || !data) return { ok: false as const, error: error?.message ?? "Sin datos del servidor" };
+    return { ok: true as const, value: data as string };
   },
 };

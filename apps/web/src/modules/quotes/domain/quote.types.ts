@@ -1,4 +1,7 @@
 // BC quotes — cotizaciones. Puro. Hermano de invoices con flujo de aprobación del cliente.
+export type Result<T, E> = { readonly ok: true; readonly value: T } | { readonly ok: false; readonly error: E };
+// Result y no `string | null`: estas RPC NUNCA devuelven null (o retornan uuid o hacen raise), asi que un
+// null solo podia significar «fallo tragado» — indistinguible de un resultado real (auditoria E2E §13).
 export type QuoteResult = { ok: true } | { ok: false; error: string };
 export type QuoteStatus = "draft" | "sent" | "viewed" | "accepted" | "rejected" | "expired" | "converted";
 
@@ -30,6 +33,6 @@ export interface IQuoteRepository {
 
   setStatus(id: string, status: QuoteStatus): Promise<QuoteResult>;
   convertToInvoice(id: string): Promise<string | null>;
-  fromLead(leadId: string): Promise<string | null>;
+  fromLead(leadId: string): Promise<Result<string, string>>;
   summary(): Promise<QuotesSummary>;
 }

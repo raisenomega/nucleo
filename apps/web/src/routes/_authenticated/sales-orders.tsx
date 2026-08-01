@@ -25,7 +25,7 @@ function SalesOrdersPage() {
   if (!can("sales", "view") || !brand.fulfillmentEnabled) return <Navigate to="/dashboard" />;
   const view = viewing ? m.list.find((o) => o.id === viewing.id) ?? viewing : null;
   const onConfirm = () => { if (view) void m.confirm(view.id).then((r) => { if (r.backordered_items.length) setBackorder(r.backordered_items); }); };
-  const onInvoice = () => { if (view) void m.invoice(view.id).then((inv) => { if (inv) window.alert(t("invoiceSaved")); }); };
+  const onInvoice = () => { if (view) void m.invoice(view.id).then((r) => window.alert(r.ok ? t("invoiceSaved") : r.error)); };
   const onCancel = () => { if (view && window.confirm(`${t("cancelOrder")}?`)) void m.cancel(view.id, "").then(() => setViewing(null)); };
   return (
     <div className="space-y-6 p-4 md:p-8">

@@ -19,13 +19,15 @@ export function LeadDetailActions({ lead, onEdit, onDuplicate, onArchive }: {
   const { generating, exportPdf } = usePdfExport();
   const brand = usePdfBrand();
   const edit = can("leads", "edit"), create = can("leads", "create"), docs = can("leads", "documents");
+  // El servidor ya explica por que no pudo ("Lead no encontrado", "No autorizado"). Antes se tapaba con
+  // "campos requeridos", que culpaba al usuario de un fallo que no era suyo (auditoria E2E §13).
   async function quote() {
-    const id = await supabaseQuoteRepository.fromLead(lead.id);
-    if (id) void nav({ to: "/quotes" }); else window.alert(t("requiredFields"));
+    const r = await supabaseQuoteRepository.fromLead(lead.id);
+    if (r.ok) void nav({ to: "/quotes" }); else window.alert(r.error);
   }
   async function invoice() {
-    const id = await supabaseInvoiceRepository.fromLead(lead.id);
-    if (id) void nav({ to: "/billing" }); else window.alert(t("requiredFields"));
+    const r = await supabaseInvoiceRepository.fromLead(lead.id);
+    if (r.ok) void nav({ to: "/billing" }); else window.alert(r.error);
   }
   const b = "flex items-center gap-1 rounded-lg bg-secondary px-2 py-1 text-xs font-body hover:bg-primary hover:text-primary-foreground";
   return (

@@ -27,7 +27,7 @@ function DeliveryNotesPage() {
   const { download, share } = useDeliveryShare(warehouses);
   if (!can("sales", "view") || !brand.fulfillmentEnabled) return <Navigate to="/dashboard" />;
   const view = viewing ? m.list.find((d) => d.id === viewing.id) ?? viewing : null;
-  const onInvoice = (d: DeliveryNote) => void m.invoice(d.id).then((inv) => { if (inv) void navigate({ to: "/billing" }); });
+  const onInvoice = (d: DeliveryNote) => void m.invoice(d.id).then((r) => { if (r.ok) void navigate({ to: "/billing" }); else window.alert(r.error); });
   return (
     <div className="space-y-6 p-4 md:p-8">
       <div className="space-y-2">

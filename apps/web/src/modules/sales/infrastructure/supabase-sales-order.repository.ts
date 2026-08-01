@@ -25,9 +25,10 @@ export const supabaseSalesOrderRepository: ISalesOrderRepository = {
       p_notes_internal: d.notesInternal || null, p_notes_customer: d.notesCustomer || null });
     return ok(error, (data as string | null) ?? undefined);
   },
-  async createFromQuote(quoteId): Promise<string | null> {
-    const { data } = await supabase.rpc("create_sales_order_from_quote", { p_quote_id: quoteId });
-    return (data as string | null) ?? null;
+  async createFromQuote(quoteId) {
+    const { data, error } = await supabase.rpc("create_sales_order_from_quote", { p_quote_id: quoteId });
+    if (error || !data) return { ok: false as const, error: error?.message ?? "Sin datos del servidor" };
+    return { ok: true as const, value: data as string };
   },
   async confirm(id): Promise<ConfirmResult> {
     const { data } = await supabase.rpc("confirm_sales_order", { p_order_id: id });
@@ -39,8 +40,9 @@ export const supabaseSalesOrderRepository: ISalesOrderRepository = {
   async update(id, d): Promise<SoResult> {
     return ok((await supabase.rpc("update_sales_order", { p_order_id: id, p_data: { delivery_date: d.deliveryDate, payment_terms: d.paymentTerms, notes_internal: d.notesInternal, notes_customer: d.notesCustomer, items: jsonItems(d) } })).error);
   },
-  async invoiceFromOrder(id): Promise<string | null> {
-    const { data } = await supabase.rpc("create_invoice_from_sales_order", { p_order_id: id });
-    return (data as string | null) ?? null;
+  async invoiceFromOrder(id) {
+    const { data, error } = await supabase.rpc("create_invoice_from_sales_order", { p_order_id: id });
+    if (error || !data) return { ok: false as const, error: error?.message ?? "Sin datos del servidor" };
+    return { ok: true as const, value: data as string };
   },
 };
