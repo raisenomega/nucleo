@@ -21,6 +21,8 @@ const nitroConfig = {
     { route: "/sitemap.xml", handler: r("apps/web/server/sitemap-handler.ts") },
     { route: "/llms.txt", handler: r("apps/web/server/llms-handler.ts") },
     { route: "/llms-full.txt", handler: r("apps/web/server/llms-full-handler.ts") },
+    // TEMPORAL (smoke test v2a.5): confirma que Vercel corre los handlers en runtime Node. Se retira tras verificar.
+    { route: "/api/contract-pdf-test", handler: r("apps/web/server/contract-pdf-test-handler.ts") },
   ],
 };
 
