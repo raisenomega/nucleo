@@ -65,7 +65,8 @@ export interface IPayrollRepository {
   create(data: PayrollFormData): Promise<Result<Payroll, string>>;
   update(id: string, data: PayrollFormData): Promise<Result<Payroll, string>>;
   remove(id: string): Promise<Result<null, string>>;
-  preview(gross: number, workerType: WorkerType, ctx?: PayrollPreviewCtx): Promise<PayrollCalc | null>;
+  // Result y no `| null`: un null no distinguía «no hay cálculo» de «la RPC falló» (auditoría E2E §13).
+  preview(gross: number, workerType: WorkerType, ctx?: PayrollPreviewCtx): Promise<Result<PayrollCalc, string>>;
 }
 
 // Contexto para el cálculo con tope anual (YTD): quién cobra, cuándo, y qué registro excluir al editar.

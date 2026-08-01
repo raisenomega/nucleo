@@ -1,4 +1,5 @@
 // BC accounting — libro mayor (asientos). Puro. READ-ONLY en esta fase (asientos auto).
+import type { Result } from "@accounting/domain/chart-of-accounts.types";
 export type EntryStatus = "draft" | "posted" | "voided";
 export type SourceType = "expense" | "income" | "invoice" | "invoice_payment" | "payroll" | "inventory" | "bank" | "adjustment" | "closing" | "opening" | "vendor_bill" | "bill_payment";
 
@@ -29,5 +30,6 @@ export interface JournalFilters {
 
 export interface IJournalEntryRepository {
   list(filters: JournalFilters): Promise<JournalEntry[]>;
-  trialBalance(year: number, month: number | null): Promise<AccountBalance[]>;
+  // Result y no un array: un [] no distinguía «balance vacío» de «la RPC falló» (auditoría E2E §13).
+  trialBalance(year: number, month: number | null): Promise<Result<AccountBalance[], string>>;
 }

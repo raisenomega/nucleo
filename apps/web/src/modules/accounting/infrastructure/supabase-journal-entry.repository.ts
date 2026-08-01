@@ -36,9 +36,10 @@ export const journalRepository: IJournalEntryRepository = {
     const { data } = await q;
     return ((data as Row[] | null) ?? []).map(toEntry);
   },
-  async trialBalance(year: number, month: number | null): Promise<AccountBalance[]> {
-    const { data } = await supabase.rpc("get_trial_balance", { p_year: year, p_month: month });
-    return ((data as Row[] | null) ?? []).map((r) => ({ accountId: r.account_id as string, accountCode: r.account_code as string, accountName: r.account_name as string,
-      accountType: r.account_type as string, normalBalance: r.normal_balance as string, totalDebit: Number(r.total_debit), totalCredit: Number(r.total_credit), balance: Number(r.balance) }));
+  async trialBalance(year: number, month: number | null) {
+    const { data, error } = await supabase.rpc("get_trial_balance", { p_year: year, p_month: month });
+    if (error) return { ok: false as const, error: error.message };
+    return { ok: true as const, value: ((data as Row[] | null) ?? []).map((r) => ({ accountId: r.account_id as string, accountCode: r.account_code as string, accountName: r.account_name as string,
+      accountType: r.account_type as string, normalBalance: r.normal_balance as string, totalDebit: Number(r.total_debit), totalCredit: Number(r.total_credit), balance: Number(r.balance) })) };
   },
 };

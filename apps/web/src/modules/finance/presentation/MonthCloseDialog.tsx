@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { formatCurrency } from "@shared/lib/format";
-import type { MonthRecStatus, MonthTotals } from "@finance/domain/month-closure.types";
+import type { MonthRecStatus, MonthTotals, Result } from "@finance/domain/month-closure.types";
 
 const Row = ({ label, value }: { label: string; value: number }) => (
   <div className="flex justify-between text-sm"><span className="text-muted-foreground">{label}</span><span className="font-medium text-foreground">{formatCurrency(value)}</span></div>
@@ -10,22 +10,23 @@ const Row = ({ label, value }: { label: string; value: number }) => (
 // Dialog de confirmación de cierre. Muestra los totales EXACTOS que se congelan (preview_month_close, la misma
 // agregación que close_month) antes de confirmar. Advierte que el bloqueo de edición aún no está activo (1.2b).
 export function MonthCloseDialog({ label, status, loadPreview, onConfirm, onClose }: {
-  label: string; status?: MonthRecStatus; loadPreview: () => Promise<MonthTotals | null>; onConfirm: () => Promise<void>; onClose: () => void;
+  label: string; status?: MonthRecStatus; loadPreview: () => Promise<Result<MonthTotals, string>>; onConfirm: () => Promise<void>; onClose: () => void;
 }) {
-  const [t, setT] = useState<MonthTotals | null>(null);
+  const [t, setT] = useState<Result<MonthTotals, string> | null>(null); // null = aún cargando
   const [busy, setBusy] = useState(false);
-  useEffect(() => { void loadPreview().then(setT); }, [loadPreview]);
+  useEffect(() => { void loadPreview().then(setT); }, [loadPreview]);   // el Result distingue cargando / ok / error
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-black/50 p-4" onClick={onClose}>
       <div className="w-full max-w-md space-y-4 rounded-xl border border-border bg-card p-5" onClick={(e) => e.stopPropagation()}>
         <h2 className="font-display text-lg font-bold text-foreground">Cerrar {label}</h2>
-        {!t ? <div className="flex justify-center py-6"><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></div> : (
+        {!t ? <div className="flex justify-center py-6"><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></div>
+         : !t.ok ? <p className="py-4 text-sm text-destructive">{t.error}</p> : (
           <div className="space-y-2 rounded-lg border border-border p-3">
-            <Row label="Ingresos" value={t.totalIncome} />
-            <Row label="Gastos" value={t.totalExpenses} />
-            <Row label="Nómina" value={t.totalPayroll} />
-            <Row label="Extraordinarios" value={t.totalExtraordinary} />
-            <div className="border-t border-border pt-2"><Row label="Balance neto" value={t.netBalance} /></div>
+            <Row label="Ingresos" value={t.value.totalIncome} />
+            <Row label="Gastos" value={t.value.totalExpenses} />
+            <Row label="Nómina" value={t.value.totalPayroll} />
+            <Row label="Extraordinarios" value={t.value.totalExtraordinary} />
+            <div className="border-t border-border pt-2"><Row label="Balance neto" value={t.value.netBalance} /></div>
           </div>
         )}
         {status && status.unmatched > 0 && (

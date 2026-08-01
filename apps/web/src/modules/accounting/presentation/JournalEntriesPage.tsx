@@ -39,6 +39,7 @@ export function JournalEntriesPage() {
       <JournalFilters filters={filters} accounts={coa.accounts} view={view} onChange={upd} />
       {j.loading ? <p className="text-sm text-muted-foreground">…</p>
         : view === "entries" ? <JournalEntriesTable entries={j.entries} cost={cost} canEdit={isCeo} onChanged={() => void j.reload()} />
+        : j.error ? <p className="text-sm text-destructive">{j.error}</p>
         : <TrialBalanceView rows={j.trial} />}
       {manual && <ManualEntryModal accounts={coa.accounts} onSaved={() => void j.reload()} onClose={() => setManual(false)} />}
     </div>

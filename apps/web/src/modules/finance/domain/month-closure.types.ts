@@ -1,4 +1,5 @@
 export type RepoResult = { ok: true } | { ok: false; error: string };
+export type Result<T, E> = { readonly ok: true; readonly value: T } | { readonly ok: false; readonly error: E };
 
 // Una fila de month_closures (mes ya cerrado). Totales congelados en el momento del cierre.
 export interface MonthClosure {
@@ -20,7 +21,8 @@ export interface MonthTotals {
 export interface IMonthClosureRepository {
   listClosures(): Promise<MonthClosure[]>;
   recStatus(): Promise<MonthRecStatus[]>;
-  preview(year: number, month: number): Promise<MonthTotals | null>;
+  // Result y no `| null`: el null no distinguía «mes sin datos» de «la RPC falló» (auditoría E2E §13).
+  preview(year: number, month: number): Promise<Result<MonthTotals, string>>;
   close(year: number, month: number): Promise<RepoResult>;
   reopen(year: number, month: number, reason: string): Promise<RepoResult>;
 }

@@ -6,7 +6,7 @@ import { EvidenceUpload } from "@finance/presentation/EvidenceUpload";
 import { PayrollDeductionPreview } from "@finance/presentation/PayrollDeductionPreview";
 import { AttendanceGrossButton } from "@finance/presentation/AttendanceGrossButton";
 import { CategoryPicker } from "@shared/components/CategoryPicker";
-import type { PayrollFormData, PayrollCalc, WorkerType, PayrollPreviewCtx } from "@finance/domain/payroll.types";
+import type { PayrollFormData, PayrollCalc, WorkerType, PayrollPreviewCtx, Result } from "@finance/domain/payroll.types";
 
 type Emp = { id: string; full_name: string };
 type Cat = { id: string; label: string };
@@ -18,13 +18,13 @@ type Ext = { id: string; full_name: string; workerType: WorkerType; dailyRate: n
 
 export function PayrollForm({ employees, externals, payCats, initial, excludeId, preview, onSubmit, onCancel }: {
   employees: Emp[]; externals: Ext[]; payCats: Cat[]; initial?: PayrollFormData;
-  excludeId?: string; preview: (gross: number, worker: WorkerType, ctx?: PayrollPreviewCtx) => Promise<PayrollCalc | null>;
+  excludeId?: string; preview: (gross: number, worker: WorkerType, ctx?: PayrollPreviewCtx) => Promise<Result<PayrollCalc, string>>;
   onSubmit: (d: PayrollFormData) => void; onCancel: () => void;
 }) {
   const { t } = useI18n();
   const { session } = useSession();
   const [f, setF] = useState<PayrollFormData>(initial ?? EMPTY);
-  const [calc, setCalc] = useState<PayrollCalc | null>(null);
+  const [calc, setCalc] = useState<Result<PayrollCalc, string> | null>(null); // null = aún no calculado
   const worker = f.workerType ?? "employee";
   const gross = f.grossSalary ?? f.amount;
   const setWorker = (w: WorkerType) => setF((c) => ({ ...c, workerType: w, ...(ONE_TIME_DEFAULT.has(w) && !c.period ? { period: "Pago único" } : {}) }));
@@ -64,7 +64,7 @@ export function PayrollForm({ employees, externals, payCats, initial, excludeId,
         <label className="space-y-1 md:col-span-3"><span className={lbl}>{t("notes")}</span>
           <input value={f.notes} onChange={(e) => setF({ ...f, notes: e.target.value })} className={field} /></label>
       </div>
-      {calc && <PayrollDeductionPreview calc={calc} workerType={worker} />}
+      {calc && (calc.ok ? <PayrollDeductionPreview calc={calc.value} workerType={worker} /> : <p className="text-xs text-destructive">{calc.error}</p>)}
       <EvidenceUpload tenantId={session?.tenantId ?? ""} value={f.evidenceUrls ?? []} onChange={(paths) => setF({ ...f, evidenceUrls: paths })} />
       <div className="flex gap-2">
         <button type="submit" className="rounded-lg bg-primary text-primary-foreground px-4 py-2 font-body font-bold">{t("save")}</button>

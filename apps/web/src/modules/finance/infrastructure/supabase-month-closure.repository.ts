@@ -27,14 +27,15 @@ export const supabaseMonthClosureRepository: IMonthClosureRepository = {
     })) as MonthRecStatus[];
   },
   async preview(year, month) {
-    const { data } = await supabase.rpc("preview_month_close", { p_year: year, p_month: month });
-    if (!data) return null;
+    const { data, error } = await supabase.rpc("preview_month_close", { p_year: year, p_month: month });
+    if (error) return { ok: false as const, error: error.message };
+    if (!data) return { ok: false as const, error: "Sin datos del servidor" };
     const d = data as Record<string, unknown>;
-    return {
+    return { ok: true as const, value: {
       totalIncome: N(d.total_income), totalExpenses: N(d.total_expenses), totalPayroll: N(d.total_payroll),
       totalExtraordinary: N(d.total_extraordinary),
       netBalance: N(d.total_income) - N(d.total_expenses) - N(d.total_payroll) - N(d.total_extraordinary),
-    } as MonthTotals;
+    } as MonthTotals };
   },
   async close(year, month) { return ok((await supabase.rpc("close_month", { p_year: year, p_month: month })).error); },
   async reopen(year, month, reason) { return ok((await supabase.rpc("reopen_month", { p_year: year, p_month: month, p_reason: reason })).error); },

@@ -9,12 +9,18 @@ interface Calc { net_salary?: number; total_employer_cost?: number; total_employ
 const arr = (v: unknown) => (Array.isArray(v) ? (v as PayrollCalc["employeeDeductions"]) : []);
 
 // ctx alimenta el tope anual (YTD): sin él la RPC usa ytd=0 (mismo cálculo de siempre).
-async function calc(gross: number, worker: WorkerType, ctx?: PayrollPreviewCtx): Promise<Calc | null> {
-  const { data } = await supabase.rpc("calculate_payroll_deductions", { p_gross: gross, p_worker_type: worker,
+async function calcRaw(gross: number, worker: WorkerType, ctx?: PayrollPreviewCtx): Promise<Result<Calc, string>> {
+  const { data, error } = await supabase.rpc("calculate_payroll_deductions", { p_gross: gross, p_worker_type: worker,
     p_employee_id: ctx?.employeeId || null, p_external_worker_id: ctx?.externalWorkerId || null,
     p_pay_date: ctx?.date || undefined, p_exclude_id: ctx?.excludeId || null });
-  return data as Calc | null;
+  if (error) return { ok: false, error: error.message };
+  if (!data) return { ok: false, error: "Sin datos del servidor" };
+  return { ok: true, value: data as Calc };
 }
+// Los usos internos (buildRow) siguen tolerando el null: ahí un fallo ya se propaga por otra vía.
+const calc = async (g: number, w: WorkerType, c?: PayrollPreviewCtx): Promise<Calc | null> => {
+  const r = await calcRaw(g, w, c); return r.ok ? r.value : null;
+};
 
 // Calcula deducciones vía RPC (tenant por default) y arma la fila con los jsonb + totales.
 async function buildRow(d: PayrollFormData, excludeId?: string) {
@@ -52,13 +58,14 @@ export const supabasePayrollRepository: IPayrollRepository = {
     if (error) return { ok: false, error: error.message };
     return { ok: true, value: null };
   },
-  async preview(gross, worker, ctx): Promise<PayrollCalc | null> {
-    const c = await calc(gross, worker, ctx);
-    if (!c) return null;
-    return {
+  async preview(gross, worker, ctx) {
+    const r = await calcRaw(gross, worker, ctx);
+    if (!r.ok) return r;
+    const c = r.value;
+    return { ok: true as const, value: {
       gross, employeeDeductions: arr(c.employee_deductions), employerContributions: arr(c.employer_contributions),
       totalEmployeeDeductions: Number(c.total_employee_deductions ?? 0), totalEmployerContributions: Number(c.total_employer_contributions ?? 0),
       netSalary: Number(c.net_salary ?? gross), totalEmployerCost: Number(c.total_employer_cost ?? gross),
-    };
+    } };
   },
 };
