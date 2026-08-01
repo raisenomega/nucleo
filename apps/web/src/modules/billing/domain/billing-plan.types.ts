@@ -1,5 +1,5 @@
 // BC billing — planes recurrentes (MRR). Puro.
-import type { BillingResult } from "@billing/domain/invoice.types";
+import type { BillingResult, Result } from "@billing/domain/invoice.types";
 
 export type PlanFrequency = "weekly" | "biweekly" | "monthly" | "quarterly" | "annual";
 export type PlanStatus = "active" | "paused" | "cancelled";
@@ -17,5 +17,6 @@ export interface IBillingRepository {
   listPlans(): Promise<BillingPlan[]>;
   savePlan(input: BillingPlanInput): Promise<BillingResult>;
   setPlanStatus(id: string, status: PlanStatus): Promise<BillingResult>;
-  runCycle(): Promise<number>;
+  // Result: un 0 suelto se leia como «no habia nada que facturar» aunque la llamada hubiese fallado.
+  runCycle(): Promise<Result<number, string>>;
 }

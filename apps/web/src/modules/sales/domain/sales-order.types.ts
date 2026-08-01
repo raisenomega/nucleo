@@ -33,7 +33,8 @@ export interface ISalesOrderRepository {
   list(): Promise<SalesOrder[]>;
   create(input: SoInput): Promise<SoResult>;
   createFromQuote(quoteId: string): Promise<Result<string, string>>;
-  confirm(id: string): Promise<ConfirmResult>;
+  // Result: el fallback {confirmed:false, backordered_items:[]} afirmaba un hecho de negocio falso.
+  confirm(id: string): Promise<Result<ConfirmResult, string>>;
   cancel(id: string, reason: string): Promise<SoResult>;
   update(id: string, input: SoInput): Promise<SoResult>;
   invoiceFromOrder(id: string): Promise<Result<string, string>>;

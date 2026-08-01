@@ -7,6 +7,6 @@ export function useBillingPlans(repo: IBillingRepository) {
   useEffect(() => { void load(); }, [load]);
   const save = useCallback(async (d: BillingPlanInput) => { const r = await repo.savePlan(d); if (r.ok) await load(); return r; }, [repo, load]);
   const setStatus = useCallback(async (id: string, st: PlanStatus) => { const r = await repo.setPlanStatus(id, st); if (r.ok) await load(); return r; }, [repo, load]);
-  const runCycle = useCallback(async () => { const n = await repo.runCycle(); await load(); return n; }, [repo, load]);
+  const runCycle = useCallback(async () => { const r = await repo.runCycle(); await load(); return r; }, [repo, load]);
   return { plans, save, setStatus, runCycle };
 }

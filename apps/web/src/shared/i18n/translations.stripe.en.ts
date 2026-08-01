@@ -31,4 +31,7 @@ export const enStripe = {
   subsTab: "Subscriptions", subsItem: "Plan", subsFrequency: "Frequency", subsAmount: "Amount",
   subsStatus: "Status", subsNextCharge: "Next charge", subsCancel: "Cancel",
   subsCancelConfirm: "Cancel this subscription at the end of the current period?", subsEmpty: "No subscriptions yet.",
+  subsErrNotFound: "This subscription no longer exists.", subsErrForbidden: "You do not have permission to cancel this subscription.",
+  subsErrNoSecret: "Stripe is not configured for this business.", subsErrUnreachable: "Could not reach Stripe. Please try again.",
+  subsErrRejected: "Stripe rejected the cancellation.",
 } satisfies Partial<Record<TranslationKey, string>>;

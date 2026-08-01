@@ -31,4 +31,7 @@ export const esStripe = {
   subsTab: "Suscripciones", subsItem: "Plan", subsFrequency: "Frecuencia", subsAmount: "Monto",
   subsStatus: "Estado", subsNextCharge: "Próximo cobro", subsCancel: "Cancelar",
   subsCancelConfirm: "¿Cancelar esta suscripción al fin del período actual?", subsEmpty: "Aún no hay suscripciones.",
+  subsErrNotFound: "La suscripción ya no existe.", subsErrForbidden: "No tienes permiso para cancelar esta suscripción.",
+  subsErrNoSecret: "Stripe no está configurado en este negocio.", subsErrUnreachable: "No se pudo contactar con Stripe. Vuelve a intentarlo.",
+  subsErrRejected: "Stripe rechazó la cancelación.",
 } satisfies Partial<Record<TranslationKey, string>>;

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { createFileRoute, Navigate, useNavigate } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 import { useI18n } from "@shared/i18n";
+import { useToast } from "@shared/providers/toast-context";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { useBrand } from "@shared/providers/BrandProvider";
 import { useSalesOrders } from "@sales/application/useSalesOrders.hook";
@@ -18,14 +19,14 @@ import type { SalesOrder, Backorder } from "@sales/domain/sales-order.types";
 export const Route = createFileRoute("/_authenticated/sales-orders")({ component: SalesOrdersPage });
 
 function SalesOrdersPage() {
-  const { t } = useI18n(); const { can } = useModuleAccess(); const brand = useBrand(); const navigate = useNavigate();
+  const { t } = useI18n(); const { can } = useModuleAccess(); const brand = useBrand(); const navigate = useNavigate(); const toast = useToast();
   const m = useSalesOrders(supabaseSalesOrderRepository);
   const [creating, setCreating] = useState(false); const [viewing, setViewing] = useState<SalesOrder | null>(null);
   const [backorder, setBackorder] = useState<Backorder[] | null>(null); const [delivering, setDelivering] = useState<SalesOrder | null>(null);
   if (!can("sales", "view") || !brand.fulfillmentEnabled) return <Navigate to="/dashboard" />;
   const view = viewing ? m.list.find((o) => o.id === viewing.id) ?? viewing : null;
-  const onConfirm = () => { if (view) void m.confirm(view.id).then((r) => { if (r.backordered_items.length) setBackorder(r.backordered_items); }); };
-  const onInvoice = () => { if (view) void m.invoice(view.id).then((r) => window.alert(r.ok ? t("invoiceSaved") : r.error)); };
+  const onConfirm = () => { if (view) void m.confirm(view.id).then((r) => { if (!r.ok) toast.error(r.error); else if (r.value.backordered_items.length) setBackorder(r.value.backordered_items); }); };
+  const onInvoice = () => { if (view) void m.invoice(view.id).then((r) => (r.ok ? toast.success(t("invoiceSaved")) : toast.error(r.error))); };
   const onCancel = () => { if (view && window.confirm(`${t("cancelOrder")}?`)) void m.cancel(view.id, "").then(() => setViewing(null)); };
   return (
     <div className="space-y-6 p-4 md:p-8">

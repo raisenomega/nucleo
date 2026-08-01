@@ -30,9 +30,10 @@ export const supabaseSalesOrderRepository: ISalesOrderRepository = {
     if (error || !data) return { ok: false as const, error: error?.message ?? "Sin datos del servidor" };
     return { ok: true as const, value: data as string };
   },
-  async confirm(id): Promise<ConfirmResult> {
-    const { data } = await supabase.rpc("confirm_sales_order", { p_order_id: id });
-    return (data as ConfirmResult | null) ?? { confirmed: false, backordered_items: [] };
+  async confirm(id) {
+    const { data, error } = await supabase.rpc("confirm_sales_order", { p_order_id: id });
+    if (error || !data) return { ok: false as const, error: error?.message ?? "Sin datos del servidor" };
+    return { ok: true as const, value: data as ConfirmResult };
   },
   async cancel(id, reason): Promise<SoResult> {
     return ok((await supabase.rpc("cancel_sales_order", { p_order_id: id, p_reason: reason || null })).error);

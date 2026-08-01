@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Plus, RefreshCw } from "lucide-react";
 import { useI18n } from "@shared/i18n";
+import { useToast } from "@shared/providers/toast-context";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { useBillingPlans } from "@billing/application/useBillingPlans.hook";
 import { supabaseBillingRepository } from "@billing/infrastructure/supabase-billing.repository";
@@ -10,11 +11,11 @@ import { BillingPlanTable } from "@billing/presentation/BillingPlanTable";
 import type { BillingPlan } from "@billing/domain/billing-plan.types";
 
 export function PlansTab() {
-  const { t } = useI18n(); const { can } = useModuleAccess();
+  const { t } = useI18n(); const { can } = useModuleAccess(); const toast = useToast();
   const m = useBillingPlans(supabaseBillingRepository);
   const [creating, setCreating] = useState(false);
   const manage = can("billing", "edit");
-  const runCycle = async () => { const n = await m.runCycle(); window.alert(`${n} · ${t("generateInvoices")}`); };
+  const runCycle = async () => { const r = await m.runCycle(); if (r.ok) toast.success(`${r.value} · ${t("generateInvoices")}`); else toast.error(r.error); };
   const genOne = async (p: BillingPlan) => {
     await supabaseInvoiceRepository.save({ customerId: null, clientName: p.clientName, phone: p.phone ?? "", email: p.email ?? "",
       items: [{ description: p.serviceDescription ?? t("serviceDescription"), quantity: 1, unitPrice: p.amount, taxPct: 0, discountPct: 0, lineTotal: p.amount }],

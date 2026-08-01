@@ -28,8 +28,10 @@ export const supabaseBillingRepository: IBillingRepository = {
   async setPlanStatus(id, status: PlanStatus): Promise<BillingResult> {
     return ok((await supabase.from("billing_plans").update({ status }).eq("id", id)).error);
   },
-  async runCycle(): Promise<number> {
-    const { data } = await supabase.rpc("generate_recurring_invoices");
-    return (data as number | null) ?? 0;
+  async runCycle() {
+    const { data, error } = await supabase.rpc("generate_recurring_invoices");
+    // Solo se mira `error`: 0 facturas es un resultado legitimo, no un fallo.
+    if (error) return { ok: false as const, error: error.message };
+    return { ok: true as const, value: Number(data ?? 0) };
   },
 };
