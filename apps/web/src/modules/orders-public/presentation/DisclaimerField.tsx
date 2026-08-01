@@ -2,6 +2,7 @@ import { useI18n } from "@shared/i18n";
 import type { OrderFormField } from "@orders-public/domain/order-form.types";
 
 // Pseudo-field kind='disclaimer': texto informativo entre secciones, sin input ni value. style: info|warning|neutral.
+// Opcional: validation.link + link_label_es/en → agrega un CTA clickeable al final (ej. cotización personalizada).
 const STYLE: Record<string, string> = {
   info: "border-primary/30 bg-primary/5 text-foreground",
   warning: "border-destructive/40 bg-destructive/10 text-destructive",
@@ -11,5 +12,12 @@ export function DisclaimerField({ field }: { field: OrderFormField }) {
   const { locale } = useI18n();
   const text = locale === "en" ? field.labelEn : field.labelEs;
   const style = STYLE[(field.validation.style as string) ?? "info"] ?? STYLE.info;
-  return <p className={`rounded-lg border p-3 text-xs leading-relaxed ${style}`}>{text}</p>;
+  const link = field.validation.link as string | undefined;
+  const linkLabel = (locale === "en" ? field.validation.link_label_en : field.validation.link_label_es) as string | undefined;
+  return (
+    <p className={`rounded-lg border p-3 text-xs leading-relaxed ${style}`}>
+      {text}
+      {link && linkLabel && <> <a href={link} className="font-bold underline">{linkLabel}</a></>}
+    </p>
+  );
 }
