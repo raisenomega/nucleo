@@ -4,8 +4,12 @@ import { PublicBrandProvider } from "@landing-public/presentation/PublicBrandPro
 import { ServicePageLayout } from "@landing-public/presentation/service-pages/ServicePageLayout";
 
 export const Route = createFileRoute("/servicios/$slug")({
-  validateSearch: (s: Record<string, unknown>): { preview?: boolean; pid?: string } => ({
-    preview: s.preview === true || s.preview === "true", pid: typeof s.pid === "string" ? s.pid : undefined,
+  // `preview` sólo viaja si vino en la URL. Devolverla siempre (aunque fuera false) hacía que TanStack
+  // redirigiera la URL limpia con 307 a ?preview=false, y Google la veía no indexable. Mismo patrón que
+  // c.$slug.tsx:39. Ver memoria [[tanstack-validatesearch-redirect]].
+  validateSearch: (s: Record<string, unknown>): { preview?: true; pid?: string } => ({
+    ...(s.preview === true || s.preview === "true" ? { preview: true as const } : {}),
+    ...(typeof s.pid === "string" ? { pid: s.pid } : {}),
   }),
   component: Page,
 });

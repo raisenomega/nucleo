@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { getPublicFaqs, type PublicFaqsResp } from "@landing-public/infrastructure/public-faqs.repository";
 import { PublicFaqsView } from "@landing-public/presentation/PublicFaqsView";
+import { loadTenantSeo, tenantPageHead } from "@shared/seo/tenant-page-head";
 
 export const Route = createFileRoute("/preguntas-frecuentes")({
-  head: () => ({ meta: [{ title: "Preguntas frecuentes" }] }),
+  loader: async () => ({ tenantSeo: await loadTenantSeo() }),
+  head: ({ loaderData }) => tenantPageHead("Preguntas frecuentes", loaderData?.tenantSeo),
   component: PublicFaqsPage,
 });
 

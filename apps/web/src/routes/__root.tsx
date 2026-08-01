@@ -17,7 +17,7 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { title: "Portal" },
+      { title: "Núcleo" },   // default del root: neutro. Cada ruta pública compone el suyo con tenantPageHead.
       { name: "theme-color", content: "hsl(38 85% 55%)" },
       { name: "apple-mobile-web-app-capable", content: "yes" }, { name: "mobile-web-app-capable", content: "yes" }, { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
     ],

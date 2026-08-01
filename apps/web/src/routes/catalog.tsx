@@ -2,12 +2,15 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMounted } from "@shared/hooks/useMounted";
 import { PublicBrandProvider } from "@landing-public/presentation/PublicBrandProvider";
 import { CatalogPage } from "@landing-public/presentation/catalog/CatalogPage";
+import { loadTenantSeo, tenantPageHead } from "@shared/seo/tenant-page-head";
 
 export const Route = createFileRoute("/catalog")({
   validateSearch: (s: Record<string, unknown>): { category?: string; type?: string } => ({
     category: typeof s.category === "string" ? s.category : undefined,
     type: typeof s.type === "string" ? s.type : undefined,
   }),
+  loader: async () => ({ tenantSeo: await loadTenantSeo() }),
+  head: ({ loaderData }) => tenantPageHead("Catálogo", loaderData?.tenantSeo),
   component: Page,
 });
 
