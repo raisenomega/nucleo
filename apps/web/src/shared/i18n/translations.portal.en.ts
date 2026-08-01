@@ -7,7 +7,7 @@ export const enPortal = {
   navReviews: "My reviews", navSupport: "Support", navNotifications: "Notifications", navSettings: "Settings",
   pComingSoon: "Coming soon", pWelcome: "Hi", pMyProfile: "My profile", signOut: "Sign out",
   pCompleteProfile: "Complete your profile", pCompleteHint: "Your details are reused when you request a service.",
-  pFullName: "Full name", pPhone: "Phone", pAddress: "Address", pCity: "City", pState: "State", pZip: "ZIP code",
+  pFullName: "Full name", pPhone: "Phone", pPhoneLocked: "To change your phone, please contact the business.", pAddress: "Address", pCity: "City", pState: "State", pZip: "ZIP code",
   pContactPref: "Contact preference", pLanguage: "Language", pNotesTeam: "Notes for the team", pNotesHint: "e.g. gate code 1234, dog in the yard",
   pProfileSaved: "Profile saved", pSaveError: "Could not save", pPassword: "Password",
   pLogin: "Sign in", pMagicLink: "Send magic link", pMagicSent: "We sent a link to your email", pEmailFirst: "Enter your email first",

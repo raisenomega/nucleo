@@ -3,7 +3,7 @@ import { useI18n, type TranslationKey } from "@shared/i18n";
 import { updateMyCustomer } from "@shared/portal/customer.repository";
 import type { CustomerProfile, CustomerFormData } from "@shared/portal/customer.types";
 
-type StrKey = "fullName" | "phone" | "address" | "city" | "state" | "zipCode";
+type StrKey = "fullName" | "address" | "city" | "state" | "zipCode";
 
 // Mi Perfil (CRUD) — datos del cliente, se reutilizan al solicitar servicio. Email read-only (es el login).
 export function PortalProfileForm({ profile, onSaved }: { profile: CustomerProfile; onSaved: () => void }) {
@@ -17,7 +17,10 @@ export function PortalProfileForm({ profile, onSaved }: { profile: CustomerProfi
   return (
     <form onSubmit={save} className="grid grid-cols-1 gap-3 rounded-lg border border-border bg-card p-4 md:grid-cols-2">
       <label className="space-y-1 md:col-span-2"><span className={lbl}>{t("email")}</span><input value={profile.email} readOnly className={`${fld} opacity-70`} /></label>
-      {txt("fullName", "pFullName")}{txt("phone", "pPhone")}
+      {txt("fullName", "pFullName")}
+      {/* Teléfono de solo lectura: desde la migr 354 el backend lo ignora en update_my_customer (era la palanca
+          del phone hijacking). Se muestra —no se oculta— para que el cliente sepa qué número tenemos registrado. */}
+      <label className="space-y-1"><span className={lbl}>{t("pPhone")}</span><input value={f.phone} readOnly className={`${fld} opacity-70`} /><span className="block text-[11px] text-muted-foreground">{t("pPhoneLocked")}</span></label>
       {txt("address", "pAddress")}{txt("city", "pCity")}{txt("state", "pState")}{txt("zipCode", "pZip")}
       <label className="space-y-1"><span className={lbl}>{t("pContactPref")}</span><select value={f.contactPreference} onChange={(e) => set({ contactPreference: e.target.value })} className={fld}><option value="email">Email</option><option value="whatsapp">WhatsApp</option><option value="phone">{t("pPhone")}</option></select></label>
       <label className="space-y-1"><span className={lbl}>{t("pLanguage")}</span><select value={f.language} onChange={(e) => set({ language: e.target.value })} className={fld}><option value="es">Español</option><option value="en">English</option></select></label>
