@@ -14,6 +14,7 @@ import { CouponInput } from "@orders-public/presentation/CouponInput";
 import { OrderSuccessDialog } from "@orders-public/presentation/OrderSuccessDialog";
 import { PromoOrderHeader, type PromoHeaderCtx } from "@orders-public/presentation/PromoOrderHeader";
 import { OfferDisclosureBlock, type OfferCtx } from "@orders-public/presentation/OfferDisclosureBlock";
+import { FormTermsBlock } from "@orders-public/presentation/FormTermsBlock";
 import { firstInvalidField } from "@orders-public/domain/validate-order";
 
 export interface OrderItem { kind: "product" | "service" | "package"; id: string; name: string; basePrice: number }
@@ -23,16 +24,15 @@ const bar = "sticky z-10 border-border bg-card/85 p-4 backdrop-blur supports-[ba
 export function OrderModal({ item, onClose, defaultValues, defaultCoupon, promoContext, offerContext }: { item: OrderItem; onClose: () => void; defaultValues?: Record<string, unknown>; defaultCoupon?: string | null; promoContext?: PromoHeaderCtx; offerContext?: OfferCtx }) {
   const { t, locale } = useI18n(); const toast = useToast();
   const { form, methods, status, payConfig } = useOrderForm(item.kind, item.id); const { busy, submit, checkout } = useCreateOrder();
-  const [values, setValues] = useState<Record<string, unknown>>({});
-  const [accepted, setAccepted] = useState(false);
+  const [values, setValues] = useState<Record<string, unknown>>({}); const [accepted, setAccepted] = useState(false);
   const [pm, setPm] = useState(""); const [coupon, setCoupon] = useState<string | null>(defaultCoupon ?? null);
   const [done, setDone] = useState<{ orderNumber: string; orderId: string } | null>(null); const [redirecting, setRedirecting] = useState(false);
   // isSub (form con campo 'frequency') → checkout de suscripción; one-time → checkout normal. Ambos con Stripe si está activo.
-  const isSub = form?.fields.some((f) => f.fieldKey === "frequency") ?? false;
-  const useStripe = payConfig?.stripeEnabled ?? false;
+  const isSub = form?.fields.some((f) => f.fieldKey === "frequency") ?? false; const useStripe = payConfig?.stripeEnabled ?? false;
   useEffect(() => { if (!useStripe && methods[0] && !pm) setPm(methods[0].methodKey); }, [methods, pm, useStripe]);
   useEffect(() => { if (form) setValues({ ...Object.fromEntries(form.fields.filter((f) => f.validation.default !== undefined).map((f) => [f.fieldKey, f.validation.default])), ...defaultValues }); }, [form]);
   const items = [{ kind: item.kind, id: item.id, qty: 1, name: item.name }]; const totals = useOrderPricing(item, values, coupon);
+  const formTerms = ((!offerContext && (locale === "en" ? form?.termsEn : form?.termsEs)) || "").replace(/^(PENDIENTE_|PENDING_).*/s, "") || null; // contrato firmable del form; PENDIENTE_/PENDING_ = placeholder de infra (no se firma)
   async function onSubmit() {
     if (!form) return;
     const bad = firstInvalidField(form.fields, values); // bloqueante: toast educativo, no se envía la orden.
@@ -40,8 +40,7 @@ export function OrderModal({ item, onClose, defaultValues, defaultCoupon, promoC
     const r = await submit({ formId: form.id, items, customFields: values, paymentMethodKey: useStripe ? "stripe" : pm, couponCode: coupon, clientTotal: totals.total, offerId: offerContext?.offerId ?? null });
     if (!r.ok) return toast.error(t((ERR[r.code] ?? "opErrNetwork") as Parameters<typeof t>[0]));
     if (useStripe) { // crea la orden pending → redirige a Stripe Checkout (suscripción o one-time); el webhook confirma.
-      setRedirecting(true);
-      const url = r.publicToken ? await checkout(r.publicToken, isSub) : null;
+      setRedirecting(true); const url = r.publicToken ? await checkout(r.publicToken, isSub) : null;
       if (url) window.location.assign(url); else { setRedirecting(false); toast.error(t("payError")); }
       return;
     }
@@ -61,6 +60,7 @@ export function OrderModal({ item, onClose, defaultValues, defaultCoupon, promoC
           <>
             {promoContext && <PromoOrderHeader {...promoContext} />}
             {offerContext && <OfferDisclosureBlock offer={offerContext} recurring={totals.total} accepted={accepted} onAccept={setAccepted} />}
+            {formTerms && <FormTermsBlock terms={formTerms} accepted={accepted} onAccept={setAccepted} />}
             <OrderFormRenderer fields={form.fields} values={values} onChange={(k, v) => setValues((p) => ({ ...p, [k]: v }))} />
             <CouponInput onApply={setCoupon} discount={totals.discount} activeCode={coupon} />
             {!useStripe && <PaymentMethodPicker methods={methods} value={pm} onChange={setPm} />}
@@ -68,7 +68,7 @@ export function OrderModal({ item, onClose, defaultValues, defaultCoupon, promoC
         )}
       </div>
       {status === "ready" && form && (
-        <OrderSubmitBar form={form} totals={totals} promoContext={promoContext} busy={busy} redirecting={redirecting} useStripe={useStripe} isSub={isSub} pm={pm} locale={locale} blocked={!!offerContext && !accepted} offerHook={offerContext?.hookPrice ?? null} offerAccepted={accepted} onSubmit={() => void onSubmit()} onClose={onClose} />
+        <OrderSubmitBar form={form} totals={totals} promoContext={promoContext} busy={busy} redirecting={redirecting} useStripe={useStripe} isSub={isSub} pm={pm} locale={locale} blocked={(!!offerContext || !!formTerms) && !accepted} offerHook={offerContext?.hookPrice ?? null} offerAccepted={accepted} onSubmit={() => void onSubmit()} onClose={onClose} />
       )}
     </ScreenModal>
   );

@@ -36,7 +36,7 @@ export function FieldInput({ field, value, onChange }: { field: OrderFormField; 
     const sel = field.options.find((o) => o.value === v);
     const detail = sel && (locale === "en" ? sel.detail_en : sel.detail_es);
     return wrap(<>
-      <select value={v as string} onChange={(e) => onChange(e.target.value)} className={cls}><option value="">—</option>{field.options.map((o) => <option key={o.value} value={o.value}>{optLabel(o)}</option>)}</select>
+      <select value={v as string} onChange={(e) => onChange(e.target.value)} className={cls}><option value="">—</option>{field.options.map((o) => <option key={o.value} value={o.value} disabled={o.disabled === true}>{optLabel(o)}</option>)}</select>
       {detail && <p className="mt-1 text-xs text-muted-foreground">{detail}</p>}
     </>);
   }

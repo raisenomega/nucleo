@@ -1,5 +1,5 @@
 export type FieldKind = "text" | "email" | "tel" | "textarea" | "select" | "radio" | "checkbox" | "number" | "disclaimer";
-export interface FieldOption { value: string; label_es: string; label_en: string; detail_es?: string; detail_en?: string; price_display?: string; }
+export interface FieldOption { value: string; label_es: string; label_en: string; detail_es?: string; detail_en?: string; price_display?: string; disabled?: boolean; }
 export interface OrderFormField {
   id: string; orderIndex: number; kind: FieldKind; fieldKey: string;
   labelEs: string; labelEn: string; placeholderEs: string | null; placeholderEn: string | null; required: boolean;
@@ -11,6 +11,7 @@ export interface OrderForm {
   id: string; name: string; fields: OrderFormField[];
   submitLabelEs: string | null; submitLabelEn: string | null; cancelLabelEs: string | null; cancelLabelEn: string | null;
   showSummary: boolean; summaryFooterEs: string | null; summaryFooterEn: string | null;
+  termsEs: string | null; termsEn: string | null;  // contrato firmable del form (generaliza el de las ofertas)
 }
 export interface PaymentOption {
   methodKey: string; nameEs: string; nameEn: string;
