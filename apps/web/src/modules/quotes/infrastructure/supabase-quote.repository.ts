@@ -44,9 +44,10 @@ export const supabaseQuoteRepository: IQuoteRepository = {
   async setStatus(id, status: QuoteStatus): Promise<QuoteResult> {
     return ok((await supabase.from("quotes").update({ status }).eq("id", id)).error);
   },
-  async convertToInvoice(id): Promise<string | null> {
-    const { data } = await supabase.rpc("convert_quote_to_invoice", { p_quote_id: id });
-    return (data as string | null) ?? null;
+  async convertToInvoice(id) {
+    const { data, error } = await supabase.rpc("convert_quote_to_invoice", { p_quote_id: id });
+    if (error || !data) return { ok: false as const, error: error?.message ?? "Sin datos del servidor" };
+    return { ok: true as const, value: data as string };
   },
   async fromLead(leadId) {
     const { data, error } = await supabase.rpc("generate_quote_from_lead", { p_lead_id: leadId });

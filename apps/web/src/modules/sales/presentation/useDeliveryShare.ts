@@ -10,7 +10,9 @@ import type { DeliveryNote } from "@sales/domain/delivery-note.types";
 export function useDeliveryShare(warehouses: Record<string, string>) {
   const { t } = useI18n(); const { exportPdf } = usePdfExport(); const brand = usePdfBrand();
   const download = (n: DeliveryNote) => void exportPdf(() => deliveryNoteDoc(n, warehouses, brand, t));
-  const share = (n: DeliveryNote) => void getDeliveryShareUrl(n.id)
-    .then((url) => shareViaWhatsApp(null, docWaMessage(`${t("conduce")} ${n.noteNumber}`, t("viewDetail"), url)));
+  const share = (n: DeliveryNote) => void getDeliveryShareUrl(n.id).then((r) => {
+    if (!r.ok) { window.alert(r.error); return; }   // sin enlace no se abre WhatsApp (ver InvoiceDetail)
+    shareViaWhatsApp(null, docWaMessage(`${t("conduce")} ${n.noteNumber}`, t("viewDetail"), r.value));
+  });
   return { download, share };
 }

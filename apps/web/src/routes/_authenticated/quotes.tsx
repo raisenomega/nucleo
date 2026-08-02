@@ -35,7 +35,7 @@ function QuotesPage() {
   }, [quote, openedId, m.list]);
   if (!can("quotes", "view")) return <Navigate to="/dashboard" />;
   const onStatus = (s: QuoteStatus) => { if (viewing) { void m.setStatus(viewing.id, s); setViewing(null); } };
-  const onConvert = () => { if (viewing) { void m.convert(viewing.id).then((inv) => { if (inv) window.alert(t("invoiceSaved")); }); setViewing(null); } };
+  const onConvert = () => { if (viewing) { void m.convert(viewing.id).then((r) => window.alert(r.ok ? t("invoiceSaved") : r.error)); setViewing(null); } };
   const onCreateOrder = () => { if (viewing) { void supabaseSalesOrderRepository.createFromQuote(viewing.id).then((r) => { if (r.ok) void navigate({ to: "/sales-orders" }); else window.alert(r.error); }); setViewing(null); } };
   return (
     <div className="space-y-6 p-4 md:p-8">

@@ -1,4 +1,5 @@
 import { supabase } from "@shared/lib/supabase";
+import type { Result } from "@billing/domain/invoice.types";
 
 // Página pública de factura (anon, patrón cotización) + helpers de envío (staff).
 export interface PublicInvoiceResp {
@@ -18,9 +19,12 @@ export async function getInvoiceByToken(token: string): Promise<PublicInvoiceRes
 }
 
 // URL branded (https://{primary_domain}/factura/{token}) para el WhatsApp — la arma el backend.
-export async function getInvoiceShareUrl(id: string): Promise<string | null> {
-  const { data } = await supabase.rpc("get_invoice_share_url", { p_invoice_id: id });
-  return (data as string | null) ?? null;
+// El null es negocio valido: la RPC lo devuelve cuando la factura no tiene public_token. Por eso viaja
+// DENTRO del ok:true y no se confunde con el fallo, que antes se mandaba al cliente como mensaje sin enlace.
+export async function getInvoiceShareUrl(id: string): Promise<Result<string | null, string>> {
+  const { data, error } = await supabase.rpc("get_invoice_share_url", { p_invoice_id: id });
+  if (error) return { ok: false, error: error.message };
+  return { ok: true, value: (data as string | null) ?? null };
 }
 
 export async function markInvoiceSent(id: string): Promise<void> {

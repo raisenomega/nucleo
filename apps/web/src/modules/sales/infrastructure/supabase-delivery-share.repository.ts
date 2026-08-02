@@ -1,4 +1,5 @@
 import { supabase } from "@shared/lib/supabase";
+import type { Result } from "@sales/domain/sales-order.types";
 
 // Página pública del conduce (anon, patrón factura/orden) + share URL branded (staff).
 export interface PublicDeliveryResp {
@@ -17,7 +18,9 @@ export async function getDeliveryByToken(token: string): Promise<PublicDeliveryR
   return (data as PublicDeliveryResp | null) ?? { status: "error" };
 }
 
-export async function getDeliveryShareUrl(id: string): Promise<string | null> {
-  const { data } = await supabase.rpc("get_delivery_share_url", { p_note_id: id });
-  return (data as string | null) ?? null;
+// Null de negocio (conduce sin public_token) dentro del ok:true; el fallo, aparte.
+export async function getDeliveryShareUrl(id: string): Promise<Result<string | null, string>> {
+  const { data, error } = await supabase.rpc("get_delivery_share_url", { p_note_id: id });
+  if (error) return { ok: false, error: error.message };
+  return { ok: true, value: (data as string | null) ?? null };
 }

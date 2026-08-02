@@ -32,7 +32,7 @@ export interface IQuoteRepository {
   update(id: string, input: QuoteInput): Promise<QuoteResult>;  // edición: status NO se toca
 
   setStatus(id: string, status: QuoteStatus): Promise<QuoteResult>;
-  convertToInvoice(id: string): Promise<string | null>;
+  convertToInvoice(id: string): Promise<Result<string, string>>;
   fromLead(leadId: string): Promise<Result<string, string>>;
   summary(): Promise<QuotesSummary>;
 }

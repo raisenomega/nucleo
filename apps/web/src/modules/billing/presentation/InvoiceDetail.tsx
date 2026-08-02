@@ -31,14 +31,14 @@ export function InvoiceDetail({ inv, canManage, onChanged, onCancel, onClose }: 
   const after = (e: string | null) => { if (e) window.alert(e); else onChanged(); };
   const voidP = (id: string) => { const r = window.prompt("Motivo de la anulación (mín. 3):"); if (r) void pay.void(id, r).then(after); };
   const msg = `${t("invoice")} ${inv.invoiceNumber ?? ""} — ${formatCurrency(inv.total)}`;
-  // WhatsApp: linkea a la página pública branded /factura/{token} (preview del dominio del tenant, no URL cruda).
-  // Si es borrador → confirma y pasa a 'sent' (dispara el posting GL) ANTES de abrir WhatsApp.
+  // WhatsApp: linkea a /factura/{token} branded. Si es borrador pasa a 'sent' (posting GL) antes de abrir; y sin
+  // enlace NO se abre, porque antes iba el mensaje sin link y el usuario creía haberlo enviado completo.
   async function waSend() {
     const draft = inv.status === "draft";
     if (draft && !window.confirm(t("sendDraftConfirm"))) return;
     if (draft) { await markInvoiceSent(inv.id); onChanged(); }
-    const url = await getInvoiceShareUrl(inv.id);
-    shareViaWhatsApp(inv.phone, docWaMessage(msg, t("viewInvoice"), url));
+    const r = await getInvoiceShareUrl(inv.id); if (!r.ok) { window.alert(r.error); return; }
+    shareViaWhatsApp(inv.phone, docWaMessage(msg, t("viewInvoice"), r.value));
   }
   return (
     <ScreenModal onClose={onClose}>
