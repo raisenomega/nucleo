@@ -24,6 +24,7 @@ export function InvoicesTab({ initialInvoiceId }: { initialInvoiceId?: string })
   const cancel = () => { if (viewing) { void m.setStatus(viewing.id, "cancelled"); setViewing(null); } };
   return (
     <div className="space-y-4">
+      {m.error && <p className="text-sm text-destructive">{m.error}</p>}
       <BillingKpis s={m.summary} />
       {can("billing", "create") && <button type="button" onClick={() => setCreating((v) => !v)}
         className="flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm font-bold"><Plus className="h-4 w-4" /> {t("newInvoice")}</button>}

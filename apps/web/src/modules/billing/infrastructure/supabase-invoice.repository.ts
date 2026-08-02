@@ -41,8 +41,9 @@ export const supabaseInvoiceRepository: IInvoiceRepository = {
     if (error || !data) return { ok: false as const, error: error?.message ?? "Sin datos del servidor" };
     return { ok: true as const, value: data as string };
   },
-  async summary(): Promise<BillingSummary> {
-    const { data } = await supabase.rpc("get_billing_summary");
-    return (data as BillingSummary | null) ?? EMPTY;
+  async summary() {
+    const { data, error } = await supabase.rpc("get_billing_summary");
+    if (error) return { ok: false as const, error: error.message };
+    return { ok: true as const, value: (data as BillingSummary | null) ?? EMPTY };
   },
 };

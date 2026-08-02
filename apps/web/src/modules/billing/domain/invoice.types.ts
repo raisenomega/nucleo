@@ -31,5 +31,5 @@ export interface IInvoiceRepository {
   confirmPayment(id: string): Promise<BillingResult>;
   setStatus(id: string, status: InvoiceStatus): Promise<BillingResult>;
   fromLead(leadId: string): Promise<Result<string, string>>;
-  summary(): Promise<BillingSummary>;
+  summary(): Promise<Result<BillingSummary, string>>;
 }
