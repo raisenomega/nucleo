@@ -18,13 +18,15 @@ export function useReports(repo: IReportRepository) {
   const [period, setPeriod] = useState<Period>("half");
   const [series, setSeries] = useState<ReportSeries | null>(null);
   const [employees, setEmployees] = useState<EmployeePerformance[]>([]);
+  const [error, setError] = useState<string | null>(null);
   const range = useMemo(() => rangeFor(period), [period]);
   const load = useCallback(async () => {
     const [s, e] = await Promise.all([
       repo.getSeries(range.from, range.to), repo.getEmployeePerformance(range.from, range.to),
     ]);
-    setSeries(s); setEmployees(e);
+    setSeries(s.ok ? s.value : null); setEmployees(e.ok ? e.value : []);
+    setError(s.ok ? (e.ok ? null : e.error) : s.error);
   }, [repo, range]);
   useEffect(() => { void load(); }, [load]);
-  return { period, setPeriod, series, employees, range };
+  return { period, setPeriod, series, employees, error, range };
 }

@@ -4,7 +4,8 @@ import type { IAccountsReceivableRepository, ARSnapshot } from "@finance/domain/
 // DI del repo. Carga las deudas pendientes; cobrar/perdonar refrescan.
 export function useAccountsReceivable(repo: IAccountsReceivableRepository) {
   const [snapshot, setSnapshot] = useState<ARSnapshot | null>(null);
-  const refresh = useCallback(async () => { setSnapshot(await repo.getAll()); }, [repo]);
+  const [error, setError] = useState<string | null>(null);
+  const refresh = useCallback(async () => { const r = await repo.getAll(); setSnapshot(r.ok ? r.value : null); setError(r.ok ? null : r.error); }, [repo]);
   useEffect(() => { void refresh(); }, [refresh]);
   const collect = useCallback(async (stopId: string, methodId: string) => {
     const r = await repo.collectDebt(stopId, methodId); if (r.ok) await refresh(); return r;
@@ -15,5 +16,5 @@ export function useAccountsReceivable(repo: IAccountsReceivableRepository) {
   const addNote = useCallback(async (stopId: string, text: string) => {
     const r = await repo.addNote(stopId, text); if (r.ok) await refresh(); return r;
   }, [repo, refresh]);
-  return { snapshot, collect, forgive, addNote, refresh };
+  return { snapshot, error, collect, forgive, addNote, refresh };
 }

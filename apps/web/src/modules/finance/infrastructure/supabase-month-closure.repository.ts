@@ -20,11 +20,12 @@ export const supabaseMonthClosureRepository: IMonthClosureRepository = {
     })) as MonthClosure[];
   },
   async recStatus() {
-    const { data } = await supabase.rpc("list_reconciliation_status");
-    return ((data as Record<string, unknown>[] | null) ?? []).map((r) => ({
+    const { data, error } = await supabase.rpc("list_reconciliation_status");
+    if (error) return { ok: false as const, error: error.message };
+    return { ok: true as const, value: ((data as Record<string, unknown>[] | null) ?? []).map((r) => ({
       periodYear: N(r.period_year), periodMonth: N(r.period_month), totalLines: N(r.total_lines),
       matched: N(r.matched), unmatched: N(r.unmatched), unmatchedAmount: N(r.unmatched_amount),
-    })) as MonthRecStatus[];
+    })) as MonthRecStatus[] };
   },
   async preview(year, month) {
     const { data, error } = await supabase.rpc("preview_month_close", { p_year: year, p_month: month });

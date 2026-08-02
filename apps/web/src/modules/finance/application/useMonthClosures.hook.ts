@@ -7,9 +7,10 @@ export function useMonthClosures(repo: IMonthClosureRepository) {
   const [closures, setClosures] = useState<MonthClosure[]>([]);
   const [recStatus, setRecStatus] = useState<MonthRecStatus[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const reload = useCallback(async () => {
     const [c, s] = await Promise.all([repo.listClosures(), repo.recStatus()]);
-    setClosures(c); setRecStatus(s); setLoading(false);
+    setClosures(c); setRecStatus(s.ok ? s.value : []); setError(s.ok ? null : s.error); setLoading(false);
   }, [repo]);
   useEffect(() => { void reload(); }, [reload]);
 
@@ -20,5 +21,5 @@ export function useMonthClosures(repo: IMonthClosureRepository) {
     const r = await repo.reopen(y, m, reason); if (r.ok) await reload(); return r;
   }, [repo, reload]);
 
-  return { closures, recStatus, loading, reload, close, reopen, preview: repo.preview.bind(repo) };
+  return { closures, recStatus, loading, error, reload, close, reopen, preview: repo.preview.bind(repo) };
 }

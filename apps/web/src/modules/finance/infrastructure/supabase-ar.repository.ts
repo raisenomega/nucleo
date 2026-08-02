@@ -9,16 +9,17 @@ interface Raw { total_pending: number | string; count: number; items: RawItem[] 
 const ok = (e: { message: string } | null): ARResult => (e ? { ok: false, error: e.message } : { ok: true });
 
 export const supabaseArRepository: IAccountsReceivableRepository = {
-  async getAll(month): Promise<ARSnapshot> {
-    const { data } = await supabase.rpc("get_accounts_receivable", month ? { p_month: month } : {});
+  async getAll(month) {
+    const { data, error } = await supabase.rpc("get_accounts_receivable", month ? { p_month: month } : {});
+    if (error) return { ok: false as const, error: error.message };
     const r = (data as Raw | null) ?? { total_pending: 0, count: 0, items: [] };
-    return {
+    return { ok: true as const, value: {
       totalPending: Number(r.total_pending), count: r.count,
       items: (r.items ?? []).map((i) => ({
         stopId: i.stopId, clientName: i.clientName, phone: i.phone, amount: Number(i.amount),
         routeDate: i.routeDate, assignedTo: i.assignedTo, reason: i.reason,
       })),
-    };
+    } };
   },
   async collectDebt(stopId, methodId) {
     return ok((await supabase.rpc("collect_pending_debt", { p_stop_id: stopId, p_method_id: methodId || null })).error);

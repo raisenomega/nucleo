@@ -8,11 +8,13 @@ const EMPTY: ReportSeries = {
 
 export const supabaseReportRepository: IReportRepository = {
   async getSeries(from, to) {
-    const { data } = await supabase.rpc("get_report_series", { p_from: from, p_to: to });
-    return (data as ReportSeries | null) ?? EMPTY;
+    const { data, error } = await supabase.rpc("get_report_series", { p_from: from, p_to: to });
+    if (error) return { ok: false as const, error: error.message };
+    return { ok: true as const, value: (data as ReportSeries | null) ?? EMPTY };
   },
   async getEmployeePerformance(from, to) {
-    const { data } = await supabase.rpc("get_employee_performance", { p_from: from, p_to: to });
-    return (data as EmployeePerformance[] | null) ?? [];
+    const { data, error } = await supabase.rpc("get_employee_performance", { p_from: from, p_to: to });
+    if (error) return { ok: false as const, error: error.message };
+    return { ok: true as const, value: (data as EmployeePerformance[] | null) ?? [] };
   },
 };

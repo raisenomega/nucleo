@@ -7,6 +7,7 @@ import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { usePdfExport } from "@shared/hooks/usePdfExport";
 import { usePdfBrand } from "@shared/hooks/usePdfBrand";
 import { reportDoc } from "@finance/presentation/pdf/report-doc";
+import { rpcErr } from "@finance/presentation/rpc-error";
 import { useAccountsReceivable } from "@finance/application/useAccountsReceivable.hook";
 import { supabaseArRepository } from "@finance/infrastructure/supabase-ar.repository";
 import { AccountsReceivableTable } from "@finance/presentation/AccountsReceivableTable";
@@ -54,6 +55,7 @@ function ARPage() {
         </div>
         <p className="text-xs text-muted-foreground">{t("pendingDebts")}</p>
       </div>
+      {m.error && <p className="text-sm text-destructive">{rpcErr(m.error, t)}</p>}
       {m.snapshot && (
         <div className="rounded-xl border border-border bg-card p-4">
           <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("totalPending")}</span>

@@ -1,4 +1,5 @@
 // BC finance — tipos de dominio del dashboard. Puro: sin imports externos.
+import type { Result } from "@finance/domain/payroll.types";
 export interface RecentItem { readonly date: string; readonly category: string | null; readonly amount: number }
 
 export interface Snapshot {
@@ -65,11 +66,9 @@ export interface IDashboardRepository {
   getCrmSnapshot(month?: Date): Promise<CrmSnapshot | null>;
   getMarketingSnapshot(month?: Date): Promise<MktSnapshot | null>;
   getReconciliationSnapshot(month?: Date): Promise<FiscalSnapshot | null>;
-  getArAging(): Promise<Aging | null>;
-  getApAging(): Promise<Aging | null>;
-  getInventory(): Promise<InvSnapshot | null>;
-  getOps(): Promise<OpsSnapshot | null>;
-  getTrend(): Promise<readonly TrendPoint[]>;
-  getQuotes(): Promise<QuotesSummary | null>;
-  getFleet(): Promise<readonly FleetPos[]>;
+  // Result: ceros y listas vacias se leian como «no hubo actividad»; en aging el null SI es negocio valido (§13).
+  getArAging(): Promise<Result<Aging | null, string>>; getApAging(): Promise<Result<Aging | null, string>>;
+  getInventory(): Promise<Result<InvSnapshot, string>>; getOps(): Promise<Result<OpsSnapshot, string>>;
+  getTrend(): Promise<Result<readonly TrendPoint[], string>>; getQuotes(): Promise<Result<QuotesSummary, string>>;
+  getFleet(): Promise<Result<readonly FleetPos[], string>>;
 }

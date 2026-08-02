@@ -1,4 +1,5 @@
 // BC finance — tipos de reportes (/reports). Puro.
+import type { Result } from "@finance/domain/payroll.types";
 export type MonthPoint = {
   month: string; income: number; expense: number; payroll: number; extraordinary: number; cogs: number;
   marketing_spent: number; marketing_budget: number; leads_new: number; leads_converted: number;
@@ -22,6 +23,6 @@ export interface EmployeePerformance {
   collectionRate: number; incomeCollected: number; suppliesUsed: number; laborCost: number;
 }
 export interface IReportRepository {
-  getSeries(from: string, to: string): Promise<ReportSeries>;
-  getEmployeePerformance(from: string, to: string): Promise<EmployeePerformance[]>;
+  getSeries(from: string, to: string): Promise<Result<ReportSeries, string>>;
+  getEmployeePerformance(from: string, to: string): Promise<Result<EmployeePerformance[], string>>;
 }

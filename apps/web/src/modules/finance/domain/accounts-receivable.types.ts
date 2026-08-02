@@ -1,4 +1,5 @@
 // BC finance — cuentas por cobrar (deudas de paradas no atendidas). Puro.
+import type { Result } from "@finance/domain/payroll.types";
 export type ARResult = { ok: true } | { ok: false; error: string };
 
 export interface AccountReceivable {
@@ -11,7 +12,7 @@ export interface ARSnapshot {
 }
 
 export interface IAccountsReceivableRepository {
-  getAll(month?: string): Promise<ARSnapshot>;
+  getAll(month?: string): Promise<Result<ARSnapshot, string>>;
   collectDebt(stopId: string, methodId: string): Promise<ARResult>;
   forgiveDebt(stopId: string, reason: string): Promise<ARResult>;
   addNote(stopId: string, text: string): Promise<ARResult>;

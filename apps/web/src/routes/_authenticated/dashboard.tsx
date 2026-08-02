@@ -8,6 +8,7 @@ import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { useSession } from "@shared/providers/SessionProvider";
 import { useBrand } from "@shared/providers/BrandProvider";
+import { rpcErr } from "@finance/presentation/rpc-error";
 import { useDashboard } from "@finance/application/useDashboard.hook";
 import { supabaseDashboardRepository } from "@finance/infrastructure/supabase-dashboard.repository";
 import { healthOf, type DashView } from "@finance/application/dash-health";
@@ -33,7 +34,7 @@ function Dashboard() {
   const [view, setView] = useState<DashView>("general");
   const [period, setPeriod] = useState<PeriodKey>("cur");
   const month = useMemo(() => (period === "prev" ? new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1) : undefined), [period]);
-  const { d, loading } = useDashboard(supabaseDashboardRepository, month);
+  const { d, loading, errors } = useDashboard(supabaseDashboardRepository, month);
   if (isSuperAdmin) return <PlatformDashboard />;
   if (session?.role === "servicio" && !can("dashboard", "view")) return <Navigate to="/my-route" />;
   const gl = brand.glEnabled;
@@ -54,6 +55,7 @@ function Dashboard() {
           <p className="text-xs text-muted-foreground">{session?.email} · {session?.role ?? "—"}</p></div>
         {can("dashboard", "view") && <DashPeriod value={period} onChange={setPeriod} />}
       </div>
+      {errors.length > 0 && <p className="text-sm text-destructive">{rpcErr(errors[0] ?? "", t)}{errors.length > 1 ? ` (+${errors.length - 1})` : ""}</p>}
       {!can("dashboard", "view") ? null : loading || !d ? <p className="font-body text-muted-foreground">{t("noData")}</p> : (
         <div className="space-y-4">
           <DashboardHealth level={healthOf(active, d)} />

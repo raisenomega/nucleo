@@ -7,6 +7,7 @@ import { FileText } from "lucide-react";
 import { usePdfExport } from "@shared/hooks/usePdfExport";
 import { usePdfBrand } from "@shared/hooks/usePdfBrand";
 import { reportDoc } from "@finance/presentation/pdf/report-doc";
+import { rpcErr } from "@finance/presentation/rpc-error";
 import { useReports, type Period } from "@finance/application/useReports.hook";
 import { supabaseReportRepository } from "@finance/infrastructure/supabase-report.repository";
 import { buildReportBody } from "@finance/presentation/report-pdf";
@@ -40,6 +41,7 @@ function ReportsPage() {
   const exportPdf = () => { if (s) void runPdf(() => reportDoc(buildReportBody(active, s, m.employees, m.range.from, m.range.to, activeTitle), brand)); };
   return (
     <div className="space-y-6 p-4 md:p-8">
+      {m.error && <p className="text-sm text-destructive">{rpcErr(m.error, t)}</p>}
       <div className="space-y-2">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <h1 className="font-display text-xl font-bold text-foreground md:text-3xl">{t("reports")}</h1>
