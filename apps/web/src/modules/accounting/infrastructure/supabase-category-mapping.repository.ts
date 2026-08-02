@@ -12,9 +12,10 @@ function toMapping(r: Row): CategoryMapping {
 }
 
 export const supabaseCategoryMappingRepository: ICategoryMappingRepository = {
-  async list(): Promise<CategoryMapping[]> {
-    const { data } = await supabase.rpc("get_category_mappings");
-    return ((data as Row[] | null) ?? []).map(toMapping);
+  async list() {
+    const { data, error } = await supabase.rpc("get_category_mappings");
+    if (error) return { ok: false as const, error: error.message };
+    return { ok: true as const, value: ((data as Row[] | null) ?? []).map(toMapping) };
   },
   async setAccount(categoryId, accountId): Promise<Result<null, string>> {
     const { error } = await supabase.from("categories").update({ account_id: accountId }).eq("id", categoryId);

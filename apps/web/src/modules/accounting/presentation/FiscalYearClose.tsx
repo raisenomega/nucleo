@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Lock, Unlock } from "lucide-react";
 import { useI18n } from "@shared/i18n";
+import { stmtErr } from "@accounting/presentation/statement-error";
 import { useToast } from "@shared/providers/toast-context";
 import { formatCurrency } from "@shared/lib/format";
 import { accountingActionsRepository as repo, type FiscalYear } from "@accounting/infrastructure/supabase-accounting-actions.repository";
@@ -15,7 +16,10 @@ export function FiscalYearClose() {
   useEffect(() => { void load(); }, [load]);
   const close = async (y: number) => {
     const is = await fs.getIncomeStatement({ year: y, monthFrom: 1, monthTo: 12 });
-    const net = is?.summary.netIncome ?? 0;
+    // Sin estado de resultados NO se ofrece cerrar: antes mostraba «$0.00» —cifra plausible para un anio sin
+    // actividad— y el CEO aprobaba el cierre del anio fiscal sobre un dato falso (auditoria E2E §13).
+    if (!is.ok) { toast.error(stmtErr(is.error, t)); return; }
+    const net = is.value.summary.netIncome;
     if (!window.confirm(`${t("closeYearConfirm")} ${y}\n${t("netIncomeToClose")}: ${formatCurrency(net)}`)) return;
     const r = await repo.closeFiscalYear(y);
     if (r.ok) { toast.success(t("fiscalYearClosed")); void load(); } else toast.error(r.error);

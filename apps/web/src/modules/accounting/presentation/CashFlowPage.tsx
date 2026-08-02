@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useI18n } from "@shared/i18n";
+import { stmtErr } from "@accounting/presentation/statement-error";
 import { formatCurrency } from "@shared/lib/format";
 import { useCashFlow } from "@accounting/application/useCashFlow.hook";
 import { supabaseFinancialStatementsRepository } from "@accounting/infrastructure/supabase-financial-statements.repository";
@@ -10,7 +11,7 @@ const M = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 export function CashFlowPage() {
   const { t } = useI18n();
   const [f, setF] = useState<StatementFilters>(() => { const d = new Date(); return { year: d.getFullYear(), monthFrom: 1, monthTo: d.getMonth() + 1 }; });
-  const { cashFlow, loading } = useCashFlow(supabaseFinancialStatementsRepository, f);
+  const { cashFlow, loading, error } = useCashFlow(supabaseFinancialStatementsRepository, f);
   const upd = (p: Partial<StatementFilters>) => setF((s) => ({ ...s, ...p }));
   const sm = cashFlow?.summary;
   const empty = cashFlow && cashFlow.summary.cashBeginning === 0 && cashFlow.summary.cashEnding === 0 && cashFlow.operating.netIncome === 0;
@@ -31,6 +32,7 @@ export function CashFlowPage() {
         <button type="button" onClick={() => upd({ monthFrom: 1, monthTo: new Date().getMonth() + 1 })} className={qb}>{t("yearToDate")}</button>
       </div>
       {loading ? <p className="text-sm text-muted-foreground">…</p>
+        : error ? <p className="rounded-lg border border-destructive p-6 text-center text-sm text-destructive">{stmtErr(error, t)}</p>
         : !sm || empty ? <p className="rounded-lg border border-border p-6 text-center text-sm text-muted-foreground">{t("noDataForPeriod")}</p>
         : <>
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4">

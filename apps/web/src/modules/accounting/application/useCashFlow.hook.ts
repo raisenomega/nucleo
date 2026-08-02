@@ -5,12 +5,14 @@ import type { CashFlowStatement, StatementFilters, IFinancialStatementsRepositor
 export function useCashFlow(repo: IFinancialStatementsRepository, filters: StatementFilters) {
   const [cashFlow, setCashFlow] = useState<CashFlowStatement | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { year, monthFrom, monthTo } = filters;
   useEffect(() => {
     let alive = true;
     setLoading(true);
-    void repo.getCashFlow({ year, monthFrom, monthTo }).then((c) => { if (alive) { setCashFlow(c); setLoading(false); } });
+    void repo.getCashFlow({ year, monthFrom, monthTo }).then((r) => { if (!alive) return;
+      setCashFlow(r.ok ? r.value : null); setError(r.ok ? null : r.error); setLoading(false); });
     return () => { alive = false; };
   }, [repo, year, monthFrom, monthTo]);
-  return { cashFlow, loading };
+  return { cashFlow, loading, error };
 }

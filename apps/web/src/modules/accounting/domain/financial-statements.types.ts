@@ -1,4 +1,5 @@
 // BC accounting — estados financieros formales desde el GL.
+import type { Result } from "@accounting/domain/chart-of-accounts.types";
 export interface StatementAccount { readonly code: string; readonly name: string; readonly amount: number; }
 
 export interface IncomeStatementSummary {
@@ -44,7 +45,9 @@ export interface CashFlowStatement {
 }
 
 export interface IFinancialStatementsRepository {
-  getIncomeStatement(f: StatementFilters): Promise<IncomeStatement | null>;
-  getBalanceSheet(asOfDate: string): Promise<BalanceSheet | null>;
-  getCashFlow(f: StatementFilters): Promise<CashFlowStatement | null>;
+  // Result: un null no distinguia «periodo sin movimientos» de «la RPC fallo», y el mensaje del servidor
+  // (codigo `forbidden`) se estaba descartando (auditoria E2E §13).
+  getIncomeStatement(f: StatementFilters): Promise<Result<IncomeStatement, string>>;
+  getBalanceSheet(asOfDate: string): Promise<Result<BalanceSheet, string>>;
+  getCashFlow(f: StatementFilters): Promise<Result<CashFlowStatement, string>>;
 }

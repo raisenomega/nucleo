@@ -4,9 +4,10 @@ import type { CategoryMapping, ICategoryMappingRepository } from "@accounting/do
 // DI del repo. Estado del mapeo categoría→cuenta + mutaciones que refrescan.
 export function useCategoryMappings(repo: ICategoryMappingRepository) {
   const [mappings, setMappings] = useState<CategoryMapping[]>([]);
-  const refresh = useCallback(async () => { setMappings(await repo.list()); }, [repo]);
+  const [error, setError] = useState<string | null>(null);
+  const refresh = useCallback(async () => { const r = await repo.list(); setMappings(r.ok ? r.value : []); setError(r.ok ? null : r.error); }, [repo]);
   useEffect(() => { void refresh(); }, [refresh]);
   const setAccount = useCallback(async (id: string, acc: string | null) => { const r = await repo.setAccount(id, acc); if (r.ok) await refresh(); return r; }, [repo, refresh]);
   const autoMap = useCallback(async (tid: string) => { const r = await repo.autoMap(tid); if (r.ok) await refresh(); return r; }, [repo, refresh]);
-  return { mappings, setAccount, autoMap, refresh };
+  return { mappings, error, setAccount, autoMap, refresh };
 }

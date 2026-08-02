@@ -5,11 +5,13 @@ import type { BalanceSheet, IFinancialStatementsRepository } from "@accounting/d
 export function useBalanceSheet(repo: IFinancialStatementsRepository, asOfDate: string) {
   const [sheet, setSheet] = useState<BalanceSheet | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     let alive = true;
     setLoading(true);
-    void repo.getBalanceSheet(asOfDate).then((s) => { if (alive) { setSheet(s); setLoading(false); } });
+    void repo.getBalanceSheet(asOfDate).then((r) => { if (!alive) return;
+      setSheet(r.ok ? r.value : null); setError(r.ok ? null : r.error); setLoading(false); });
     return () => { alive = false; };
   }, [repo, asOfDate]);
-  return { sheet, loading };
+  return { sheet, loading, error };
 }

@@ -9,7 +9,7 @@ export interface CategoryMapping {
 }
 
 export interface ICategoryMappingRepository {
-  list(): Promise<CategoryMapping[]>;
+  list(): Promise<Result<CategoryMapping[], string>>;
   setAccount(categoryId: string, accountId: string | null): Promise<Result<null, string>>;
   autoMap(tenantId: string): Promise<Result<{ mapped: number; remaining: number }, string>>;
 }

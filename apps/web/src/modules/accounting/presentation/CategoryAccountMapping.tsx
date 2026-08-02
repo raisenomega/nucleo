@@ -35,6 +35,7 @@ export function CategoryAccountMapping({ accounts, tenantId, canEdit }: { accoun
           {total > 0 && mapped === total && <span className="ml-2 rounded-full bg-green-500/10 px-2 py-0.5 text-xs font-bold text-green-600">{t("mappingComplete")}</span>}</span>
         {canEdit && <button type="button" onClick={() => void auto()} className="flex items-center gap-1 rounded-lg bg-secondary px-3 py-2 text-xs font-bold"><Wand2 className="h-4 w-4" />{t("autoMapAll")}</button>}
       </div>
+      {cm.error && <p className="rounded-lg border border-destructive p-3 text-sm text-destructive">{cm.error}</p>}
       {section("expense", t("expenses"))}
       {section("income", t("income"))}
     </div>
