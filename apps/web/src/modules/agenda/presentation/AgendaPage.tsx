@@ -18,7 +18,7 @@ export function AgendaPage({ search, onSearch }: { search: Search; onSearch: (p:
   const c = useAgendaController();
   const [editing, setEditing] = useState<Appointment | null>(null);
   const [creating, setCreating] = useState<string | null>(null);
-  if (!can("settings", "edit")) return <Navigate to="/dashboard" />;
+  if (!can("settings", "view")) return <Navigate to="/dashboard" />;
   const view = search.view ?? "list";
   async function onSave(input: AppointmentInput) { if (await c.saveApt(editing?.id ?? null, input)) { setEditing(null); setCreating(null); } }
   return (
