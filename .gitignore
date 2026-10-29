@@ -35,6 +35,10 @@ AGENT-TEAMS-*.md
 DDD-*.md
 Trilogy_Model_Price.md
 PACKAGE-*.md
+# Docs de auditoría: inventario de vulnerabilidades de producción — confidencial, nunca se commitea.
+Auditoria_*.md
+Auditoria-*.md
+AUDITORIA-*.md
 
 # --- Ecosistema Claude Code (revela reglas y acciones) -----------------------
 .claude/

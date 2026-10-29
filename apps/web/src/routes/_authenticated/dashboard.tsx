@@ -14,7 +14,7 @@ import { supabaseDashboardRepository } from "@finance/infrastructure/supabase-da
 import { healthOf, type DashView } from "@finance/application/dash-health";
 import { DashboardChips } from "@finance/presentation/DashboardChips";
 import { DashboardHealth } from "@finance/presentation/DashboardHealth";
-import { DashPeriod, type PeriodKey } from "@finance/presentation/DashPeriod";
+import { DashPeriod } from "@finance/presentation/DashPeriod";
 import { DashboardGeneral } from "@finance/presentation/DashboardGeneral";
 import { DashboardFinanzas } from "@finance/presentation/DashboardFinanzas";
 import { DashboardOperaciones } from "@finance/presentation/DashboardOperaciones";
@@ -32,8 +32,8 @@ function Dashboard() {
   const { session } = useSession();
   const brand = useBrand();
   const [view, setView] = useState<DashView>("general");
-  const [period, setPeriod] = useState<PeriodKey>("cur");
-  const month = useMemo(() => (period === "prev" ? new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1) : undefined), [period]);
+  const [monthsAgo, setMonthsAgo] = useState(0);
+  const month = useMemo(() => (monthsAgo === 0 ? undefined : new Date(new Date().getFullYear(), new Date().getMonth() - monthsAgo, 1)), [monthsAgo]);
   const { d, loading, errors } = useDashboard(supabaseDashboardRepository, month);
   if (isSuperAdmin) return <PlatformDashboard />;
   if (session?.role === "servicio" && !can("dashboard", "view")) return <Navigate to="/my-route" />;
@@ -53,7 +53,7 @@ function Dashboard() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div><h1 className="font-display text-xl font-bold text-foreground md:text-3xl">{t("welcome")} {tenantName}</h1>
           <p className="text-xs text-muted-foreground">{session?.email} · {session?.role ?? "—"}</p></div>
-        {can("dashboard", "view") && <DashPeriod value={period} onChange={setPeriod} />}
+        {can("dashboard", "view") && <DashPeriod value={monthsAgo} onChange={setMonthsAgo} />}
       </div>
       {errors.length > 0 && <p className="text-sm text-destructive">{rpcErr(errors[0] ?? "", t)}{errors.length > 1 ? ` (+${errors.length - 1})` : ""}</p>}
       {!can("dashboard", "view") ? null : loading || !d ? <p className="font-body text-muted-foreground">{t("noData")}</p> : (
