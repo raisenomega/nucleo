@@ -4,6 +4,7 @@ import { Plus, FileText, Ruler, ScanBarcode, ClipboardCheck, Warehouse } from "l
 import { useI18n } from "@shared/i18n";
 import { useModuleAccess } from "@shared/hooks/useModuleAccess";
 import { useSession } from "@shared/providers/SessionProvider";
+import { useToast } from "@shared/providers/toast-context";
 import { usePdfExport } from "@shared/hooks/usePdfExport";
 import { usePdfBrand } from "@shared/hooks/usePdfBrand";
 import { reportDoc } from "@finance/presentation/pdf/report-doc";
@@ -26,7 +27,7 @@ import type { InventoryFormData, LandingProductRef } from "@fieldops/domain/inve
 export const Route = createFileRoute("/_authenticated/inventory/")({ component: InventoryPage });
 
 function InventoryPage() {
-  const { t } = useI18n(); const { can } = useModuleAccess(); const { session } = useSession();
+  const { t } = useI18n(); const { can } = useModuleAccess(); const { session } = useSession(); const toast = useToast();
   const inv = useInventory(supabaseInventoryRepository);
   const sup = useSuppliers(supabaseSupplierRepository);
   const { movs, slow, high, now } = useInventoryAnalytics(inv.items);
@@ -34,8 +35,7 @@ function InventoryPage() {
   const [editing, setEditing] = useState<string | null>(null);
   const [landing, setLanding] = useState<LandingProductRef[]>([]);
   const [filter, setFilter] = useState<InvFilter>("all");
-  const [search, setSearch] = useState("");
-  const [catFilter, setCatFilter] = useState("");
+  const [search, setSearch] = useState(""); const [catFilter, setCatFilter] = useState("");
   const [manageUom, setManageUom] = useState(false); const [manageWh, setManageWh] = useState(false);
   const [scan, setScan] = useState(false); const [scannedId, setScannedId] = useState<string | null>(null); const [scanBc, setScanBc] = useState<string | undefined>();
   const items = inv.items;
@@ -47,7 +47,7 @@ function InventoryPage() {
     return (filter === "all" || (filter === "low" && low) || (filter === "catalog" && i.landingProductId) || (filter === "nostock" && i.stock <= 0) || (filter === "slow" && slow.has(i.id)) || (filter === "reorder" && reorder.has(i.id))) && (!catFilter || i.categoryId === catFilter) && (!q || `${i.name} ${i.sku} ${i.warehouseZone} ${i.aisle} ${i.shelf} ${i.bin}`.toLowerCase().includes(q));
   }), [items, filter, search, catFilter, slow, reorder]);
   const editRow = useMemo<InventoryFormData | undefined>(() => { const i = items.find((x) => x.id === editing); return i ? { name: i.name, sku: i.sku, stock: i.stock, unitCost: i.unitCost, minStock: i.minStock, landingProductId: i.landingProductId, supplierId: i.supplierId, warehouseZone: i.warehouseZone, aisle: i.aisle, shelf: i.shelf, bin: i.bin, reorderPoint: i.reorderPoint, reorderQty: i.reorderQty, categoryId: i.categoryId, unitOfMeasureId: i.unitOfMeasureId, barcode: i.barcode, trackingType: i.trackingType } : undefined; }, [editing, items]);
-  async function submit(d: InventoryFormData) { if (editing && editing !== "new") await inv.update(editing, d); else await inv.create(d); setEditing(null); }
+  async function submit(d: InventoryFormData) { const r = editing && editing !== "new" ? await inv.update(editing, d) : await inv.create(d); if (r.ok) { setEditing(null); toast.success(t("saved")); } else toast.error(r.error); }
   const onDelete = (id: string) => { if (window.confirm(`${t("delete")}?`)) void inv.remove(id); };
 
   if (!can("inventory", "view")) return <Navigate to="/dashboard" />;
