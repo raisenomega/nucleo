@@ -39,6 +39,9 @@ PACKAGE-*.md
 Auditoria_*.md
 Auditoria-*.md
 AUDITORIA-*.md
+# Artefactos de la app de escritorio FORTRESS (debug/auditoria local) — nunca al repo.
+COGNITION-LOG.md
+FORTRESS-RECORD.md
 
 # --- Ecosistema Claude Code (revela reglas y acciones) -----------------------
 .claude/
