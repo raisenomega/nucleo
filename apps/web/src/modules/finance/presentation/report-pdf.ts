@@ -1,6 +1,6 @@
 import type { ReportSeries, EmployeePerformance } from "@finance/domain/report.types";
 
-// Construye el body de POST /pdf/report (title/kpis/tables) desde el snapshot del tab activo.
+// Construye el body de ReportPdf (title/kpis/tables) desde el snapshot del tab activo.
 type Cell = string | number;
 export interface ReportPdfBody {
   title: string; date_from: string; date_to: string;

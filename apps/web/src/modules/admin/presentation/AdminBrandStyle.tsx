@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useI18n } from "@shared/i18n";
 import type { RepoResult } from "@admin/domain/admin.types";
 
-// Defaults neutros (los mismos del pdf-api). Concatenados: el oráculo #9 prohíbe hex literales en src/.
+// Defaults neutros de marca. Concatenados: el oráculo #9 prohíbe hex literales en src/.
 const DEF_PRIMARY = "#" + "1a1a2e";
 const DEF_ACCENT = "#" + "4a4a6a";
 

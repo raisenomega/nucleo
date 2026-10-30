@@ -3,7 +3,7 @@ import type { Expense } from "@finance/domain/expense.types";
 import type { ExtraPayment } from "@finance/domain/extraordinary.types";
 import type { Payroll } from "@finance/domain/payroll.types";
 
-// Builders del body de /pdf/report para reportes con rango de fechas (headers en español, como el resto de PDFs).
+// Builders del body de ReportPdf para reportes con rango de fechas (headers en español, como el resto de PDFs).
 const $ = (n: number) => `$${n.toFixed(2)}`;
 const range = <T>(rows: readonly T[], date: (r: T) => string, from: string, to: string): T[] =>
   rows.filter((r) => (!from || date(r) >= from) && (!to || date(r) <= to));

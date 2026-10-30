@@ -28,7 +28,7 @@ export async function quoteDoc(q: Quote, brand: PdfBrand, t: T): Promise<ReactEl
     totals={totals} sections={sections} />;
 }
 
-// Flujo WhatsApp/link público: render client-side → blob → sube a tenant-pdfs → signed URL 7 días (sin Railway).
+// Flujo WhatsApp/link público: render client-side → blob → sube a tenant-pdfs → signed URL 7 días (PDF nativo).
 export async function uploadQuotePdf(tenantId: string, q: Quote, brand: PdfBrand, t: T): Promise<string | null> {
   const blob = await renderPdfBlob(await quoteDoc(q, brand, t));
   return blob ? uploadTenantPdf(tenantId, `quote/${q.id}-${Date.now()}.pdf`, blob) : null;

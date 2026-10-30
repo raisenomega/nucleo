@@ -11,7 +11,7 @@ const loc = (i: InventoryItem) => [i.aisle, i.shelf, i.bin].filter(Boolean).join
 const isLow = (i: InventoryItem) => i.minStock > 0 && i.stock > 0 && i.stock <= i.minStock;
 const ACT: [TranslationKey, string][] = [["stockIn", "entrada"], ["stockOut", "salida"], ["movVentaPublica", "venta_publica"], ["movMerma", "merma"], ["movAjuste", "ajuste"]];
 
-// Reporte E2E de inventario (5 secciones) → body de /pdf/report (kpis + tablas). Sin charts (van en el dashboard).
+// Reporte E2E de inventario (5 secciones) → body para ReportPdf nativo (kpis + tablas). Sin charts (van en el dashboard).
 export async function inventoryReportBody(items: readonly InventoryItem[], movs: RawMov[], suppliers: readonly Supplier[], now: Date, t: T) {
   const hasTracking = items.some((i) => i.trackingType !== "none");
   const exp = hasTracking ? await supabaseInventoryLotRepository.listExpiring(30) : [];

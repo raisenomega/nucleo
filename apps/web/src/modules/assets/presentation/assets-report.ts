@@ -6,7 +6,7 @@ import { ASSET_TYPE, STATUS } from "@assets/presentation/asset-labels";
 type T = (k: TranslationKey) => string;
 const money = (n: number) => `$${n.toFixed(2)}`;
 
-// Reporte de activos → body de /pdf/report: resumen (KPIs) + listado + alertas de garantía/seguro.
+// Reporte de activos → body para ReportPdf nativo: resumen (KPIs) + listado + alertas de garantía/seguro.
 export function assetsReportBody(items: readonly Asset[], now: Date, t: T) {
   const value = items.reduce((s, a) => s + assetValue(a), 0);
   const inUse = items.filter((a) => a.status === "in_use");

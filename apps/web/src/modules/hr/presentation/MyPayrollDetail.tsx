@@ -6,7 +6,7 @@ import { payslipDoc } from "@finance/presentation/pdf/finance-pdf-docs";
 import { ScreenModal } from "@shared/components/ScreenModal";
 import type { MyPayStub } from "@hr/domain/portal.types";
 
-// Desglose de un recibo. PDF client-side (RLS payroll self) → sin el 403 del pdf-api (roles ceo/coo).
+// Desglose de un recibo. PDF client-side (RLS payroll self): el empleado genera su propio recibo sin gate de rol de servidor.
 export function MyPayrollDetail({ stub, employeeName, onClose }: { stub: MyPayStub; employeeName: string; onClose: () => void }) {
   const { t } = useI18n();
   const { generating, exportPdf } = usePdfExport();

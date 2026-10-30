@@ -6,7 +6,7 @@ import { AdminTemplatesInfo } from "@admin/presentation/AdminTemplatesInfo";
 import type { TenantIdentity } from "@admin/domain/brand.types";
 import type { SettingEntry, RepoResult } from "@admin/domain/admin.types";
 
-// Tab Plantillas (solo ceo): identidad + colores + plantillas PDF. Branding que consume el pdf-api.
+// Tab Plantillas (solo ceo): identidad + colores + plantillas PDF. Branding que consume el PDF nativo.
 export function AdminBrandTab({ tenantId, settings, onSaveSetting }: {
   tenantId: string; settings: readonly SettingEntry[];
   onSaveSetting: (key: string, value: string) => Promise<RepoResult>;
