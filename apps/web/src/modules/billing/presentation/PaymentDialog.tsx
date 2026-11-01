@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { formatCurrency } from "@shared/lib/format";
 import type { RecordPayment } from "@billing/infrastructure/invoice-payments.repository";
 
@@ -14,10 +14,16 @@ export function PaymentDialog({ invoiceId, balance, onClose, onSave }: {
   const [reference, setReference] = useState(""); const [notes, setNotes] = useState("");
   const amt = Number(amount);
   const invalid = !(amt > 0) || amt > balance + 0.01;
+  const titleId = useId();
+  useEffect(() => { // a11y: Escape cierra (mismo patrón que ImageLightbox)
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
   return (
     <div className="fixed inset-0 z-[70] grid place-items-center bg-black/50 p-4" onClick={onClose}>
-      <div className="w-full max-w-sm space-y-2 rounded-xl border border-border bg-card p-5" onClick={(e) => e.stopPropagation()}>
-        <h3 className="font-display text-lg font-bold text-foreground">Registrar pago</h3>
+      <div role="dialog" aria-modal="true" aria-labelledby={titleId} className="w-full max-w-sm space-y-2 rounded-xl border border-border bg-card p-5" onClick={(e) => e.stopPropagation()}>
+        <h3 id={titleId} className="font-display text-lg font-bold text-foreground">Registrar pago</h3>
         <p className="text-xs text-muted-foreground">Balance pendiente: <span className="font-bold text-foreground">{formatCurrency(balance)}</span></p>
         <label className="block space-y-1"><span className="text-xs font-bold text-muted-foreground">Monto</span>
           <input type="number" min={0} max={balance} step="0.01" value={amount} onChange={(e) => setAmount(e.target.value)} className={F} /></label>
