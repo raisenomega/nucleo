@@ -11,9 +11,10 @@
 en el clone**. Un procedimiento de desastre que sólo existe en una máquina no existe el día del desastre:
 si se pierde el portátil junto con el proveedor, se pierde también el manual para recuperarlo.
 
-Este archivo es, por tanto, la **única** definición de backup/restore del repositorio, y
-`scripts/validate-before-push.sh` (§15) lo verifica en cada push y en CI para que no vuelva a desaparecer
-ni pueda declararse "verificado" sin evidencia fechada.
+Este archivo es, por tanto, la **única** definición de backup/restore del repositorio.
+**Hoy ningún guard automático lo verifica**: `scripts/validate-before-push.sh` llega hasta el §14 y no
+lee este archivo ni el marcador `dr-control` de la línea 1. Que no desaparezca ni se declare "verificado"
+sin evidencia fechada depende de revisión humana hasta que se cierre DR-4 (§5).
 
 ## 1. Objetivos — RPO y RTO (compromiso, no descripción)
 
@@ -74,13 +75,14 @@ libro mayor, nómina o auditoría. **Nunca contra producción**: siempre a un pr
 ### Evidencia a capturar
 
 Los conteos de (a), la salida de (b), las dos cifras de (d), y `T0`/`T1`. Sin evidencia pegada en §4 el
-simulacro **no cuenta**; el guard lo trata como no ejecutado.
+simulacro **no cuenta**: se trata como no ejecutado.
 
 ## 4. Registro de simulacros
 
 Al registrar uno: añadir la fila, y poner `ESTADO=VERIFICADO ULTIMO_SIMULACRO=YYYY-MM-DD` en la primera
-línea del archivo. Si el último simulacro supera `CADENCIA_DIAS`, el guard pone el push y el CI en rojo:
-la caducidad es deliberada, porque un restore probado hace dos años no prueba nada sobre el esquema de hoy.
+línea del archivo. Si el último simulacro supera `CADENCIA_DIAS`, el control se considera caducado
+(hoy por revisión humana; DR-4 lo convertiría en rojo automático de push y CI): la caducidad es
+deliberada, porque un restore probado hace dos años no prueba nada sobre el esquema de hoy.
 
 | Fecha | Ejecutó | Origen | RTO medido | RPO medido | Resultado | Evidencia |
 |---|---|---|---|---|---|---|
@@ -93,3 +95,4 @@ la caducidad es deliberada, porque un restore probado hace dos años no prueba n
 | DR-1 | Confirmar si PITR está activo y anotarlo en §2 | el RPO de 5 min de T1 |
 | DR-2 | Ejecutar el primer simulacro y registrarlo en §4 | poder afirmar que existe backup |
 | DR-3 | Copia de Storage y de secretos fuera del proveedor | los gaps 1 y 2 de §2 |
+| DR-4 | Guard en `validate-before-push.sh` que lea el marcador `dr-control` (existencia del archivo, `VERIFICADO` sólo con fila fechada en §4, caducidad por `CADENCIA_DIAS`) | que la verificación de este documento sea automática y no de palabra |
