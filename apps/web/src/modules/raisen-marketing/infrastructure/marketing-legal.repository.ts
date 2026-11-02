@@ -5,7 +5,7 @@ const SEL = "id, slug, title_es, title_en, content_es, content_en, is_active, di
 const toRow = (o: Record<string, unknown>): LegalPageRow => ({ id: o.id as string, slug: o.slug as string, titleEs: o.title_es as string, titleEn: o.title_en as string, contentEs: (o.content_es as string) ?? "", contentEn: (o.content_en as string) ?? "", isActive: o.is_active !== false, displayOrder: o.display_order as number });
 
 export async function getLegalPage(slug: string): Promise<LegalPageRow | null> {
-  const { data } = await supabase.from("marketing_legal_pages").select(SEL).eq("slug", slug).maybeSingle();
+  const { data } = await supabase.from("marketing_legal_pages").select(SEL).eq("slug", slug).eq("is_active", true).maybeSingle();
   return data ? toRow(data as Record<string, unknown>) : null;
 }
 export async function getLegalPages(): Promise<LegalPageRow[]> {
