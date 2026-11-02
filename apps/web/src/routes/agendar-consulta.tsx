@@ -30,8 +30,10 @@ function AgendarConsulta() {
     setError(null);
     const { error: rpcError } = await supabase.rpc("submit_consultation", form);
     setBusy(false);
-    if (rpcError) setError(rpcError.message);
-    else setSent(true);
+    if (!rpcError) return void setSent(true);
+    // No mostrar el mensaje crudo de Postgres/PostgREST (tablas, constraints, permisos).
+    console.error("[submit_consultation]", rpcError.code, rpcError.message);
+    setError("No pudimos enviar tu solicitud. Inténtalo de nuevo en unos minutos.");
   }
 
   const field = "w-full rounded-lg bg-secondary text-foreground p-3 font-body";
