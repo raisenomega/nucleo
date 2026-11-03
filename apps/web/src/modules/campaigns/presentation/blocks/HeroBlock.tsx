@@ -1,4 +1,5 @@
 import type { BlockContent } from "@campaigns/domain/campaign.types";
+import { safeHref } from "@shared/lib/safe-href";
 
 const s = (c: BlockContent, k: string) => (typeof c[k] === "string" ? (c[k] as string) : "");
 
@@ -13,7 +14,7 @@ export function HeroBlock({ content }: { content: BlockContent }) {
       <div className="camp-hero-inner">
         <h1 className="camp-hero-title">{s(content, "headline")}</h1>
         {s(content, "subtitle") && <p className="camp-hero-sub">{s(content, "subtitle")}</p>}
-        {s(content, "cta_label") && <a href={s(content, "cta_action") || "#"} className="camp-btn">{s(content, "cta_label")}</a>}
+        {s(content, "cta_label") && <a href={safeHref(s(content, "cta_action"))} className="camp-btn">{s(content, "cta_label")}</a>}
       </div>
     </section>
   );
