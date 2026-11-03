@@ -1,4 +1,5 @@
 import { supabase } from "@shared/lib/supabase";
+import { resolvePublicBrand } from "@landing-public/infrastructure/public-brand.resolver";
 import type { CreateOrderInput, OrderForm, OrderFormField, PayConfig, PaymentOption, PricingRules } from "@orders-public/domain/order-form.types";
 
 type FormRow = { id: string; name: string; submit_button_label_es: string | null; submit_button_label_en: string | null; cancel_button_label_es: string | null; cancel_button_label_en: string | null; show_summary: boolean | null; summary_footer_es: string | null; summary_footer_en: string | null; terms_es: string | null; terms_en: string | null };
@@ -13,8 +14,7 @@ const toField = (r: FieldRow): OrderFormField => ({
 });
 
 export const ordersPublicRepository = {
-  // Resuelve item.form_id > default vía RPC DEFINER (las tablas del catálogo tienen RLS tenant_id=current_tenant(),
-  // null en anon → un select directo devolvía 0 filas y caía siempre al default). Los forms/fields sí son anon-legibles.
+  // Resuelve item.form_id > default vía RPC DEFINER (las tablas del catálogo tienen RLS tenant_id=current_tenant(), null en anon → un select directo devolvía 0 filas y caía siempre al default). Los forms/fields sí son anon-legibles.
   async resolveForm(kind: string, itemId: string): Promise<OrderForm | null> {
     const { data: fid } = await supabase.rpc("_public_resolve_form_id", { _hostname: window.location.hostname, _kind: kind, _item_id: itemId });
     const formId = fid as string | null;
@@ -28,8 +28,8 @@ export const ordersPublicRepository = {
       cancelLabelEs: form.cancel_button_label_es, cancelLabelEn: form.cancel_button_label_en,
       showSummary: form.show_summary ?? true, summaryFooterEs: form.summary_footer_es, summaryFooterEn: form.summary_footer_en, termsEs: form.terms_es, termsEn: form.terms_en };
   },
-  async paymentMethods(): Promise<PaymentOption[]> {
-    const { data } = await supabase.from("tenant_payment_methods").select("method_key,display_name,config").eq("is_active", true).order("display_order");
+  async paymentMethods(): Promise<PaymentOption[]> { const tenantId = (await resolvePublicBrand(window.location.hostname))?.tenantId; if (!tenantId) return []; // RLS anon no acota por tenant → filtro explícito, fail-closed
+    const { data } = await supabase.from("tenant_payment_methods").select("method_key,display_name,config").eq("tenant_id", tenantId).eq("is_active", true).order("display_order");
     return ((data ?? []) as { method_key: string; display_name: { es?: string; en?: string }; config: { instructions_es?: string; instructions_en?: string; ath_number?: string } }[])
       .map((m) => ({ methodKey: m.method_key, nameEs: m.display_name?.es ?? m.method_key, nameEn: m.display_name?.en ?? m.method_key,
         instructionsEs: m.config?.instructions_es ?? "", instructionsEn: m.config?.instructions_en ?? "", athNumber: m.config?.ath_number ?? null }));
