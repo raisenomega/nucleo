@@ -18,6 +18,7 @@ export const enStripe = {
   payWithCard: "Pay by card",
   payProcessing: "Redirecting…",
   payReceived: "Payment received, processing… The invoice will update in a few seconds.",
+  payConfirming: "Confirming your payment… This may take a few seconds.",
   payError: "Could not start the payment. Try again.",
   stripeSyncNow: "Sync catalog",
   stripeSynced: "Catalog synced",

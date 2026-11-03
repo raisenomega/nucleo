@@ -22,7 +22,7 @@
   --secondary: var(--brand-secondary); --secondary-foreground: 0 0% 100%;
   --muted: 0 0% 96%;                   --muted-foreground: 0 0% 38%;
   --accent: var(--brand-accent);       --accent-foreground: 0 0% 100%;
-  --destructive: 0 84% 55%;            --destructive-foreground: 0 0% 100%;
+  --destructive: 0 72% 51%;            --destructive-foreground: 0 0% 100%; /* 4.8:1 AA */
   --success: 142 71% 40%;              --success-foreground: 0 0% 100%;
   --warning: 45 100% 50%;              --warning-foreground: 0 0% 8%;
   --border: 0 0% 90%;   --input: 0 0% 90%;   --ring: var(--brand-primary);

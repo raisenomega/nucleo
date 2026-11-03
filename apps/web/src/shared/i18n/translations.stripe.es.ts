@@ -18,6 +18,7 @@ export const esStripe = {
   payWithCard: "Pagar con tarjeta",
   payProcessing: "Redirigiendo…",
   payReceived: "Pago recibido, procesando… La factura se actualizará en unos segundos.",
+  payConfirming: "Confirmando tu pago… Puede tardar unos segundos.",
   payError: "No se pudo iniciar el pago. Intenta de nuevo.",
   stripeSyncNow: "Sincronizar catálogo",
   stripeSynced: "Catálogo sincronizado",
