@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { supabase } from "@shared/lib/supabase";
+import { signUpErrorMessage } from "@shared/lib/signup-error";
 import { PasswordInput } from "@shared/components/PasswordInput";
 import { isRaisenHost } from "@shared/lib/brand-host";
 import { useRaisenGuard } from "@shared/hooks/useRaisenGuard";
@@ -25,18 +26,17 @@ function Registro() {
   }
 
   async function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setBusy(true);
-    setError(null);
-    // El trigger handle_new_user (migr 111) crea tenant+profile+role desde estos metadatos,
-    // server-side en el INSERT de auth.users → no depende de que haya sesión (email sin confirmar).
+    e.preventDefault(); setBusy(true); setError(null);
+    // handle_new_user (migr 111) crea tenant+profile+role server-side desde estos metadatos.
     const signUp = await supabase.auth.signUp({
       email: form.email, password: form.password,
       options: { data: { full_name: form.name, business_name: form.business_name, phone: form.phone } },
     });
+    if (signUp.data.session) await supabase.auth.signOut({ scope: "local" }); // autoconfirm: igual que /invite
     setBusy(false);
-    if (signUp.error) return void setError(signUp.error.message);
-    setDone(true);
+    const msg = signUp.error ? signUpErrorMessage(signUp.error) : null; // nunca el texto crudo
+    if (msg) return void setError(msg);
+    setDone(true); // alta nueva y email ya registrado: misma pantalla
   }
 
   const field = "w-full rounded-lg bg-secondary text-foreground p-3 font-body";
