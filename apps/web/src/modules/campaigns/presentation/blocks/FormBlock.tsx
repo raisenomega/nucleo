@@ -4,6 +4,7 @@ import { track } from "@shared/analytics/track";
 import { createCampaignLead } from "@campaigns/infrastructure/campaigns-public.repository";
 import { captureAttribution } from "@campaigns/infrastructure/campaign-attribution";
 import type { BlockContent } from "@campaigns/domain/campaign.types";
+import { safeHref } from "@shared/lib/safe-href";
 
 const s = (c: BlockContent, k: string) => (typeof c[k] === "string" ? (c[k] as string) : "");
 type Custom = { name: string; label?: string; required?: boolean };
@@ -24,7 +25,7 @@ export function FormBlock({ content, pageId }: { content: BlockContent; pageId: 
       page_id: pageId, customer_name: v.name ?? "", customer_email: v.email ?? "", customer_phone: v.phone ?? "",
       message: v.message ?? "", hp, custom_fields: cf, attribution: captureAttribution(),
     });
-    if (r.ok) { track("form_contact_submitted"); setSt("ok"); const url = s(content, "redirect_url"); if (url) window.setTimeout(() => { window.location.href = url; }, 2000); } else setSt("error");
+    if (r.ok) { track("form_contact_submitted"); setSt("ok"); const url = safeHref(s(content, "redirect_url"), ""); if (url) window.setTimeout(() => { window.location.href = url; }, 2000); } else setSt("error");
   }
   if (st === "ok") return <section className="camp-form" id="form"><p className="camp-form-ok">{s(content, "success_message") || "¡Gracias! Te contactaremos pronto."}</p></section>;
   return (
