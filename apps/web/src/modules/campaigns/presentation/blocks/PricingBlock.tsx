@@ -1,5 +1,6 @@
 import { Check } from "lucide-react";
 import type { BlockContent } from "@campaigns/domain/campaign.types";
+import { safeHref } from "@shared/lib/safe-href";
 
 type P = { name?: string; price?: string | number; currency?: string; period?: string; features?: string | string[]; cta_label?: string; cta_action?: string; highlighted?: boolean | string };
 const feats = (f: P["features"]) => (Array.isArray(f) ? (f as string[]) : typeof f === "string" ? f.split(",").map((x) => x.trim()).filter(Boolean) : []);
@@ -17,7 +18,7 @@ export function PricingBlock({ content }: { content: BlockContent }) {
             <h3 className="camp-price-name">{p.name}</h3>
             <p className="camp-price-amt">{p.currency ?? "$"}{p.price}<span className="camp-price-per">{p.period ? `/${p.period}` : ""}</span></p>
             <ul className="camp-price-feats">{feats(p.features).map((f, j) => <li key={j}><Check className="camp-benefit-ic" />{f}</li>)}</ul>
-            {p.cta_label && <a href={p.cta_action || "#"} className="camp-btn">{p.cta_label}</a>}
+            {p.cta_label && <a href={safeHref(typeof p.cta_action === "string" ? p.cta_action : "")} className="camp-btn">{p.cta_label}</a>}
           </div>
         );
       })}
