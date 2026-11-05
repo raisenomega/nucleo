@@ -9,14 +9,15 @@ type Props = {
   placeholder?: string;
   autoComplete?: string;
   className?: string;
+  id?: string;
 };
 
-export function PasswordInput({ value, onChange, placeholder, autoComplete, className }: Props) {
+export function PasswordInput({ value, onChange, placeholder, autoComplete, className, id }: Props) {
   const { t } = useI18n();
   const [show, setShow] = useState(false);
   return (
     <div className="relative">
-      <input type={show ? "text" : "password"} value={value} onChange={onChange}
+      <input id={id} type={show ? "text" : "password"} value={value} onChange={onChange}
         placeholder={placeholder} autoComplete={autoComplete} className={`${className ?? ""} pr-10`} />
       <button type="button" tabIndex={-1} onClick={() => setShow((s) => !s)}
         aria-label={show ? t("hidePassword") : t("showPassword")}
