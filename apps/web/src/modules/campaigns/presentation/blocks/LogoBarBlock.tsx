@@ -1,4 +1,5 @@
 import type { BlockContent } from "@campaigns/domain/campaign.types";
+import { safeHref } from "@shared/lib/safe-href";
 
 type L = { image_url?: string; alt_text?: string; link_url?: string };
 
@@ -10,8 +11,10 @@ export function LogoBarBlock({ content }: { content: BlockContent }) {
     <section className="camp-logos">
       {items.map((l, i) => {
         const img = <img src={l.image_url} alt={l.alt_text ?? ""} loading="lazy" className="camp-logo" />;
-        return l.link_url
-          ? <a key={i} href={l.link_url} target="_blank" rel="noopener noreferrer">{img}</a>
+        // link_url lo escribe el editor: esquema fuera de la allowlist (javascript:, data:…) → logo sin enlace.
+        const href = safeHref(typeof l.link_url === "string" ? l.link_url : "", "");
+        return href
+          ? <a key={i} href={href} target="_blank" rel="noopener noreferrer">{img}</a>
           : <span key={i}>{img}</span>;
       })}
     </section>
