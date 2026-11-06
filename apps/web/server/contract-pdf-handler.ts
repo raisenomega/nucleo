@@ -1,5 +1,6 @@
 import { defineHandler, getRequestHeader, getRequestHost, readBody } from "h3";
 import { createElement as h } from "react";
+import { buildContractEmail } from "./contract-email";
 
 // v2a.5 · POST /api/contract-pdf — renderiza el PDF del contrato firmado, lo archiva y avisa por email.
 // LA INFRA QUEDA DORMIDA: nadie lo llama todavía (v2a.6 lo enciende desde el flujo de aceptación).
@@ -158,14 +159,11 @@ export default defineHandler(async (event) => {
   } else if (!link) {
     pending.push("email:sin token en claro no hay enlace público (/contrato/{token}) y el email pierde su función");
   } else {
-    const t = locale === "en"
-      ? { s: `${labels.number} ${data.contract_number}`, p: "Your signed agreement is attached. You can also view it online:", v: "View agreement" }
-      : { s: `${labels.number} ${data.contract_number}`, p: "Adjuntamos tu contrato firmado. También puedes verlo en línea:", v: "Ver contrato" };
-    const html = `<p>${data.signer_name},</p><p>${t.p}</p><p><a href="${link}">${t.v}</a></p>`
-      + `<p style="color:#888;font-size:12px">${labels.hash}: ${data.terms_hash}</p>`;
+    const { subject, html } = buildContractEmail({ locale, signerName: data.signer_name,
+      contractNumber: data.contract_number, termsHash: data.terms_hash, link, labels });
     const send = await fetch("https://api.resend.com/emails", {
       method: "POST", headers: { authorization: `Bearer ${RESEND()}`, "content-type": "application/json" },
-      body: JSON.stringify({ from: `${data.tenant_name} <${MAIL_FROM()}>`, to: data.signer_email, subject: t.s,
+      body: JSON.stringify({ from: `${data.tenant_name} <${MAIL_FROM()}>`, to: data.signer_email, subject,
         html, attachments: [{ filename, content: b64 }] }),
     });
     if (!send.ok) return json(502, { error: "email_failed", status: send.status, detail: (await send.text()).slice(0, 300) });
