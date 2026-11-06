@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useI18n } from "@shared/i18n";
 import { PasswordInput } from "@shared/components/PasswordInput";
@@ -14,7 +14,8 @@ function PortalRegister() {
   const tenantId = b.status === "ready" ? b.brand.tenantId : null;
   const [f, setF] = useState({ name: "", phone: "", email: "", pw: "" });
   const [err, setErr] = useState<string | null>(null); const [busy, setBusy] = useState(false); const [sent, setSent] = useState(false);
-  const fld = "w-full rounded-lg bg-secondary text-foreground p-3 font-body";
+  const fld = "w-full rounded-lg bg-secondary text-foreground p-3 font-body"; const lbl = "text-xs font-bold text-muted-foreground";
+  const uid = useId(); const ids = { name: `${uid}-name`, phone: `${uid}-phone`, email: `${uid}-email`, pw: `${uid}-pw` };
   const submit = async (e: React.FormEvent) => {
     e.preventDefault(); setBusy(true); setErr(null);
     const up = await signUpCustomer(f.email, f.pw, { tenantId, name: f.name, phone: f.phone }); if (up) { setBusy(false); return setErr(up); }
@@ -28,10 +29,14 @@ function PortalRegister() {
     <main className="flex min-h-screen items-center justify-center bg-background p-4 text-foreground">
       <form onSubmit={submit} className="w-full max-w-sm space-y-3">
         <h1 className="text-center font-display text-2xl font-bold">{t("pRegister")}</h1>
-        <input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} placeholder={t("pFullName")} className={fld} />
-        <input value={f.phone} onChange={(e) => setF({ ...f, phone: e.target.value })} placeholder={t("pPhone")} className={fld} />
-        <input type="email" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} placeholder={t("email")} autoComplete="email" className={fld} />
-        <PasswordInput value={f.pw} onChange={(e) => setF({ ...f, pw: e.target.value })} placeholder={t("pPassword")} autoComplete="new-password" className={fld} />
+        <div className="space-y-1"><label htmlFor={ids.name} className={lbl}>{t("pFullName")}</label>
+          <input id={ids.name} value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} placeholder={t("pFullName")} className={fld} /></div>
+        <div className="space-y-1"><label htmlFor={ids.phone} className={lbl}>{t("pPhone")}</label>
+          <input id={ids.phone} value={f.phone} onChange={(e) => setF({ ...f, phone: e.target.value })} placeholder={t("pPhone")} className={fld} /></div>
+        <div className="space-y-1"><label htmlFor={ids.email} className={lbl}>{t("email")}</label>
+          <input id={ids.email} type="email" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} placeholder={t("email")} autoComplete="email" className={fld} /></div>
+        <div className="space-y-1"><label htmlFor={ids.pw} className={lbl}>{t("pPassword")}</label>
+          <PasswordInput id={ids.pw} value={f.pw} onChange={(e) => setF({ ...f, pw: e.target.value })} placeholder={t("pPassword")} autoComplete="new-password" className={fld} /></div>
         {err && <p className="text-sm text-destructive">{err}</p>}
         <button type="submit" disabled={busy} className="w-full rounded-lg bg-primary p-3 font-bold text-primary-foreground disabled:opacity-50">{busy ? "…" : t("pRegister")}</button>
         <p className="text-center text-sm text-muted-foreground">{t("pHaveAccount")} <Link to="/portal/login" className="font-bold text-foreground">{t("pLogin")}</Link></p>
